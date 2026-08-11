@@ -1,0 +1,50 @@
+{
+ "n_predicates": 227,
+ "by_kind": {
+  "sum_identity": 35,
+  "same_sheet_equality": 11,
+  "cross_sheet_equality": 181
+ },
+ "cells_in_graph": 2826,
+ "mutants": 19782,
+ "killed": 3574,
+ "equivalent": 22,
+ "mutation_score_pct": 18.09,
+ "per_operator": {
+  "sign_flip": {
+   "mutants": 2826,
+   "killed": 511,
+   "equivalent": 0
+  },
+  "scale_x10": {
+   "mutants": 2826,
+   "killed": 511,
+   "equivalent": 0
+  },
+  "scale_div10": {
+   "mutants": 2826,
+   "killed": 511,
+   "equivalent": 0
+  },
+  "off_by_one": {
+   "mutants": 2826,
+   "killed": 511,
+   "equivalent": 0
+  },
+  "digit_transpose": {
+   "mutants": 2826,
+   "killed": 511,
+   "equivalent": 0
+  },
+  "zero_out": {
+   "mutants": 2826,
+   "killed": 511,
+   "equivalent": 0
+  },
+  "round_to_int": {
+   "mutants": 2826,
+   "killed": 508,
+   "equivalent": 22
+  }
+ }
+}

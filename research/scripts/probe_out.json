@@ -1,0 +1,4541 @@
+[
+ {
+  "file": "ALR_V2_3_20250808_1024.xlsx",
+  "bytes": 55501,
+  "sha256": "a414d8d3300d884e06c89eff92cf9f9857bad5690fd38266375979b784c8b998",
+  "sheets": [
+   {
+    "name": "General Information",
+    "state": "visible",
+    "cells": 74,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "o6OABRvmP7EktrebbaxoUerIe1UkjOm119DnieIkumSoom6hD9CCAZwnDRrVrJnRxeIw0pr9bbOOJf3jUsVUGw==",
+     "saltValue": "josXXK9/BiunoaQmUw+rkg==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "formatCells": "0",
+     "sort": "0",
+     "autoFilter": "0",
+     "pivotTables": "0"
+    },
+    "merged_ranges": 1,
+    "merged_sample": [
+     "A1:B1"
+    ],
+    "data_validations": 1,
+    "labels": 32
+   },
+   {
+    "name": "Assets",
+    "state": "visible",
+    "cells": 1108,
+    "formulas": 328,
+    "formula_with_body": 106,
+    "formula_no_body": 222,
+    "shared_master": 53,
+    "shared_dependent": 222,
+    "array": 0,
+    "cross_sheet": 1,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "n5Yj37oDuOghrUK09Xa9YkoFOw9N/jM8WkypfWBz8VVN2MnaJq5oGu1G2WQy9wivkzmBF0nymPCoOAmcVdLIUQ==",
+     "saltValue": "KaBnDRfC3HqI9XRCrWKLIg==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "insertRows": "0",
+     "sort": "0",
+     "autoFilter": "0",
+     "pivotTables": "0"
+    },
+    "merged_ranges": 4,
+    "merged_sample": [
+     "A1:J1",
+     "A96:J96",
+     "B3:C3",
+     "D3:F3"
+    ],
+    "data_validations": 1,
+    "labels": 80
+   },
+   {
+    "name": "Liabilities",
+    "state": "visible",
+    "cells": 727,
+    "formulas": 226,
+    "formula_with_body": 70,
+    "formula_no_body": 156,
+    "shared_master": 23,
+    "shared_dependent": 156,
+    "array": 0,
+    "cross_sheet": 10,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "+3duMRqUlhgvUgZ3Vd/D++axrjFaCmTMSISzFw12slk75DN24P96IiT2ZUyf0cJYJfo5fouSIDTu1OG6qM2e6Q==",
+     "saltValue": "fGuiMrdIR9w9aZKhZE7LkA==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "insertRows": "0",
+     "sort": "0",
+     "autoFilter": "0",
+     "pivotTables": "0"
+    },
+    "merged_ranges": 3,
+    "merged_sample": [
+     "A1:J1",
+     "B3:C3",
+     "D3:F3"
+    ],
+    "data_validations": 1,
+    "labels": 58
+   },
+   {
+    "name": "Other products",
+    "state": "visible",
+    "cells": 279,
+    "formulas": 53,
+    "formula_with_body": 32,
+    "formula_no_body": 21,
+    "shared_master": 4,
+    "shared_dependent": 21,
+    "array": 0,
+    "cross_sheet": 19,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "hBjLifNidQrGvb/lynVlvnuqo5lWElrl+QNQzVJRhnk17dYd8xFeBsU3/GpzYniQ57DksQTgQAcaFg056UKKwg==",
+     "saltValue": "e6BECoKmIezuHmEYABqqTw==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "insertRows": "0",
+     "sort": "0",
+     "autoFilter": "0",
+     "pivotTables": "0"
+    },
+    "merged_ranges": 11,
+    "merged_sample": [
+     "C36:E36",
+     "C37:E37",
+     "C38:E38",
+     "A1:J1",
+     "C31:E31",
+     "C32:E32"
+    ],
+    "data_validations": 1,
+    "labels": 28
+   },
+   {
+    "name": "Business Volumes",
+    "state": "visible",
+    "cells": 247,
+    "formulas": 20,
+    "formula_with_body": 20,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 1,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "a77In8/bjjDY8ZoO8OQ7bOtX0WjxH9qAJhSoLyr3rcyUkwCaXYo0UvhsDCwSIWW3t0y/CWeNUV0vibaRDCyhIw==",
+     "saltValue": "OqaU6iLoMeWz1ZZzXAAyDA==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "insertRows": "0",
+     "sort": "0",
+     "autoFilter": "0",
+     "pivotTables": "0"
+    },
+    "merged_ranges": 32,
+    "merged_sample": [
+     "B14:B21",
+     "A1:E1",
+     "B12:C12",
+     "C8:D8",
+     "C9:D9",
+     "C10:D10"
+    ],
+    "data_validations": 0,
+    "labels": 46
+   },
+   {
+    "name": "Structured Deposits Report",
+    "state": "visible",
+    "cells": 95,
+    "formulas": 1,
+    "formula_with_body": 1,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 1,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "FdLrjzEWzHg0ygsnP5/csNjMEUxebqRwyCKlhO/Nc+qPIoLiR6i/zP3puMn/W8wmt8f4yHuTg4rAJ4odQkd2GQ==",
+     "saltValue": "ooFBU6NO27Mo5oAuwJLJcA==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "insertRows": "0",
+     "sort": "0",
+     "autoFilter": "0",
+     "pivotTables": "0"
+    },
+    "merged_ranges": 10,
+    "merged_sample": [
+     "B12:G12",
+     "B13:G13",
+     "B14:G14",
+     "B10:G10",
+     "A1:G1",
+     "E6:G6"
+    ],
+    "data_validations": 0,
+    "labels": 14
+   },
+   {
+    "name": "Off BS Exposure",
+    "state": "visible",
+    "cells": 102,
+    "formulas": 3,
+    "formula_with_body": 3,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 1,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "9aegriZN1hnDzqtwmjWbysBKfX00PxseORc1bHtwUDHt+eXUb2v/T6XKJaps8jrVPAs+hw1WEh0X1/oLdLkuGg==",
+     "saltValue": "i7IanE4gVeKgS6pFfe1ysw==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "sort": "0",
+     "autoFilter": "0",
+     "pivotTables": "0"
+    },
+    "merged_ranges": 5,
+    "merged_sample": [
+     "A1:G1",
+     "A5:C5",
+     "E5:G5",
+     "E6:G6",
+     "C3:F3"
+    ],
+    "data_validations": 1,
+    "labels": 24
+   },
+   {
+    "name": "Nostro",
+    "state": "visible",
+    "cells": 92,
+    "formulas": 1,
+    "formula_with_body": 1,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 1,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "nQwSjL10omEXnTGPBzR+TPi8CV6y+2dAef1TG3j0FC/ylOwSKk8IL6IeR2br3iJOUZo+Upz2DTNyGfHwY7fI8g==",
+     "saltValue": "qmSlCvUn/EzodZ7mIfKCpA==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "sort": "0",
+     "autoFilter": "0",
+     "pivotTables": "0"
+    },
+    "merged_ranges": 3,
+    "merged_sample": [
+     "A1:G1",
+     "B5:C5",
+     "C3:E3"
+    ],
+    "data_validations": 0,
+    "labels": 5
+   },
+   {
+    "name": "Reconciliation",
+    "state": "visible",
+    "cells": 165,
+    "formulas": 13,
+    "formula_with_body": 13,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 1,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "tjFGAYYY5pNwz00/pLJv0jJbRIjkj3Y7AKRRm+UXG1+kfbUHBGRiWAtQCbLZXgotqiPgzNYED3WNW9p7UOHhcA==",
+     "saltValue": "jMb9u/ecCur/gKey+qm3Xg==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "sort": "0",
+     "autoFilter": "0",
+     "pivotTables": "0"
+    },
+    "merged_ranges": 8,
+    "merged_sample": [
+     "A22:E22",
+     "A1:E1",
+     "A7:E7",
+     "A8:E8",
+     "A14:E14",
+     "A15:E15"
+    ],
+    "data_validations": 2,
+    "labels": 27
+   }
+  ],
+  "defined_names": [],
+  "workbook_protection": false,
+  "totals": {
+   "cells": 2889,
+   "formulas": 645,
+   "formula_with_body": 246,
+   "formula_no_body": 399,
+   "cross_sheet": 35,
+   "merged": 77,
+   "dv": 7,
+   "protected": 9
+  },
+  "n_sheets": 9,
+  "formula_classes": {
+   "shared-dependent (no body)": 399,
+   "other function: ROUND": 197,
+   "bare arithmetic": 28,
+   "IF conditional carry": 9,
+   "pure cross-sheet carry-forward": 8,
+   "same-sheet cell ref": 3,
+   "SUM row/col total": 1
+  },
+  "label_instances": 314,
+  "distinct_labels": 264,
+  "shared_strings": 287,
+  "dv_list_with_literal_vocab": [],
+  "dv_list_type": [
+   {
+    "sheet": "General Information",
+    "type": "list",
+    "sqref": "B5",
+    "formula1": "$E$5:$E$17",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "main"
+   }
+  ],
+  "dv_by_type": {
+   "list": 1,
+   "decimal": 5,
+   "whole": 1
+  }
+ },
+ {
+  "file": "AL_monthly_report_updated_final_20260717_0257.xlsx",
+  "bytes": 41181,
+  "sha256": "79e43a7fdbbec9d993fb983c1bcbfc3162be13c2fe3a40ffb3a28abead87c6a9",
+  "sheets": [
+   {
+    "name": "0 Validation",
+    "state": "hidden",
+    "cells": 103,
+    "formulas": 35,
+    "formula_with_body": 6,
+    "formula_no_body": 29,
+    "shared_master": 2,
+    "shared_dependent": 29,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": false,
+    "protection": null,
+    "merged_ranges": 0,
+    "merged_sample": [],
+    "data_validations": 0,
+    "labels": 47
+   },
+   {
+    "name": "Entity Details",
+    "state": "visible",
+    "cells": 98,
+    "formulas": 9,
+    "formula_with_body": 8,
+    "formula_no_body": 1,
+    "shared_master": 2,
+    "shared_dependent": 1,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "EuXqYn/LtGfbmqXi/5PCPOYOL6WttsWRcCob6PkIOhD4PTKOELmpkGu0xFzDuMJcLpBCgSBW0pukrMNDm7zbeg==",
+     "saltValue": "Jv/6Nx90waWe0pfUA8uLGw==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "insertColumns": "0",
+     "insertRows": "0",
+     "insertHyperlinks": "0",
+     "autoFilter": "0",
+     "pivotTables": "0"
+    },
+    "merged_ranges": 13,
+    "merged_sample": [
+     "D5:I5",
+     "C3:I3",
+     "E8:G8",
+     "D4:I4",
+     "E11:G11",
+     "E14:G14"
+    ],
+    "data_validations": 5,
+    "labels": 30
+   },
+   {
+    "name": "Mode of transaction",
+    "state": "visible",
+    "cells": 472,
+    "formulas": 107,
+    "formula_with_body": 25,
+    "formula_no_body": 82,
+    "shared_master": 19,
+    "shared_dependent": 82,
+    "array": 0,
+    "cross_sheet": 2,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "hBxbj4Euxt2AWyQfNat741K/j5vhrRhy1t0B7gQc8feKySDr5rbBv3Upza0pFSl/KmbW5RVV2hbHBBgKxVf35g==",
+     "saltValue": "vbVa9SCwSiMwnbRG7+NuiA==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "insertColumns": "0",
+     "insertRows": "0",
+     "insertHyperlinks": "0",
+     "autoFilter": "0",
+     "pivotTables": "0"
+    },
+    "merged_ranges": 18,
+    "merged_sample": [
+     "D37:M37",
+     "D38:E38",
+     "F38:G38",
+     "H38:I38",
+     "J38:K38",
+     "L38:M38"
+    ],
+    "data_validations": 0,
+    "labels": 71
+   },
+   {
+    "name": "Asset Details",
+    "state": "visible",
+    "cells": 3542,
+    "formulas": 10,
+    "formula_with_body": 10,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 4,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "tN/cZwiFc38X80z+fRk6JwHtmAc8WOndcZnFGSpFwDLKJ+findJXN0kOumZMTaP+YU2WCqA6/pVsAfu9cPWCMw==",
+     "saltValue": "Xn/xs5OCmJr8qkfRyBfn8w==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "insertColumns": "0",
+     "insertRows": "0",
+     "autoFilter": "0",
+     "pivotTables": "0"
+    },
+    "merged_ranges": 5,
+    "merged_sample": [
+     "S8:Y8",
+     "L8:Q8",
+     "D8:E8",
+     "F8:K8",
+     "C160:G160"
+    ],
+    "data_validations": 5,
+    "labels": 634
+   }
+  ],
+  "defined_names": [
+   {
+    "name": "_xlnm.Print_Area",
+    "localSheetId": "2",
+    "hidden": null,
+    "value": "'Mode of transaction'!$B$1:$N$77"
+   }
+  ],
+  "workbook_protection": true,
+  "totals": {
+   "cells": 4215,
+   "formulas": 161,
+   "formula_with_body": 49,
+   "formula_no_body": 112,
+   "cross_sheet": 6,
+   "merged": 36,
+   "dv": 10,
+   "protected": 3
+  },
+  "n_sheets": 4,
+  "formula_classes": {
+   "shared-dependent (no body)": 112,
+   "bare arithmetic": 41,
+   "SUM row/col total": 6,
+   "other/ref": 2
+  },
+  "label_instances": 782,
+  "distinct_labels": 118,
+  "shared_strings": 141,
+  "dv_list_with_literal_vocab": [],
+  "dv_list_type": [
+   {
+    "sheet": "Entity Details",
+    "type": "list",
+    "sqref": "E10 E13",
+    "formula1": "'0 Validation'!$D$4:$D$35",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "Entity Details",
+    "type": "list",
+    "sqref": "F10 E9 F13",
+    "formula1": "'0 Validation'!$E$4:$E$16",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "Entity Details",
+    "type": "list",
+    "sqref": "E12:G12",
+    "formula1": "'0 Validation'!$B$4:$B$7",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "Entity Details",
+    "type": "list",
+    "sqref": "F9 G10",
+    "formula1": "'0 Validation'!$F$4:$F$10",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "Entity Details",
+    "type": "list",
+    "sqref": "G13",
+    "formula1": "'0 Validation'!$G$4:$G$16",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "Asset Details",
+    "type": "list",
+    "sqref": "D10:D159",
+    "formula1": "'0 Validation'!$I$4:$I$16",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "Asset Details",
+    "type": "list",
+    "sqref": "F10:F159",
+    "formula1": "'0 Validation'!$B$11:$B$15",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "Asset Details",
+    "type": "list",
+    "sqref": "L10:L159",
+    "formula1": "'0 Validation'!$B$17:$B$21",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "Asset Details",
+    "type": "list",
+    "sqref": "M10:M159",
+    "formula1": "'0 Validation'!$B$22:$B$26",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   }
+  ],
+  "dv_by_type": {
+   "list": 9,
+   "custom": 1
+  }
+ },
+ {
+  "file": "Draft_ACAC_Format_20260605_0631.xlsx",
+  "bytes": 83409,
+  "sha256": "74ba7b894b429bbe939a296cacf39196ad9f5b93ec238037f2c47c277dd79e5e",
+  "sheets": [
+   {
+    "name": "Guidance Note",
+    "state": "visible",
+    "cells": 20,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": false,
+    "protection": null,
+    "merged_ranges": 1,
+    "merged_sample": [
+     "A1:B1"
+    ],
+    "data_validations": 0,
+    "labels": 5
+   },
+   {
+    "name": "All CMIs",
+    "state": "visible",
+    "cells": 418,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": false,
+    "protection": null,
+    "merged_ranges": 15,
+    "merged_sample": [
+     "A1:K1",
+     "B34:B38",
+     "B31:B32",
+     "K2:K3",
+     "B6:B9",
+     "B11:B17"
+    ],
+    "data_validations": 0,
+    "labels": 100
+   },
+   {
+    "name": "Broker Dealer & Clearing Member",
+    "state": "visible",
+    "cells": 154,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": false,
+    "protection": null,
+    "merged_ranges": 8,
+    "merged_sample": [
+     "B13:B14",
+     "A1:K1",
+     "H2:J2",
+     "K2:K3",
+     "B4:B12",
+     "A2:A3"
+    ],
+    "data_validations": 0,
+    "labels": 39
+   },
+   {
+    "name": "GAP & Introducing Broker",
+    "state": "visible",
+    "cells": 495,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": false,
+    "protection": null,
+    "merged_ranges": 9,
+    "merged_sample": [
+     "A1:K1",
+     "B4:B12",
+     "K2:K3",
+     "B15:B45",
+     "A2:A3",
+     "B2:D2"
+    ],
+    "data_validations": 0,
+    "labels": 102
+   },
+   {
+    "name": "Credit Rating Agency",
+    "state": "visible",
+    "cells": 748,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": false,
+    "protection": null,
+    "merged_ranges": 9,
+    "merged_sample": [
+     "A1:K1",
+     "A2:A3",
+     "B2:D2",
+     "E2:G2",
+     "B26:B68",
+     "H2:J2"
+    ],
+    "data_validations": 0,
+    "labels": 148
+   },
+   {
+    "name": "Custodian",
+    "state": "visible",
+    "cells": 165,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": false,
+    "protection": null,
+    "merged_ranges": 8,
+    "merged_sample": [
+     "K2:K3",
+     "A1:K1",
+     "B4:B7",
+     "B8:B15",
+     "A2:A3",
+     "B2:D2"
+    ],
+    "data_validations": 0,
+    "labels": 41
+   },
+   {
+    "name": "Debenture Trustee",
+    "state": "visible",
+    "cells": 198,
+    "formulas": 13,
+    "formula_with_body": 3,
+    "formula_no_body": 10,
+    "shared_master": 2,
+    "shared_dependent": 10,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": false,
+    "protection": null,
+    "merged_ranges": 9,
+    "merged_sample": [
+     "A1:K1",
+     "B14:B18",
+     "K2:K3",
+     "B4:B9",
+     "B10:B13",
+     "A2:A3"
+    ],
+    "data_validations": 0,
+    "labels": 48
+   },
+   {
+    "name": "Depository Participant",
+    "state": "visible",
+    "cells": 121,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": false,
+    "protection": null,
+    "merged_ranges": 8,
+    "merged_sample": [
+     "K2:K3",
+     "A1:K1",
+     "B4:B7",
+     "B8:B11",
+     "A2:A3",
+     "B2:D2"
+    ],
+    "data_validations": 0,
+    "labels": 33
+   },
+   {
+    "name": "Distributor",
+    "state": "visible",
+    "cells": 528,
+    "formulas": 44,
+    "formula_with_body": 2,
+    "formula_no_body": 42,
+    "shared_master": 1,
+    "shared_dependent": 42,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": false,
+    "protection": null,
+    "merged_ranges": 9,
+    "merged_sample": [
+     "A1:K1",
+     "B35:B48",
+     "K2:K3",
+     "B7:B34",
+     "B4:B6",
+     "A2:A3"
+    ],
+    "data_validations": 0,
+    "labels": 108
+   },
+   {
+    "name": "ERDPP",
+    "state": "visible",
+    "cells": 209,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": false,
+    "protection": null,
+    "merged_ranges": 8,
+    "merged_sample": [
+     "A1:K1",
+     "B17:B19",
+     "K2:K3",
+     "B4:B16",
+     "A2:A3",
+     "B2:D2"
+    ],
+    "data_validations": 0,
+    "labels": 49
+   },
+   {
+    "name": "Investment Adviser",
+    "state": "visible",
+    "cells": 253,
+    "formulas": 19,
+    "formula_with_body": 1,
+    "formula_no_body": 18,
+    "shared_master": 1,
+    "shared_dependent": 18,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": false,
+    "protection": null,
+    "merged_ranges": 9,
+    "merged_sample": [
+     "A1:K1",
+     "B19:B23",
+     "K2:K3",
+     "B4:B15",
+     "B16:B18",
+     "A2:A3"
+    ],
+    "data_validations": 0,
+    "labels": 58
+   },
+   {
+    "name": "Investment Banker",
+    "state": "visible",
+    "cells": 198,
+    "formulas": 14,
+    "formula_with_body": 1,
+    "formula_no_body": 13,
+    "shared_master": 1,
+    "shared_dependent": 13,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": false,
+    "protection": null,
+    "merged_ranges": 9,
+    "merged_sample": [
+     "A1:K1",
+     "B16:B18",
+     "K2:K3",
+     "B4:B9",
+     "B10:B15",
+     "A2:A3"
+    ],
+    "data_validations": 0,
+    "labels": 48
+   },
+   {
+    "name": "Research Entity",
+    "state": "visible",
+    "cells": 286,
+    "formulas": 22,
+    "formula_with_body": 2,
+    "formula_no_body": 20,
+    "shared_master": 2,
+    "shared_dependent": 20,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": false,
+    "protection": null,
+    "merged_ranges": 9,
+    "merged_sample": [
+     "A1:K1",
+     "B24:B26",
+     "K2:K3",
+     "B4:B18",
+     "B19:B23",
+     "A2:A3"
+    ],
+    "data_validations": 0,
+    "labels": 64
+   }
+  ],
+  "defined_names": [],
+  "workbook_protection": false,
+  "totals": {
+   "cells": 3793,
+   "formulas": 112,
+   "formula_with_body": 9,
+   "formula_no_body": 103,
+   "cross_sheet": 0,
+   "merged": 111,
+   "dv": 0,
+   "protected": 0
+  },
+  "n_sheets": 13,
+  "formula_classes": {
+   "shared-dependent (no body)": 103,
+   "bare arithmetic": 9
+  },
+  "label_instances": 843,
+  "distinct_labels": 632,
+  "shared_strings": 632,
+  "dv_list_with_literal_vocab": [],
+  "dv_list_type": [],
+  "dv_by_type": {}
+ },
+ {
+  "file": "EDR_1__Exposure_Data_Report_1__V2_3_20250808_1030.xlsx",
+  "bytes": 24124,
+  "sha256": "230a6f0c7f1bfad504167e52002e4dfb5f0014bf2c2968787b4e6f785f5774c1",
+  "sheets": [
+   {
+    "name": "General Information",
+    "state": "visible",
+    "cells": 79,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "l5d5GqYAV1zfYhOl1+tJwUXC81YM5TWo0kIEyfFq4JLaqqKbVyo7NZlosMshbI7+S0S4BVupsAp1GaGXsA26MA==",
+     "saltValue": "ifynq18Kh5xeAc6aiq29pg==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "formatCells": "0",
+     "sort": "0",
+     "autoFilter": "0",
+     "pivotTables": "0"
+    },
+    "merged_ranges": 1,
+    "merged_sample": [
+     "A1:B1"
+    ],
+    "data_validations": 1,
+    "labels": 37
+   },
+   {
+    "name": "EDR 1",
+    "state": "visible",
+    "cells": 309,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "H8Vb3JlQbvtCEPGKuyk6MEC/HurJMagBNUHRPdFJMIjpmECdOISyYf8qOcjLS2CkF3fb9K0OkpcWb8c/eEo8+w==",
+     "saltValue": "CUWUUN70k1OjoVhAM1Om8A==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "formatColumns": "0",
+     "formatRows": "0"
+    },
+    "merged_ranges": 1,
+    "merged_sample": [
+     "A1:C1"
+    ],
+    "data_validations": 0,
+    "labels": 105
+   },
+   {
+    "name": "Clarifications",
+    "state": "visible",
+    "cells": 9,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "iq48guja2yYGCTqeaohVjTFhbFzJCKDS2hDkaVw2lgoQA/TnNceH1xyCOjr8aCYwRkQ38JUYHPQA2HGWttrpug==",
+     "saltValue": "cDffdjM9LZLXuVLuTP+fnA==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1"
+    },
+    "merged_ranges": 0,
+    "merged_sample": [],
+    "data_validations": 0,
+    "labels": 5
+   }
+  ],
+  "defined_names": [],
+  "workbook_protection": false,
+  "totals": {
+   "cells": 397,
+   "formulas": 0,
+   "formula_with_body": 0,
+   "formula_no_body": 0,
+   "cross_sheet": 0,
+   "merged": 2,
+   "dv": 1,
+   "protected": 3
+  },
+  "n_sheets": 3,
+  "formula_classes": {},
+  "label_instances": 147,
+  "distinct_labels": 143,
+  "shared_strings": 155,
+  "dv_list_with_literal_vocab": [],
+  "dv_list_type": [
+   {
+    "sheet": "General Information",
+    "type": "list",
+    "sqref": "B5",
+    "formula1": "$E$19:$E$23",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "main"
+   }
+  ],
+  "dv_by_type": {
+   "list": 1
+  }
+ },
+ {
+  "file": "IBU_Operations_Report_V2_3_20250808_1033.xlsx",
+  "bytes": 34577,
+  "sha256": "bf6bbf6b810f8afc571232e9b72c070a5f6a04519b13b8676d72a36682803556",
+  "sheets": [
+   {
+    "name": "General Information",
+    "state": "visible",
+    "cells": 74,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "5pjJMYbq9EZ03N9no86unNnq/jy//0O9bZnnAfj108CnRT0F047ivdYaq4WQsgolxXjlide9T4jDN9m8KdEe0w==",
+     "saltValue": "0ED8nshDBwIoUuREGeZkcA==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "sort": "0",
+     "autoFilter": "0",
+     "pivotTables": "0"
+    },
+    "merged_ranges": 1,
+    "merged_sample": [
+     "A1:B1"
+    ],
+    "data_validations": 1,
+    "labels": 32
+   },
+   {
+    "name": "Outsourcing Details",
+    "state": "visible",
+    "cells": 92,
+    "formulas": 1,
+    "formula_with_body": 1,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 1,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "WvMmEa01VlY2+zVX77YnTZkyCtmRMl27fIkwwTpTNU9bc2uyDTYFirzf5Db1Tcid1dKFhgMx9jGjEpRb3qHcXA==",
+     "saltValue": "Q+CmmQsSuGa4VHXPxZjung==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1",
+     "insertRows": "0",
+     "sort": "0",
+     "autoFilter": "0",
+     "pivotTables": "0"
+    },
+    "merged_ranges": 2,
+    "merged_sample": [
+     "B2:C2",
+     "D2:F2"
+    ],
+    "data_validations": 1,
+    "labels": 22
+   },
+   {
+    "name": "Staff Information",
+    "state": "visible",
+    "cells": 166,
+    "formulas": 1,
+    "formula_with_body": 1,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 1,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "ShaGQNoPsTSoIFSosrqdG94ElbwKJm4qYPqIvAOW0IN/Zys58PSi0mVfqmMY0fLgEcECOJuDx95pa/wRKJlxIQ==",
+     "saltValue": "SqJxBWd50NKruF1TY+HPvw==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1",
+     "insertRows": "0",
+     "sort": "0",
+     "autoFilter": "0",
+     "pivotTables": "0"
+    },
+    "merged_ranges": 6,
+    "merged_sample": [
+     "D2:F2",
+     "A5:C5",
+     "A10:C10",
+     "A15:C15",
+     "A20:C20",
+     "B2:C2"
+    ],
+    "data_validations": 0,
+    "labels": 36
+   },
+   {
+    "name": "Currency of Transactions",
+    "state": "visible",
+    "cells": 150,
+    "formulas": 1,
+    "formula_with_body": 1,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 1,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "R+8TRaZhE5vQQSgCdshfv0eMMuGy3sd5R9m33ZuBkkDBP6hnyClgwM0PDapRjc2w3iLEHyYWaFwDO1aRnufiuA==",
+     "saltValue": "C+C+qWlzf14xNyaKG05/yA==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1",
+     "insertColumns": "0",
+     "insertRows": "0",
+     "sort": "0",
+     "autoFilter": "0",
+     "pivotTables": "0"
+    },
+    "merged_ranges": 9,
+    "merged_sample": [
+     "C6:K6",
+     "C10:K10",
+     "B2:C2",
+     "D2:F2",
+     "B16:B17",
+     "C16:C17"
+    ],
+    "data_validations": 0,
+    "labels": 17
+   },
+   {
+    "name": "List of policies",
+    "state": "visible",
+    "cells": 85,
+    "formulas": 1,
+    "formula_with_body": 1,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 1,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "XL6tCsrKZ/QyYlwQA1D8UatIcbix6pMNCkRuLqpusH0tsC4VzIuQ38PpFECBcZ2IxqNjWeEL5WWYTmBgFSeu1g==",
+     "saltValue": "PVDcx24l0NjCcE7bzYuvVA==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "insertRows": "0",
+     "sort": "0",
+     "autoFilter": "0",
+     "pivotTables": "0"
+    },
+    "merged_ranges": 2,
+    "merged_sample": [
+     "A5:B5",
+     "A23:B23"
+    ],
+    "data_validations": 0,
+    "labels": 8
+   },
+   {
+    "name": "Reg. Compliance Information",
+    "state": "visible",
+    "cells": 66,
+    "formulas": 1,
+    "formula_with_body": 1,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 1,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "Y+tf3a/AtzMDfXhIfhJQdOYmHDN4fNUvztPvGTNw6opMQFE2m5tXd7Ba8FQLZH1FZV1DiRHe0U8G5tgTUQvz3w==",
+     "saltValue": "47N64rJbYmppUzPJgPNY0w==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "sort": "0",
+     "autoFilter": "0",
+     "pivotTables": "0"
+    },
+    "merged_ranges": 2,
+    "merged_sample": [
+     "A1:C1",
+     "B3:C3"
+    ],
+    "data_validations": 1,
+    "labels": 19
+   },
+   {
+    "name": "Account opening details",
+    "state": "visible",
+    "cells": 224,
+    "formulas": 1,
+    "formula_with_body": 1,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 1,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "hSVKpk7Nrgiq7mpZAVqLpscDiTVHZFtGRBtAwZaDEpIjOwtkm5l2KAfwx6mu10+w0xPy66alAso2hp8Zyq6eeA==",
+     "saltValue": "qDxUFMgyG26NLO5af6xTCQ==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "insertRows": "0",
+     "sort": "0",
+     "autoFilter": "0",
+     "pivotTables": "0"
+    },
+    "merged_ranges": 9,
+    "merged_sample": [
+     "B17:F17",
+     "G17:G18",
+     "B26:D26",
+     "B1:G1",
+     "C3:G3",
+     "B5:E5"
+    ],
+    "data_validations": 1,
+    "labels": 37
+   },
+   {
+    "name": "Reg. Customer Grievances ",
+    "state": "visible",
+    "cells": 104,
+    "formulas": 1,
+    "formula_with_body": 1,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 1,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "FKjeZxGFQxlqVCi/18wJ1KyCo1DOp64ngPMbCYo/C+6UeKPA/DD1PB2K84lnq/6AVUNFAdSuQjijzbrBDpO1VQ==",
+     "saltValue": "4K79tNlXkYgcxHYkdAZ2+w==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "insertRows": "0",
+     "sort": "0",
+     "autoFilter": "0",
+     "pivotTables": "0"
+    },
+    "merged_ranges": 5,
+    "merged_sample": [
+     "A4:C4",
+     "A16:C16",
+     "B20:C20",
+     "A30:C30",
+     "B34:C34"
+    ],
+    "data_validations": 0,
+    "labels": 45
+   }
+  ],
+  "defined_names": [],
+  "workbook_protection": false,
+  "totals": {
+   "cells": 961,
+   "formulas": 7,
+   "formula_with_body": 7,
+   "formula_no_body": 0,
+   "cross_sheet": 7,
+   "merged": 36,
+   "dv": 4,
+   "protected": 8
+  },
+  "n_sheets": 8,
+  "formula_classes": {
+   "pure cross-sheet carry-forward": 6,
+   "other/ref": 1
+  },
+  "label_instances": 216,
+  "distinct_labels": 159,
+  "shared_strings": 174,
+  "dv_list_with_literal_vocab": [
+   {
+    "sheet": "Reg. Compliance Information",
+    "type": "list",
+    "sqref": "B13",
+    "formula1": "\"Yes/No,Yes,No\"",
+    "literal_vocab": [
+     "Yes/No",
+     "Yes",
+     "No"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Account opening details",
+    "type": "list",
+    "sqref": "C29:C31",
+    "formula1": "\"Yes/No,Yes,No\"",
+    "literal_vocab": [
+     "Yes/No",
+     "Yes",
+     "No"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   }
+  ],
+  "dv_list_type": [
+   {
+    "sheet": "General Information",
+    "type": "list",
+    "sqref": "B5",
+    "formula1": "$E$5:$E$17",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Outsourcing Details",
+    "type": "list",
+    "sqref": "C6:C8 C11:C13",
+    "formula1": "$C$16:$C$18",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Reg. Compliance Information",
+    "type": "list",
+    "sqref": "B13",
+    "formula1": "\"Yes/No,Yes,No\"",
+    "literal_vocab": [
+     "Yes/No",
+     "Yes",
+     "No"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Account opening details",
+    "type": "list",
+    "sqref": "C29:C31",
+    "formula1": "\"Yes/No,Yes,No\"",
+    "literal_vocab": [
+     "Yes/No",
+     "Yes",
+     "No"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   }
+  ],
+  "dv_by_type": {
+   "list": 4
+  }
+ },
+ {
+  "file": "IFSCA_Annual_Reporting_Format_30April_2026_Approved_20260504_1247.xlsx",
+  "bytes": 33299,
+  "sha256": "4b2d4a2bb0416ae22048c7cf1fcbb5c581c19933ca85663ab69f311a8846395d",
+  "sheets": [
+   {
+    "name": "Summary Sheet",
+    "state": "visible",
+    "cells": 48,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": false,
+    "protection": null,
+    "merged_ranges": 6,
+    "merged_sample": [
+     "B14:B15",
+     "A2:C2",
+     "A1:C1",
+     "B4:B5",
+     "B8:B10",
+     "B11:B13"
+    ],
+    "data_validations": 0,
+    "labels": 25
+   },
+   {
+    "name": "A. General Information",
+    "state": "visible",
+    "cells": 459,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": false,
+    "protection": null,
+    "merged_ranges": 58,
+    "merged_sample": [
+     "B20:G20",
+     "B21:G21",
+     "B22:G22",
+     "B16:G16",
+     "B18:G18",
+     "B10:G10"
+    ],
+    "data_validations": 0,
+    "labels": 58
+   },
+   {
+    "name": "B. Degree Programme Details",
+    "state": "visible",
+    "cells": 265,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": false,
+    "protection": null,
+    "merged_ranges": 9,
+    "merged_sample": [
+     "B52:I52",
+     "B49:I49",
+     "B50:I50",
+     "B51:I51",
+     "A1:E1",
+     "B45:I45"
+    ],
+    "data_validations": 0,
+    "labels": 51
+   },
+   {
+    "name": "C. Executive Programme Details ",
+    "state": "visible",
+    "cells": 97,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": false,
+    "protection": null,
+    "merged_ranges": 1,
+    "merged_sample": [
+     "A1:E1"
+    ],
+    "data_validations": 0,
+    "labels": 25
+   },
+   {
+    "name": "D. Faculty and Staff",
+    "state": "visible",
+    "cells": 255,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": false,
+    "protection": null,
+    "merged_ranges": 5,
+    "merged_sample": [
+     "A1:C1",
+     "A11:H11",
+     "A23:H23",
+     "C12:H12",
+     "C24:H24"
+    ],
+    "data_validations": 0,
+    "labels": 38
+   },
+   {
+    "name": "E. Student Grievances",
+    "state": "visible",
+    "cells": 130,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": false,
+    "protection": null,
+    "merged_ranges": 9,
+    "merged_sample": [
+     "B28:D28",
+     "A1:F1",
+     "A9:F9",
+     "A15:D15",
+     "B25:D25",
+     "B27:D27"
+    ],
+    "data_validations": 0,
+    "labels": 37
+   },
+   {
+    "name": "F. Financial Information",
+    "state": "visible",
+    "cells": 359,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": false,
+    "protection": null,
+    "merged_ranges": 6,
+    "merged_sample": [
+     "B40:I40",
+     "A1:E1",
+     "A24:E24",
+     "B37:I37",
+     "B38:I38",
+     "B39:I39"
+    ],
+    "data_validations": 0,
+    "labels": 39
+   },
+   {
+    "name": "G. Campus Infrastructure",
+    "state": "visible",
+    "cells": 95,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": false,
+    "protection": null,
+    "merged_ranges": 1,
+    "merged_sample": [
+     "B1:E1"
+    ],
+    "data_validations": 0,
+    "labels": 22
+   },
+   {
+    "name": "Sheet1",
+    "state": "visible",
+    "cells": 0,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": false,
+    "protection": null,
+    "merged_ranges": 0,
+    "merged_sample": [],
+    "data_validations": 0,
+    "labels": 0
+   }
+  ],
+  "defined_names": [],
+  "workbook_protection": false,
+  "totals": {
+   "cells": 1708,
+   "formulas": 0,
+   "formula_with_body": 0,
+   "formula_no_body": 0,
+   "cross_sheet": 0,
+   "merged": 95,
+   "dv": 0,
+   "protected": 0
+  },
+  "n_sheets": 9,
+  "formula_classes": {},
+  "label_instances": 295,
+  "distinct_labels": 268,
+  "shared_strings": 280,
+  "dv_list_with_literal_vocab": [],
+  "dv_list_type": [],
+  "dv_by_type": {}
+ },
+ {
+  "file": "ITFS_Monthly_report201220241626.xlsx",
+  "bytes": 23079,
+  "sha256": "446b811a2b06922c8f18f5a15af47ef803fe0f0f6b9963e381cf6a414dec8c16",
+  "sheets": [
+   {
+    "name": "Montly Report",
+    "state": "visible",
+    "cells": 440,
+    "formulas": 16,
+    "formula_with_body": 16,
+    "formula_no_body": 0,
+    "shared_master": 1,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 1,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "iMFf/yJdpSwZ1qEkvfuY67XIC3SqvG9MyMr02iUELmOITQ9B1K2CRL+IGsSPBNjBj+hAqhgUN4n1wjblwNzwEQ==",
+     "saltValue": "BQ8cRSW/pVvsTV6GQNjvQw==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "insertRows": "0",
+     "sort": "0",
+     "autoFilter": "0",
+     "pivotTables": "0"
+    },
+    "merged_ranges": 82,
+    "merged_sample": [
+     "G34:H34",
+     "I28:J28",
+     "B27:C29",
+     "D27:E29",
+     "F27:F29",
+     "K27:K29"
+    ],
+    "data_validations": 16,
+    "labels": 67
+   },
+   {
+    "name": "Validation Sheet",
+    "state": "hidden",
+    "cells": 292,
+    "formulas": 16,
+    "formula_with_body": 16,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 10,
+    "protected": false,
+    "protection": null,
+    "merged_ranges": 0,
+    "merged_sample": [],
+    "data_validations": 0,
+    "labels": 41
+   }
+  ],
+  "defined_names": [],
+  "workbook_protection": false,
+  "totals": {
+   "cells": 732,
+   "formulas": 32,
+   "formula_with_body": 32,
+   "formula_no_body": 0,
+   "cross_sheet": 11,
+   "merged": 82,
+   "dv": 16,
+   "protected": 1
+  },
+  "n_sheets": 2,
+  "formula_classes": {
+   "SUM row/col total": 13,
+   "other function: MONTH": 3,
+   "other/ref": 3,
+   "bare arithmetic": 2,
+   "other function: DATE": 2,
+   "other function: YEAR": 2,
+   "other function: DAY": 2,
+   "other function: AND": 2,
+   "pure cross-sheet carry-forward": 1,
+   "IF conditional carry": 1,
+   "other function: OR": 1
+  },
+  "label_instances": 108,
+  "distinct_labels": 92,
+  "shared_strings": 106,
+  "dv_list_with_literal_vocab": [],
+  "dv_list_type": [
+   {
+    "sheet": "Montly Report",
+    "type": "list",
+    "sqref": "C11",
+    "formula1": "'Validation Sheet'!$A$1:$A$11",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "Montly Report",
+    "type": "list",
+    "sqref": "D11:E11",
+    "formula1": "'Validation Sheet'!$B$1:$B$13",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "Montly Report",
+    "type": "list",
+    "sqref": "C12",
+    "formula1": "'Validation Sheet'!$C$1:$C$32",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "Montly Report",
+    "type": "list",
+    "sqref": "D12",
+    "formula1": "'Validation Sheet'!$B$1:$B$12",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "Montly Report",
+    "type": "list",
+    "sqref": "E12",
+    "formula1": "'Validation Sheet'!$A$1:$A$11",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "Montly Report",
+    "type": "list",
+    "sqref": "D15:D16",
+    "formula1": "'Validation Sheet'!$L$5:$L$7",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "Montly Report",
+    "type": "list",
+    "sqref": "B30:B31 C8:E10",
+    "formula1": "'Validation Sheet'!$H$14:$H$22",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "Montly Report",
+    "type": "list",
+    "sqref": "D30:D31",
+    "formula1": "'Validation Sheet'!$H$23:$H$33",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   }
+  ],
+  "dv_by_type": {
+   "custom": 1,
+   "whole": 1,
+   "decimal": 1,
+   "null": 4,
+   "list": 8,
+   "date": 1
+  }
+ },
+ {
+  "file": "Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx",
+  "bytes": 3663391,
+  "sha256": "7d9a1960085785eefbe166fb5e04e94689780c490235fe55d8f3e8b620ceea39",
+  "sheets": [
+   {
+    "name": "1. Introduction",
+    "state": "visible",
+    "cells": 772,
+    "formulas": 66,
+    "formula_with_body": 43,
+    "formula_no_body": 23,
+    "shared_master": 3,
+    "shared_dependent": 23,
+    "array": 1,
+    "cross_sheet": 0,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "3+WfU3xkMHnUevBXgDuo7iBP3QfVw3cCuQwb2f7/CHFxoxRZXTKv/W1OyV21qnVXPGT21ZsL31l+fJ0bFw2gTg==",
+     "saltValue": "qKKusWNdfev1bdmMo1BxTQ==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1"
+    },
+    "merged_ranges": 34,
+    "merged_sample": [
+     "E73:E74",
+     "B72:M72",
+     "L73:M73",
+     "J73:K73",
+     "C117:D117",
+     "C108:D108"
+    ],
+    "data_validations": 17,
+    "labels": 117
+   },
+   {
+    "name": "2. Summary",
+    "state": "visible",
+    "cells": 528,
+    "formulas": 50,
+    "formula_with_body": 50,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 50,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "Me2+ADcBd49V5kMfHmLrBr/WcXeqvV/2JY1toIudsVAFBpGwM6lCHpfTCsPFcaHOGII0r4RzH4A+dtajATze9A==",
+     "saltValue": "KBcPoPGYhmbHl+fJK40ocg==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1"
+    },
+    "merged_ranges": 13,
+    "merged_sample": [
+     "A26:O26",
+     "A24:O24",
+     "A25:O25",
+     "A20:O20",
+     "A2:X2",
+     "Q3:X3"
+    ],
+    "data_validations": 3,
+    "labels": 38
+   },
+   {
+    "name": "3. Portfolio",
+    "state": "visible",
+    "cells": 2704,
+    "formulas": 250,
+    "formula_with_body": 128,
+    "formula_no_body": 122,
+    "shared_master": 15,
+    "shared_dependent": 122,
+    "array": 0,
+    "cross_sheet": 100,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "wGzC9orpoOgMR37+b8EyL4XuDsla+s/2o/ndcwx4Ggx79EFtqEBDT6QVNmpDLsDQ03Xm0mOleve8uY8G1BOGgg==",
+     "saltValue": "e1PqQpyZm0D6ilnI/mrQew==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1",
+     "insertRows": "0"
+    },
+    "merged_ranges": 84,
+    "merged_sample": [
+     "A1:O1",
+     "A173:K173",
+     "L73:P73",
+     "Q73:U73",
+     "V73:Z73",
+     "A67:K67"
+    ],
+    "data_validations": 13,
+    "labels": 233
+   },
+   {
+    "name": "4. Investors",
+    "state": "visible",
+    "cells": 1369,
+    "formulas": 88,
+    "formula_with_body": 52,
+    "formula_no_body": 36,
+    "shared_master": 6,
+    "shared_dependent": 36,
+    "array": 0,
+    "cross_sheet": 40,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "26vB3rZtso4veL1Vo86cCNAkfXgo3IvWhq4KLKg7rGYEKHmfdoqdNyuMUxuN+lWzLoHWDDkj09CNLcZit/UyfA==",
+     "saltValue": "OgKbWo397ysvL5+y06TVCw==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1",
+     "insertRows": "0"
+    },
+    "merged_ranges": 48,
+    "merged_sample": [
+     "D78:E78",
+     "F78:G78",
+     "A77:G77",
+     "Y19:Z19",
+     "K58:L58",
+     "A34:P34"
+    ],
+    "data_validations": 3,
+    "labels": 123
+   },
+   {
+    "name": "5. PMS",
+    "state": "visible",
+    "cells": 893,
+    "formulas": 46,
+    "formula_with_body": 16,
+    "formula_no_body": 30,
+    "shared_master": 8,
+    "shared_dependent": 30,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "U9EvG/ocBVk6Nn20NSsqNLwxGd6rTXggZRQmKhMhjw52+DA3sw5uJm9YdtHuv4v0JaOmp8EjZrtEx1/+YueXnA==",
+     "saltValue": "pGRpJnOWNV3jlc5vjmEjuQ==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1",
+     "insertRows": "0"
+    },
+    "merged_ranges": 41,
+    "merged_sample": [
+     "A29:M29",
+     "A30:M30",
+     "A31:M31",
+     "C47:D47",
+     "E47:F47",
+     "G47:H47"
+    ],
+    "data_validations": 6,
+    "labels": 126
+   },
+   {
+    "name": "6. Complaints",
+    "state": "visible",
+    "cells": 126,
+    "formulas": 1,
+    "formula_with_body": 1,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 1,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "luy0YJmPJiLUqCFMh64HCaV42Y3QFqJcXLJCz9XySgTaBWR1fBlwXlYQzQXs1XtMJdFNj93MGR3AcsFS4JJ4mQ==",
+     "saltValue": "jH09woh7FfFxOZmlRFDz8Q==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1"
+    },
+    "merged_ranges": 8,
+    "merged_sample": [
+     "A1:C1",
+     "A44:C44",
+     "B45:C45",
+     "A3:C3",
+     "A15:C15",
+     "B19:C19"
+    ],
+    "data_validations": 2,
+    "labels": 43
+   },
+   {
+    "name": "7. AML-CFT",
+    "state": "visible",
+    "cells": 168,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "WfCXR1VYOa3PCnuCyEfKS9wKCs9wDI9eHgBmOHSPgub16YSSfJKCOKJXf6nhaLmAEKx0A/mSNaw7X0k4MHvNJA==",
+     "saltValue": "LAtgISyGfIsCHH1uJ+cFig==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1"
+    },
+    "merged_ranges": 18,
+    "merged_sample": [
+     "B49:C49",
+     "B12:C12",
+     "B6:C6",
+     "B15:C15",
+     "B17:C17",
+     "B19:C19"
+    ],
+    "data_validations": 5,
+    "labels": 61
+   },
+   {
+    "name": "8. Compliance Status",
+    "state": "visible",
+    "cells": 73,
+    "formulas": 4,
+    "formula_with_body": 4,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 4,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "yLmltdv2cI8Z0JLimRY06SGVwC4TP57pi7mC+6GAH/QkKyiuUsuOIyddLKlQ1lncMCSIg10b7u+9UzJXo4WUww==",
+     "saltValue": "Z2RsnI24t6lyYZQFmWnpKg==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1"
+    },
+    "merged_ranges": 3,
+    "merged_sample": [
+     "A2:D2",
+     "C13:D13",
+     "B17:H17"
+    ],
+    "data_validations": 4,
+    "labels": 32
+   },
+   {
+    "name": "9. Compliance Report",
+    "state": "visible",
+    "cells": 62,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "YGggvEFaycUNSoAe2rPdteyCbcrw1Y3Ke7yaaIqpvZEul6ckKb9/5PUKOkKwPJ6u+pARgNjDsQRPpyOKChx3qw==",
+     "saltValue": "iGCTRWfmtea7KXnQkquKvA==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1"
+    },
+    "merged_ranges": 3,
+    "merged_sample": [
+     "B15:I15",
+     "B16:I16",
+     "B14:I14"
+    ],
+    "data_validations": 0,
+    "labels": 22
+   },
+   {
+    "name": "Dropdown",
+    "state": "hidden",
+    "cells": 62,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": false,
+    "protection": null,
+    "merged_ranges": 0,
+    "merged_sample": [],
+    "data_validations": 1,
+    "labels": 59
+   }
+  ],
+  "defined_names": [
+   {
+    "name": "Choicelist",
+    "localSheetId": null,
+    "hidden": null,
+    "value": "Dropdown!$H$3:$H$5"
+   },
+   {
+    "name": "ExternalData_1",
+    "localSheetId": "1",
+    "hidden": "1",
+    "value": "'2. Summary'!#REF!"
+   },
+   {
+    "name": "ExternalData_17",
+    "localSheetId": "3",
+    "hidden": "1",
+    "value": "'4. Investors'!#REF!"
+   },
+   {
+    "name": "ExternalData_2",
+    "localSheetId": "0",
+    "hidden": "1",
+    "value": "'1. Introduction'!#REF!"
+   },
+   {
+    "name": "ExternalData_3",
+    "localSheetId": "2",
+    "hidden": "1",
+    "value": "'3. Portfolio'!#REF!"
+   },
+   {
+    "name": "NA",
+    "localSheetId": null,
+    "hidden": null,
+    "value": "Dropdown!$H$5"
+   },
+   {
+    "name": "_xlnm.Print_Area",
+    "localSheetId": "0",
+    "hidden": null,
+    "value": "'1. Introduction'!$B$1:$H$114"
+   },
+   {
+    "name": "_xlnm.Print_Area",
+    "localSheetId": "1",
+    "hidden": null,
+    "value": "'2. Summary'!$A$2:$U$26"
+   },
+   {
+    "name": "_xlnm.Print_Area",
+    "localSheetId": "2",
+    "hidden": null,
+    "value": "'3. Portfolio'!$A$176:$F$190"
+   },
+   {
+    "name": "_xlnm.Print_Area",
+    "localSheetId": "3",
+    "hidden": null,
+    "value": "'4. Investors'!$A$18:$Z$75"
+   },
+   {
+    "name": "YesNolist",
+    "localSheetId": null,
+    "hidden": null,
+    "value": "Dropdown!$H$3:$H$4"
+   },
+   {
+    "name": "YesNoNA",
+    "localSheetId": null,
+    "hidden": null,
+    "value": "Dropdown!$H$3:$H$5"
+   }
+  ],
+  "workbook_protection": true,
+  "totals": {
+   "cells": 6757,
+   "formulas": 505,
+   "formula_with_body": 294,
+   "formula_no_body": 211,
+   "cross_sheet": 195,
+   "merged": 252,
+   "dv": 54,
+   "protected": 9
+  },
+  "n_sheets": 10,
+  "formula_classes": {
+   "shared-dependent (no body)": 211,
+   "pure cross-sheet carry-forward": 181,
+   "IFERROR wrapper": 50,
+   "SUM row/col total": 35,
+   "IF conditional carry": 14,
+   "same-sheet cell ref": 11,
+   "COUNTIF tally": 3
+  },
+  "label_instances": 854,
+  "distinct_labels": 458,
+  "shared_strings": 494,
+  "dv_list_with_literal_vocab": [],
+  "dv_list_type": [
+   {
+    "sheet": "1. Introduction",
+    "type": "list",
+    "sqref": "N54:N63",
+    "formula1": "Choicelist",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "1. Introduction",
+    "type": "list",
+    "sqref": "D2",
+    "formula1": "Dropdown!$D$3:$D$6",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "1. Introduction",
+    "type": "list",
+    "sqref": "D10",
+    "formula1": "Dropdown!$J$3:$J$5",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "1. Introduction",
+    "type": "list",
+    "sqref": "D12",
+    "formula1": "Dropdown!$G$3:$G$7",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "1. Introduction",
+    "type": "list",
+    "sqref": "D21:D22 L54:L63",
+    "formula1": "Dropdown!$H$3:$H$5",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "1. Introduction",
+    "type": "list",
+    "sqref": "D39 J54:K63 M54:M63",
+    "formula1": "Dropdown!$H$3:$H$4",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "1. Introduction",
+    "type": "list",
+    "sqref": "D3",
+    "formula1": "Dropdown!$E$3:$E$6",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "1. Introduction",
+    "type": "list",
+    "sqref": "F54:F63",
+    "formula1": "Dropdown!$K$3:$K$5",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "1. Introduction",
+    "type": "list",
+    "sqref": "G54:G63",
+    "formula1": "Dropdown!$F$3:$F$11",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "1. Introduction",
+    "type": "list",
+    "sqref": "H54:H63",
+    "formula1": "Dropdown!$I$3:$I$4",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "3. Portfolio",
+    "type": "list",
+    "sqref": "I116:I126 M116:M126 Q116:Q126 U116:U126 F75:F84 U75:U84 P75:P84 K75:K84 E116:E126 Q103:Q112 M103:M112 I103:I112 E103:E112 Z75:Z84 U103:U112 K88:K97 I98 Z88:Z97 F88:F97 E98 U88:U98 Q98 P88:P97 M98",
+    "formula1": "Dropdown!$H$3:$H$4",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "3. Portfolio",
+    "type": "list",
+    "sqref": "W88:W97 W75:W84 R88:R97 M88:M97 H88:H97 C88:C97 R75:R84 M75:M84 H75:H84 C75:C84",
+    "formula1": "Dropdown!$M$3:$M$14",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "6. Complaints",
+    "type": "list",
+    "sqref": "C6",
+    "formula1": "Dropdown!$H$3:$H$4",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "7. AML-CFT",
+    "type": "list",
+    "sqref": "C13",
+    "formula1": "Dropdown!$N$3:$N$5",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "7. AML-CFT",
+    "type": "list",
+    "sqref": "C16 C18",
+    "formula1": "Dropdown!$H$3:$H$4",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "7. AML-CFT",
+    "type": "list",
+    "sqref": "C20",
+    "formula1": "Dropdown!$O$3:$O$4",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "7. AML-CFT",
+    "type": "list",
+    "sqref": "C22",
+    "formula1": "Dropdown!$P$3:$P$4",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "7. AML-CFT",
+    "type": "list",
+    "sqref": "C32",
+    "formula1": "Dropdown!$Q$3:$Q$6",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "8. Compliance Status",
+    "type": "list",
+    "sqref": "C10",
+    "formula1": "IF(C5=\"No\",Choicelist,YesNolist)",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "8. Compliance Status",
+    "type": "list",
+    "sqref": "C11",
+    "formula1": "IF(C5=\"No\",Choicelist,YesNolist)",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "8. Compliance Status",
+    "type": "list",
+    "sqref": "C12",
+    "formula1": "Dropdown!$H$3:$H$5",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   },
+   {
+    "sheet": "8. Compliance Status",
+    "type": "list",
+    "sqref": "C4:C9",
+    "formula1": "Dropdown!$H$3:$H$4",
+    "literal_vocab": null,
+    "allowBlank": "1",
+    "ns": "x14"
+   }
+  ],
+  "dv_by_type": {
+   "date": 6,
+   "null": 2,
+   "whole": 11,
+   "list": 22,
+   "decimal": 13
+  }
+ },
+ {
+  "file": "Updated___Quarterly_Reporting_Format_for_Capital_Market_Intermediaries_20260409_1019.xlsx",
+  "bytes": 3720205,
+  "sha256": "82dd291f5a7d6667f10b39ffb8770b4eae589bc03d31869e6d5e2f6564452671",
+  "sheets": [
+   {
+    "name": "Guidance Note",
+    "state": "visible",
+    "cells": 28,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "2yVJC7yfXXWNyHZldfvuXOdkcKioIcWUgkZwBcK5+SYPeS+7VnBy6b583KFBGRUIGlBvqV+s/ynSOycF1H1CDw==",
+     "saltValue": "B2D1gS2lRoIlfAo4gkJ1zQ==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1"
+    },
+    "merged_ranges": 0,
+    "merged_sample": [],
+    "data_validations": 0,
+    "labels": 15
+   },
+   {
+    "name": "General Information",
+    "state": "visible",
+    "cells": 299,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "6Dx/kwQcwOcjOv05UyY1g2gWzGG1YaAYaJCYwJKgDyXhu3IQDVgc3ROLYdgAXk8PiASeEs9smjSOnHpQYV1G2g==",
+     "saltValue": "TafGrcKaJ6XNTBbmEBWxdw==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1"
+    },
+    "merged_ranges": 1,
+    "merged_sample": [
+     "A5:C5"
+    ],
+    "data_validations": 18,
+    "labels": 102
+   },
+   {
+    "name": "Broker Dealer",
+    "state": "visible",
+    "cells": 389,
+    "formulas": 3,
+    "formula_with_body": 3,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 1,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "EPHeW6gTRDqEExa4fJ3AgF10sb1vdqnAmyVyIQzmW7i6QHSdzJcV2XEhICGq5c99HZYGnPg+KjVfEpGEgiJTbA==",
+     "saltValue": "WtX/0JPy4mGahQ5VH9voxQ==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1"
+    },
+    "merged_ranges": 1,
+    "merged_sample": [
+     "C54:D54"
+    ],
+    "data_validations": 10,
+    "labels": 115
+   },
+   {
+    "name": "Global Access Provider",
+    "state": "visible",
+    "cells": 1077,
+    "formulas": 5,
+    "formula_with_body": 5,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 1,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "wzobFyLGFGbBzWcD0QQqgEBXIlD8Ti3kr4grWZMpSg5d0CxLS4hJqyKJUbNeqKfI8fXlDwy8Bk1KUJhmrKHF9Q==",
+     "saltValue": "eNnKmlctyRRxLoSc333qbQ==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1"
+    },
+    "merged_ranges": 3,
+    "merged_sample": [
+     "G10:H10",
+     "E10:E11",
+     "F10:F11"
+    ],
+    "data_validations": 15,
+    "labels": 242
+   },
+   {
+    "name": "Clearing Member",
+    "state": "visible",
+    "cells": 406,
+    "formulas": 3,
+    "formula_with_body": 3,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 1,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "wGxo2gdqaElX/blHhA/PBasnjBjTR1x1jeOloPJbaDbQe8lxJge8rxpPBMOYYhl0xu9Hd6o20E+w4wt7KcVgUw==",
+     "saltValue": "7MK/HhJAVEFW+xCUpI/TCQ==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1"
+    },
+    "merged_ranges": 1,
+    "merged_sample": [
+     "C59:D59"
+    ],
+    "data_validations": 10,
+    "labels": 121
+   },
+   {
+    "name": "Depository Participant",
+    "state": "visible",
+    "cells": 174,
+    "formulas": 2,
+    "formula_with_body": 2,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "zB6tZSBmKSR91bnPfbI4W5WjQ/C4awqUBwShF0xzTv0JHEffHFq8vnOhEg3yL5ZBd0HdP86gdohPedqGPNl2GQ==",
+     "saltValue": "BHEcRf/4BHID+Mkt4C7GOw==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1"
+    },
+    "merged_ranges": 0,
+    "merged_sample": [],
+    "data_validations": 6,
+    "labels": 63
+   },
+   {
+    "name": "Custodian",
+    "state": "visible",
+    "cells": 583,
+    "formulas": 4,
+    "formula_with_body": 4,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "5zWT1SkxrmEFE702wAPOZDk8bW0zVVo15/T139CwPCyBG+Zcg57g5+OObQWWkb4kcT+F7GXkv0JO0lEVZAbIMg==",
+     "saltValue": "WeaR/uObPIm+Tj7XvMRzWw==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1"
+    },
+    "merged_ranges": 0,
+    "merged_sample": [],
+    "data_validations": 9,
+    "labels": 63
+   },
+   {
+    "name": "Investment Banker",
+    "state": "visible",
+    "cells": 870,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "eEux+HsYT2tPAC+aGLkdaKS2MXmvs86CtpEKVfh9CTleDKV2y2nsqepExVcDcrqCJJEvyouAhWqG4QkubWjM+g==",
+     "saltValue": "4xWktiqtRYED8PhVodujmQ==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1"
+    },
+    "merged_ranges": 0,
+    "merged_sample": [],
+    "data_validations": 8,
+    "labels": 64
+   },
+   {
+    "name": "Debenture Trustee",
+    "state": "visible",
+    "cells": 597,
+    "formulas": 3,
+    "formula_with_body": 3,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 1,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "79aKtmVzGVbIcGCNI34I2x58wK4CBdDNuw3OiwPNBZ0M0BtBg7dsHHp4jb2iNwH+lZ/laFEhwS8y6kZCPvYAzg==",
+     "saltValue": "pVzyiGPMKIV8gxNyK30fmw==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1"
+    },
+    "merged_ranges": 0,
+    "merged_sample": [],
+    "data_validations": 6,
+    "labels": 78
+   },
+   {
+    "name": "Investment Adviser",
+    "state": "visible",
+    "cells": 521,
+    "formulas": 3,
+    "formula_with_body": 3,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 1,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "i3+hImlspW8FW5Pj4HzDUX5cEpK1MYCBS+bJbEs4Ofibnj+qrdDQ0No9cXL6JfxOiWsN/ykMUtM5dGencJ2ECA==",
+     "saltValue": "vzfEC/5+vS4reMOcm8sjDg==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1"
+    },
+    "merged_ranges": 0,
+    "merged_sample": [],
+    "data_validations": 9,
+    "labels": 53
+   },
+   {
+    "name": "Registered Distributor",
+    "state": "visible",
+    "cells": 610,
+    "formulas": 3,
+    "formula_with_body": 3,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 1,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "+v4cEJLXF7339PVJEBM3B7lUUcldy9s0HLs6rVCvDi6lIalGGejeT3yyzlsiSbO6kMTbx8mtSGe5B16xtUlurQ==",
+     "saltValue": "g+4ktXjctduI5jzRricYpg==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1"
+    },
+    "merged_ranges": 0,
+    "merged_sample": [],
+    "data_validations": 9,
+    "labels": 56
+   },
+   {
+    "name": "Credit Rating Agency",
+    "state": "visible",
+    "cells": 935,
+    "formulas": 3,
+    "formula_with_body": 3,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 1,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "F6OHz0xfXPaxJ/rBfAyMd9l7Ga6Uqeqogvg2XV6YzrbNavb3iw3AujYT8L/d9Bm1K44tS1X6EO/ibiYoQGc7dg==",
+     "saltValue": "2hHDZTHTYq/sv9VmL3JxPQ==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1"
+    },
+    "merged_ranges": 0,
+    "merged_sample": [],
+    "data_validations": 19,
+    "labels": 76
+   },
+   {
+    "name": "ERDPP",
+    "state": "visible",
+    "cells": 494,
+    "formulas": 3,
+    "formula_with_body": 3,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "1grI1ld8tnsm72v42+lbfsy/LcObmiPb0e+FUY/ld76ykdvgGnm8w9eZpxjaYmUKS2OnshboCVR4XTiWFWFmew==",
+     "saltValue": "9KZdghlKF9iIvXXYrx56mQ==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1"
+    },
+    "merged_ranges": 0,
+    "merged_sample": [],
+    "data_validations": 16,
+    "labels": 76
+   },
+   {
+    "name": "Research Entity",
+    "state": "visible",
+    "cells": 171,
+    "formulas": 1,
+    "formula_with_body": 1,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 1,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "EIfLIUpO8pwrQk6D958uRpMsK30mpYdtD8umZsFL8nGQsEhZzZ+FmeOEy5HkynCIn0HsUx1nepP4kncgNYI3ow==",
+     "saltValue": "lW/9lCgxf95pq6HEUdccZA==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1"
+    },
+    "merged_ranges": 0,
+    "merged_sample": [],
+    "data_validations": 7,
+    "labels": 57
+   },
+   {
+    "name": "Complaint Handling",
+    "state": "visible",
+    "cells": 108,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "ceP2xBT7a/FbDhEYrjuo8Kl5zW+soKFnYAzkklSTuxoe52wvTziTZ9G8DZwvmZKw8vaOSmKoAo+yx26yl9Pk0A==",
+     "saltValue": "ri1dDUQ662r6gxV0Vwtlrg==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1"
+    },
+    "merged_ranges": 3,
+    "merged_sample": [
+     "A1:C1",
+     "A13:C13",
+     "A27:C27"
+    ],
+    "data_validations": 0,
+    "labels": 44
+   },
+   {
+    "name": "AML-CFT",
+    "state": "visible",
+    "cells": 177,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "+caz/xc0/gUvwQg3xYBM5cGSOxIWYmOf6dBb8aIu8zShyy9A2U+RgaIdtcZ6wm1lI0PCf4nEEpGB/1bexiWdew==",
+     "saltValue": "mYsgqcQ8+JQpKU2B986jSw==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1"
+    },
+    "merged_ranges": 18,
+    "merged_sample": [
+     "B49:C49",
+     "B17:C17",
+     "B19:C19",
+     "B21:C21",
+     "B23:C23",
+     "A27:C27"
+    ],
+    "data_validations": 0,
+    "labels": 61
+   },
+   {
+    "name": "V-CIP",
+    "state": "visible",
+    "cells": 130,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": true,
+    "protection": {
+     "algorithmName": "SHA-512",
+     "hashValue": "MMOT1pwltNmcEWucC8zUDg9Ib8VdH/eNyC+TqilPBBjZBr00ScuZQobC6UMgbMNpXMRegqPNQCRjpXXfTERANA==",
+     "saltValue": "EvdAqDhqEDUOrlLJISdpzw==",
+     "spinCount": "100000",
+     "sheet": "1",
+     "objects": "1",
+     "scenarios": "1"
+    },
+    "merged_ranges": 24,
+    "merged_sample": [
+     "C6:E6",
+     "A7:A17",
+     "B7:B8",
+     "C7:E8",
+     "C9:E9",
+     "C10:E10"
+    ],
+    "data_validations": 0,
+    "labels": 25
+   },
+   {
+    "name": "Undertaking",
+    "state": "visible",
+    "cells": 241,
+    "formulas": 0,
+    "formula_with_body": 0,
+    "formula_no_body": 0,
+    "shared_master": 0,
+    "shared_dependent": 0,
+    "array": 0,
+    "cross_sheet": 0,
+    "protected": false,
+    "protection": null,
+    "merged_ranges": 2,
+    "merged_sample": [
+     "B16:I16",
+     "B17:I17"
+    ],
+    "data_validations": 0,
+    "labels": 26
+   }
+  ],
+  "defined_names": [],
+  "workbook_protection": false,
+  "totals": {
+   "cells": 7810,
+   "formulas": 33,
+   "formula_with_body": 33,
+   "formula_no_body": 0,
+   "cross_sheet": 8,
+   "merged": 53,
+   "dv": 142,
+   "protected": 17
+  },
+  "n_sheets": 18,
+  "formula_classes": {
+   "SUM row/col total": 24,
+   "IF conditional carry": 8,
+   "bare arithmetic": 1
+  },
+  "label_instances": 1337,
+  "distinct_labels": 608,
+  "shared_strings": 684,
+  "dv_list_with_literal_vocab": [
+   {
+    "sheet": "General Information",
+    "type": "list",
+    "sqref": "C3",
+    "formula1": "\"FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\"",
+    "literal_vocab": [
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "General Information",
+    "type": "list",
+    "sqref": "C45 C56 C48:C49 C87",
+    "formula1": "\"YES, NO\"",
+    "literal_vocab": [
+     "YES",
+     "NO"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "General Information",
+    "type": "list",
+    "sqref": "C10:C21",
+    "formula1": "\"SELECT, BROKER DEALER, CLEARING MEMBER, DEPOSITORY PARTICIPANT, CUSTODIAN, INVESTMEN ADVISER, INVESTMENT BANKER, REGISTERED DISTRIBUTOR, DEBENTURE TRUSTEE, CREDIT RATING AGENCY, E",
+    "literal_vocab": [
+     "SELECT",
+     "BROKER DEALER",
+     "CLEARING MEMBER",
+     "DEPOSITORY PARTICIPANT",
+     "CUSTODIAN",
+     "INVESTMEN ADVISER",
+     "INVESTMENT BANKER",
+     "REGISTERED DISTRIBUTOR",
+     "DEBENTURE TRUSTEE",
+     "CREDIT RATING AGENCY",
+     "ESG RATINGS PROVIDER",
+     "RESEARCH ENTITY",
+     "GLOBAL ACCESS PROVIDER"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "General Information",
+    "type": "list",
+    "sqref": "C23",
+    "formula1": "\"SELECT, COMPANY, BRANCH OF A COMPANY, LIMITED LIABILITY PARTNERSHIP (LLP), BRANCH OF AN LLP, PARTNERSHIP FIRM, TRUST, PROPRIETORSHIP, SEPARATE BUSINESS UNIT (SBU), OTHER\"",
+    "literal_vocab": [
+     "SELECT",
+     "COMPANY",
+     "BRANCH OF A COMPANY",
+     "LIMITED LIABILITY PARTNERSHIP (LLP)",
+     "BRANCH OF AN LLP",
+     "PARTNERSHIP FIRM",
+     "TRUST",
+     "PROPRIETORSHIP",
+     "SEPARATE BUSINESS UNIT (SBU)",
+     "OTHER"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "General Information",
+    "type": "list",
+    "sqref": "C57",
+    "formula1": "\"YES, NO, Not Applicable\"",
+    "literal_vocab": [
+     "YES",
+     "NO",
+     "Not Applicable"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "General Information",
+    "type": "list",
+    "sqref": "C2",
+    "formula1": "\"Q1,Q2,Q3,Q4\"",
+    "literal_vocab": [
+     "Q1",
+     "Q2",
+     "Q3",
+     "Q4"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "General Information",
+    "type": "list",
+    "sqref": "C34",
+    "formula1": "\"YES, NO, NA\"",
+    "literal_vocab": [
+     "YES",
+     "NO",
+     "NA"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Broker Dealer",
+    "type": "list",
+    "sqref": "C6",
+    "formula1": "\"NSEIX, IndiaINX, Both\"",
+    "literal_vocab": [
+     "NSEIX",
+     "IndiaINX",
+     "Both"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Broker Dealer",
+    "type": "list",
+    "sqref": "C49 C14:C15",
+    "formula1": "\"Yes, No\"",
+    "literal_vocab": [
+     "Yes",
+     "No"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Global Access Provider",
+    "type": "list",
+    "sqref": "C12 C31 C15",
+    "formula1": "\"YES, NO\"",
+    "literal_vocab": [
+     "YES",
+     "NO"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Global Access Provider",
+    "type": "list",
+    "sqref": "C6",
+    "formula1": "\"Client-Prop (both), Client-Prop (Derivatives), Client-Prop (Other than Derivatives), Prop Trade (Derivatives), Prop Trade (Other than Derivatives), Prop Trade (Both), Client Trade",
+    "literal_vocab": [
+     "Client-Prop (both)",
+     "Client-Prop (Derivatives)",
+     "Client-Prop (Other than Derivatives)",
+     "Prop Trade (Derivatives)",
+     "Prop Trade (Other than Derivatives)",
+     "Prop Trade (Both)",
+     "Client Trade (Derivatives)",
+     "Client Trade (Other Than Derivatives)",
+     "Client Trade (Both)"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Global Access Provider",
+    "type": "list",
+    "sqref": "C7",
+    "formula1": "\"Omnibus Account Structure, Fully Discosed Model, Combination of both, Other\"",
+    "literal_vocab": [
+     "Omnibus Account Structure",
+     "Fully Discosed Model",
+     "Combination of both",
+     "Other"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Global Access Provider",
+    "type": "list",
+    "sqref": "C30",
+    "formula1": "\"FY 2025-26, FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\"",
+    "literal_vocab": [
+     "FY 2025-26",
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Global Access Provider",
+    "type": "list",
+    "sqref": "C29",
+    "formula1": "\"Q1,Q2,Q3,Q4\"",
+    "literal_vocab": [
+     "Q1",
+     "Q2",
+     "Q3",
+     "Q4"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Global Access Provider",
+    "type": "list",
+    "sqref": "H19:H38",
+    "formula1": "\"GAP-International Broker, GAP- GAP, GAP-Introducing Broker, Other\"",
+    "literal_vocab": [
+     "GAP-International Broker",
+     "GAP- GAP",
+     "GAP-Introducing Broker",
+     "Other"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Clearing Member",
+    "type": "list",
+    "sqref": "B58",
+    "formula1": "\"NSEIX, IndiaINX\"",
+    "literal_vocab": [
+     "NSEIX",
+     "IndiaINX"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Clearing Member",
+    "type": "list",
+    "sqref": "C6",
+    "formula1": "\"NSEICC, IndiaICC, Both\"",
+    "literal_vocab": [
+     "NSEICC",
+     "IndiaICC",
+     "Both"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Clearing Member",
+    "type": "list",
+    "sqref": "C7",
+    "formula1": "\"Self Clearing Member (SCM), Clearing Member (CM), Professional Clearing Member (PCM)\"",
+    "literal_vocab": [
+     "Self Clearing Member (SCM)",
+     "Clearing Member (CM)",
+     "Professional Clearing Member (PCM)"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Clearing Member",
+    "type": "list",
+    "sqref": "C12",
+    "formula1": "\"FY 2025-26, FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\"",
+    "literal_vocab": [
+     "FY 2025-26",
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Depository Participant",
+    "type": "list",
+    "sqref": "C10",
+    "formula1": "\"FY 2025-26, FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\"",
+    "literal_vocab": [
+     "FY 2025-26",
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Custodian",
+    "type": "list",
+    "sqref": "C10",
+    "formula1": "\"FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\"",
+    "literal_vocab": [
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Investment Banker",
+    "type": "list",
+    "sqref": "B48 B54",
+    "formula1": "\"NSEICC, IndiaICC\"",
+    "literal_vocab": [
+     "NSEICC",
+     "IndiaICC"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Investment Banker",
+    "type": "list",
+    "sqref": "C10",
+    "formula1": "\"FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\"",
+    "literal_vocab": [
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Investment Banker",
+    "type": "list",
+    "sqref": "D29:D33",
+    "formula1": "\"Indian, IFSC, Foreign\"",
+    "literal_vocab": [
+     "Indian",
+     "IFSC",
+     "Foreign"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Debenture Trustee",
+    "type": "list",
+    "sqref": "C10",
+    "formula1": "\"FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\"",
+    "literal_vocab": [
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Investment Adviser",
+    "type": "list",
+    "sqref": "C50:C59",
+    "formula1": "\"With Execution, Without Execution\"",
+    "literal_vocab": [
+     "With Execution",
+     "Without Execution"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Investment Adviser",
+    "type": "list",
+    "sqref": "C10",
+    "formula1": "\"FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\"",
+    "literal_vocab": [
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Registered Distributor",
+    "type": "list",
+    "sqref": "C10",
+    "formula1": "\"FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\"",
+    "literal_vocab": [
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Credit Rating Agency",
+    "type": "list",
+    "sqref": "E55 G41",
+    "formula1": "\"LONG TERM, SHORT TERM\"",
+    "literal_vocab": [
+     "LONG TERM",
+     "SHORT TERM"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Credit Rating Agency",
+    "type": "list",
+    "sqref": "K55 L41",
+    "formula1": "\"LISTED, UNLISTED, ABOUT TO BE LISTED\"",
+    "literal_vocab": [
+     "LISTED",
+     "UNLISTED",
+     "ABOUT TO BE LISTED"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Credit Rating Agency",
+    "type": "list",
+    "sqref": "C10",
+    "formula1": "\"FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\"",
+    "literal_vocab": [
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Credit Rating Agency",
+    "type": "list",
+    "sqref": "C93:C102",
+    "formula1": "\"Indian, IFSC, Foreign\"",
+    "literal_vocab": [
+     "Indian",
+     "IFSC",
+     "Foreign"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Credit Rating Agency",
+    "type": "list",
+    "sqref": "E29:E41",
+    "formula1": "\"PUBLIC, PRIVATE\"",
+    "literal_vocab": [
+     "PUBLIC",
+     "PRIVATE"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Credit Rating Agency",
+    "type": "list",
+    "sqref": "H55 I45:I54",
+    "formula1": "\"Upgrade, Downgrade, Default, Withdrawn\"",
+    "literal_vocab": [
+     "Upgrade",
+     "Downgrade",
+     "Default",
+     "Withdrawn"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Credit Rating Agency",
+    "type": "list",
+    "sqref": "I55 J45:J54",
+    "formula1": "\"REQUESTED BY ISSUER, SUO MOTO\"",
+    "literal_vocab": [
+     "REQUESTED BY ISSUER",
+     "SUO MOTO"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Credit Rating Agency",
+    "type": "list",
+    "sqref": "H29:H40 F45:F54",
+    "formula1": "\"LONG TERM, SHORT TERM, OTHER\"",
+    "literal_vocab": [
+     "LONG TERM",
+     "SHORT TERM",
+     "OTHER"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Credit Rating Agency",
+    "type": "list",
+    "sqref": "L45:L54 M29:M40",
+    "formula1": "\"LISTED, UNLISTED, ABOUT TO BE LISTED, OTHER\"",
+    "literal_vocab": [
+     "LISTED",
+     "UNLISTED",
+     "ABOUT TO BE LISTED",
+     "OTHER"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Credit Rating Agency",
+    "type": "list",
+    "sqref": "K41 L29:L40",
+    "formula1": "\"SOLICITED, UN-SOLICITED\"",
+    "literal_vocab": [
+     "SOLICITED",
+     "UN-SOLICITED"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Credit Rating Agency",
+    "type": "list",
+    "sqref": "M45:M54",
+    "formula1": "\"INVESTMENT GRADE TO INVESTMENT GRADE, INVESTMENT GRADE TO NON INVESTMENT GRADE, NON INVESTMENT GRADE TO INVESTMENT GRADE, NON INVESTMENT GRADE TO NON INVESTMENT GRADE, OTHER\"",
+    "literal_vocab": [
+     "INVESTMENT GRADE TO INVESTMENT GRADE",
+     "INVESTMENT GRADE TO NON INVESTMENT GRADE",
+     "NON INVESTMENT GRADE TO INVESTMENT GRADE",
+     "NON INVESTMENT GRADE TO NON INVESTMENT GRADE",
+     "OTHER"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Credit Rating Agency",
+    "type": "list",
+    "sqref": "C29:C40 C45:C54",
+    "formula1": "\"Indian, IFSC, Foreign, Sovereign\"",
+    "literal_vocab": [
+     "Indian",
+     "IFSC",
+     "Foreign",
+     "Sovereign"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "ERDPP",
+    "type": "list",
+    "sqref": "H43:H47",
+    "formula1": "\"Upgrade, Downgrade, Default, Withdrawn\"",
+    "literal_vocab": [
+     "Upgrade",
+     "Downgrade",
+     "Default",
+     "Withdrawn"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "ERDPP",
+    "type": "list",
+    "sqref": "I43:I47",
+    "formula1": "\"REQUESTED BY ISSUER, SUO MOTO\"",
+    "literal_vocab": [
+     "REQUESTED BY ISSUER",
+     "SUO MOTO"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "ERDPP",
+    "type": "list",
+    "sqref": "L43:L46",
+    "formula1": "\"INVESTMENT GRADE TO NON INVESTMENT GRADE, NON INVESTMENT GRADE TO INVESTMENT GRADE\"",
+    "literal_vocab": [
+     "INVESTMENT GRADE TO NON INVESTMENT GRADE",
+     "NON INVESTMENT GRADE TO INVESTMENT GRADE"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "ERDPP",
+    "type": "list",
+    "sqref": "E29:E39",
+    "formula1": "\"PUBLIC, PRIVATE\"",
+    "literal_vocab": [
+     "PUBLIC",
+     "PRIVATE"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "ERDPP",
+    "type": "list",
+    "sqref": "E43:E47 G29:G30 G32:G39",
+    "formula1": "\"LONG TERM, SHORT TERM\"",
+    "literal_vocab": [
+     "LONG TERM",
+     "SHORT TERM"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "ERDPP",
+    "type": "list",
+    "sqref": "L29:L39 K43:K47",
+    "formula1": "\"LISTED, UNLISTED, ABOUT TO BE LISTED\"",
+    "literal_vocab": [
+     "LISTED",
+     "UNLISTED",
+     "ABOUT TO BE LISTED"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "ERDPP",
+    "type": "list",
+    "sqref": "K29:K39",
+    "formula1": "\"SOLICITED, UN-SOLICITED\"",
+    "literal_vocab": [
+     "SOLICITED",
+     "UN-SOLICITED"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "ERDPP",
+    "type": "list",
+    "sqref": "C39",
+    "formula1": "\"CORPORATE, SOVEREIGN, OTHER\"",
+    "literal_vocab": [
+     "CORPORATE",
+     "SOVEREIGN",
+     "OTHER"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "ERDPP",
+    "type": "list",
+    "sqref": "C10",
+    "formula1": "\"FY 2025-26, FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\"",
+    "literal_vocab": [
+     "FY 2025-26",
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "ERDPP",
+    "type": "list",
+    "sqref": "C29:C38",
+    "formula1": "\"Indian, IFSC, Foreign\"",
+    "literal_vocab": [
+     "Indian",
+     "IFSC",
+     "Foreign"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Research Entity",
+    "type": "list",
+    "sqref": "C29",
+    "formula1": "\"Yes, No\"",
+    "literal_vocab": [
+     "Yes",
+     "No"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Research Entity",
+    "type": "list",
+    "sqref": "C10",
+    "formula1": "\"FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\"",
+    "literal_vocab": [
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   }
+  ],
+  "dv_list_type": [
+   {
+    "sheet": "General Information",
+    "type": "list",
+    "sqref": "C3",
+    "formula1": "\"FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\"",
+    "literal_vocab": [
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "General Information",
+    "type": "list",
+    "sqref": "C45 C56 C48:C49 C87",
+    "formula1": "\"YES, NO\"",
+    "literal_vocab": [
+     "YES",
+     "NO"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "General Information",
+    "type": "list",
+    "sqref": "C10:C21",
+    "formula1": "\"SELECT, BROKER DEALER, CLEARING MEMBER, DEPOSITORY PARTICIPANT, CUSTODIAN, INVESTMEN ADVISER, INVESTMENT BANKER, REGISTERED DISTRIBUTOR, DEBENTURE TRUSTEE, CREDIT RATING AGENCY, E",
+    "literal_vocab": [
+     "SELECT",
+     "BROKER DEALER",
+     "CLEARING MEMBER",
+     "DEPOSITORY PARTICIPANT",
+     "CUSTODIAN",
+     "INVESTMEN ADVISER",
+     "INVESTMENT BANKER",
+     "REGISTERED DISTRIBUTOR",
+     "DEBENTURE TRUSTEE",
+     "CREDIT RATING AGENCY",
+     "ESG RATINGS PROVIDER",
+     "RESEARCH ENTITY",
+     "GLOBAL ACCESS PROVIDER"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "General Information",
+    "type": "list",
+    "sqref": "C23",
+    "formula1": "\"SELECT, COMPANY, BRANCH OF A COMPANY, LIMITED LIABILITY PARTNERSHIP (LLP), BRANCH OF AN LLP, PARTNERSHIP FIRM, TRUST, PROPRIETORSHIP, SEPARATE BUSINESS UNIT (SBU), OTHER\"",
+    "literal_vocab": [
+     "SELECT",
+     "COMPANY",
+     "BRANCH OF A COMPANY",
+     "LIMITED LIABILITY PARTNERSHIP (LLP)",
+     "BRANCH OF AN LLP",
+     "PARTNERSHIP FIRM",
+     "TRUST",
+     "PROPRIETORSHIP",
+     "SEPARATE BUSINESS UNIT (SBU)",
+     "OTHER"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "General Information",
+    "type": "list",
+    "sqref": "C57",
+    "formula1": "\"YES, NO, Not Applicable\"",
+    "literal_vocab": [
+     "YES",
+     "NO",
+     "Not Applicable"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "General Information",
+    "type": "list",
+    "sqref": "C2",
+    "formula1": "\"Q1,Q2,Q3,Q4\"",
+    "literal_vocab": [
+     "Q1",
+     "Q2",
+     "Q3",
+     "Q4"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "General Information",
+    "type": "list",
+    "sqref": "C34",
+    "formula1": "\"YES, NO, NA\"",
+    "literal_vocab": [
+     "YES",
+     "NO",
+     "NA"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Broker Dealer",
+    "type": "list",
+    "sqref": "C6",
+    "formula1": "\"NSEIX, IndiaINX, Both\"",
+    "literal_vocab": [
+     "NSEIX",
+     "IndiaINX",
+     "Both"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Broker Dealer",
+    "type": "list",
+    "sqref": "C49 C14:C15",
+    "formula1": "\"Yes, No\"",
+    "literal_vocab": [
+     "Yes",
+     "No"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Global Access Provider",
+    "type": "list",
+    "sqref": "C12 C31 C15",
+    "formula1": "\"YES, NO\"",
+    "literal_vocab": [
+     "YES",
+     "NO"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Global Access Provider",
+    "type": "list",
+    "sqref": "C6",
+    "formula1": "\"Client-Prop (both), Client-Prop (Derivatives), Client-Prop (Other than Derivatives), Prop Trade (Derivatives), Prop Trade (Other than Derivatives), Prop Trade (Both), Client Trade",
+    "literal_vocab": [
+     "Client-Prop (both)",
+     "Client-Prop (Derivatives)",
+     "Client-Prop (Other than Derivatives)",
+     "Prop Trade (Derivatives)",
+     "Prop Trade (Other than Derivatives)",
+     "Prop Trade (Both)",
+     "Client Trade (Derivatives)",
+     "Client Trade (Other Than Derivatives)",
+     "Client Trade (Both)"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Global Access Provider",
+    "type": "list",
+    "sqref": "C7",
+    "formula1": "\"Omnibus Account Structure, Fully Discosed Model, Combination of both, Other\"",
+    "literal_vocab": [
+     "Omnibus Account Structure",
+     "Fully Discosed Model",
+     "Combination of both",
+     "Other"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Global Access Provider",
+    "type": "list",
+    "sqref": "C30",
+    "formula1": "\"FY 2025-26, FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\"",
+    "literal_vocab": [
+     "FY 2025-26",
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Global Access Provider",
+    "type": "list",
+    "sqref": "C29",
+    "formula1": "\"Q1,Q2,Q3,Q4\"",
+    "literal_vocab": [
+     "Q1",
+     "Q2",
+     "Q3",
+     "Q4"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Global Access Provider",
+    "type": "list",
+    "sqref": "H19:H38",
+    "formula1": "\"GAP-International Broker, GAP- GAP, GAP-Introducing Broker, Other\"",
+    "literal_vocab": [
+     "GAP-International Broker",
+     "GAP- GAP",
+     "GAP-Introducing Broker",
+     "Other"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Clearing Member",
+    "type": "list",
+    "sqref": "B58",
+    "formula1": "\"NSEIX, IndiaINX\"",
+    "literal_vocab": [
+     "NSEIX",
+     "IndiaINX"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Clearing Member",
+    "type": "list",
+    "sqref": "C6",
+    "formula1": "\"NSEICC, IndiaICC, Both\"",
+    "literal_vocab": [
+     "NSEICC",
+     "IndiaICC",
+     "Both"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Clearing Member",
+    "type": "list",
+    "sqref": "C7",
+    "formula1": "\"Self Clearing Member (SCM), Clearing Member (CM), Professional Clearing Member (PCM)\"",
+    "literal_vocab": [
+     "Self Clearing Member (SCM)",
+     "Clearing Member (CM)",
+     "Professional Clearing Member (PCM)"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Clearing Member",
+    "type": "list",
+    "sqref": "C12",
+    "formula1": "\"FY 2025-26, FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\"",
+    "literal_vocab": [
+     "FY 2025-26",
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Depository Participant",
+    "type": "list",
+    "sqref": "C10",
+    "formula1": "\"FY 2025-26, FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\"",
+    "literal_vocab": [
+     "FY 2025-26",
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Custodian",
+    "type": "list",
+    "sqref": "C10",
+    "formula1": "\"FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\"",
+    "literal_vocab": [
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Investment Banker",
+    "type": "list",
+    "sqref": "B48 B54",
+    "formula1": "\"NSEICC, IndiaICC\"",
+    "literal_vocab": [
+     "NSEICC",
+     "IndiaICC"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Investment Banker",
+    "type": "list",
+    "sqref": "C10",
+    "formula1": "\"FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\"",
+    "literal_vocab": [
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Investment Banker",
+    "type": "list",
+    "sqref": "D29:D33",
+    "formula1": "\"Indian, IFSC, Foreign\"",
+    "literal_vocab": [
+     "Indian",
+     "IFSC",
+     "Foreign"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Debenture Trustee",
+    "type": "list",
+    "sqref": "C10",
+    "formula1": "\"FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\"",
+    "literal_vocab": [
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Investment Adviser",
+    "type": "list",
+    "sqref": "C50:C59",
+    "formula1": "\"With Execution, Without Execution\"",
+    "literal_vocab": [
+     "With Execution",
+     "Without Execution"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Investment Adviser",
+    "type": "list",
+    "sqref": "C10",
+    "formula1": "\"FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\"",
+    "literal_vocab": [
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Registered Distributor",
+    "type": "list",
+    "sqref": "C10",
+    "formula1": "\"FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\"",
+    "literal_vocab": [
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Credit Rating Agency",
+    "type": "list",
+    "sqref": "E55 G41",
+    "formula1": "\"LONG TERM, SHORT TERM\"",
+    "literal_vocab": [
+     "LONG TERM",
+     "SHORT TERM"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Credit Rating Agency",
+    "type": "list",
+    "sqref": "K55 L41",
+    "formula1": "\"LISTED, UNLISTED, ABOUT TO BE LISTED\"",
+    "literal_vocab": [
+     "LISTED",
+     "UNLISTED",
+     "ABOUT TO BE LISTED"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Credit Rating Agency",
+    "type": "list",
+    "sqref": "C10",
+    "formula1": "\"FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\"",
+    "literal_vocab": [
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Credit Rating Agency",
+    "type": "list",
+    "sqref": "C93:C102",
+    "formula1": "\"Indian, IFSC, Foreign\"",
+    "literal_vocab": [
+     "Indian",
+     "IFSC",
+     "Foreign"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Credit Rating Agency",
+    "type": "list",
+    "sqref": "E29:E41",
+    "formula1": "\"PUBLIC, PRIVATE\"",
+    "literal_vocab": [
+     "PUBLIC",
+     "PRIVATE"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Credit Rating Agency",
+    "type": "list",
+    "sqref": "H55 I45:I54",
+    "formula1": "\"Upgrade, Downgrade, Default, Withdrawn\"",
+    "literal_vocab": [
+     "Upgrade",
+     "Downgrade",
+     "Default",
+     "Withdrawn"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Credit Rating Agency",
+    "type": "list",
+    "sqref": "I55 J45:J54",
+    "formula1": "\"REQUESTED BY ISSUER, SUO MOTO\"",
+    "literal_vocab": [
+     "REQUESTED BY ISSUER",
+     "SUO MOTO"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Credit Rating Agency",
+    "type": "list",
+    "sqref": "H29:H40 F45:F54",
+    "formula1": "\"LONG TERM, SHORT TERM, OTHER\"",
+    "literal_vocab": [
+     "LONG TERM",
+     "SHORT TERM",
+     "OTHER"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Credit Rating Agency",
+    "type": "list",
+    "sqref": "L45:L54 M29:M40",
+    "formula1": "\"LISTED, UNLISTED, ABOUT TO BE LISTED, OTHER\"",
+    "literal_vocab": [
+     "LISTED",
+     "UNLISTED",
+     "ABOUT TO BE LISTED",
+     "OTHER"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Credit Rating Agency",
+    "type": "list",
+    "sqref": "K41 L29:L40",
+    "formula1": "\"SOLICITED, UN-SOLICITED\"",
+    "literal_vocab": [
+     "SOLICITED",
+     "UN-SOLICITED"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Credit Rating Agency",
+    "type": "list",
+    "sqref": "M45:M54",
+    "formula1": "\"INVESTMENT GRADE TO INVESTMENT GRADE, INVESTMENT GRADE TO NON INVESTMENT GRADE, NON INVESTMENT GRADE TO INVESTMENT GRADE, NON INVESTMENT GRADE TO NON INVESTMENT GRADE, OTHER\"",
+    "literal_vocab": [
+     "INVESTMENT GRADE TO INVESTMENT GRADE",
+     "INVESTMENT GRADE TO NON INVESTMENT GRADE",
+     "NON INVESTMENT GRADE TO INVESTMENT GRADE",
+     "NON INVESTMENT GRADE TO NON INVESTMENT GRADE",
+     "OTHER"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Credit Rating Agency",
+    "type": "list",
+    "sqref": "C29:C40 C45:C54",
+    "formula1": "\"Indian, IFSC, Foreign, Sovereign\"",
+    "literal_vocab": [
+     "Indian",
+     "IFSC",
+     "Foreign",
+     "Sovereign"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "ERDPP",
+    "type": "list",
+    "sqref": "H43:H47",
+    "formula1": "\"Upgrade, Downgrade, Default, Withdrawn\"",
+    "literal_vocab": [
+     "Upgrade",
+     "Downgrade",
+     "Default",
+     "Withdrawn"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "ERDPP",
+    "type": "list",
+    "sqref": "I43:I47",
+    "formula1": "\"REQUESTED BY ISSUER, SUO MOTO\"",
+    "literal_vocab": [
+     "REQUESTED BY ISSUER",
+     "SUO MOTO"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "ERDPP",
+    "type": "list",
+    "sqref": "L43:L46",
+    "formula1": "\"INVESTMENT GRADE TO NON INVESTMENT GRADE, NON INVESTMENT GRADE TO INVESTMENT GRADE\"",
+    "literal_vocab": [
+     "INVESTMENT GRADE TO NON INVESTMENT GRADE",
+     "NON INVESTMENT GRADE TO INVESTMENT GRADE"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "ERDPP",
+    "type": "list",
+    "sqref": "E29:E39",
+    "formula1": "\"PUBLIC, PRIVATE\"",
+    "literal_vocab": [
+     "PUBLIC",
+     "PRIVATE"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "ERDPP",
+    "type": "list",
+    "sqref": "E43:E47 G29:G30 G32:G39",
+    "formula1": "\"LONG TERM, SHORT TERM\"",
+    "literal_vocab": [
+     "LONG TERM",
+     "SHORT TERM"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "ERDPP",
+    "type": "list",
+    "sqref": "L29:L39 K43:K47",
+    "formula1": "\"LISTED, UNLISTED, ABOUT TO BE LISTED\"",
+    "literal_vocab": [
+     "LISTED",
+     "UNLISTED",
+     "ABOUT TO BE LISTED"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "ERDPP",
+    "type": "list",
+    "sqref": "K29:K39",
+    "formula1": "\"SOLICITED, UN-SOLICITED\"",
+    "literal_vocab": [
+     "SOLICITED",
+     "UN-SOLICITED"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "ERDPP",
+    "type": "list",
+    "sqref": "C39",
+    "formula1": "\"CORPORATE, SOVEREIGN, OTHER\"",
+    "literal_vocab": [
+     "CORPORATE",
+     "SOVEREIGN",
+     "OTHER"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "ERDPP",
+    "type": "list",
+    "sqref": "C10",
+    "formula1": "\"FY 2025-26, FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\"",
+    "literal_vocab": [
+     "FY 2025-26",
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "ERDPP",
+    "type": "list",
+    "sqref": "C29:C38",
+    "formula1": "\"Indian, IFSC, Foreign\"",
+    "literal_vocab": [
+     "Indian",
+     "IFSC",
+     "Foreign"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Research Entity",
+    "type": "list",
+    "sqref": "C29",
+    "formula1": "\"Yes, No\"",
+    "literal_vocab": [
+     "Yes",
+     "No"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   },
+   {
+    "sheet": "Research Entity",
+    "type": "list",
+    "sqref": "C10",
+    "formula1": "\"FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\"",
+    "literal_vocab": [
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "allowBlank": "1",
+    "ns": "main"
+   }
+  ],
+  "dv_by_type": {
+   "list": 52,
+   "decimal": 29,
+   "whole": 32,
+   "date": 17,
+   "custom": 10,
+   "null": 2
+  }
+ }
+]

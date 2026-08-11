@@ -1,0 +1,13 @@
+.venv-cdfc/
+.venv/
+reports/
+blobs/
+*.db
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.mutmut-cache
+# fixtures/ is NEVER ignored — the nine real artifacts are the evidence base
+!fixtures/

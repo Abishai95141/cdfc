@@ -1,0 +1,77 @@
+=== NC CATALOGUE CHECK (arbitration C9) — 13 documents in /Users/abishaikc/Gift/plan ===
+
+POSITIVE CONTROLS
+  definition parser sees a synthetic entry row  : True   (expect True)
+  NUL detector on a file WITHOUT a NUL          : 0      (expect 0)
+  NUL detector on a file WITH one real NUL      : 1      (expect 1)
+  instrument trustworthy                        : True
+
+NUL-BYTE AND ENCODING SCAN (binary read; a shell cannot pass NUL as argv)
+  00-decomposition.md                  167814 B  NUL=0  enc=utf-8
+  01-validation-methodology.md         189396 B  NUL=0  enc=utf-8
+  02-phases-foundation.md              225296 B  NUL=0  enc=utf-8
+  03-phases-verdict.md                 167103 B  NUL=0  enc=utf-8
+  04-phases-qualification.md           212707 B  NUL=0  enc=utf-8
+  05-phases-probes-attestation.md      219324 B  NUL=0  enc=utf-8
+  06-phases-model-and-clause.md        183862 B  NUL=0  enc=utf-8
+  07-phases-surface-and-transfer.md    171949 B  NUL=0  enc=utf-8
+  08-adversary.md                       80685 B  NUL=0  enc=utf-8
+  09-operating-manual.md                71884 B  NUL=0  enc=utf-8
+  10-repair-verification.md             42247 B  NUL=0  enc=utf-8
+  11-arbitration.md                     10188 B  NUL=0  enc=utf-8
+  12-arbitration-confirmed.md           34797 B  NUL=0  enc=utf-8
+  files containing NUL: 0 of 13   (must be 0)
+
+RETIRED IDS read from `01` §2.2: 33
+  NC-A21, NC-E09, NC-N07, NC-N15, NC-N20, NC-N21, NC-Q12, NC-Q13, NC-Q14, NC-Q15, NC-Q16, NC-Q22, NC-Q22b, NC-Q23, NC-Q24, NC-Q25, NC-Q26, NC-Q27, NC-Q28, NC-Q29, NC-Q40, NC-Q41, NC-Q42, NC-Q43, NC-Q44, NC-Q45, NC-Q46, NC-Q49, NC-Q50, NC-Q51, NC-Q52, NC-Q53, NC-Q54
+
+COUNTS
+  distinct ids DEFINED            : 196
+  total definition sites          : 199
+  distinct ids REFERENCED (live)  : 171
+  total live reference sites      : 617
+  distinct ids in history/exempt  : 129
+  DUPLICATE definitions (2+ docs) : 0     (must be 0)
+  same-doc index restatements     : 64    (informational)
+  cross-doc amendments (*amended*): 1    (informational)
+  DANGLING (ref'd, never defined) : 0     (must be 0)  <- C9.5
+  entries with no prose cross-ref : 25    (informational, NOT an error)
+      `10` §4.3 and C9.5 define an ORPHAN as *referenced, defined nowhere* —
+      the DANGLING line above.  `01` §2.4 rule 3 defines the orphan GUARD test
+      over `tests/negative/` functions, which do not exist yet.  A catalogue
+      entry that no prose sentence happens to cite is the normal, healthy state
+      of a catalogue and is reported here only so the number is not hidden.
+  RETIRED ids REDEFINED           : 0     (must be 0)
+  RETIRED ids in a LIVE reference : 0     (must be 0)
+  BAND TABLES in the corpus       : 1     (must be 1)
+      01-validation-methodology.md:664
+
+ENTRIES WITH NO PROSE CROSS-REFERENCE (informational)
+  NC-A08  defined at 07-phases-surface-and-transfer.md:550
+  NC-A11  defined at 07-phases-surface-and-transfer.md:582
+  NC-A12  defined at 07-phases-surface-and-transfer.md:598
+  NC-A14  defined at 07-phases-surface-and-transfer.md:808
+  NC-A16  defined at 05-phases-probes-attestation.md:2291
+  NC-A17  defined at 05-phases-probes-attestation.md:2303
+  NC-A18  defined at 05-phases-probes-attestation.md:2315
+  NC-A19  defined at 05-phases-probes-attestation.md:2418
+  NC-A20  defined at 05-phases-probes-attestation.md:2481
+  NC-C05  defined at 05-phases-probes-attestation.md:1956
+  NC-C06  defined at 05-phases-probes-attestation.md:1968
+  NC-C07  defined at 05-phases-probes-attestation.md:1797
+  NC-C08  defined at 05-phases-probes-attestation.md:1980
+  NC-C09  defined at 05-phases-probes-attestation.md:1992
+  NC-N16  defined at 02-phases-foundation.md:3072
+  NC-N22  defined at 05-phases-probes-attestation.md:2654
+  NC-N23  defined at 05-phases-probes-attestation.md:2655
+  NC-N25  defined at 05-phases-probes-attestation.md:2652
+  NC-N26  defined at 05-phases-probes-attestation.md:2653
+  NC-N33  defined at 06-phases-model-and-clause.md:2465
+  NC-R02  defined at 05-phases-probes-attestation.md:851
+  NC-R04  defined at 05-phases-probes-attestation.md:874
+  NC-R05  defined at 05-phases-probes-attestation.md:1189
+  NC-R06  defined at 05-phases-probes-attestation.md:1253
+  NC-R07  defined at 05-phases-probes-attestation.md:1359
+
+VERDICT: CLEAN
+wrote /Users/abishaikc/Gift/plan/scripts/catalogue_check_result.json

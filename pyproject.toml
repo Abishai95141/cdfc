@@ -1,0 +1,70 @@
+[project]
+name = "cdfc"
+version = "0.0.1"
+description = "The coverage-declaring filing checker — a regulated-filing checker that reports what it did not check"
+requires-python = ">=3.12,<3.13"
+license = { text = "Apache-2.0" }
+readme = "BUILD-PLAN.md"
+
+dependencies = [
+  "lxml==6.1.1",
+  "openpyxl==3.1.5",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest==8.3.4",
+  "hypothesis==6.122.3",
+  "ruff==0.8.4",
+  "mypy==1.14.0",
+  "coverage==7.6.9",
+]
+
+[project.scripts]
+cdfc = "cdfc.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# ---------------------------------------------------------------------------
+# THE NON-NEGOTIABLE BLOCK (methodology §1.0)
+#
+# filterwarnings = ["error"] is not hygiene. openpyxl emits
+#   "Data Validation extension is not supported and will be removed"
+# when it reads the FME workbook — and that discarded warning is exactly how a
+# parser comes to report 35 of 54 validations, and the AML-CFT sheet as having
+# zero when it has five. This project exists to stop discarding that signal.
+# Guarded by tests/negative/test_nc_ci.py::test_nc__CI02_openpyxl_warning_is_an_error.
+# ---------------------------------------------------------------------------
+[tool.pytest.ini_options]
+addopts = "--strict-markers --strict-config -q"
+xfail_strict = true
+filterwarnings = ["error"]
+markers = [
+  "linux_only: collected only in the Linux CI image (R7)",
+]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "PL"]
+# E722 (bare except) is deliberately NOT relied on here: ci/no-bare-except.sh is the
+# gate, because a linter configuration can be relaxed in the same commit as the
+# violation it would have caught. The shell gate has its own negative control.
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["src/cdfc"]
+warn_unreachable = true
+
+[tool.coverage.run]
+branch = true
+source = ["src/cdfc"]

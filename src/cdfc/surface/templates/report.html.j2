@@ -1,0 +1,9 @@
+{# P14 renders here. NC-A02 injector target.
+   Jinja comments are stripped at render; HTML comments are not, and would reach the
+   browser. Nothing in this file may contain a banned surface token — see
+   cdfc.surface.labels and ci/no-green-tick.sh (registry row 1). #}
+<section class="report">
+  <p class="hero">{{ failures }} failures across {{ checks }} checks</p>
+  <p class="hero">{{ unchecked }} fields were not checked</p>
+  <p class="admission">predicate set: {{ admission_state }}</p>
+</section>
