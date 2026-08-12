@@ -45,6 +45,9 @@ fixtures:
 agreement:
 	$(PY) tools/measure/agreement_matrix.py
 
+field-surface:
+	$(PY) tools/measure/field_surface.py
+
 property:
 	$(PY) -m pytest tests/property -q
 
@@ -67,7 +70,7 @@ mutation-pr:
 gates: nc-sweep
 	$(PY) tools/gate_liveness.py
 
-measure-foundation: gates agreement
+measure-foundation: gates agreement field-surface
 	@echo "wrote docs/measurements/p0-gate-liveness.json"
 
 nightly: all

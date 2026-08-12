@@ -1,0 +1,248 @@
+{
+ "adopted_rule": "v3",
+ "derivable": 7,
+ "g_denom_agree": 9,
+ "lawful_readings_on_fme": {
+  "v3": 3747,
+  "v3-abs": 6249,
+  "v3-uw": 3755
+ },
+ "not_derivable": 2,
+ "rows": [
+  {
+   "agree": true,
+   "census": {
+    "apply_protection": 108,
+    "cell_xfs": 258,
+    "explicit_locked": 0,
+    "explicit_unlocked": 108,
+    "inheriting": 150
+   },
+   "generator_rule": "v3",
+   "path_a": 1599,
+   "path_b": 1599,
+   "per_sheet": {
+    "Assets": 684,
+    "Business Volumes": 87,
+    "General Information": 53,
+    "Liabilities": 425,
+    "Nostro": 34,
+    "Off BS Exposure": 31,
+    "Other products": 189,
+    "Reconciliation": 80,
+    "Structured Deposits Report": 16
+   },
+   "sha8": "a414d8d3",
+   "sheets_in_scope": 9,
+   "source": "styles.xml cellXfs with xfId inheritance (path A)",
+   "validation_state": "PROVISIONAL-UNVALIDATED",
+   "workbook": "ALR_V2_3_20250808_1024.xlsx"
+  },
+  {
+   "agree": true,
+   "census": {
+    "apply_protection": 111,
+    "cell_xfs": 248,
+    "explicit_locked": 0,
+    "explicit_unlocked": 111,
+    "inheriting": 137
+   },
+   "generator_rule": "v3",
+   "path_a": 3537,
+   "path_b": 3537,
+   "per_sheet": {
+    "0 Validation": 0,
+    "Asset Details": 3300,
+    "Entity Details": 36,
+    "Mode of transaction": 201
+   },
+   "sha8": "79e43a7f",
+   "sheets_in_scope": 4,
+   "source": "styles.xml cellXfs with xfId inheritance (path A)",
+   "validation_state": "PROVISIONAL-UNVALIDATED",
+   "workbook": "AL_monthly_report_updated_final_20260717_0257.xlsx"
+  },
+  {
+   "agree": true,
+   "census": {
+    "apply_protection": 0,
+    "cell_xfs": 63,
+    "explicit_locked": 0,
+    "explicit_unlocked": 0,
+    "inheriting": 63
+   },
+   "generator_rule": "v3",
+   "path_a": null,
+   "path_b": null,
+   "per_sheet": {},
+   "sha8": "74ba7b89",
+   "sheets_in_scope": 13,
+   "source": "not derivable \u2014 template ships no protection mask",
+   "validation_state": "PROVISIONAL-UNVALIDATED",
+   "workbook": "Draft_ACAC_Format_20260605_0631.xlsx"
+  },
+  {
+   "agree": true,
+   "census": {
+    "apply_protection": 22,
+    "cell_xfs": 30,
+    "explicit_locked": 0,
+    "explicit_unlocked": 17,
+    "inheriting": 13
+   },
+   "generator_rule": "v3",
+   "path_a": 162,
+   "path_b": 162,
+   "per_sheet": {
+    "Clarifications": 0,
+    "EDR 1": 104,
+    "General Information": 58
+   },
+   "sha8": "230a6f0c",
+   "sheets_in_scope": 3,
+   "source": "styles.xml cellXfs with xfId inheritance (path A)",
+   "validation_state": "PROVISIONAL-UNVALIDATED",
+   "workbook": "EDR_1__Exposure_Data_Report_1__V2_3_20250808_1030.xlsx"
+  },
+  {
+   "agree": true,
+   "census": {
+    "apply_protection": 36,
+    "cell_xfs": 99,
+    "explicit_locked": 0,
+    "explicit_unlocked": 36,
+    "inheriting": 63
+   },
+   "generator_rule": "v3",
+   "path_a": 459,
+   "path_b": 459,
+   "per_sheet": {
+    "Account opening details": 106,
+    "Currency of Transactions": 80,
+    "General Information": 53,
+    "List of policies": 58,
+    "Outsourcing Details": 45,
+    "Reg. Compliance Information": 28,
+    "Reg. Customer Grievances ": 26,
+    "Staff Information": 63
+   },
+   "sha8": "bf6bbf6b",
+   "sheets_in_scope": 8,
+   "source": "styles.xml cellXfs with xfId inheritance (path A)",
+   "validation_state": "PROVISIONAL-UNVALIDATED",
+   "workbook": "IBU_Operations_Report_V2_3_20250808_1033.xlsx"
+  },
+  {
+   "agree": true,
+   "census": {
+    "apply_protection": 1,
+    "cell_xfs": 153,
+    "explicit_locked": 0,
+    "explicit_unlocked": 1,
+    "inheriting": 152
+   },
+   "generator_rule": "v3",
+   "path_a": null,
+   "path_b": null,
+   "per_sheet": {},
+   "sha8": "4b2d4a2b",
+   "sheets_in_scope": 9,
+   "source": "not derivable \u2014 template ships no protection mask",
+   "validation_state": "PROVISIONAL-UNVALIDATED",
+   "workbook": "IFSCA_Annual_Reporting_Format_30April_2026_Approved_20260504_1247.xlsx"
+  },
+  {
+   "agree": true,
+   "census": {
+    "apply_protection": 50,
+    "cell_xfs": 112,
+    "explicit_locked": 0,
+    "explicit_unlocked": 50,
+    "inheriting": 62
+   },
+   "generator_rule": "v3",
+   "path_a": 481,
+   "path_b": 481,
+   "per_sheet": {
+    "Montly Report": 217,
+    "Validation Sheet": 264
+   },
+   "sha8": "446b811a",
+   "sheets_in_scope": 2,
+   "source": "styles.xml cellXfs with xfId inheritance (path A)",
+   "validation_state": "PROVISIONAL-UNVALIDATED",
+   "workbook": "ITFS_Monthly_report201220241626.xlsx"
+  },
+  {
+   "agree": true,
+   "census": {
+    "apply_protection": 112,
+    "cell_xfs": 434,
+    "explicit_locked": 7,
+    "explicit_unlocked": 105,
+    "inheriting": 322
+   },
+   "generator_rule": "v3",
+   "path_a": 3747,
+   "path_b": 3747,
+   "per_sheet": {
+    "1. Introduction": 371,
+    "2. Summary": 231,
+    "3. Portfolio": 1698,
+    "4. Investors": 897,
+    "5. PMS": 480,
+    "6. Complaints": 25,
+    "7. AML-CFT": 22,
+    "8. Compliance Status": 23,
+    "9. Compliance Report": 0,
+    "Dropdown": 0
+   },
+   "sha8": "7d9a1960",
+   "sheets_in_scope": 10,
+   "source": "styles.xml cellXfs with xfId inheritance (path A)",
+   "validation_state": "PROVISIONAL-UNVALIDATED",
+   "workbook": "Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx"
+  },
+  {
+   "agree": true,
+   "census": {
+    "apply_protection": 113,
+    "cell_xfs": 502,
+    "explicit_locked": 0,
+    "explicit_unlocked": 100,
+    "inheriting": 402
+   },
+   "generator_rule": "v3",
+   "path_a": 2255,
+   "path_b": 2255,
+   "per_sheet": {
+    "AML-CFT": 22,
+    "Broker Dealer": 146,
+    "Clearing Member": 152,
+    "Complaint Handling": 28,
+    "Credit Rating Agency": 440,
+    "Custodian": 79,
+    "Debenture Trustee": 51,
+    "Depository Participant": 38,
+    "ERDPP": 297,
+    "General Information": 73,
+    "Global Access Provider": 512,
+    "Guidance Note": 0,
+    "Investment Adviser": 60,
+    "Investment Banker": 109,
+    "Registered Distributor": 155,
+    "Research Entity": 39,
+    "Undertaking": 0,
+    "V-CIP": 54
+   },
+   "sha8": "82dd291f",
+   "sheets_in_scope": 18,
+   "source": "styles.xml cellXfs with xfId inheritance (path A)",
+   "validation_state": "PROVISIONAL-UNVALIDATED",
+   "workbook": "Updated___Quarterly_Reporting_Format_for_Capital_Market_Intermediaries_20260409_1019.xlsx"
+  }
+ ],
+ "validation_state": "PROVISIONAL-UNVALIDATED",
+ "warrant": "MEASURED",
+ "workbooks": 9
+}

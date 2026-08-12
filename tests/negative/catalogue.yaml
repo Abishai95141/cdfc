@@ -338,3 +338,51 @@ entries:
         flips: true
     positive_control: "the repository clones and runs on another machine"
     status: active
+
+  - id: NC-D03
+    component: schema
+    break: hidden sheets are dropped from the denominator's scope
+    measured_instance: "on FME this still returns 3,747 — right by accident while the code is wrong"
+    injector: MaskSkipsHiddenSheets
+    guard_tests:
+      - path: "tests/negative/test_nc_schema.py::test_nc__D03_hidden_sheets_are_in_scope"
+        flips: true
+    positive_control: "the total is unchanged by the hidden sheet, which is why the sheet SET is asserted"
+    status: active
+
+  - id: NC-D05
+    component: schema
+    break: absence of <protection> is read as unlocked, inverting the OOXML default
+    measured_instance: "adds 2,502 cells on FME — 3,747 becomes 6,249"
+    injector: MaskReadsAbsenceAsUnlocked
+    guard_tests:
+      - path: "tests/negative/test_nc_schema.py::test_nc__D05_absence_of_protection_is_not_unlocked"
+        flips: true
+      - path: "tests/negative/test_nc_schema.py::test_nc__D02_the_two_paths_agree_on_every_workbook"
+        flips: true
+    positive_control: "the adopted reading returns 3,747 and both paths agree on all nine"
+    status: active
+
+  - id: NC-D06
+    component: schema
+    break: rule 6 stops firing, so a workbook with no protection mask is given a denominator
+    measured_instance: "two of the nine ship no protection mask; their null IS the measurement"
+    injector: MaskSkipsRuleSix
+    guard_tests:
+      - path: "tests/negative/test_nc_schema.py::test_nc__D06_rule_6_fires_before_rule_5"
+        flips: true
+    positive_control: "the seven derivable workbooks still return a number"
+    status: active
+
+  - id: NC-D07
+    component: schema
+    break: the denominator stops declaring that nothing has externally validated it
+    measured_instance: "nothing in P2..P7 can falsify the mask; P8-B1 is the first artifact that can"
+    injector: MaskDropsValidationState
+    guard_tests:
+      - path: "tests/negative/test_nc_schema.py::test_nc__D07_the_denominator_declares_its_validation_state"
+        flips: true
+      - path: "tests/negative/test_nc_schema.py::test_nc__D07b_the_canonical_projection_carries_the_rule_and_the_state"
+        flips: true
+    positive_control: "the real projection carries generator_rule and validation_state"
+    status: active

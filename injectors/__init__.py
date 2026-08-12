@@ -702,3 +702,79 @@ class ExternalFixturePath(Injector):
 
 ALL_INJECTORS = ALL_INJECTORS + (ExternalFixturePath,)
 BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+# --------------------------------------------------------------------------------
+# P2 injectors
+# --------------------------------------------------------------------------------
+
+MASK_A = REPO_ROOT / "src" / "cdfc" / "schema" / "styles_mask.py"
+
+
+class MaskSkipsHiddenSheets(Injector):
+    """Scope truncation by hidden sheet.
+
+    The defect P2's own headline number cannot see: on FME this still returns 3,747, so
+    the number is right by accident while the code is wrong. Only a test asserting the
+    SHEET SET catches it.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="mask_skips_hidden_sheets", touches=[MASK_A])
+
+    def apply(self) -> None:
+        MASK_A.write_text(
+            MASK_A.read_text().replace(
+                '        out.append((sh.get("name", ""), sh.get("state", "visible"), part))',
+                '        if sh.get("state", "visible") != "visible":\n            continue\n'
+                '        out.append((sh.get("name", ""), sh.get("state", "visible"), part))',
+            )
+        )
+
+
+class MaskReadsAbsenceAsUnlocked(Injector):
+    """The rejected reading becomes the adopted one, silently."""
+
+    def __init__(self) -> None:
+        super().__init__(name="mask_reads_absence_as_unlocked", touches=[MASK_A])
+
+    def apply(self) -> None:
+        MASK_A.write_text(
+            MASK_A.read_text().replace(
+                "    if rule is Rule.V3_ABS:\n        return False",
+                "    if True:\n        return False",
+            )
+        )
+
+
+class MaskDropsValidationState(Injector):
+    """The denominator stops declaring that nothing has externally validated it."""
+
+    def __init__(self) -> None:
+        super().__init__(name="mask_drops_validation_state", touches=[MASK_A])
+
+    def apply(self) -> None:
+        MASK_A.write_text(
+            MASK_A.read_text().replace(
+                '            "validation_state": self.validation_state,\n', ""
+            )
+        )
+
+
+class MaskSkipsRuleSix(Injector):
+    """Rule 6 stops firing, so a workbook with no protection mask gets a number anyway."""
+
+    def __init__(self) -> None:
+        super().__init__(name="mask_skips_rule_six", touches=[MASK_A])
+
+    def apply(self) -> None:
+        MASK_A.write_text(MASK_A.read_text().replace("        if not any_protection:", "        if False:"))
+
+
+ALL_INJECTORS = ALL_INJECTORS + (
+    MaskSkipsHiddenSheets,
+    MaskReadsAbsenceAsUnlocked,
+    MaskDropsValidationState,
+    MaskSkipsRuleSix,
+)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
