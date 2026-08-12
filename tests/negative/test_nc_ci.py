@@ -124,3 +124,109 @@ def test_nc__CI05_a_stub_that_exits_zero_is_rejected() -> None:
         "cli.py was made to exit 0 for an unimplemented subcommand and the unit test "
         "still passed — the test does not test what it claims"
     )
+
+
+# --------------------------------------------------------------------------------- NC-CI11
+def test_nc__CI11_monotonic_clock_is_rejected() -> None:
+    """A duration we measured ourselves must not enter the deterministic core."""
+    from injectors import ClockInCore
+
+    assert run_gate("ci/no-clock-in-core.sh") == 0, "precondition: green on a correct tree"
+    with inject(ClockInCore()):
+        rc = run_gate("ci/no-clock-in-core.sh")
+    assert rc != 0, "a perf_counter() reached the deterministic core and the gate passed"
+
+
+def test_nc__CI11b_clock_in_measure_perf_is_allowed() -> None:
+    """Admission-side twin: timings ARE allowed in src/cdfc/measure/perf/.
+
+    Without this the gate could be satisfied by banning the clock everywhere, which
+    would delete the evidence that a loop ran rather than keep it out of the hash.
+    """
+    p = Path("src/cdfc/measure/perf/__init__.py")
+    original = p.read_bytes()
+    try:
+        p.write_bytes(original + b"\nimport time\n\n\ndef t() -> float:\n    return time.perf_counter()\n")
+        assert run_gate("ci/no-clock-in-core.sh") == 0, (
+            "a timing inside measure/perf was rejected; that is where timings live"
+        )
+    finally:
+        p.write_bytes(original)
+
+
+# --------------------------------------------------------------------------------- NC-CI12
+def test_nc__CI12_version_must_read_the_registry() -> None:
+    """Gate 10. A hard-coded gate count drifts the moment a row is added."""
+    from injectors import AddGateRow, HardcodeGateCount
+
+    with inject(HardcodeGateCount()), inject(AddGateRow()):
+        proc = subprocess.run(
+            [sys.executable, "-m", "pytest", "tests/unit/test_cli.py::test_cli__version_reports_gate_count",
+             "-q", "--no-header"],
+            cwd=REPO_ROOT, capture_output=True, text=True,
+            env={"PYTHONPATH": str(REPO_ROOT / "src"), "PATH": "/usr/bin:/bin", "HOME": str(Path.home())},
+        )
+    assert proc.returncode != 0, "the CLI reported a hard-coded gate count and the test passed"
+
+
+# --------------------------------------------------------------------------------- NC-CI13
+def test_nc__CI13_denylisted_runtime_licence_is_rejected() -> None:
+    """Gate 11. A denylisted licence in the resolved runtime set fails the build."""
+    from injectors import DenylistedRuntimeDep
+
+    assert run_gate("ci/licence-denylist.sh") == 0, "precondition: green on the real set"
+    with inject(DenylistedRuntimeDep()):
+        rc = run_gate("ci/licence-denylist.sh")
+    assert rc != 0, "a denylisted licence passed the gate"
+
+
+# --------------------------------------------------------------------------------- NC-CI14
+def test_nc__CI14_nul_byte_in_a_document_is_rejected() -> None:
+    """Gate 12. A NUL makes grep skip a whole file — found once, in this project."""
+    from injectors import NulByteInPlanDoc
+
+    assert run_gate("ci/catalogue-ids.sh") == 0, "precondition: green on a clean corpus"
+    with inject(NulByteInPlanDoc()):
+        rc = run_gate("ci/catalogue-ids.sh")
+    assert rc != 0, "a NUL byte survived the encoding gate"
+
+
+# --------------------------------------------------------------------------------- NC-CI15
+def test_nc__CI15_timing_in_a_hashed_payload_is_rejected() -> None:
+    """Gate 17. A duration inside a canonicalised payload breaks byte-identity."""
+    from injectors import ElapsedUsField
+
+    assert run_gate("ci/no-timing-in-hashed-payload.sh") == 0, "precondition: green"
+    with inject(ElapsedUsField()):
+        rc = run_gate("ci/no-timing-in-hashed-payload.sh")
+    assert rc != 0, "an elapsed_us field entered a hashed payload and the gate passed"
+
+
+# --------------------------------------------------------------------------------- NC-CI02c
+def test_nc__CI02c_the_config_is_what_makes_warnings_errors() -> None:
+    """Gate 4, made demonstrable.
+
+    CI02 and CI02b both install their own filter, so neither depends on
+    `filterwarnings = ["error"]` in pyproject.toml — which left gate 4 PROVISIONAL: the
+    guard could not tell whether the config was there at all. This one runs a throwaway
+    test through pytest FROM THE REPO, so the project's own config applies, and asserts a
+    plain UserWarning fails the run.
+    """
+    tmp = REPO_ROOT / "tests" / "negative" / "broken_builds" / "test_emits_warning.py"
+    tmp.write_text(
+        "import warnings\n\n\ndef test_emits() -> None:\n"
+        "    warnings.warn('a warning the config must turn into an error', UserWarning)\n"
+    )
+    try:
+        proc = subprocess.run(
+            [sys.executable, "-m", "pytest", str(tmp.relative_to(REPO_ROOT)), "-q", "--no-header"],
+            cwd=REPO_ROOT, capture_output=True, text=True,
+            env={"PYTHONPATH": str(REPO_ROOT / "src"), "PATH": "/usr/bin:/bin", "HOME": str(Path.home())},
+        )
+        assert proc.returncode != 0, (
+            "a UserWarning did not fail the run: filterwarnings = ['error'] is not in effect, "
+            "which is the one line standing between this project and the signal that produced "
+            "its flagship finding"
+        )
+    finally:
+        tmp.unlink(missing_ok=True)

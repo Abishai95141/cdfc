@@ -1,0 +1,78 @@
+{
+ "count": 9,
+ "files": [
+  {
+   "bytes": 55501,
+   "filename": "ALR_V2_3_20250808_1024.xlsx",
+   "origin_uri": "https://ifsca.gov.in/Download",
+   "retrieved_at": "2026-08-10",
+   "sha256": "a414d8d3300d884e06c89eff92cf9f9857bad5690fd38266375979b784c8b998",
+   "vendored_from": "/Users/abishaikc/Thinking/gift-ifsc-ground/scratchpad-oracle/ALR_V2_3_20250808_1024.xlsx"
+  },
+  {
+   "bytes": 41181,
+   "filename": "AL_monthly_report_updated_final_20260717_0257.xlsx",
+   "origin_uri": "https://ifsca.gov.in/Download",
+   "retrieved_at": "2026-08-10",
+   "sha256": "79e43a7fdbbec9d993fb983c1bcbfc3162be13c2fe3a40ffb3a28abead87c6a9",
+   "vendored_from": "/Users/abishaikc/Thinking/gift-ifsc-ground/scratchpad-oracle/AL_monthly_report_updated_final_20260717_0257.xlsx"
+  },
+  {
+   "bytes": 83409,
+   "filename": "Draft_ACAC_Format_20260605_0631.xlsx",
+   "origin_uri": "https://ifsca.gov.in/Download",
+   "retrieved_at": "2026-08-10",
+   "sha256": "74ba7b894b429bbe939a296cacf39196ad9f5b93ec238037f2c47c277dd79e5e",
+   "vendored_from": "/Users/abishaikc/Thinking/gift-ifsc-ground/scratchpad-oracle/Draft_ACAC_Format_20260605_0631.xlsx"
+  },
+  {
+   "bytes": 24124,
+   "filename": "EDR_1__Exposure_Data_Report_1__V2_3_20250808_1030.xlsx",
+   "origin_uri": "https://ifsca.gov.in/Download",
+   "retrieved_at": "2026-08-10",
+   "sha256": "230a6f0c7f1bfad504167e52002e4dfb5f0014bf2c2968787b4e6f785f5774c1",
+   "vendored_from": "/Users/abishaikc/Thinking/gift-ifsc-ground/scratchpad-oracle/EDR_1__Exposure_Data_Report_1__V2_3_20250808_1030.xlsx"
+  },
+  {
+   "bytes": 34577,
+   "filename": "IBU_Operations_Report_V2_3_20250808_1033.xlsx",
+   "origin_uri": "https://ifsca.gov.in/Download",
+   "retrieved_at": "2026-08-10",
+   "sha256": "bf6bbf6b810f8afc571232e9b72c070a5f6a04519b13b8676d72a36682803556",
+   "vendored_from": "/Users/abishaikc/Thinking/gift-ifsc-ground/scratchpad-oracle/IBU_Operations_Report_V2_3_20250808_1033.xlsx"
+  },
+  {
+   "bytes": 33299,
+   "filename": "IFSCA_Annual_Reporting_Format_30April_2026_Approved_20260504_1247.xlsx",
+   "origin_uri": "https://ifsca.gov.in/Download",
+   "retrieved_at": "2026-08-10",
+   "sha256": "4b2d4a2bb0416ae22048c7cf1fcbb5c581c19933ca85663ab69f311a8846395d",
+   "vendored_from": "/Users/abishaikc/Thinking/gift-ifsc-ground/scratchpad-oracle/IFSCA_Annual_Reporting_Format_30April_2026_Approved_20260504_1247.xlsx"
+  },
+  {
+   "bytes": 23079,
+   "filename": "ITFS_Monthly_report201220241626.xlsx",
+   "origin_uri": "https://ifsca.gov.in/Download",
+   "retrieved_at": "2026-08-10",
+   "sha256": "446b811a2b06922c8f18f5a15af47ef803fe0f0f6b9963e381cf6a414dec8c16",
+   "vendored_from": "/Users/abishaikc/Thinking/gift-ifsc-ground/scratchpad-oracle/ITFS_Monthly_report201220241626.xlsx"
+  },
+  {
+   "bytes": 3663391,
+   "filename": "Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx",
+   "origin_uri": "https://ifsca.gov.in/Download",
+   "retrieved_at": "2026-08-10",
+   "sha256": "7d9a1960085785eefbe166fb5e04e94689780c490235fe55d8f3e8b620ceea39",
+   "vendored_from": "/Users/abishaikc/Thinking/gift-ifsc-ground/scratchpad-oracle/Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx"
+  },
+  {
+   "bytes": 3720205,
+   "filename": "Updated___Quarterly_Reporting_Format_for_Capital_Market_Intermediaries_20260409_1019.xlsx",
+   "origin_uri": "https://ifsca.gov.in/Download",
+   "retrieved_at": "2026-08-10",
+   "sha256": "82dd291f5a7d6667f10b39ffb8770b4eae589bc03d31869e6d5e2f6564452671",
+   "vendored_from": "/Users/abishaikc/Thinking/gift-ifsc-ground/scratchpad-oracle/Updated___Quarterly_Reporting_Format_for_Capital_Market_Intermediaries_20260409_1019.xlsx"
+  }
+ ],
+ "note": "The evidence base, vendored byte-for-byte. Every number this project publishes is a fraction of something in this directory. `make corpus-verify` re-hashes all nine and exits non-zero NAMING the file on any drift \u2014 a drift detector that does not name the file is a drift detector nobody uses."
+}

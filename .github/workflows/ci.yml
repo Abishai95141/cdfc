@@ -1,0 +1,59 @@
+name: ci
+on: [push, pull_request]
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: install, hash-pinned
+        run: |
+          python -m pip install --require-hashes -r requirements.lock
+          python -m pip install pyyaml
+      # The thirteen stages, in order. Stage 1 must be the scan-root assertion: every
+      # grep gate after it would otherwise pass trivially over a directory that does not
+      # exist, which is the defect the whole registry is built around.
+      - name: 1 scan roots exist
+        run: bash ci/scan-roots-exist.sh
+      - name: 2 no bare except
+        run: bash ci/no-bare-except.sh
+      - name: 3 no green tick
+        run: bash ci/no-green-tick.sh
+      - name: 4 no clock in core
+        run: bash ci/no-clock-in-core.sh
+      - name: 5 no timing in a hashed payload
+        run: bash ci/no-timing-in-hashed-payload.sh
+      - name: 6 no bare absence
+        run: bash ci/no-bare-absence.sh
+      - name: 7 licence denylist
+        run: bash ci/licence-denylist.sh
+      - name: 8 catalogue ids and encoding
+        run: bash ci/catalogue-ids.sh
+      - name: 9 corpus verify
+        run: python tools/measure/corpus_verify.py
+      - name: 10 contract
+        run: python -m pytest tests/contract -q
+        env: { PYTHONPATH: src }
+      - name: 11 unit + determinism + golden
+        run: python -m pytest tests/unit tests/determinism tests/golden -q
+        env: { PYTHONPATH: src }
+      - name: 12 negative controls
+        run: python -m pytest tests/negative -q
+        env: { PYTHONPATH: src }
+      # Stage 13 is the sweep. It is slow and it is the one that proves the rest mean
+      # something, so it runs last and it blocks.
+      - name: 13 negative-control sweep (exact set)
+        run: |
+          python tools/nc_sweep.py
+          python tools/gate_liveness.py
+        env: { PYTHONPATH: src }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: measurements
+          path: |
+            reports/negative-control-sweep.json
+            docs/measurements/p0-gate-liveness.json

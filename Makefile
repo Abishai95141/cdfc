@@ -4,7 +4,7 @@ export PYTHONPATH := $(CURDIR)/src
 .PHONY: all lint licence greps contract unit property golden differential nc-sweep \
         determinism perf mutation-pr e2e nightly demo corpus-verify measure-foundation gates
 
-all: lint licence greps contract unit negative determinism gates
+all: lint licence greps corpus-verify contract unit golden determinism negative gates
 
 lint:
 	$(PY) -m ruff check src tests injectors 2>/dev/null || echo "ruff not installed — advisory at P0"
@@ -16,7 +16,9 @@ greps:
 	bash ci/scan-roots-exist.sh
 	bash ci/no-bare-except.sh
 	bash ci/no-green-tick.sh
+	bash ci/no-clock-in-core.sh
 	bash ci/no-timing-in-hashed-payload.sh
+	bash ci/no-bare-absence.sh
 	bash ci/catalogue-ids.sh
 
 contract:
@@ -28,15 +30,22 @@ unit:
 negative:
 	$(PY) -m pytest tests/negative -q
 
-nc-sweep: negative
-
 determinism:
 	$(PY) -m pytest tests/determinism -q
 
 property:
 	@echo "no property exists at P0 — stated, not skipped (DoD requires it to be stated)"
 
-golden differential e2e demo corpus-verify:
+golden:
+	$(PY) -m pytest tests/golden -q
+
+corpus-verify:
+	$(PY) tools/measure/corpus_verify.py
+
+nc-sweep:
+	$(PY) tools/nc_sweep.py
+
+differential e2e demo:
 	@echo "$@: subject does not exist at P0"; exit 0
 
 perf:
@@ -45,7 +54,7 @@ perf:
 mutation-pr:
 	@echo "mutation testing arrives with the code it measures (P2)"
 
-gates:
+gates: nc-sweep
 	$(PY) tools/gate_liveness.py
 
 measure-foundation: gates

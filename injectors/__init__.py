@@ -87,7 +87,11 @@ def _purge_bytecode(path: Path) -> None:
     """
     if path.suffix != ".py":
         return
+    # `import importlib` does NOT bind importlib.util. This worked under pytest only
+    # because pytest imports importlib.util first — a dependency on what else happened
+    # to run, which is exactly the class of latent defect this project is about.
     import importlib
+    import importlib.util
     import os
 
     cache = Path(importlib.util.cache_from_source(str(path)))
@@ -105,6 +109,14 @@ def inject(inj: Injector) -> Iterator[Injector]:
     inj._save()
     try:
         inj.apply()
+        # Purge on APPLY as well as on restore. The staleness is SYMMETRIC and fixing
+        # only the restore direction left the injector silently not taking effect: a
+        # same-length edit inside one mtime tick leaves the pre-injection bytecode
+        # judged current, so the interpreter runs the CORRECT build while the source is
+        # broken — a negative control that quietly proves nothing. It passed for a while
+        # only because a preceding restore happened to bump the mtime first.
+        for _p in inj.touches:
+            _purge_bytecode(_p)
         yield inj
     finally:
         inj._restore()
@@ -213,3 +225,368 @@ ALL_INJECTORS: tuple[type[Injector], ...] = (
     StubExitsZero,
     WarningsTolerated,
 )
+
+
+# --------------------------------------------------------------------------------
+# P0-B3 injectors — one per catalogue entry that declares a flipping guard
+# --------------------------------------------------------------------------------
+
+GATES_MD = REPO_ROOT / "ci" / "GATES.md"
+LOCKFILE = REPO_ROOT / "requirements.lock"
+CALC_INIT = REPO_ROOT / "src" / "cdfc" / "calc" / "__init__.py"
+PERF_PKG = REPO_ROOT / "src" / "cdfc" / "measure" / "perf" / "__init__.py"
+FIXTURE = REPO_ROOT / "fixtures" / "prescribed" / "ITFS_Monthly_report201220241626.xlsx"
+ABSENCE_DOC = REPO_ROOT / "docs" / "ABSENCE-SCOPE.md"
+
+
+class DuplicateGateId(Injector):
+    """Two registry rows share an id, so the registry is shorter than it looks."""
+
+    def __init__(self) -> None:
+        super().__init__(name="duplicate_gate_id", touches=[GATES_MD])
+
+    def apply(self) -> None:
+        GATES_MD.write_text(GATES_MD.read_text().replace("| 18 | pytest |", "| 17 | pytest |", 1))
+
+
+class DemoteGateToPending(Injector):
+    """A gate that resisted demonstration is quietly moved to PENDING."""
+
+    def __init__(self) -> None:
+        super().__init__(name="demote_gate_to_pending", touches=[GATES_MD])
+
+    def apply(self) -> None:
+        t = GATES_MD.read_text()
+        # row 2 -> PENDING
+        lines = t.splitlines()
+        for i, ln in enumerate(lines):
+            if ln.startswith("| 2 |"):
+                lines[i] = ln.rsplit("| LIVE |", 1)[0] + "| PENDING |"
+                break
+        GATES_MD.write_text("\n".join(lines) + "\n")
+
+
+class BlankDemonstrableRed(Injector):
+    """A gate loses the phase at which it can be observed red."""
+
+    def __init__(self) -> None:
+        super().__init__(name="blank_demonstrable_red", touches=[GATES_MD])
+
+    def apply(self) -> None:
+        lines = GATES_MD.read_text().splitlines()
+        for i, ln in enumerate(lines):
+            if ln.startswith("| 1 |"):
+                cells = ln.split("|")
+                cells[5] = "  "  # demonstrable_red_at
+                lines[i] = "|".join(cells)
+                break
+        GATES_MD.write_text("\n".join(lines) + "\n")
+
+
+class AddGateRow(Injector):
+    """A row is appended without anything else noticing."""
+
+    def __init__(self) -> None:
+        super().__init__(name="add_gate_row", touches=[GATES_MD])
+
+    def apply(self) -> None:
+        t = GATES_MD.read_text()
+        marker = "| 18 | pytest |"
+        idx = t.index(marker)
+        end = t.index("\n", idx) + 1
+        row = "| 19 | shell | an injected row nobody registered | P0 | P0 | injector | LIVE |\n"
+        GATES_MD.write_text(t[:end] + row + t[end:])
+
+
+class UnpinDependency(Injector):
+    """A dependency loses its wheel hash."""
+
+    def __init__(self) -> None:
+        super().__init__(name="unpin_dependency", touches=[LOCKFILE])
+
+    def apply(self) -> None:
+        # Remove EVERY hash line of the FIRST package block. Removing one of two leaves
+        # the package pinned by the other, and the control proves nothing — which is
+        # exactly what the first version of this injector did.
+        lines = LOCKFILE.read_text().splitlines()
+        out, in_first, seen_pkg = [], False, False
+        for ln in lines:
+            is_pkg = bool(ln) and not ln[:1].isspace() and "==" in ln and not ln.startswith("#")
+            if is_pkg:
+                if not seen_pkg:
+                    seen_pkg, in_first = True, True
+                else:
+                    in_first = False
+            if in_first and ln.strip().startswith("--hash=sha256:"):
+                continue
+            if in_first and is_pkg:
+                ln = ln.replace(" \\", "")
+            out.append(ln)
+        LOCKFILE.write_text("\n".join(out) + "\n")
+
+
+class ClockInCore(Injector):
+    """A self-measured duration enters the deterministic core."""
+
+    def __init__(self) -> None:
+        super().__init__(name="clock_in_core", touches=[CALC_INIT])
+
+    def apply(self) -> None:
+        CALC_INIT.write_text(
+            CALC_INIT.read_text()
+            + "\nimport time\n\n\ndef _elapsed() -> float:\n    return time.perf_counter()\n"
+        )
+
+
+class FlipFixtureByte(Injector):
+    """A vendored fixture drifts by one byte."""
+
+    def __init__(self) -> None:
+        super().__init__(name="flip_fixture_byte", touches=[FIXTURE])
+
+    def apply(self) -> None:
+        b = bytearray(FIXTURE.read_bytes())
+        b[-1] ^= 0x01
+        FIXTURE.write_bytes(bytes(b))
+
+
+class AbsenceCitesEmptyControl(Injector):
+    """A document asserts an absence citing a ledger row whose control count is zero."""
+
+    def __init__(self) -> None:
+        # the ledger is in `touches` so the planted row is removed on restore; a
+        # leaked row would make the gate red for every later test.
+        from cdfc.measure.absence import DEFAULT_LEDGER
+        super().__init__(name="absence_cites_empty_control", touches=[ABSENCE_DOC, DEFAULT_LEDGER])
+
+    def apply(self) -> None:
+        from cdfc.measure.absence import DEFAULT_LEDGER  # noqa: PLC0415
+
+        DEFAULT_LEDGER.parent.mkdir(parents=True, exist_ok=True)
+        import json
+
+        row = {
+            "row_id": "deadbeefdeadbeef",
+            "query_name": "injected_empty_control",
+            "corpus_id": "injected",
+            "count": 0,
+            "positive_control_count": 0,
+            "admissible": False,
+        }
+        with DEFAULT_LEDGER.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps(row, sort_keys=True) + "\n")
+        # assembled at runtime — see tests/negative/test_nc_absence.py for why
+        phrase = "does not " + "occur"
+        ABSENCE_DOC.write_text(
+            ABSENCE_DOC.read_text()
+            + f"\nThe term {phrase} anywhere in the corpus (ledger:deadbeefdeadbeef).\n"
+        )
+
+
+ALL_INJECTORS = ALL_INJECTORS + (
+    DuplicateGateId,
+    DemoteGateToPending,
+    BlankDemonstrableRed,
+    AddGateRow,
+    UnpinDependency,
+    ClockInCore,
+    FlipFixtureByte,
+    AbsenceCitesEmptyControl,
+)
+
+BY_NAME: dict[str, type[Injector]] = {c.__name__: c for c in ALL_INJECTORS}
+
+
+# --------------------------------------------------------------------------------
+# GATE-DEFEATING injectors.
+#
+# The composition rule this project learned on its first sweep: **a guard that itself
+# applies an injector cannot be a control under a second injector.** For a gate-style
+# entry the break is not "the artifact is broken" — the guard already breaks it — it is
+# "THE GATE IS DEFEATED". So these injectors weaken the gate script, and the guard, which
+# injects an artifact break and asserts rejection, goes red because nothing rejects.
+#
+# The admission-side twin then stays green, because a defeated gate still passes the
+# legitimate case. Both directions of every entry carry information.
+# --------------------------------------------------------------------------------
+
+CI = REPO_ROOT / "ci"
+
+
+class _DefeatGate(Injector):
+    """Make a gate script exit 0 unconditionally, keeping its output shape."""
+
+    script = ""
+
+    def __init__(self) -> None:
+        super().__init__(name=f"defeat_{self.script}", touches=[CI / self.script])
+
+    def apply(self) -> None:
+        p = CI / self.script
+        p.write_text(
+            "#!/usr/bin/env bash\n# DEFEATED BY AN INJECTOR\nset -euo pipefail\n"
+            f'echo "{self.script.removesuffix(".sh")}: OK"\nexit 0\n'
+        )
+
+
+class DefeatGreenTickGate(_DefeatGate):
+    script = "no-green-tick.sh"
+
+
+class DefeatBareExceptGate(_DefeatGate):
+    script = "no-bare-except.sh"
+
+
+class DefeatClockGate(_DefeatGate):
+    script = "no-clock-in-core.sh"
+
+
+class DefeatAbsenceGate(_DefeatGate):
+    script = "no-bare-absence.sh"
+
+
+class WeakenCliTest(Injector):
+    """The unit test that catches a zero-exit stub is relaxed to accept any exit code."""
+
+    def __init__(self) -> None:
+        super().__init__(name="weaken_cli_test", touches=[REPO_ROOT / "tests" / "unit" / "test_cli.py"])
+
+    def apply(self) -> None:
+        p = REPO_ROOT / "tests" / "unit" / "test_cli.py"
+        p.write_text(
+            p.read_text().replace(
+                'assert rc == 2, "an unimplemented subcommand must exit 2; exiting 0 is an all-clear"',
+                "assert rc >= 0  # DEFEATED BY AN INJECTOR",
+            )
+        )
+
+
+ALL_INJECTORS = ALL_INJECTORS + (
+    DefeatGreenTickGate,
+    DefeatBareExceptGate,
+    DefeatClockGate,
+    DefeatAbsenceGate,
+    WeakenCliTest,
+)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+PLAN_DOC = REPO_ROOT / "plan" / "00-decomposition.md"
+
+
+class HardcodeGateCount(Injector):
+    """The CLI stops reading the registry and pins the count as a literal.
+
+    Gate 10's registered broken_build was "add a row without touching cli.py" — but
+    `--version` READS the registry, so the count tracks automatically and that break
+    cannot make the gate red. A gate whose named broken_build cannot make it fail is a
+    preference with a filename, which the registry's own rule forbids. The break that
+    CAN fail it is the one that stops it reading.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="hardcode_gate_count", touches=[CLI_PY])
+
+    def apply(self) -> None:
+        CLI_PY.write_text(
+            CLI_PY.read_text().replace(
+                'return f"cdfc {__version__} (schema {_schema_sha8()}, gates {len(parse())})"',
+                'return f"cdfc {__version__} (schema {_schema_sha8()}, gates 18)"',
+            )
+        )
+
+
+class DenylistedRuntimeDep(Injector):
+    """A copyleft-incompatible package enters the declared RUNTIME set."""
+
+    def __init__(self) -> None:
+        super().__init__(name="denylisted_runtime_dep", touches=[CI / "licence-denylist.sh"])
+
+    def apply(self) -> None:
+        p = CI / "licence-denylist.sh"
+        t = p.read_text()
+        # declare a package we know carries GPL-3.0 metadata in this environment
+        t = t.replace(
+            'DENY = {"GPL-3.0", "GPL-3.0-only", "GPL-3.0-or-later", "AGPL-3.0", "AGPL-3.0-only", "SSPL-1.0"}',
+            'DENY = {"GPL-3.0", "GPL-3.0-only", "GPL-3.0-or-later", "AGPL-3.0", "AGPL-3.0-only", "SSPL-1.0", "MIT"}',
+        )
+        p.write_text(t)
+
+
+class NulByteInPlanDoc(Injector):
+    """A raw NUL makes grep skip an entire document.
+
+    Not hypothetical: one was found in this project's own plan, and it would have made
+    the id-collision gate run green over the largest instance of the problem it checks.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="nul_byte_in_plan_doc", touches=[PLAN_DOC])
+
+    def apply(self) -> None:
+        PLAN_DOC.write_bytes(PLAN_DOC.read_bytes() + b"\x00")
+
+
+class ElapsedUsField(Injector):
+    """A duration field is written into a hashed payload's shape."""
+
+    def __init__(self) -> None:
+        super().__init__(name="elapsed_us_field", touches=[REPO_ROOT / "src" / "cdfc" / "attest" / "__init__.py"])
+
+    def apply(self) -> None:
+        p = REPO_ROOT / "src" / "cdfc" / "attest" / "__init__.py"
+        p.write_text(
+            p.read_text()
+            + "\n\nclass CanaryRow:\n    predicate_id: str = \"\"\n    elapsed_us: int = 0\n"
+        )
+
+
+ALL_INJECTORS = ALL_INJECTORS + (
+    HardcodeGateCount,
+    DenylistedRuntimeDep,
+    NulByteInPlanDoc,
+    ElapsedUsField,
+)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+class HardcodeCountAndAddRow(Injector):
+    """Composite: pin the count as a literal AND add a row, so the literal is wrong.
+
+    Neither half flips gate 10 alone — a hardcoded 18 matches an 18-row registry, and a
+    19th row is tracked automatically by a CLI that reads. The break is the PAIR, and an
+    entry whose injector performs only half of it reports a mismatch rather than a catch.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="hardcode_count_and_add_row", touches=[CLI_PY, GATES_MD])
+
+    def apply(self) -> None:
+        HardcodeGateCount().apply()
+        AddGateRow().apply()
+
+
+ALL_INJECTORS = ALL_INJECTORS + (HardcodeCountAndAddRow,)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+class BreakCriticalPathTotal(Injector):
+    """A per-phase figure changes and the displayed total does not follow.
+
+    The shared-denominator error, in a schedule. Found in this project's own plan, where
+    two phases were re-estimated and the critical-path total kept its old value.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="break_critical_path_total", touches=[PLAN_DOC])
+
+    def apply(self) -> None:
+        t = PLAN_DOC.read_text()
+        PLAN_DOC.write_text(
+            t.replace(" 8    8    10   17   14   12  10.5  16   9.5    6     16    =  127 working days",
+                      " 9    8    10   17   14   12  10.5  16   9.5    6     16    =  127 working days")
+        )
+
+
+ALL_INJECTORS = ALL_INJECTORS + (BreakCriticalPathTotal,)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}

@@ -1,0 +1,268 @@
+# THE machine-readable negative-control catalogue.
+#
+# Every entry names a real break, the injector that performs it, and the guards that must
+# react. `flips: true` guards MUST go red under the injector; `flips: false` guards are
+# POSITIVE CONTROLS and must stay green — without them a gate that rejects everything
+# scores perfectly.
+#
+# The sweep asserts the EXACT SET, never "at least one". An entry is caught only when
+# every declared flips:true guard flipped and every flips:false guard held.
+version: 1
+entries:
+  - id: NC-CI01
+    component: ci
+    break: a grep gate whose scan root does not exist reports success
+    measured_instance: "grep -r pat missing/ exits 0; found in this project's own CI design"
+    injector: DefeatBareExceptGate
+    guard_tests:
+      - path: "tests/negative/test_nc_ci.py::test_nc__CI01_missing_scan_root_fails"
+        flips: true
+    positive_control: "an existing but empty scan root still passes"
+    status: active
+
+  - id: NC-CI02
+    component: ci
+    break: openpyxl's data-validation warning is discarded instead of raised
+    measured_instance: "openpyxl 3.1.5 reports 35 of 54 validations on the FME workbook; AML-CFT 0 of 5"
+    injector: WarningsTolerated
+    guard_tests:
+      - path: "tests/negative/test_nc_ci.py::test_nc__CI02_openpyxl_warning_is_an_error"
+        flips: false
+      - path: "tests/negative/test_nc_ci.py::test_nc__CI02b_the_warning_is_real_not_a_test_artifact"
+        flips: false
+      - path: "tests/negative/test_nc_ci.py::test_nc__CI02c_the_config_is_what_makes_warnings_errors"
+        flips: true
+    positive_control: "the warning genuinely originates from the artifact, not from simplefilter"
+    status: active
+    note: >
+      The first two guards install their own filter and hold under the injector; the
+      third runs a subprocess pytest that reads pyproject.toml and flips.
+    resolved: >
+      Previously PROVISIONAL because both guards installed their own filter and so could
+      not tell whether the config existed at all. CI02c runs a throwaway test through
+      pytest from the repo, where pyproject.toml applies, and flips when the config is
+      relaxed. Gate 4 is now demonstrable.
+
+  - id: NC-CI03
+    component: surface
+    break: an all-clear glyph or phrase reaches a user surface
+    measured_instance: "the product's core commitment; a surface that can render all-clear will"
+    injector: DefeatGreenTickGate
+    guard_tests:
+      - path: "tests/negative/test_nc_ci.py::test_nc__CI03_green_tick_gate_rejects_an_all_clear"
+        flips: true
+    positive_control: "the real template passes the gate"
+    status: active
+
+  - id: NC-CI04
+    component: core
+    break: a bare except swallows a crash into a clean state
+    measured_instance: "a crash that looks like a limit — mechanism 6 of the silent-pass taxonomy"
+    injector: DefeatBareExceptGate
+    guard_tests:
+      - path: "tests/negative/test_nc_ci.py::test_nc__CI04_bare_except_is_rejected"
+        flips: true
+    positive_control: "the real tree passes"
+    status: active
+
+  - id: NC-CI05
+    component: cli
+    break: an unimplemented subcommand exits 0
+    measured_instance: "a stub that exits 0 is an all-clear"
+    injector: WeakenCliTest
+    guard_tests:
+      - path: "tests/negative/test_nc_ci.py::test_nc__CI05_a_stub_that_exits_zero_is_rejected"
+        flips: true
+    positive_control: "the real CLI exits 2 and names the phase that builds the command"
+    status: active
+
+  - id: NC-CI06
+    component: ci
+    break: a duplicate gate id makes the registry silently shorter than it looks
+    measured_instance: "a tolerant parser over a registry"
+    injector: DuplicateGateId
+    guard_tests:
+      - path: "tests/contract/test_contract_gates.py::test_contract__gates_registry_schema"
+        flips: true
+      - path: "tests/contract/test_contract_gates.py::test_contract__registry_parser_rejects_a_duplicate_id"
+        flips: false
+    positive_control: "the real registry parses to 18 rows"
+    status: active
+    note: "the guard exercises the parser directly on a temp file, so it holds under the injector"
+
+  - id: NC-CI07
+    component: ci
+    break: a gate row is moved to PENDING so the live ratio becomes n/n
+    measured_instance: "P0's original exit gate `gates_live == gates_written` was x == x"
+    injector: DemoteGateToPending
+    guard_tests:
+      - path: "tests/contract/test_contract_gates.py::test_contract__live_set_is_pre_registered"
+        flips: true
+    positive_control: "the real registry matches the pre-registered literal sets"
+    status: active
+
+  - id: NC-CI08
+    component: ci
+    break: a gate loses its demonstrable_red_at, becoming permanently pending
+    measured_instance: "a gate that can never be observed red is a preference with a filename"
+    injector: BlankDemonstrableRed
+    guard_tests:
+      - path: "tests/contract/test_contract_gates.py::test_contract__pending_rows_name_a_phase"
+        flips: true
+    positive_control: "every real row names a phase"
+    status: active
+
+  - id: NC-CI09
+    component: ci
+    break: a registry row is added without the version line seeing it
+    measured_instance: "a constant re-typed in two places drifts"
+    injector: AddGateRow
+    guard_tests:
+      - path: "tests/unit/test_cli.py::test_cli__version_reports_gate_count"
+        flips: false
+      - path: "tests/contract/test_contract_gates.py::test_contract__live_set_is_pre_registered"
+        flips: true
+    positive_control: "--version reads the registry rather than a literal, so it tracks automatically"
+    status: active
+
+  - id: NC-CI10
+    component: ci
+    break: a dependency loses its wheel hash
+    measured_instance: "an unpinned dependency makes a build unreproducible"
+    injector: UnpinDependency
+    guard_tests:
+      - path: "tests/determinism/test_det_lockfile.py::test_det__lockfile_is_hash_pinned"
+        flips: true
+    positive_control: "the real lockfile is fully hash-pinned"
+    status: active
+
+  - id: NC-CI11
+    component: core
+    break: a self-measured duration enters the deterministic core
+    measured_instance: "CanaryRow.elapsed_us inside a canonicalised payload — found in the plan"
+    injector: DefeatClockGate
+    guard_tests:
+      - path: "tests/negative/test_nc_ci.py::test_nc__CI11_monotonic_clock_is_rejected"
+        flips: true
+      - path: "tests/negative/test_nc_ci.py::test_nc__CI11b_clock_in_measure_perf_is_allowed"
+        flips: false
+    positive_control: "the same call inside src/cdfc/measure/perf/ passes — timings live there"
+    status: active
+
+  - id: NC-F01
+    component: fixtures
+    break: a vendored fixture drifts from its manifest
+    measured_instance: "every number this project publishes is a fraction of these nine files"
+    injector: FlipFixtureByte
+    guard_tests:
+      - path: "tests/negative/test_nc_fixtures.py::test_nc__F01_fixture_drift_is_caught"
+        flips: true
+    positive_control: "the real corpus verifies and names all nine"
+    status: active
+
+  - id: NC-A01
+    component: absence
+    break: an absence is reported by an interface nobody proved could see a presence
+    measured_instance: "two corpus claims collapsed this way; a NUL scan reported a false positive on every file"
+    injector: DefeatAbsenceGate
+    guard_tests:
+      - path: "tests/negative/test_nc_absence.py::test_nc__A01_absence_must_resolve_a_live_ledger_row"
+        flips: true
+      - path: "tests/negative/test_nc_absence.py::test_nc__A01b_the_gate_is_not_merely_grepping_for_a_phrase"
+        flips: true
+      - path: "tests/unit/test_absence.py::test_assert_absent__raises_when_control_returns_zero"
+        flips: false
+      - path: "tests/unit/test_absence.py::test_assert_absent__writes_both_counts"
+        flips: false
+    positive_control: "a live control returns a positive count and the claim is admitted"
+    status: active
+    note: "the unit guards exercise assert_absent directly and hold; the gate guard flips"
+
+  - id: NC-Q02
+    component: predicates
+    break: a predicate with no qualification record loads
+    measured_instance: "the admission rule the settled-fraction claim rests on"
+    injector: NONE
+    why_impossible: >
+      load_or_refuse refuses unconditionally from P0 to P4, so the admission-side twin —
+      a qualified predicate that DOES load — cannot exist until P4 gives the schema.
+      Reported PROVISIONAL and excluded from entries_caught.
+    guard_tests:
+      - path: "tests/unit/test_registry.py::test_nc__Q02_unqualified_predicate_does_not_load"
+        flips: false
+    positive_control: "IMPOSSIBLE UNTIL P4"
+    status: active
+    provisional: true
+    why_provisional: "no admission-side twin until the predicate schema exists (P4)"
+
+  - id: NC-CI12
+    component: cli
+    break: the CLI pins a gate count as a literal instead of reading the registry
+    measured_instance: "gate 10's registered broken_build could not make it red; this one can"
+    injector: HardcodeCountAndAddRow
+    guard_tests:
+      - path: "tests/unit/test_cli.py::test_cli__version_reports_gate_count"
+        flips: true
+    positive_control: "the real CLI reads the registry, so the count tracks a new row automatically"
+    status: active
+
+  - id: NC-CI13
+    component: licences
+    break: a denylisted licence enters the resolved runtime set
+    measured_instance: "a licence nobody opened is not a licence; this is a hard block from P2"
+    injector: DenylistedRuntimeDep
+    guard_tests:
+      - path: "tests/negative/test_nc_ci.py::test_nc__CI13_denylisted_runtime_licence_is_rejected"
+        flips: true
+    positive_control: "the four real runtime deps pass, all labelled SECONDARY"
+    status: active
+    note: >
+      The guard applies the SAME break it asserts against, so under the sweep's outer
+      injection its precondition ("green on a correct tree") correctly goes red. It is
+      declared flips:true for that reason, and the gate exit code inside the guard is
+      the evidence that the gate itself rejects.
+
+  - id: NC-CI14
+    component: ci
+    break: a raw NUL byte makes grep skip an entire document
+    measured_instance: "found in this project's own plan; the id gate would have run green over it"
+    injector: NulByteInPlanDoc
+    guard_tests:
+      - path: "tests/negative/test_nc_ci.py::test_nc__CI14_nul_byte_in_a_document_is_rejected"
+        flips: true
+    positive_control: "all thirteen plan documents are clean UTF-8, verified by binary read"
+    status: active
+    note: >
+      The guard applies the SAME break it asserts against, so under the sweep's outer
+      injection its precondition ("green on a correct tree") correctly goes red. It is
+      declared flips:true for that reason, and the gate exit code inside the guard is
+      the evidence that the gate itself rejects.
+
+  - id: NC-CI15
+    component: attest
+    break: a duration field enters a canonicalised payload
+    measured_instance: "CanaryRow.elapsed_us inside the hashed evidence — found in the plan"
+    injector: ElapsedUsField
+    guard_tests:
+      - path: "tests/negative/test_nc_ci.py::test_nc__CI15_timing_in_a_hashed_payload_is_rejected"
+        flips: true
+    positive_control: "the same duration inside reports/perf/ is allowed"
+    status: active
+    note: >
+      The guard applies the SAME break it asserts against, so under the sweep's outer
+      injection its precondition ("green on a correct tree") correctly goes red. It is
+      declared flips:true for that reason, and the gate exit code inside the guard is
+      the evidence that the gate itself rejects.
+
+  - id: NC-CI16
+    component: plan
+    break: a displayed total stops equalling the sum of its own rows
+    measured_instance: "the plan's critical-path row displayed 118 while its parts summed to 127"
+    injector: BreakCriticalPathTotal
+    guard_tests:
+      - path: "tests/contract/test_contract_plan.py::test_plan__critical_path_total_equals_sum_of_rows"
+        flips: true
+      - path: "tests/contract/test_contract_plan.py::test_plan__the_total_check_can_fail"
+        flips: false
+    positive_control: "the real plan row sums to its displayed total"
+    status: active
