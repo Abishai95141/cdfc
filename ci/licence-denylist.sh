@@ -13,7 +13,13 @@
 # not a permissive licence.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-PY="${CDFC_PY:-.venv/bin/python}"
+# Resolve an interpreter that can see the RESOLVED RUNTIME SET. `CDFC_PY` wins; otherwise the
+# repo-local venv; otherwise `python3`, which will fail loudly on the first missing distribution
+# rather than reporting a shorter list as if it were the whole one.
+if [ -n "${CDFC_PY:-}" ]; then PY="$CDFC_PY"
+elif [ -x ".venv/bin/python" ]; then PY=".venv/bin/python"
+else PY="$(command -v python3 || true)"; fi
+[ -x "$PY" ] || { echo "GATE FAIL: no interpreter found; set CDFC_PY" >&2; exit 1; }
 "$PY" - <<'PYEOF'
 import sys, pathlib, re
 from importlib import metadata

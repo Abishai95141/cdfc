@@ -28,6 +28,7 @@ from __future__ import annotations
 
 import json
 import re
+import os
 import subprocess
 import sys
 from dataclasses import asdict, dataclass, field
@@ -87,7 +88,17 @@ def _run_guards(node_ids: list[str]) -> dict[str, tuple[bool, str]]:
         cwd=REPO,
         capture_output=True,
         text=True,
-        env={"PYTHONPATH": str(REPO / "src"), "PATH": "/usr/bin:/bin:/usr/sbin:/sbin", "HOME": str(Path.home())},
+        # A deliberately minimal environment, for determinism — plus the ONE variable that tells
+        # a shell gate which interpreter to use. Dropping CDFC_PY made every guard that invokes a
+        # gate unrunnable wherever the venv is not at the gate's default path, and the sweep
+        # reported "guards not green before injection" rather than saying so. Found in a fresh
+        # clone, which is the only place it could be found.
+        env={
+            "PYTHONPATH": str(REPO / "src"),
+            "PATH": "/usr/bin:/bin:/usr/sbin:/sbin",
+            "HOME": str(Path.home()),
+            **({"CDFC_PY": os.environ["CDFC_PY"]} if os.environ.get("CDFC_PY") else {}),
+        },
     )
     out = proc.stdout + proc.stderr
 
