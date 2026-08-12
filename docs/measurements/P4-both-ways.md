@@ -5,7 +5,7 @@
 claim becomes true — or measurably false — the day `schema_keys` is machine-checked
 against the CEL AST **in both directions** and the shortfall is counted.
 
-## **592 of 592** candidates agree in both directions
+## **572 of 572** candidates agree in both directions
 
 | workbook | sha8 | agree | candidates | shortfalls |
 |---|---|---:|---:|---:|
@@ -16,9 +16,9 @@ against the CEL AST **in both directions** and the shortfall is counted.
 | `IBU_Operations_Report_V2_3_20250808_1033.xlsx` | `bf6bbf6b` | 10 | 10 | 0 |
 | `IFSCA_Annual_Reporting_Format_30April_2026_Approved_20260504_1247.xlsx` | `4b2d4a2b` | 0 | 0 | 0 |
 | `ITFS_Monthly_report201220241626.xlsx` | `446b811a` | 25 | 25 | 0 |
-| `Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx` | `7d9a1960` | 351 | 351 | 0 |
-| `Updated___Quarterly_Reporting_Format_for_Capital_Market_Intermediaries_20260409_1019.xlsx` | `82dd291f` | 157 | 157 | 0 |
-| **total** | — | **592** | **592** | 0 |
+| `Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx` | `7d9a1960` | 349 | 349 | 0 |
+| `Updated___Quarterly_Reporting_Format_for_Capital_Market_Intermediaries_20260409_1019.xlsx` | `82dd291f` | 139 | 139 | 0 |
+| **total** | — | **572** | **572** | 0 |
 
 ## The two directions, and why they are different exception types
 

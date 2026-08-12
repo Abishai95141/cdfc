@@ -23,7 +23,8 @@ from cdfc.gates import RegistryError, live_ids, parse, pending_ids  # noqa: E402
 # prevent, and which a single mutable set would permit.
 LIVE_AT_P0 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 17, 18, 19, 20}
 ADDED_LIVE_AT_P4 = {21, 22, 23, 24, 25, 26, 27}   # docs/GATE-CHANGES.md, 12 Aug 2026
-LIVE_EXPECTED = LIVE_AT_P0 | ADDED_LIVE_AT_P4
+ADDED_LIVE_AT_P5 = {28, 29, 30, 31, 32, 33, 34, 35, 36}   # docs/GATE-CHANGES.md, 12 Aug 2026
+LIVE_EXPECTED = LIVE_AT_P0 | ADDED_LIVE_AT_P4 | ADDED_LIVE_AT_P5
 PENDING_AT_P0 = {14, 15, 16}
 
 

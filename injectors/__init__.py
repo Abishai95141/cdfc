@@ -1209,3 +1209,143 @@ ALL_INJECTORS = ALL_INJECTORS + (
     HostFnResolvesLive, HostFnLosesItsThirdValue, LoaderSkipsQualificationCheck,
 )
 BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+# --------------------------------------------------------------------------------
+# The P5 injectors — run assembly, the verdict model, closure, the settled fraction
+# --------------------------------------------------------------------------------
+
+VERDICT = REPO_ROOT / "src" / "cdfc" / "verdict"
+EVAL = REPO_ROOT / "src" / "cdfc" / "evaluate"
+
+
+class CellsBoundAfterExpr(Injector):
+    """`cells_bound == 0` is checked AFTER `expr`, so the vacuous pass is produced and corrected.
+
+    `all([])` is `True`. A design that lets the PASS exist and then overwrites it is trusting
+    itself to overwrite it, and NC-E20 exists because that trust is exactly what fails.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="cells_bound_after_expr", touches=[EVAL / "runner.py"])
+
+    def apply(self) -> None:
+        p = EVAL / "runner.py"
+        p.write_text(p.read_text().replace(
+            "    bound = bind_count(p, schema)\n    if not bound:",
+            "    bound = bind_count(p, schema) or ('<deferred>',)\n    if False:"))
+
+
+class CellsFromEvaluations(Injector):
+    """`run_cell` is accumulated from the evaluations instead of materialised from the denominator.
+
+    The table then has exactly as many rows as things that happened, and the cells nothing happened
+    to — the ones that matter — are absent. Closure cannot see a hole it was never given.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="cells_from_evaluations", touches=[EVAL / "rollup.py"])
+
+    def apply(self) -> None:
+        p = EVAL / "rollup.py"
+        p.write_text(p.read_text().replace(
+            "        for key in sorted(set(cells))\n    }",
+            "        for key in sorted(set(cells))[:1]\n    }"))
+
+
+class InvalidEmitsZero(Injector):
+    """An INVALID run emits `0` for the settled fraction instead of a present `null`."""
+
+    def __init__(self) -> None:
+        super().__init__(name="invalid_emits_zero", touches=[VERDICT / "settled_fraction.py"])
+
+    def apply(self) -> None:
+        p = VERDICT / "settled_fraction.py"
+        p.write_text(p.read_text().replace(
+            '    return {"settledFraction": None if sf is None else sf.as_row()}',
+            '    return {} if sf is None else {"settledFraction": sf.as_row()}'))
+
+
+class RunCauseInItemReason(Injector):
+    """A run-level `invalid.*` cause is written into an item's reason field.
+
+    The two vocabularies stop being disjoint, and the item-level count is no longer 8 x 30.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="run_cause_in_item_reason", touches=[VERDICT / "invalid.py"])
+
+    def apply(self) -> None:
+        # Injected on the RUN-LEVEL side. Changing an ITEM code to an `invalid.*` string breaks
+        # the family map at import, so the module never loads and the guards ERROR at collection
+        # rather than going red — a break the sweep cannot attribute. This one collides the two
+        # vocabularies while leaving both modules importable.
+        p = VERDICT / "invalid.py"
+        p.write_text(p.read_text().replace(
+            '    CANARY_SILENT = "invalid.canary_silent"',
+            '    CANARY_SILENT = "error.canary_silent"'))
+
+
+class ValueDerivedRemoval(Injector):
+    """A cell leaves `inScope` for a reason derived from the filing's own VALUES.
+
+    D-P5-05's whole subject: `scope_kind == PREDICATE_PRECONDITION` starts removing cells, so a
+    predicate whose `applicable` went degenerate shrinks the denominator it is measured against —
+    and a filer who fills in less gets a better settled fraction.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="value_derived_removal", touches=[VERDICT / "states.py"])
+
+    def apply(self) -> None:
+        p = VERDICT / "states.py"
+        p.write_text(p.read_text().replace(
+            "        return scope_kind != LEAVES_IN_SCOPE",
+            "        return False"))
+
+
+class InformationalOnlyLeaves(Injector):
+    """An INFORMATIONAL-only cell rolls up to INFORMATIONAL, which LEAVES the denominator.
+
+    Adding a row to `template_defects.yaml` then raises the headline fraction.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="informational_only_leaves", touches=[EVAL / "rollup.py"])
+
+    def apply(self) -> None:
+        p = EVAL / "rollup.py"
+        p.write_text(p.read_text().replace(
+            "    if all(e.state is ItemState.INFORMATIONAL for e in evals):",
+            "    if False and all(e.state is ItemState.INFORMATIONAL for e in evals):"))
+
+
+class ContractTableEdit(Injector):
+    """One cell of the GENERATED contract table is hand-edited."""
+
+    def __init__(self) -> None:
+        super().__init__(name="contract_table_edit", touches=[REPO_ROOT / "EVALUATION-CONTRACT.md"])
+
+    def apply(self) -> None:
+        p = REPO_ROOT / "EVALUATION-CONTRACT.md"
+        p.write_text(p.read_text().replace("| 4 | 5 | cells_bound == 0 |", "| 4 | 5 | cells bound is zero |"))
+
+
+class PreflightDisabled(Injector):
+    """Pre-flight is skipped, so `true || <error>` returns PASS over a key nobody checked."""
+
+    def __init__(self) -> None:
+        super().__init__(name="preflight_disabled", touches=[EVAL / "runner.py"])
+
+    def apply(self) -> None:
+        p = EVAL / "runner.py"
+        p.write_text(p.read_text().replace(
+            "    pf: PreflightResult = preflight(p, facts)\n    if not pf.proceed:",
+            "    pf: PreflightResult = preflight(p, facts)\n    if False:"))
+
+
+ALL_INJECTORS = ALL_INJECTORS + (
+    CellsBoundAfterExpr, CellsFromEvaluations, InvalidEmitsZero, RunCauseInItemReason,
+    ValueDerivedRemoval, InformationalOnlyLeaves, ContractTableEdit, PreflightDisabled,
+)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}

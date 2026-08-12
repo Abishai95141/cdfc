@@ -73,28 +73,17 @@ def build() -> dict[str, str]:
     # this fixture destroyed two formula cells while claiming to overwrite one, and the
     # only reason it was caught is that the formula count was checked (505 -> 503, not
     # 504). Both encodings are handled explicitly.
-    overwritten = re.sub(
-        r'(<c r="O7"[^>]*>)\s*(?:<f[^>]*/>|<f[^>]*>.*?</f>)\s*(?:<v>[^<]*</v>)?',
-        r"\1<v>999999</v>",
-        xml,
-        count=1,
-        flags=re.S,
-    )
-    _rewrite(FME, OUT / "formula-overwritten__portfolio-O7.xlsx", {part: overwritten.encode()})
+    # REPAIRED AT P5. Both transforms here were patterns over OOXML, and `ci/no-regex-over-xml.sh`
+    # — the sibling gate `ci/no-regex-over-cel.sh` names and that did not exist until P5 — found
+    # them on its first run. The comment above records what the pattern form already cost once: it
+    # destroyed two formula cells while claiming to overwrite one. The elements are edited through
+    # the one parser factory now, so the self-closing `<f/>` case stops being a special case at
+    # all — it is an element with no children.
+    overwritten = _overwrite_formula_cell(xml, "O7", "999999")
+    _rewrite(FME, OUT / "formula-overwritten__portfolio-O7.xlsx", {part: overwritten})
 
     # 3. fifty values written into field-surface cells — the fingerprint must NOT move.
-    def _add_values(x: str) -> str:
-        n = 0
-        out = []
-        for chunk in re.split(r'(<c r="[A-Z]+\d+"[^>]*/>)', x):
-            if n < 50 and re.fullmatch(r'<c r="[A-Z]+\d+"[^>]*/>', chunk or ""):
-                out.append(chunk[:-2] + "><v>1</v></c>")
-                n += 1
-            else:
-                out.append(chunk)
-        return "".join(out)
-
-    _rewrite(FME, OUT / "values-written__50-cells.xlsx", {part: _add_values(xml).encode()})
+    _rewrite(FME, OUT / "values-written__50-cells.xlsx", {part: _write_fifty_values(xml)})
 
     made = {}
     for f in sorted(OUT.glob("*.xlsx")):
@@ -112,5 +101,56 @@ def main() -> int:
     return 0
 
 
+M_NS = "{http://schemas.openxmlformats.org/spreadsheetml/2006/main}"
+
+
+def _parse(xml: str | bytes):
+    import sys as _sys
+
+    _sys.path.insert(0, str(REPO / "src"))
+    from cdfc.ingest.xmlsafe import fromstring
+
+    return fromstring(xml.encode() if isinstance(xml, str) else xml)
+
+
+def _serialise(root) -> bytes:
+    from lxml import etree
+
+    return etree.tostring(root, xml_declaration=True, encoding="UTF-8", standalone=True)
+
+
+def _sub_element(parent, tag: str):
+    from lxml import etree
+
+    return etree.SubElement(parent, tag)
+
+
+def _overwrite_formula_cell(xml: str, ref: str, literal: str) -> bytes:
+    """F11 — a cell the pinned blank declares a formula for carries a literal instead."""
+    root = _parse(xml)
+    for c in root.iter(f"{M_NS}c"):
+        if c.get("r") != ref:
+            continue
+        for child in list(c):
+            c.remove(child)
+        c.attrib.pop("t", None)
+        _sub_element(c, f"{M_NS}v").text = literal
+        break
+    return _serialise(root)
+
+
+def _write_fifty_values(xml: str) -> bytes:
+    """Fifty EMPTY field-surface cells given a value. The fingerprint must NOT move."""
+    root = _parse(xml)
+    written = 0
+    for c in root.iter(f"{M_NS}c"):
+        if written >= 50 or len(c) or c.get("t"):
+            continue
+        _sub_element(c, f"{M_NS}v").text = "1"
+        written += 1
+    return _serialise(root)
+
+
 if __name__ == "__main__":
     raise SystemExit(main())
+

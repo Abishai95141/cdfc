@@ -100,6 +100,12 @@ BANNED: Final[Mapping[str, str]] = {
     "unknown function": (
         "not an admitted built-in and not a registered host function"
     ),
+    "int64 overflow": (
+        "an integer literal outside the int64 range. Money is an int64 count of 10^-3 USD "
+        "Million and every quantity in this system is an integer, so a literal this large is "
+        "outside the model — and the runtime does not merely reject it, it exhausts memory "
+        "trying to represent it"
+    ),
     "map literal": (
         "no fact in the model is a map; a constant map inside a predicate is a lookup table "
         "nobody qualified, and it belongs in the template side of the fact model where its "
@@ -257,6 +263,13 @@ def _walk(
         for tok in node.children:
             if isinstance(tok, lark.Token) and tok.type in _BANNED_LITERAL_TOKENS:
                 raise _ban(_BANNED_LITERAL_TOKENS[tok.type], slot=slot, offset=_pos(tok))
+            if isinstance(tok, lark.Token) and tok.type == "INT_LIT":
+                try:
+                    value = int(str(tok), 0)
+                except ValueError:
+                    value = 0
+                if not (-(2**63) <= value < 2**63):
+                    raise _ban("int64 overflow", slot=slot, offset=_pos(tok))
         return
 
     if node.data == "member_object":

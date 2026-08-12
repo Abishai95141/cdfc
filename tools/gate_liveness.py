@@ -59,6 +59,16 @@ EVIDENCE: dict[int, str] = {
     25: "NC-Q48",   # the G2 denominator is declared per class
     26: "NC-Q49",   # a host function never resolves live
     27: "NC-Q02",   # the predicate schema and the loader invariant
+    # P5
+    28: "NC-E36",   # no regex over OOXML (its subject is the generated contract's sibling break)
+    29: "NC-E30",   # the vacuous pass is unreachable
+    30: "NC-E31",   # the cell table is the denominator
+    31: "NC-E32",   # null is not zero and not omitted
+    32: "NC-E33",   # two vocabularies, disjoint
+    33: "NC-E34",   # no value-derived removal
+    34: "NC-E35",   # an INFORMATIONAL-only cell stays counted
+    35: "NC-E36",   # the contract is generated
+    36: "NC-E37",   # pre-flight blocks expr
 }
 
 

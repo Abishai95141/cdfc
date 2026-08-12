@@ -28,7 +28,17 @@ def _literal(text: str | None) -> str | None:
         f = float(t)
     except ValueError:
         return None
-    return str(int(f)) if f == int(f) else None
+    if f != int(f):
+        return None
+    # A BOUND OUTSIDE int64 IS NOT A BOUND THIS SYSTEM CAN EXPRESS. One `decimal` validation on
+    # FME declares 9.99999999999999E+21, which is ~1,000x the int64 ceiling; emitting it as a CEL
+    # integer literal made the runtime exhaust memory on that one predicate and the run was killed.
+    # Money is an int64 count of 10^-3 USD Million, so a threshold this large is outside the
+    # model — and a predicate whose threshold cannot be represented is a typed skip, not a
+    # predicate with an approximated threshold.
+    if not (-(2**63) <= int(f) < 2**63):
+        return None
+    return str(int(f))
 
 
 def emit_bounds(
@@ -45,9 +55,10 @@ def emit_bounds(
             hi = _literal(dv.formula2)
             if lo is None:
                 ctx.skip("dv_no_type", sheet, dv.sqref,
-                         f"{dv_type} validation whose bound {(dv.formula1 or '')[:40]!r} is not a "
-                         "literal in the pinned blank; a threshold the filing supplies is a "
-                         "threshold the filer sets")
+                         f"{dv_type} validation whose bound {(dv.formula1 or '')[:40]!r} is not an "
+                         "int64 literal in the pinned blank: either the filing supplies the "
+                         "threshold (a threshold the filer sets), or it is outside the range "
+                         "MILLI_USD_MILLION can represent")
                 continue
             if not dv.sqref.split():
                 ctx.skip("dv_no_type", sheet, "<no sqref>",
@@ -64,15 +75,24 @@ def emit_bounds(
                 f"{base}.cells[*].v": {f"{sheet}!{c}" for c in cells},
                 f"{base}.cells[*].__cell__": {f"{sheet}!{c}" for c in cells},
             }
+            # NO BLANK ARM. A bound is over NUMBERS, and `c.v == ""` compares an integer to a
+            # string — which CEL treats as a type error, not as false, so five predicates on the
+            # clean filing produced ERROR(error.predicate_raised) and invalidated the run.
+            #
+            # The blank arm was also unnecessary: a blank NUMERIC cell is ABSENT from the fact
+            # model (F05 — blank is not zero), so it never reaches `.all()` at all. Removing it
+            # makes the inferred type unambiguous, which moves a text value in a numeric column
+            # from ERROR (our apparatus failed) to NOT_RUN (the source could not be read) at
+            # pre-flight — the honest state, and one with a different remedy.
             if hi is not None and op is None:
-                test = f'c.v == "" || (c.v >= {lo} && c.v <= {hi})'
-                bad = f'c.v != "" && (c.v < {lo} || c.v > {hi})'
+                test = f"c.v >= {lo} && c.v <= {hi}"
+                bad = f"c.v < {lo} || c.v > {hi}"
                 shown = f"between {lo} and {hi}"
             else:
                 o = op or ">="
                 inverse = {">": "<=", ">=": "<", "<": ">=", "<=": ">", "==": "!=", "!=": "=="}[o]
-                test = f'c.v == "" || c.v {o} {lo}'
-                bad = f'c.v != "" && c.v {inverse} {lo}'
+                test = f"c.v {o} {lo}"
+                bad = f"c.v {inverse} {lo}"
                 shown = f"{o} {lo}"
             first = dv.sqref.split()[0].split(":")[0].replace("$", "")
             yield order_key(ctx, sheet, first, name), Draft(

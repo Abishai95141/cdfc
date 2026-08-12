@@ -194,6 +194,15 @@ def _to_cel(value: Any, unit: Unit | str | None = None) -> Any:
             raise TypeError(f"{value} is not an integer; scale it at the fact-model boundary")
         return celtypes.IntType(int(value))
     if isinstance(value, int):
+        if not (-(2**63) <= value < 2**63):
+            # celpy raises a bare `ValueError: overflow` with no value in it. A fact model that
+            # refuses a number must say which number, or the reader goes looking through 3,747
+            # cells for it.
+            raise TypeError(
+                f"{value} does not fit in int64 and cannot enter the fact model. Money is an "
+                "int64 count of 10^-3 USD Million; a quantity this large is a unit error or a "
+                "bound copied into a value."
+            )
         return celtypes.IntType(value)
     if isinstance(value, _dt.date):
         return celtypes.StringType(value.isoformat())
@@ -235,3 +244,89 @@ class FactView:
 
     def __repr__(self) -> str:
         return f"FactView(root={self.root!r}, top={sorted(map(str, self._cel))!r})"
+
+
+# --- the two documents, addressable by the key grammar ---------------------------------------
+
+
+class FactSet:
+    """`filing` and `template`, addressable by D-P4-02's dotted key grammar.
+
+    Pre-flight needs to ask *is `filing.a.b[*].c` present, and what type is it* — over the same
+    tree the runtime evaluates against, because a pre-flight that consults a different structure
+    guards something other than what runs.
+
+    A `[*]` segment means "every element of this repeated node": present iff the collection exists
+    AND every element carries the remaining path. **A repeated node with no elements is PRESENT and
+    empty** — that is not a missing key, it is an empty table, and conflating them would make
+    pre-flight refuse to run on a filing with no rows rather than letting the predicate see zero.
+    """
+
+    def __init__(self, filing: Mapping[str, Any], template: Mapping[str, Any]) -> None:
+        self._trees = {"filing": dict(filing), "template": dict(template)}
+        self._views: dict[str, FactView] = {}
+
+    def view(self, root: str) -> FactView:
+        """Built ONCE per root and reused for the whole run.
+
+        Not an optimisation. `evaluate_one` asks for the views on every predicate, and rebuilding
+        the 3,747-cell celtypes tree 351 times exhausted memory and the run was killed. The trees
+        are immutable within a run, and the recording proxy is created fresh per evaluation by
+        `bind(meter)` — so the cache holds the DATA, never the instrumentation.
+        """
+        if root not in self._views:
+            self._views[root] = FactView(self._trees[root], root=root)  # type: ignore[arg-type]
+        return self._views[root]
+
+    def _walk(self, key: str) -> tuple[bool, list[Any]]:
+        """`(present, values)` — every value the key resolves to, or `(False, [])`."""
+        parts = key.split(".")
+        root, segments = parts[0], parts[1:]
+        if root not in self._trees:
+            return False, []
+        nodes: list[Any] = [self._trees[root]]
+        for seg in segments:
+            repeated = seg.endswith(REPEATED)
+            name = seg[: -len(REPEATED)] if repeated else seg
+            nxt: list[Any] = []
+            for node in nodes:
+                if not isinstance(node, Mapping) or name not in node:
+                    return False, []
+                value = node[name]
+                if repeated:
+                    if not isinstance(value, (list, tuple)):
+                        return False, []
+                    nxt.extend(value)
+                else:
+                    nxt.append(value)
+            nodes = nxt
+            if not nodes:
+                # A repeated node with NO elements. The key is present; there is nothing under it.
+                return True, []
+        return True, nodes
+
+    def has(self, key: str) -> bool:
+        present, _ = self._walk(key)
+        return present
+
+    def type_of(self, key: str) -> str | None:
+        """`STRING` | `INT` | `LIST` | `BOOL`, or None when the key resolves to nothing or to a
+        mixture. A mixture is reported as unknown rather than as the first value's type."""
+        present, values = self._walk(key)
+        if not present or not values:
+            return None
+        kinds = set()
+        for v in values:
+            if isinstance(v, bool):
+                kinds.add("BOOL")
+            elif isinstance(v, int):
+                kinds.add("INT")
+            elif isinstance(v, str):
+                kinds.add("STRING")
+            elif isinstance(v, (list, tuple)):
+                kinds.add("LIST")
+            elif isinstance(v, Mapping):
+                kinds.add("OBJECT")
+            else:
+                kinds.add("OTHER")
+        return kinds.pop() if len(kinds) == 1 else None

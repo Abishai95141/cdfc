@@ -53,7 +53,7 @@ def test_golden__harvest_count__fme() -> None:
         "date_bound": 5,
         "integer_bound": 11,
         "membership": 20,
-        "numeric_bound": 12,
+        "numeric_bound": 10,
         "same_sheet_equality": 42,
         "sum_identity": 79,
         "tally_identity": 1,

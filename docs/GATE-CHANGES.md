@@ -40,3 +40,17 @@ control proved nothing while still reporting itself as caught.** The sweep could
 injector applied cleanly and the tree restored exactly, and the digest check is blind to a no-op by
 construction. It was found because the guard test went red for the right reason. The injector now
 removes every file under the root.
+
+---
+
+## 12 Aug 2026 — P5 adds rows 28–36, all LIVE, all observed red in the same session
+
+Row 28 (`ci/no-regex-over-xml.sh`) is the notable one: it was **named as a sibling by a gate
+written at P4 and did not exist**. It found a live defect in the P5 filing generator and a
+pre-existing one in `tools/fixtures/make_synthetic.py` on its first run. A gate named in a comment
+is not a gate.
+
+Row 33 carries the product's headline claim: **nothing derived from the filing's own values may
+remove a cell from the in-scope denominator.** `LIVE_AT_P0` and `ADDED_LIVE_AT_P4` are unchanged
+and `ADDED_LIVE_AT_P5` is a third frozen literal, so no row that was ever LIVE can leave the set by
+being edited out of a growing list.

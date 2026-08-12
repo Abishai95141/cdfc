@@ -709,3 +709,136 @@ entries:
         flips: false
     positive_control: "it still answers where the regulation determines the answer"
     status: active
+
+  # --- P5: run assembly, the verdict model, closure, the settled fraction ------------
+  #
+  # ID ALLOCATION, CORRECTED. The plan gives this document the band E20-E29. **E20-E23 were
+  # already taken** by P3 (money scaled twice, the warrant lattice, a leaf without __cell__, a
+  # relative tolerance) — and the catalogue is keyed by `id`, so appending E20 here would have
+  # SILENTLY REPLACED P3's entry, taking its guard with it. `test_nc_meta__ids_are_unique` caught
+  # it, which is the whole reason that test exists. This block is E30-E37.
+  # Ids are inside this document's E20-E29 band (`02` R5a).
+
+  - id: NC-E30
+    note: >
+      The guard functions keep their `E20`-style names: they name the DEFECT, which is what a
+      reader greps for, and renaming them would break every DoD line that cites a node id. The
+      catalogue row is what had to move.
+    component: evaluate
+    break: cells_bound is computed AFTER expr, so the vacuous pass is produced and then corrected
+    measured_instance: "`all([])` is True; a design that overwrites its own PASS is trusting itself to"
+    injector: CellsBoundAfterExpr
+    guard_tests:
+      - path: "tests/negative/test_nc_verdict.py::test_nc__E20_cells_bound_zero_is_error_before_expr_runs"
+        flips: true
+      - path: "tests/golden/test_p5_runtime.py::test_golden__cells_bound_zero_is_error_and_invalidates_the_run"
+        flips: true
+      - path: "tests/negative/test_nc_verdict.py::test_nc__E20b_a_predicate_that_binds_cells_still_runs"
+        flips: false
+    positive_control: "a predicate that binds cells still runs"
+    status: active
+
+  - id: NC-E31
+    component: evaluate
+    break: run_cell is accumulated from the evaluations instead of materialised from the field surface
+    measured_instance: "the table then has as many rows as things that happened; the cells nothing happened to are the ones that matter"
+    injector: CellsFromEvaluations
+    guard_tests:
+      - path: "tests/negative/test_nc_verdict.py::test_nc__E21_run_cell_is_materialised_from_the_field_surface"
+        flips: true
+      - path: "tests/unit/test_rollup_closure.py::test_materialise__count_equals_field_surface"
+        flips: true
+      - path: "tests/negative/test_nc_verdict.py::test_nc__E21b_an_empty_evaluation_set_still_has_a_row"
+        flips: false
+    positive_control: "a cell nothing happened to is present, NO_PREDICATE, and counted"
+    status: active
+
+  - id: NC-E32
+    component: verdict
+    break: an INVALID run emits 0 for the settled fraction, or omits the key, instead of a present null
+    measured_instance: "null, forbidden and omitted are three different things and three documents asserted three different ones"
+    injector: InvalidEmitsZero
+    guard_tests:
+      - path: "tests/negative/test_nc_verdict.py::test_nc__E22_invalid_carries_a_present_null"
+        flips: true
+      - path: "tests/unit/test_rollup_closure.py::test_contract__invalid_carries_a_null_not_an_absence"
+        flips: true
+      - path: "tests/negative/test_nc_verdict.py::test_nc__E22b_a_valid_run_carries_the_object"
+        flips: false
+    positive_control: "a VALID run carries the object, so the key is not null for everything"
+    status: active
+
+  - id: NC-E33
+    component: verdict
+    break: a run-level invalid.* cause is written into an item's reason field
+    measured_instance: "the item-level count is pinned at 8 x 30 in four places; a leak moves all four"
+    injector: RunCauseInItemReason
+    guard_tests:
+      - path: "tests/negative/test_nc_verdict.py::test_nc__E23_no_run_level_cause_appears_in_the_item_vocabulary"
+        flips: true
+      - path: "tests/contract/test_contract_vocabulary.py::test_contract__invalid_causes_and_reason_codes_are_disjoint"
+        flips: true
+      - path: "tests/negative/test_nc_verdict.py::test_nc__E23b_a_guard_trip_produces_one_run_cause_and_zero_item_reasons"
+        flips: false
+    positive_control: "a guard trip produces exactly one run-level cause and zero per-cell reasons"
+    status: active
+
+  - id: NC-E34
+    component: verdict
+    break: a cell leaves inScope for a reason derived from the filing's own values
+    measured_instance: "D-P5-05: a filer who fills in less then gets a better settled fraction"
+    injector: ValueDerivedRemoval
+    guard_tests:
+      - path: "tests/negative/test_nc_verdict.py::test_nc__E24_a_degenerate_precondition_does_not_leave_the_denominator"
+        flips: true
+      - path: "tests/contract/test_contract_vocabulary.py::test_contract__the_retention_rule_is_asserted_directly"
+        flips: true
+      - path: "tests/negative/test_nc_verdict.py::test_nc__E24b_a_declared_characteristic_does_leave"
+        flips: false
+    positive_control: "a DECLARED_CHARACTERISTIC still leaves; the removal path is not simply disabled"
+    status: active
+
+  - id: NC-E35
+    component: evaluate
+    break: an INFORMATIONAL-only cell leaves the denominator
+    measured_instance: "adding a row to template_defects.yaml would then raise the headline fraction"
+    injector: InformationalOnlyLeaves
+    guard_tests:
+      - path: "tests/negative/test_nc_verdict.py::test_nc__E25_an_informational_only_cell_is_no_predicate"
+        flips: true
+      - path: "tests/unit/test_rollup_closure.py::test_roll_up__informational_only_cell_is_no_predicate"
+        flips: true
+      - path: "tests/negative/test_nc_verdict.py::test_nc__E25b_a_genuine_informational_cell_still_leaves"
+        flips: false
+    positive_control: "a genuinely INFORMATIONAL cell still leaves; the bucket has not stopped removing"
+    status: active
+
+  - id: NC-E36
+    component: evaluate
+    break: the evaluation contract's generated table is hand-edited
+    measured_instance: "three drafts of the specification gave three different fives; a build cannot satisfy two"
+    injector: ContractTableEdit
+    guard_tests:
+      - path: "tests/negative/test_nc_verdict.py::test_nc__E03b_contract_is_generated_not_edited"
+        flips: true
+      - path: "tests/negative/test_nc_verdict.py::test_nc__E03c_the_generator_still_writes_the_table"
+        flips: true
+    positive_control: "the generator does write the table — E03c reads it, so an empty generator fails too"
+    note: >
+      `test_contract__generated_doc_is_byte_identical` is deliberately NOT a guard here. It runs
+      the generator, which REWRITES the file, so it heals the hand edit for every guard after it
+      in the same pytest process. A guard that repairs the break is not a guard.
+    status: active
+
+  - id: NC-E37
+    component: evaluate
+    break: pre-flight is skipped, so `true || <error>` returns PASS over a key nobody checked
+    measured_instance: "the CEL specification says an operand error in ||/&& will be ignored — the defect this product exists to prevent, manufactured by the language"
+    injector: PreflightDisabled
+    guard_tests:
+      - path: "tests/negative/test_nc_verdict.py::test_nc__E02b_preflight_blocks_expr_when_a_declared_key_is_absent"
+        flips: true
+      - path: "tests/negative/test_nc_verdict.py::test_nc__E02c_a_complete_fact_set_proceeds_to_expr"
+        flips: false
+    positive_control: "a complete fact set still reaches `expr`"
+    status: active

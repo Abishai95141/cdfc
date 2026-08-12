@@ -52,6 +52,15 @@ a row between sets fails the build.
 | 25 | pytest | `test_nc__Q48_claims_precede_the_campaign_and_do_not_vary_per_predicate` — the G2 denominator is declared per class | P4 | P4 | `injectors/claims_from_kill_vector.py` | LIVE |
 | 26 | pytest | `test_nc__Q49_reg_resolves_never_answers_without_a_snapshot` — a host function never resolves live | P4 | P4 | `injectors/host_fn_resolves_live.py` | LIVE |
 | 27 | contract | `test_contract__committed_schema_matches_the_generated_one` — the predicate schema is generated from the record | P4 | P4 | edit the schema without touching `envelope.py` | LIVE |
+| 28 | shell | `ci/no-regex-over-xml.sh` — no regular expression reads or rewrites OOXML | P1 | P5 | add a pattern over `<c r=...>` to any scanned module | LIVE |
+| 29 | pytest | `test_nc__E20_cells_bound_zero_is_error_before_expr_runs` — the vacuous pass is unreachable, not repaired | P5 | P5 | `injectors/cells_bound_after_expr.py` | LIVE |
+| 30 | pytest | `test_nc__E21_run_cell_is_materialised_from_the_field_surface` — the cell table IS the denominator | P5 | P5 | `injectors/cells_from_evaluations.py` | LIVE |
+| 31 | pytest | `test_nc__E22_invalid_carries_a_present_null` — null is not zero and not omitted | P5 | P5 | `injectors/invalid_emits_zero.py` | LIVE |
+| 32 | pytest | `test_nc__E23_no_run_level_cause_appears_in_the_item_vocabulary` — two vocabularies, disjoint | P5 | P5 | `injectors/run_cause_in_item_reason.py` | LIVE |
+| 33 | pytest | `test_nc__E24_a_degenerate_precondition_does_not_leave_the_denominator` — nothing derived from the filing's values removes a cell | P5 | P5 | `injectors/value_derived_removal.py` | LIVE |
+| 34 | pytest | `test_nc__E25_an_informational_only_cell_is_no_predicate` — a template defect cannot raise the headline | P5 | P5 | `injectors/informational_only_leaves.py` | LIVE |
+| 35 | pytest | `test_nc__E03b_contract_is_generated_not_edited` — EVALUATION-CONTRACT.md is generated | P5 | P5 | `injectors/contract_table_edit.py` | LIVE |
+| 36 | pytest | `test_nc__E02b_preflight_blocks_expr_when_a_declared_key_is_absent` — a disjunction never returns PASS over an unchecked key | P5 | P5 | `injectors/preflight_disabled.py` | LIVE |
 
 **Rows 17 and 18 exist as gates from the first commit, dated 11 Aug 2026, and their reason is recorded
 rather than assumed.** Row 17: a `CanaryRow.elapsed_us` inside a canonicalised payload was found in the
@@ -59,7 +68,7 @@ plan and would have made byte-identical re-derivation impossible; the gate exist
 Row 18: a displayed critical-path total that did not equal the sum of its own rows was found in the plan,
 which is the shared-denominator error in a schedule; the gate exists before any other total does.
 
-**LIVE = {1,…,13,17,…,27} (24 rows). PENDING = {14,15,16} (3 rows). Total 27.**
+**LIVE = {1,…,13,17,…,36} (33 rows). PENDING = {14,15,16} (3 rows). Total 36.**
 
 **Row 20 was added at P3, dated 11 Aug 2026.** R4 requires the evaluator to be `Decimal` from its first line rather than converted later; the gate exists so that cannot drift in unnoticed.
 
@@ -90,3 +99,18 @@ directory with the failure suppressed. That worked while `evaluate/` held one fi
 P0 negative control proved nothing while still reporting itself as caught.** The sweep could not see
 it: the injector applied cleanly and the tree restored exactly. It was found because the guard test
 went red for the right reason. The injector now removes every file under the root.
+
+**Rows 28–36 were added at P5, dated 12 Aug 2026.**
+
+Row 28's reason is the one worth reading: `ci/no-regex-over-cel.sh` named this gate as *"the
+sibling"* at P4 and **the sibling did not exist**. At P5 the filing generator rewrote `<c>`
+elements with a pattern, produced malformed XML, and LibreOffice "repaired" the result by dropping
+424 of the workbook's 505 formulas — the formula count then read 81. On its first run the new gate
+also found a PRE-EXISTING instance in `tools/fixtures/make_synthetic.py`, which had been building
+the adversarial fixtures with the technique this project bans. Same defect shape as
+`<f[ >][^>]*>` over the same format: **a correct count with wrong contents, three times now.**
+
+Row 33 is the one the product's headline number depends on. A cell may leave the in-scope
+denominator only for a reason that is a function of the template, the selection, or a declared
+filer characteristic — **never a function of the filing's own cell values.** Without it a filer who
+fills in less gets a better settled fraction.

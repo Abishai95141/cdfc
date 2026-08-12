@@ -8,7 +8,7 @@ without an entry in `docs/HARVEST-DELTA.md` fails the build.
 ## Every row, including the two zeroes
 
 **Publishing the total alone is banned.** The distribution is concentrated — see the
-concentration line below — and `592` on its own conceals which workbooks produced it.
+concentration line below — and `572` on its own conceals which workbooks produced it.
 
 | workbook | sha8 | candidates | conditional_required | cross_sheet_equality | date_bound | integer_bound | membership | numeric_bound | same_sheet_equality | sum_identity | tally_identity | skipped | cells reachable |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -19,11 +19,11 @@ concentration line below — and `592` on its own conceals which workbooks produ
 | `IBU_Operations_Report_V2_3_20250808_1033.xlsx` | `bf6bbf6b` | **10** | 0 | 6 | 0 | 0 | 4 | 0 | 0 | 0 | 0 | 0 | 18 |
 | `IFSCA_Annual_Reporting_Format_30April_2026_Approved_20260504_1247.xlsx` | `4b2d4a2b` | **0** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `ITFS_Monthly_report201220241626.xlsx` | `446b811a` | **25** | 1 | 1 | 0 | 1 | 8 | 1 | 0 | 13 | 0 | 2 | 88 |
-| `Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx` | `7d9a1960` | **351** | 0 | 181 | 5 | 11 | 20 | 12 | 42 | 79 | 1 | 178 | 2854 |
-| `Updated___Quarterly_Reporting_Format_for_Capital_Market_Intermediaries_20260409_1019.xlsx` | `82dd291f` | **157** | 10 | 0 | 17 | 32 | 47 | 28 | 0 | 23 | 0 | 127 | 1353 |
-| **total** | — | **592** | 12 | 196 | 22 | 45 | 90 | 46 | 51 | 129 | 1 | 309 | 7467 |
+| `Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx` | `7d9a1960` | **349** | 0 | 181 | 5 | 11 | 20 | 10 | 42 | 79 | 1 | 180 | 2794 |
+| `Updated___Quarterly_Reporting_Format_for_Capital_Market_Intermediaries_20260409_1019.xlsx` | `82dd291f` | **139** | 10 | 0 | 17 | 32 | 47 | 10 | 0 | 23 | 0 | 117 | 1040 |
+| **total** | — | **572** | 12 | 196 | 22 | 45 | 90 | 26 | 51 | 129 | 1 | 301 | 7094 |
 
-**Concentration: 508 of 592 come from two workbooks.** That is why the total
+**Concentration: 488 of 572 come from two workbooks.** That is why the total
 is never published without this table.
 
 **Non-empty on 7 of 9.** G-TRANSFER (mech)'s pre-registered threshold
@@ -44,8 +44,8 @@ is a typed `SkipRecord` naming the sheet, the cell and the reason.
 | `IBU_Operations_Report_V2_3_20250808_1033.xlsx` | 0 | 0 | 0 | 0 | 0 |
 | `IFSCA_Annual_Reporting_Format_30April_2026_Approved_20260504_1247.xlsx` | 0 | 0 | 0 | 0 | 0 |
 | `ITFS_Monthly_report201220241626.xlsx` | 1 | 0 | 1 | 0 | 2 |
-| `Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx` | 0 | 58 | 118 | 2 | 178 |
-| `Updated___Quarterly_Reporting_Format_for_Capital_Market_Intermediaries_20260409_1019.xlsx` | 0 | 0 | 127 | 0 | 127 |
+| `Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx` | 2 | 58 | 118 | 2 | 180 |
+| `Updated___Quarterly_Reporting_Format_for_Capital_Market_Intermediaries_20260409_1019.xlsx` | 18 | 0 | 99 | 0 | 117 |
 
 **The FME reconciliation, in one sentence.** The 2 `list_unresolved` skips on
 `7d9a1960` are exactly the pinned `22 list-type validations - 20 resolving` gap: both
@@ -56,12 +56,12 @@ FILING supplies. Resolving it from the filing would be NC-D01c; it is skipped in
 
 | number | value | warrant |
 |---|---:|---|
-| `len(cells_reachable)` for `7d9a1960`, computed here | **2854** | MEASURED |
+| `len(cells_reachable)` for `7d9a1960`, computed here | **2794** | MEASURED |
 | the specification's figure | 2373 | DERIVED-FROM-SPEC |
-| delta | **+481** | — |
+| delta | **+421** | — |
 
 **The delta is a finding. It is published and it is not reconciled by adjusting the
-harvest.** The computed figure is the union of cells bound by the 351 candidates
+harvest.** The computed figure is the union of cells bound by the 349 candidates
 this build emits; the spec attributed 2,329 of 2,373 settled cells to 53 validation
 predicates, and this harvest emits a different number of validation predicates from a
 different class set. Either 2,373 was computed from an enumeration this build does not
@@ -74,8 +74,8 @@ resolves to no ledger row and to no measurement this code produces.
 
 | published number | value | what it means |
 |---|---:|---|
-| `predicates_with_a_STATUTE_obligation / 592` | **0 / 592** | *No harvested predicate yet implements a statutory clause.* |
-| `predicates_with_a_TEMPLATE_obligation / 592` | **592 / 592** | Every harvested predicate implements a relation the regulator's own pinned blank encodes. |
+| `predicates_with_a_STATUTE_obligation / 572` | **0 / 572** | *No harvested predicate yet implements a statutory clause.* |
+| `predicates_with_a_TEMPLATE_obligation / 572` | **572 / 572** | Every harvested predicate implements a relation the regulator's own pinned blank encodes. |
 
 **The two counts are never added together, and publishing either alone fails the exit
 gate.** The first alone conceals that these predicates are grounded in a real regulator
@@ -85,7 +85,7 @@ artifact; the second alone conceals that not one of them is grounded in the stat
 
 | reason | count |
 |---|---:|
-| `derived_from_data_validation` | 215 |
+| `derived_from_data_validation` | 195 |
 | `derived_from_template_formula` | 377 |
 
 ## `fault_classes_claimed_by_no_harvested_candidate`

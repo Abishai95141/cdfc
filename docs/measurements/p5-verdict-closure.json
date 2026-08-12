@@ -1,0 +1,48 @@
+{
+  "admission_state": "PRE-GATE",
+  "cells_lowered_by_rollup": 0,
+  "closure": {
+    "cellsTotal": 3747,
+    "error": 0,
+    "inScope": 3747,
+    "indeterminate": 0,
+    "informational": 0,
+    "informationalRetained": 0,
+    "noPredicate": 1427,
+    "notRun": 0,
+    "outOfScope": 0,
+    "outOfScopeRetained": 0,
+    "settled": 2320
+  },
+  "delta_runtime_minus_static": -474,
+  "field_surface": 3747,
+  "filing_primary": "clean__independently-computed__fme-q1.xlsx",
+  "filing_primary_label": "INDEPENDENTLY-COMPUTED (LibreOffice). Its derived cells were computed by an implementation this project did not write \u2014 NOT by a person, and NOT by Excel. It is the plan's E6 substitute and it is weaker than E6 in two named ways: LibreOffice is not Excel, so a disagreement is a third answer rather than a verdict against us; and it is a spreadsheet engine, not a reader of the regulation, so it cannot notice that a formula is wrong.",
+  "filing_smoke": "clean__template-computed__fme-q1.xlsx",
+  "filing_smoke_label": "SMOKE ONLY \u2014 NON-GATING \u2014 NON-DISCRIMINATING (arithmetic). src/cdfc/calc/ wrote this filing's derived cells, and the arithmetic predicates assert exactly the identities calc/ enforced when it did. The oracle and the system under test are the same function, so a zero here is x == x. It may not be cited in a gate, in a severity tier, or in any published rate.",
+  "fraction": "0.6192",
+  "in_surface_bound_but_unsettled": 0,
+  "keys_preflighted": 1725,
+  "keys_type_checked": 77,
+  "runtime_settled_cells": 2320,
+  "seeded": {
+    "cell": "1. Introduction!C54",
+    "expected_failures": [
+      "P-0021",
+      "P-0051"
+    ],
+    "observed_failures": [
+      "P-0021",
+      "P-0051"
+    ]
+  },
+  "smoke": {
+    "checks": 349,
+    "note": "result NOT consulted by the exit gate",
+    "run_state": "INVALID"
+  },
+  "static_settled_cells": 2794,
+  "statically_bound_outside_the_field_surface": 474,
+  "validation_state": "PROVISIONAL-UNVALIDATED",
+  "warrant": "MEASURED"
+}

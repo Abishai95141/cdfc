@@ -1,9 +1,12 @@
 {
  "base": "Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx",
  "files": {
-  "formula-overwritten__portfolio-O7.xlsx": "7c0656f6db539dc4a8549b741f9a7b9bc6d2a35d08b296dce0cb09d66165d3c1",
+  "clean__independently-computed__fme-q1.xlsx": "e2bbd2533d04b2f54a7c46238b23ee356c01f4384491028925f6d9f95dc7e2e2",
+  "clean__template-computed__fme-q1.xlsx": "aeedbfe18c803061a117d6940d85047d3fc6d7d0e9a02b842d2131c56c621269",
+  "formula-overwritten__portfolio-O7.xlsx": "7d7019bf770998e990606ff5d6e66603378be2da24092316a58d74c7fe620fe2",
+  "mutant__f11-formula-override__portfolio-O7.xlsx": "eadcc60c5292ab795f97d177fb9a46157ebcf980d09086b40ce967cfd5abbf56",
   "row-inserted__portfolio-r7.xlsx": "30c9abc0b6f93bc4d741bb9125075d10d0d6e0d1f35433f676c5711d0dbf4edd",
-  "values-written__50-cells.xlsx": "6a3d18a40a8d6adab33f116b7078daf63c5efe0a686e410bcb3515de49ff8e11"
+  "values-written__50-cells.xlsx": "f2627b89f5c358653a037788f1a200445e21df3a7610b24ca1418eacb89bb81b"
  },
  "generated_by": "tools/fixtures/make_synthetic.py"
 }

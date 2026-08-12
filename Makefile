@@ -24,6 +24,7 @@ greps:
 	bash ci/no-external-paths.sh
 	bash ci/no-float-money.sh
 	bash ci/no-regex-over-cel.sh
+	bash ci/no-regex-over-xml.sh
 
 contract:
 	$(PY) -m pytest tests/contract -q
@@ -109,3 +110,13 @@ verify: lint licence greps corpus-verify
 	$(PY) tools/nc_sweep.py
 	$(PY) tools/gate_liveness.py
 	@echo "verify: every gate green, every negative control caught"
+
+# --- P5 ------------------------------------------------------------------------------
+contract:
+	$(PY) tools/gen_contract.py
+
+filings:
+	$(PY) tools/fixtures/synthesise_filing.py
+
+run-fme:
+	$(PY) tools/measure/p5_runtime_closure.py

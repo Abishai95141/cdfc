@@ -1,0 +1,105 @@
+{
+  "source": "spec II.3.4, as reproduced in plan/03-phases-verdict.md P5-B2",
+  "extracted": "2026-08-12",
+  "note": "Extracted ONCE, by hand, and pinned. It moves only with a decision record \u2014 which is how the specification's own five rules should move, since three different versions of them were live at once and a build cannot satisfy two fives. Generating this file from contract.py would make the comparison x == x.",
+  "transitions": [
+    {
+      "order": 1,
+      "rule": 1,
+      "trigger": "applicable errors",
+      "state": "NOT_RUN",
+      "reason": "not_run.source_unreadable",
+      "run_state_effect": "UNCHANGED",
+      "never": [
+        "FAIL"
+      ]
+    },
+    {
+      "order": 2,
+      "rule": 1,
+      "trigger": "applicable false",
+      "state": "OUT_OF_SCOPE",
+      "reason": "out_of_scope.not_applicable",
+      "run_state_effect": "UNCHANGED",
+      "never": [
+        "PASS",
+        "FAIL"
+      ]
+    },
+    {
+      "order": 3,
+      "rule": 1,
+      "trigger": "applicable true",
+      "state": null,
+      "reason": null,
+      "run_state_effect": "UNCHANGED",
+      "never": []
+    },
+    {
+      "order": 4,
+      "rule": 5,
+      "trigger": "cells_bound == 0",
+      "state": "ERROR",
+      "reason": "error.cells_bound_zero",
+      "run_state_effect": "INVALID",
+      "never": [
+        "PASS",
+        "NOT_RUN"
+      ]
+    },
+    {
+      "order": 5,
+      "rule": 2,
+      "trigger": "declared key absent or mistyped",
+      "state": "NOT_RUN",
+      "reason": "not_run.source_unreadable",
+      "run_state_effect": "UNCHANGED",
+      "never": [
+        "PASS",
+        "FAIL"
+      ]
+    },
+    {
+      "order": 6,
+      "rule": 3,
+      "trigger": "expr budget exceeded",
+      "state": "NOT_RUN",
+      "reason": "not_run.budget_exhausted",
+      "run_state_effect": "UNCHANGED",
+      "never": [
+        "FAIL"
+      ]
+    },
+    {
+      "order": 7,
+      "rule": 3,
+      "trigger": "expr runtime error",
+      "state": "ERROR",
+      "reason": "error.predicate_raised",
+      "run_state_effect": "INVALID",
+      "never": [
+        "NOT_RUN",
+        "PASS",
+        "FAIL"
+      ]
+    },
+    {
+      "order": 8,
+      "rule": 3,
+      "trigger": "expr false",
+      "state": "FAIL",
+      "reason": null,
+      "run_state_effect": "UNCHANGED",
+      "never": []
+    },
+    {
+      "order": 9,
+      "rule": 3,
+      "trigger": "expr true",
+      "state": "PASS",
+      "reason": null,
+      "run_state_effect": "UNCHANGED",
+      "never": []
+    }
+  ]
+}
