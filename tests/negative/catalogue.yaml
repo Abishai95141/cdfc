@@ -428,3 +428,29 @@ entries:
         flips: false
     positive_control: "the fingerprint still moves on a row insertion"
     status: active
+
+  - id: NC-E11
+    component: calc
+    break: a cell reading a NOT_RUN cell computes with a zero instead of blocking
+    measured_instance: "found in this evaluator's own arm-1 run: A13 = A11+1 returned 1 where the answer was 9"
+    injector: EvaluatorIgnoresNotRunInputs
+    guard_tests:
+      - path: "tests/unit/test_evaluate.py::test_eval__a_cell_reading_a_NOT_RUN_cell_does_not_run"
+        flips: true
+      - path: "tests/unit/test_evaluate.py::test_eval__a_declared_deferral_also_blocks"
+        flips: true
+      - path: "tests/unit/test_evaluate.py::test_eval__the_cascade_rule_is_not_over_broad"
+        flips: false
+    positive_control: "a cell whose inputs all ran still computes"
+    status: active
+
+  - id: NC-E13
+    component: calc
+    break: a float enters the deterministic numeric core
+    measured_instance: "a float produces a well-formed number differing in the last places"
+    injector: FloatInCalc
+    guard_tests:
+      - path: "tests/negative/test_nc_calc.py::test_nc__E13_float_in_the_core_is_rejected"
+        flips: true
+    positive_control: "the real calc package is Decimal throughout and passes"
+    status: active

@@ -841,3 +841,33 @@ class FingerprintIncludesFormulas(Injector):
 
 ALL_INJECTORS = ALL_INJECTORS + (KeysAreCoordinates, UnresolvedKeyGuesses, FingerprintIncludesFormulas)
 BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+class FloatInCalc(Injector):
+    """A float enters the deterministic numeric core."""
+
+    def __init__(self) -> None:
+        super().__init__(name="float_in_calc",
+                         touches=[REPO_ROOT / "src" / "cdfc" / "calc" / "operators.py"])
+
+    def apply(self) -> None:
+        p = REPO_ROOT / "src" / "cdfc" / "calc" / "operators.py"
+        p.write_text("def _ratio(a, b) -> float:\n    return float(a) / float(b)\n")
+
+
+class EvaluatorIgnoresNotRunInputs(Injector):
+    """A cell reading a NOT_RUN cell computes with a zero instead of blocking."""
+
+    def __init__(self) -> None:
+        super().__init__(name="evaluator_ignores_not_run_inputs",
+                         touches=[REPO_ROOT / "src" / "cdfc" / "calc" / "evaluate.py"])
+
+    def apply(self) -> None:
+        p = REPO_ROOT / "src" / "cdfc" / "calc" / "evaluate.py"
+        p.write_text(p.read_text().replace(
+            "        blocked = sorted(d for d in deps.get(key, ()) if d in not_run)",
+            "        blocked = []"))
+
+
+ALL_INJECTORS = ALL_INJECTORS + (FloatInCalc, EvaluatorIgnoresNotRunInputs)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}

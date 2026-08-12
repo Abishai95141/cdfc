@@ -44,6 +44,7 @@ a row between sets fails the build.
 | 17 | shell | `ci/no-timing-in-hashed-payload.sh` — no duration field inside a hashed object | P0 | P0 | `injectors/elapsed_us_in_canary_row.py` | LIVE |
 | 18 | pytest | `test_plan__critical_path_total_equals_sum_of_rows` — a total equals its parts | P0 | P0 | change a per-phase figure without the total | LIVE |
 | 19 | shell | `ci/no-external-paths.sh` — no machine-local absolute path in the build | P0 | P1 | `injectors/external_fixture_path.py` | LIVE |
+| 20 | shell | `ci/no-float-money.sh` — no float in the deterministic numeric core | P3 | P3 | `injectors/float_in_calc.py` | LIVE |
 
 **Rows 17 and 18 exist as gates from the first commit, dated 11 Aug 2026, and their reason is recorded
 rather than assumed.** Row 17: a `CanaryRow.elapsed_us` inside a canonicalised payload was found in the
@@ -51,7 +52,9 @@ plan and would have made byte-identical re-derivation impossible; the gate exist
 Row 18: a displayed critical-path total that did not equal the sum of its own rows was found in the plan,
 which is the shared-denominator error in a schedule; the gate exists before any other total does.
 
-**LIVE = {1,…,13,17,18,19} (16 rows). PENDING = {14,15,16} (3 rows). Total 19.**
+**LIVE = {1,…,13,17,18,19,20} (17 rows). PENDING = {14,15,16} (3 rows). Total 20.**
+
+**Row 20 was added at P3, dated 11 Aug 2026.** R4 requires the evaluator to be `Decimal` from its first line rather than converted later; the gate exists so that cannot drift in unnoticed.
 
 **Row 19 was added at P1, dated 11 Aug 2026, with its reason recorded rather than assumed.** A negative
 control was found still pointing at the external directory the corpus was vendored FROM, so it was
