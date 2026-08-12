@@ -79,6 +79,11 @@
   "NC-Q54",
   "NC-Q75"
  ],
- "nul_files": [],
+ "nul_files": [
+  [
+   "00-decomposition.md",
+   1
+  ]
+ ],
  "clean": false
 }
