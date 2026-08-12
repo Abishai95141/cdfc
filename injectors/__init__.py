@@ -911,3 +911,63 @@ class ShapeRefsCountAsValueDeps(Injector):
 
 ALL_INJECTORS = ALL_INJECTORS + (DependentUsesMasterUnshifted, ShapeRefsCountAsValueDeps)
 BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+FACTS = REPO_ROOT / "src" / "cdfc" / "facts"
+
+
+class MoneyScaledTwice(Injector):
+    """Money is scaled a second time — a well-formed number 1000x wrong."""
+
+    def __init__(self) -> None:
+        super().__init__(name="money_scaled_twice", touches=[FACTS / "units.py"])
+
+    def apply(self) -> None:
+        p = FACTS / "units.py"
+        p.write_text(p.read_text().replace(
+            "        scaled = d * UNITS_PER_USD_MILLION",
+            "        scaled = d * UNITS_PER_USD_MILLION * UNITS_PER_USD_MILLION"))
+
+
+class WarrantComposesByStrongest(Injector):
+    """The anchor lattice takes the MAXIMUM, so one extracted value launders itself into a
+    deterministic total."""
+
+    def __init__(self) -> None:
+        super().__init__(name="warrant_composes_by_strongest", touches=[FACTS / "anchor.py"])
+
+    def apply(self) -> None:
+        p = FACTS / "anchor.py"
+        p.write_text(p.read_text().replace(
+            "    weakest = min(a.warrant for a in anchors)",
+            "    weakest = max(a.warrant for a in anchors)"))
+
+
+class LeafWithoutCellAllowed(Injector):
+    """A leaf may exist with no __cell__ — a value that cannot be shown or re-derived."""
+
+    def __init__(self) -> None:
+        super().__init__(name="leaf_without_cell_allowed", touches=[FACTS / "fact_table.py"])
+
+    def apply(self) -> None:
+        p = FACTS / "fact_table.py"
+        p.write_text(p.read_text().replace("        if not self.cell:", "        if False:"))
+
+
+class ToleranceBecomesRelative(Injector):
+    """Tolerance becomes a percentage, so a total of zero admits everything."""
+
+    def __init__(self) -> None:
+        super().__init__(name="tolerance_becomes_relative", touches=[FACTS / "units.py"])
+
+    def apply(self) -> None:
+        p = FACTS / "units.py"
+        p.write_text(p.read_text().replace(
+            "    return abs(a - b) <= tau(n_summands)",
+            "    return abs(a - b) <= max(abs(a), abs(b)) // 100"))
+
+
+ALL_INJECTORS = ALL_INJECTORS + (
+    MoneyScaledTwice, WarrantComposesByStrongest, LeafWithoutCellAllowed, ToleranceBecomesRelative,
+)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}

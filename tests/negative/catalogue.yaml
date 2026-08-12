@@ -496,3 +496,53 @@ entries:
     status: active
     provisional: true
     why_provisional: "the injector edits a template the demo does not render; no guard flips"
+
+  - id: NC-E20
+    component: facts
+    break: money is scaled a second time
+    measured_instance: "the spec carried two unit definitions differing by 1000x"
+    injector: MoneyScaledTwice
+    guard_tests:
+      - path: "tests/unit/test_fact_table.py::test_units__one_unit_is_one_thousand_usd"
+        flips: true
+      - path: "tests/unit/test_fact_table.py::test_fact_table__money_is_scaled_exactly_once"
+        flips: true
+    positive_control: "12.34 USD Million is 12,340 units and round-trips"
+    status: active
+
+  - id: NC-E21
+    component: facts
+    break: the warrant lattice composes by STRONGEST input
+    measured_instance: >
+      one model-extracted value would launder itself into a deterministic total, and the
+      report would claim the total was read off the page
+    injector: WarrantComposesByStrongest
+    guard_tests:
+      - path: "tests/unit/test_fact_table.py::test_anchor__composes_by_weakest_input"
+        flips: true
+    positive_control: "three deterministic inputs still compose to DETERMINISTIC"
+    status: active
+
+  - id: NC-E22
+    component: facts
+    break: a leaf may exist without __cell__
+    measured_instance: "a value with no cell cannot be shown, re-opened or re-derived"
+    injector: LeafWithoutCellAllowed
+    guard_tests:
+      - path: "tests/unit/test_fact_table.py::test_fact_table__a_leaf_without_a_cell_is_refused_at_construction"
+        flips: true
+    positive_control: "every leaf built from the corpus carries a sheet-qualified cell"
+    status: active
+
+  - id: NC-E23
+    component: facts
+    break: tolerance becomes relative, so a total of zero admits everything
+    measured_instance: "totals of zero are the modal case — 301 of 505 FME cached values are 0"
+    injector: ToleranceBecomesRelative
+    guard_tests:
+      - path: "tests/unit/test_fact_table.py::test_units__zero_total_still_has_a_finite_tolerance"
+        flips: true
+      - path: "tests/unit/test_fact_table.py::test_units__tau_is_an_integer_count_not_a_percentage"
+        flips: true
+    positive_control: "tau(14) is 70 units regardless of the magnitude of the total"
+    status: active
