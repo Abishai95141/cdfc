@@ -41,6 +41,7 @@ corpus-verify:
 
 fixtures:
 	$(PY) tools/fixtures/make_adversarial.py
+	$(PY) tools/fixtures/make_synthetic.py
 
 agreement:
 	$(PY) tools/measure/agreement_matrix.py

@@ -1,0 +1,9 @@
+{
+ "base": "Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx",
+ "files": {
+  "formula-overwritten__portfolio-O7.xlsx": "7c0656f6db539dc4a8549b741f9a7b9bc6d2a35d08b296dce0cb09d66165d3c1",
+  "row-inserted__portfolio-r7.xlsx": "30c9abc0b6f93bc4d741bb9125075d10d0d6e0d1f35433f676c5711d0dbf4edd",
+  "values-written__50-cells.xlsx": "6a3d18a40a8d6adab33f116b7078daf63c5efe0a686e410bcb3515de49ff8e11"
+ },
+ "generated_by": "tools/fixtures/make_synthetic.py"
+}

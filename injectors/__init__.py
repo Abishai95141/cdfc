@@ -778,3 +778,66 @@ ALL_INJECTORS = ALL_INJECTORS + (
     MaskSkipsRuleSix,
 )
 BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+KEYS_PY = REPO_ROOT / "src" / "cdfc" / "schema" / "stable_keys.py"
+FP_PY = REPO_ROOT / "src" / "cdfc" / "schema" / "fingerprint.py"
+
+
+class KeysAreCoordinates(Injector):
+    """The stable key degrades to a coordinate, so a row insertion rebinds silently."""
+
+    def __init__(self) -> None:
+        super().__init__(name="keys_are_coordinates", touches=[KEYS_PY])
+
+    def apply(self) -> None:
+        KEYS_PY.write_text(
+            KEYS_PY.read_text().replace(
+                '        return f"{_slug(self.sheet_name)}.{head}.row[{self.row_ordinal}].{_slug(self.row_label)}"',
+                '        return f"{_slug(self.sheet_name)}.{head}.{_slug(self.row_label)}"',
+            )
+        )
+
+
+class UnresolvedKeyGuesses(Injector):
+    """An UNRESOLVED key falls back to a coordinate instead of blocking."""
+
+    def __init__(self) -> None:
+        super().__init__(name="unresolved_key_guesses", touches=[KEYS_PY])
+
+    def apply(self) -> None:
+        KEYS_PY.write_text(
+            KEYS_PY.read_text().replace(
+                '    if field.resolution_state != "RESOLVED" or field.resolved_ref is None:',
+                '    if False:',
+            )
+        )
+
+
+class FingerprintIncludesFormulas(Injector):
+    """Formula content enters the structural fingerprint.
+
+    Converts the design's flagship check — a formula cell overwritten with a literal —
+    from a FINDING about the filing into `invalid.template_unbound`, an apparatus failure
+    about us.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="fingerprint_includes_formulas", touches=[FP_PY])
+
+    def apply(self) -> None:
+        FP_PY.write_text(
+            FP_PY.read_text().replace(
+                '        "unlocked_mask": sorted(f"{s}!{r}" for s, r in fs.cells),',
+                '        "unlocked_mask": sorted(f"{s}!{r}" for s, r in fs.cells),\n'
+                '        "formulas": sorted(\n'
+                '            f"{f.sheet}!{f.ref}={f.text}"\n'
+                '            for f in __import__("cdfc.ingest.reader_lxml", fromlist=["read"])\n'
+                '            .read(blob_path).formulas\n'
+                '        ),',
+            )
+        )
+
+
+ALL_INJECTORS = ALL_INJECTORS + (KeysAreCoordinates, UnresolvedKeyGuesses, FingerprintIncludesFormulas)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}

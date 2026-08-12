@@ -386,3 +386,45 @@ entries:
         flips: true
     positive_control: "the real projection carries generator_rule and validation_state"
     status: active
+
+  - id: NC-D04
+    component: schema
+    break: a stable key degrades to a coordinate, so a row insertion rebinds it silently
+    measured_instance: "without the ordinal most cells of a 100-row table share one label pair"
+    injector: KeysAreCoordinates
+    guard_tests:
+      - path: "tests/unit/test_stable_keys.py::test_stable_keys__key_renders_the_documented_shape"
+        flips: true
+      - path: "tests/unit/test_stable_keys.py::test_stable_keys__a_row_insertion_does_not_silently_rebind"
+        flips: true
+    positive_control: "the ordinal-bearing key has zero collisions on '3. Portfolio'"
+    status: active
+
+  - id: NC-D04b
+    component: schema
+    break: an UNRESOLVED key falls back to a coordinate instead of blocking its predicates
+    measured_instance: "a guess is how a predicate comes to pass against the wrong cell"
+    injector: UnresolvedKeyGuesses
+    guard_tests:
+      - path: "tests/unit/test_stable_keys.py::test_stable_keys__unresolved_blocks_its_predicates"
+        flips: true
+    positive_control: "a RESOLVED key still binds to its reference"
+    status: active
+
+  - id: NC-D10
+    component: schema
+    break: formula content is included in the structural fingerprint
+    measured_instance: >
+      not yet realised — it would convert TEMPLATE_DIFF, a formula cell overwritten with a
+      literal, from a FINDING about the filing into invalid.template_unbound, an apparatus
+      failure about us
+    injector: FingerprintIncludesFormulas
+    guard_tests:
+      - path: "tests/unit/test_stable_keys.py::test_fingerprint__is_stable_under_a_formula_overwrite"
+        flips: true
+      - path: "tests/unit/test_stable_keys.py::test_fingerprint__excludes_formula_content_structurally"
+        flips: true
+      - path: "tests/unit/test_stable_keys.py::test_fingerprint__moves_on_a_row_insertion"
+        flips: false
+    positive_control: "the fingerprint still moves on a row insertion"
+    status: active
