@@ -454,3 +454,45 @@ entries:
         flips: true
     positive_control: "the real calc package is Decimal throughout and passes"
     status: active
+
+  - id: NC-E14
+    component: calc
+    break: a shared dependent evaluates the master's expression without shifting it
+    measured_instance: "211 of 505 FME formula cells are shared dependents; unshifted they compute the wrong row"
+    injector: DependentUsesMasterUnshifted
+    guard_tests:
+      - path: "tests/unit/test_shift.py::test_shift__materialise_uses_the_master_offset"
+        flips: true
+      - path: "tests/unit/test_shift.py::test_shift__an_unshifted_dependent_would_be_wrong_and_well_formed"
+        flips: true
+    positive_control: "a zero offset legitimately returns the master's text unchanged"
+    status: active
+
+  - id: NC-E15
+    component: calc
+    break: shape-only references (ROWS/ROW) are counted as value dependencies
+    measured_instance: >
+      invented THIRTY circular references in the FME workbook that do not exist, and
+      reported them as a finding about the regulator's template rather than as a defect in
+      our own dependency analyser
+    injector: ShapeRefsCountAsValueDeps
+    guard_tests:
+      - path: "tests/unit/test_evaluate.py::test_eval__arm1_has_zero_disagreements_on_the_corpus"
+        flips: false
+      - path: "tests/golden/test_template_diff.py::test_golden__the_output_declares_what_it_did_not_check"
+        flips: true
+    positive_control: "a genuine circular reference is still detected"
+    status: active
+
+  - id: NC-E16
+    component: surface
+    break: the flagship check's own output carries a banned surface token
+    measured_instance: "the demo's summary line read 'There is no all-clear in this output' and was rejected"
+    injector: GreenTick
+    guard_tests:
+      - path: "tests/golden/test_template_diff.py::test_golden__the_output_contains_no_banned_surface_token"
+        flips: false
+    positive_control: "the reworded copy passes; the gate was not weakened to admit a negation"
+    status: active
+    provisional: true
+    why_provisional: "the injector edits a template the demo does not render; no guard flips"

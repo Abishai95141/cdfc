@@ -23,6 +23,7 @@ sys.path.insert(0, str(REPO / "src"))
 
 from cdfc.calc.errors import is_error  # noqa: E402
 from cdfc.calc.evaluate import recalculate  # noqa: E402
+from cdfc.calc.shift import materialise  # noqa: E402
 from cdfc.ingest.reader_lxml import _sheet_parts, read  # noqa: E402
 from cdfc.ingest.xmlsafe import fromstring  # noqa: E402
 
@@ -36,15 +37,19 @@ def load(path: Path):
     """(formulas, literals, cached) keyed by (sheet, ref)."""
     wb = read(path)
     materialised = {}
-    masters = {f.si: f for f in wb.formulas if f.encoding == "SHARED_MASTER"}
+    masters = {(f.sheet, f.si): f for f in wb.formulas if f.encoding == "SHARED_MASTER"}
     for f in wb.formulas:
         if f.text:
             materialised[(f.sheet, f.ref)] = f.text
-        elif f.encoding == "SHARED_DEPENDENT" and f.si in masters:
-            # A shared dependent's expression is the master's, shifted. Row-shifting is
-            # P3-B4's own sub-problem; until it lands the dependent is NOT_RUN rather
-            # than silently evaluated with the master's unshifted references.
-            materialised[(f.sheet, f.ref)] = None
+        elif f.encoding == "SHARED_DEPENDENT":
+            m = masters.get((f.sheet, f.si))
+            if m is None or not m.text:
+                # A dependent whose master we cannot see is DECLARED, never dropped.
+                materialised[(f.sheet, f.ref)] = None
+            else:
+                # The master's expression, shifted to this cell. Evaluating it UNSHIFTED
+                # would return a well-formed number for the wrong row.
+                materialised[(f.sheet, f.ref)] = materialise(m.ref, m.text, f.ref)
 
     literals: dict[tuple[str, str], object] = {}
     cached: dict[tuple[str, str], str] = {}

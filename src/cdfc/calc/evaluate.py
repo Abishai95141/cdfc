@@ -253,18 +253,32 @@ def expand(ref: str, default_sheet: str) -> list[tuple[str, str]]:
     ]
 
 
-def refs_of(node: Any) -> list[str]:
+# ROW/ROWS/COLUMN/COLUMNS read a range's SHAPE, not its VALUES. `ROWS($C$92:C92)` in cell
+# C92 is the standard "which output row am I" counter, and it is not a circular reference:
+# Excel resolves it from the range's geometry without reading a cell.
+#
+# Treating a shape reference as a value dependency invented THIRTY circular references in
+# the FME workbook that do not exist, and reported them as NOT_RUN — a defect in our
+# dependency analyser, published as a finding about the regulator's template. Caught by
+# checking whether the cells really were self-referential before believing the number.
+SHAPE_ONLY_FUNCTIONS = frozenset({"ROW", "ROWS", "COLUMN", "COLUMNS"})
+
+
+def refs_of(node: Any, *, values_only: bool = False) -> list[str]:
+    """Every reference in the tree. With `values_only`, shape-only arguments are skipped."""
     if not isinstance(node, tuple):
         return []
     if node[0] == "ref":
         return [node[1]]
+    if values_only and node[0] == "call" and node[1] in SHAPE_ONLY_FUNCTIONS:
+        return []
     out: list[str] = []
     for part in node[1:]:
         if isinstance(part, list):
             for p in part:
-                out.extend(refs_of(p))
-        else:
-            out.extend(refs_of(part))
+                out.extend(refs_of(p, values_only=values_only))
+        elif isinstance(part, tuple):
+            out.extend(refs_of(part, values_only=values_only))
     return out
 
 
@@ -404,7 +418,7 @@ def recalculate(
     for key, ast in parsed.items():
         sheet = key[0]
         d: set[tuple[str, str]] = set()
-        for r in refs_of(ast):
+        for r in refs_of(ast, values_only=True):
             # deferred cells are IN the dependency set, so the cascade rule sees them
             d.update(c for c in expand(r, sheet) if c in known)
         deps[key] = d

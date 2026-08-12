@@ -51,12 +51,12 @@
  },
  "phase": "P0",
  "sweep": {
-  "entries_active": 33,
-  "entries_caught": 33,
-  "guards_expected_to_flip": 40,
-  "guards_flipped": 40,
+  "entries_active": 35,
+  "entries_caught": 35,
+  "guards_expected_to_flip": 43,
+  "guards_flipped": 43,
   "none_count": 1,
-  "provisional_count": 1
+  "provisional_count": 2
  },
  "warrant": "MEASURED"
 }

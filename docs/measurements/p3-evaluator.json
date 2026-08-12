@@ -5,10 +5,10 @@
   {
    "workbook": "Draft_ACAC_Format_20260605_0631.xlsx",
    "formula_cells": 112,
-   "compared": 6,
-   "agree": 6,
+   "compared": 112,
+   "agree": 112,
    "disagree": 0,
-   "not_run": 106,
+   "not_run": 0,
    "trivial_share_pct": 0.0,
    "distinct_cached": 44,
    "samples": []
@@ -27,10 +27,10 @@
   {
    "workbook": "AL_monthly_report_updated_final_20260717_0257.xlsx",
    "formula_cells": 161,
-   "compared": 39,
-   "agree": 39,
+   "compared": 161,
+   "agree": 161,
    "disagree": 0,
-   "not_run": 122,
+   "not_run": 0,
    "trivial_share_pct": 70.8,
    "distinct_cached": 38,
    "samples": []
@@ -49,10 +49,10 @@
   {
    "workbook": "ALR_V2_3_20250808_1024.xlsx",
    "formula_cells": 645,
-   "compared": 172,
-   "agree": 172,
+   "compared": 645,
+   "agree": 645,
    "disagree": 0,
-   "not_run": 473,
+   "not_run": 0,
    "trivial_share_pct": 99.8,
    "distinct_cached": 2,
    "samples": []
@@ -71,10 +71,10 @@
   {
    "workbook": "Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx",
    "formula_cells": 505,
-   "compared": 237,
-   "agree": 237,
+   "compared": 495,
+   "agree": 495,
    "disagree": 0,
-   "not_run": 268,
+   "not_run": 10,
    "trivial_share_pct": 100.0,
    "distinct_cached": 2,
    "samples": []

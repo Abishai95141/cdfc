@@ -871,3 +871,43 @@ class EvaluatorIgnoresNotRunInputs(Injector):
 
 ALL_INJECTORS = ALL_INJECTORS + (FloatInCalc, EvaluatorIgnoresNotRunInputs)
 BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+class DependentUsesMasterUnshifted(Injector):
+    """A shared dependent evaluates the master's expression WITHOUT shifting it.
+
+    Returns a well-formed number for the wrong row — 211 of 505 FME formula cells.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="dependent_uses_master_unshifted",
+                         touches=[REPO_ROOT / "src" / "cdfc" / "calc" / "shift.py"])
+
+    def apply(self) -> None:
+        p = REPO_ROOT / "src" / "cdfc" / "calc" / "shift.py"
+        p.write_text(p.read_text().replace(
+            "    if drow == 0 and dcol == 0:\n        return text",
+            "    if True:\n        return text"))
+
+
+class ShapeRefsCountAsValueDeps(Injector):
+    """ROWS()/ROW() arguments are treated as value dependencies.
+
+    Invents circular references that do not exist — thirty of them in the FME workbook —
+    and reports them as NOT_RUN, i.e. as a finding about the regulator's template rather
+    than a defect in our dependency analyser.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="shape_refs_count_as_value_deps",
+                         touches=[REPO_ROOT / "src" / "cdfc" / "calc" / "evaluate.py"])
+
+    def apply(self) -> None:
+        p = REPO_ROOT / "src" / "cdfc" / "calc" / "evaluate.py"
+        p.write_text(p.read_text().replace(
+            "SHAPE_ONLY_FUNCTIONS = frozenset({\"ROW\", \"ROWS\", \"COLUMN\", \"COLUMNS\"})",
+            "SHAPE_ONLY_FUNCTIONS = frozenset()"))
+
+
+ALL_INJECTORS = ALL_INJECTORS + (DependentUsesMasterUnshifted, ShapeRefsCountAsValueDeps)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
