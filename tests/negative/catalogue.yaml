@@ -327,3 +327,14 @@ entries:
         flips: true
     positive_control: "the FME digest is 7d9a1960... over 3,663,391 bytes"
     status: active
+
+  - id: NC-CI17
+    component: ci
+    break: the build references a machine-local absolute path
+    measured_instance: "a P0 negative control still pointed at the directory the corpus was vendored FROM"
+    injector: ExternalFixturePath
+    guard_tests:
+      - path: "tests/negative/test_nc_ci.py::test_nc__CI17_machine_local_path_is_rejected"
+        flips: true
+    positive_control: "the repository clones and runs on another machine"
+    status: active

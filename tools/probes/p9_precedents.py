@@ -1,7 +1,7 @@
 import zipfile, re
 from lxml import etree
 from openpyxl.formula.translate import Translator
-P="/Users/abishaikc/Thinking/gift-ifsc-ground/scratchpad-oracle/Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx"
+P="fixtures/prescribed/Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx"
 M="{http://schemas.openxmlformats.org/spreadsheetml/2006/main}"
 R="{http://schemas.openxmlformats.org/officeDocument/2006/relationships}"
 z=zipfile.ZipFile(P)

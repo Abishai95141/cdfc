@@ -43,6 +43,7 @@ a row between sets fails the build.
 | 16 | pytest | `test_closure` — the seven-term closure invariant holds | P5 | P5 | drop a bucket from the sum | PENDING |
 | 17 | shell | `ci/no-timing-in-hashed-payload.sh` — no duration field inside a hashed object | P0 | P0 | `injectors/elapsed_us_in_canary_row.py` | LIVE |
 | 18 | pytest | `test_plan__critical_path_total_equals_sum_of_rows` — a total equals its parts | P0 | P0 | change a per-phase figure without the total | LIVE |
+| 19 | shell | `ci/no-external-paths.sh` — no machine-local absolute path in the build | P0 | P1 | `injectors/external_fixture_path.py` | LIVE |
 
 **Rows 17 and 18 exist as gates from the first commit, dated 11 Aug 2026, and their reason is recorded
 rather than assumed.** Row 17: a `CanaryRow.elapsed_us` inside a canonicalised payload was found in the
@@ -50,4 +51,10 @@ plan and would have made byte-identical re-derivation impossible; the gate exist
 Row 18: a displayed critical-path total that did not equal the sum of its own rows was found in the plan,
 which is the shared-denominator error in a schedule; the gate exists before any other total does.
 
-**LIVE = {1,…,13,17,18} (15 rows). PENDING = {14,15,16} (3 rows). Total 18.**
+**LIVE = {1,…,13,17,18,19} (16 rows). PENDING = {14,15,16} (3 rows). Total 19.**
+
+**Row 19 was added at P1, dated 11 Aug 2026, with its reason recorded rather than assumed.** A negative
+control was found still pointing at the external directory the corpus was vendored FROM, so it was
+validated against bytes that could drift — and the repository was not portable. Adding a row is an
+append-only change and the pre-registered LIVE set moves with it, in one commit, with this paragraph as
+the dated argument `test_contract__live_set_is_pre_registered` requires.

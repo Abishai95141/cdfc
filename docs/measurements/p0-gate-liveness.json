@@ -1,10 +1,10 @@
 {
- "denominator_for_observed": 15,
+ "denominator_for_observed": 16,
  "evidence_source": "reports/negative-control-sweep.json (exact-set contract)",
- "gates_live": 15,
+ "gates_live": 16,
  "gates_pending": 3,
- "gates_total": 18,
- "gates_with_an_observed_red": 15,
+ "gates_total": 19,
+ "gates_with_an_observed_red": 16,
  "live_ids": [
   1,
   2,
@@ -20,7 +20,8 @@
   12,
   13,
   17,
-  18
+  18,
+  19
  ],
  "note": "A gate is OBSERVED RED iff its catalogue entry was caught under the sweep's exact-set contract: every flips:true guard red, every flips:false guard green. PROVISIONAL entries prove nothing yet and are excluded \u2014 a green entry with no information in it must not be counted as evidence.",
  "pending_ids": [
@@ -36,6 +37,7 @@
   "13": "NC-CI01: OBSERVED RED",
   "17": "NC-CI15: OBSERVED RED",
   "18": "NC-CI16: OBSERVED RED",
+  "19": "NC-CI17: OBSERVED RED",
   "2": "NC-CI04: OBSERVED RED",
   "3": "NC-CI01: OBSERVED RED",
   "4": "NC-CI02: OBSERVED RED",
@@ -47,10 +49,10 @@
  },
  "phase": "P0",
  "sweep": {
-  "entries_active": 23,
-  "entries_caught": 23,
-  "guards_expected_to_flip": 25,
-  "guards_flipped": 25,
+  "entries_active": 24,
+  "entries_caught": 24,
+  "guards_expected_to_flip": 26,
+  "guards_flipped": 26,
   "none_count": 1,
   "provisional_count": 1
  },

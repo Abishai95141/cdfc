@@ -17,13 +17,13 @@ from cdfc.gates import RegistryError, live_ids, parse, pending_ids  # noqa: E402
 # `gates_written` meant "the gates whose subject exists" -- decided by the same person
 # deciding whether a gate can be demonstrated. Any gate that resisted demonstration
 # could be moved to PENDING and the ratio would become n/n. The gate could not fail.
-LIVE_AT_P0 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 17, 18}
+LIVE_AT_P0 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 17, 18, 19}
 PENDING_AT_P0 = {14, 15, 16}
 
 
 def test_contract__gates_registry_schema() -> None:
     gates = parse()
-    assert len(gates) == 18
+    assert len(gates) == 19
     assert len({g.id for g in gates}) == len(gates), "gate ids must be unique"
     for g in gates:
         assert g.kind and g.gate and g.broken_build

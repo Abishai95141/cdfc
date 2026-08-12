@@ -44,12 +44,20 @@ jobs:
         run: python -m pytest tests/negative -q
         env: { PYTHONPATH: src }
       # Stage 13 is the sweep. It is slow and it is the one that proves the rest mean
-      # something, so it runs last and it blocks.
+      # something, so it runs late and it blocks.
       - name: 13 negative-control sweep (exact set)
         run: |
           python tools/nc_sweep.py
           python tools/gate_liveness.py
         env: { PYTHONPATH: src }
+      # Stage 14 exists because of a defect a fresh-clone verification found: the sweep
+      # meta-tests SKIP when reports/negative-control-sweep.json is absent, and the
+      # report is gitignored — so at stage 12 they skipped in every CI run and the
+      # exact-set contract was never asserted as a test. They run here, after the report
+      # exists, and a skip at this stage fails the build.
+      - name: 14 the sweep meta-tests, now that the report exists
+        run: python -m pytest tests/negative/test_nc_sweep.py -q -rs --no-header
+        env: { PYTHONPATH: src, CDFC_REQUIRE_SWEEP: "1" }
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -53,6 +53,7 @@ differential:
 
 nc-sweep:
 	$(PY) tools/nc_sweep.py
+	CDFC_REQUIRE_SWEEP=1 $(PY) -m pytest tests/negative/test_nc_sweep.py -q
 
 e2e demo:
 	@echo "$@: subject does not exist at P0"; exit 0

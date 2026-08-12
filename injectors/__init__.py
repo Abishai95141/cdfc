@@ -294,7 +294,10 @@ class AddGateRow(Injector):
         marker = "| 18 | pytest |"
         idx = t.index(marker)
         end = t.index("\n", idx) + 1
-        row = "| 19 | shell | an injected row nobody registered | P0 | P0 | injector | LIVE |\n"
+        # id 99: the injector must not collide with a REAL row. It used 19, and the
+        # moment row 19 was genuinely registered the parser raised on the duplicate and a
+        # second guard went red — the sweep caught it as an exact-set mismatch.
+        row = "| 99 | shell | an injected row nobody registered | P0 | P0 | injector | LIVE |\n"
         GATES_MD.write_text(t[:end] + row + t[end:])
 
 
@@ -682,4 +685,20 @@ ALL_INJECTORS = ALL_INJECTORS + (
     SecondParserFactory,
     ReceiptNormalisesBytes,
 )
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+class ExternalFixturePath(Injector):
+    """A test points at a machine-local absolute path instead of the vendored fixture."""
+
+    def __init__(self) -> None:
+        super().__init__(name="external_fixture_path",
+                         touches=[REPO_ROOT / "tests" / "unit" / "test_receipt.py"])
+
+    def apply(self) -> None:
+        p = REPO_ROOT / "tests" / "unit" / "test_receipt.py"
+        p.write_text(p.read_text() + '\n\nEXTERNAL = "/Users/somebody/corpus/f.xlsx"\n')
+
+
+ALL_INJECTORS = ALL_INJECTORS + (ExternalFixturePath,)
 BY_NAME = {c.__name__: c for c in ALL_INJECTORS}

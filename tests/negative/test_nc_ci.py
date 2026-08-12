@@ -29,8 +29,11 @@ from injectors import (  # noqa: E402
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-FME = Path(
-    "/Users/abishaikc/Thinking/gift-ifsc-ground/scratchpad-oracle/"
+# The VENDORED corpus, not the external one it was originally copied from. A reader or a
+# control validated against a fixture that can drift validates nothing, and an external
+# absolute path also makes the repository non-portable: a fresh clone fails.
+# Mechanised by ci/no-external-paths.sh (registry row 19).
+FME = REPO_ROOT / "fixtures" / "prescribed" / (
     "Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx"
 )
 
@@ -213,6 +216,7 @@ def test_nc__CI02c_the_config_is_what_makes_warnings_errors() -> None:
     plain UserWarning fails the run.
     """
     tmp = REPO_ROOT / "tests" / "negative" / "broken_builds" / "test_emits_warning.py"
+    tmp.parent.mkdir(parents=True, exist_ok=True)  # a clone may not carry an empty dir
     tmp.write_text(
         "import warnings\n\n\ndef test_emits() -> None:\n"
         "    warnings.warn('a warning the config must turn into an error', UserWarning)\n"
@@ -230,3 +234,14 @@ def test_nc__CI02c_the_config_is_what_makes_warnings_errors() -> None:
         )
     finally:
         tmp.unlink(missing_ok=True)
+
+
+# --------------------------------------------------------------------------------- NC-CI17
+def test_nc__CI17_machine_local_path_is_rejected() -> None:
+    """Registry row 19. A build coupled to one laptop is a build nobody else can verify."""
+    from injectors import ExternalFixturePath
+
+    assert run_gate("ci/no-external-paths.sh") == 0, "precondition: green on a portable tree"
+    with inject(ExternalFixturePath()):
+        rc = run_gate("ci/no-external-paths.sh")
+    assert rc != 0, "a machine-local absolute path passed the gate"

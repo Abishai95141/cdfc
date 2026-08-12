@@ -7,6 +7,7 @@ WEAKEST guard goes red and the guard the whole story rests on may never be exerc
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -19,7 +20,13 @@ REPORT = REPO / "reports" / "negative-control-sweep.json"
 
 def _report() -> dict:
     if not REPORT.exists():
-        pytest.skip("run `make nc-sweep` first; the sweep takes minutes and is a separate CI stage")
+        # CDFC_REQUIRE_SWEEP is set by the CI stage that runs AFTER the sweep. Without it
+        # these three tests skipped in every CI run — the report is gitignored, the tests
+        # ran before the sweep, and the exact-set contract was therefore never asserted
+        # as a test. Found by verifying in a fresh clone, not by running in place.
+        if os.environ.get("CDFC_REQUIRE_SWEEP"):
+            pytest.fail("the sweep report is missing at a stage that requires it")
+        pytest.skip("run `make nc-sweep` first; the sweep is a separate CI stage")
     return json.loads(REPORT.read_text())
 
 

@@ -49,6 +49,7 @@ EVIDENCE: dict[int, str] = {
     13: "NC-CI01",  # a grep over a missing root
     17: "NC-CI15",  # no timing in a hashed payload
     18: "NC-CI16",  # a total equals the sum of its rows
+    19: "NC-CI17",  # no machine-local absolute path in the build
 }
 
 
