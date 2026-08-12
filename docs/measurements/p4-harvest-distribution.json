@@ -1,0 +1,148 @@
+{
+  "fault_classes_claimed_by_no_harvested_candidate": [
+    "F10",
+    "F11",
+    "F14"
+  ],
+  "non_empty_workbooks": 7,
+  "predicates_with_a_STATUTE_obligation": 0,
+  "predicates_with_a_TEMPLATE_obligation": 592,
+  "rows": [
+    {
+      "by_class": {
+        "cross_sheet_equality": 8,
+        "integer_bound": 1,
+        "membership": 1,
+        "numeric_bound": 5,
+        "same_sheet_equality": 9,
+        "sum_identity": 8
+      },
+      "cells_reachable": 1492,
+      "n": 32,
+      "sha8": "a414d8d3",
+      "skips": 2,
+      "skips_by_kind": {
+        "key_unresolved": 2
+      },
+      "workbook": "ALR_V2_3_20250808_1024.xlsx"
+    },
+    {
+      "by_class": {
+        "conditional_required": 1,
+        "membership": 9,
+        "sum_identity": 6
+      },
+      "cells_reachable": 1661,
+      "n": 16,
+      "sha8": "79e43a7f",
+      "skips": 0,
+      "skips_by_kind": {},
+      "workbook": "AL_monthly_report_updated_final_20260717_0257.xlsx"
+    },
+    {
+      "by_class": {},
+      "cells_reachable": 0,
+      "n": 0,
+      "sha8": "74ba7b89",
+      "skips": 0,
+      "skips_by_kind": {},
+      "workbook": "Draft_ACAC_Format_20260605_0631.xlsx"
+    },
+    {
+      "by_class": {
+        "membership": 1
+      },
+      "cells_reachable": 1,
+      "n": 1,
+      "sha8": "230a6f0c",
+      "skips": 0,
+      "skips_by_kind": {},
+      "workbook": "EDR_1__Exposure_Data_Report_1__V2_3_20250808_1030.xlsx"
+    },
+    {
+      "by_class": {
+        "cross_sheet_equality": 6,
+        "membership": 4
+      },
+      "cells_reachable": 18,
+      "n": 10,
+      "sha8": "bf6bbf6b",
+      "skips": 0,
+      "skips_by_kind": {},
+      "workbook": "IBU_Operations_Report_V2_3_20250808_1033.xlsx"
+    },
+    {
+      "by_class": {},
+      "cells_reachable": 0,
+      "n": 0,
+      "sha8": "4b2d4a2b",
+      "skips": 0,
+      "skips_by_kind": {},
+      "workbook": "IFSCA_Annual_Reporting_Format_30April_2026_Approved_20260504_1247.xlsx"
+    },
+    {
+      "by_class": {
+        "conditional_required": 1,
+        "cross_sheet_equality": 1,
+        "integer_bound": 1,
+        "membership": 8,
+        "numeric_bound": 1,
+        "sum_identity": 13
+      },
+      "cells_reachable": 88,
+      "n": 25,
+      "sha8": "446b811a",
+      "skips": 2,
+      "skips_by_kind": {
+        "dv_no_type": 1,
+        "key_unresolved": 1
+      },
+      "workbook": "ITFS_Monthly_report201220241626.xlsx"
+    },
+    {
+      "by_class": {
+        "cross_sheet_equality": 181,
+        "date_bound": 5,
+        "integer_bound": 11,
+        "membership": 20,
+        "numeric_bound": 12,
+        "same_sheet_equality": 42,
+        "sum_identity": 79,
+        "tally_identity": 1
+      },
+      "cells_reachable": 2854,
+      "n": 351,
+      "sha8": "7d9a1960",
+      "skips": 178,
+      "skips_by_kind": {
+        "function_outside_vocabulary": 58,
+        "key_unresolved": 118,
+        "list_unresolved": 2
+      },
+      "workbook": "Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx"
+    },
+    {
+      "by_class": {
+        "conditional_required": 10,
+        "date_bound": 17,
+        "integer_bound": 32,
+        "membership": 47,
+        "numeric_bound": 28,
+        "sum_identity": 23
+      },
+      "cells_reachable": 1353,
+      "n": 157,
+      "sha8": "82dd291f",
+      "skips": 127,
+      "skips_by_kind": {
+        "key_unresolved": 127
+      },
+      "workbook": "Updated___Quarterly_Reporting_Format_for_Capital_Market_Intermediaries_20260409_1019.xlsx"
+    }
+  ],
+  "spec_static_settled_cells": 2373,
+  "static_settled_cells_fme": 2854,
+  "total": 592,
+  "warrant": "MEASURED",
+  "workbooks": 9
+}

@@ -23,6 +23,13 @@ M = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
 R = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
 PR = "http://schemas.openxmlformats.org/package/2006/relationships"
 X14 = "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main"
+# The x14 extension puts its FORMULA BODY and its SQREF in a third namespace, `xm:`, not in
+# x14 and not in main. Reading them from {X14} returned the empty string for all 19 x14
+# validations on FME — the COUNT was right and every BODY was empty, and nothing caught it
+# because every cross-check compared counts. Found at P4 when the harvest produced zero
+# membership predicates from them. This is the same defect shape as `<f[ >][^>]*>` over OOXML:
+# a correct count with wrong contents.
+XM = "http://schemas.microsoft.com/office/excel/2006/main"
 
 FormulaEncoding = Literal["TEXT", "SHARED_MASTER", "SHARED_DEPENDENT", "ARRAY", "NONE"]
 
@@ -59,6 +66,10 @@ class ValidationRecord:
     formula2: str | None
     resolution: Literal["RANGE", "DEFINED_NAME", "FILING_CONDITIONAL", "UNRESOLVED"]
     resolved_range: str | None
+    # ADDED AT P4, and its absence was not cosmetic: `formula1` alone does not say whether a
+    # bound is a floor, a ceiling or an equality. A harvest that defaulted to `>=` would be
+    # writing a threshold the artifact never stated.
+    operator: str = ""
 
 
 @dataclass(frozen=True)
@@ -261,16 +272,24 @@ def read(blob_path: Path) -> RawWorkbook:
                 res, rng = _classify_dv_resolution(f1, defined_set)
                 validations.append(
                     ValidationRecord(name, "main", dv.get("type", ""), dv.get("sqref", ""),
-                                     f1, f2, res, rng)  # type: ignore[arg-type]
+                                     f1, f2, res, rng, dv.get("operator", ""))  # type: ignore[arg-type]
                 )
             # x14 — the extension namespace openpyxl discards with a warning
             for dv in root.iter(f"{{{X14}}}dataValidation"):
-                f1 = dv.findtext(f"{{{X14}}}formula1/{{{M}}}f") or dv.findtext(f"{{{X14}}}formula1")
-                f2 = dv.findtext(f"{{{X14}}}formula2/{{{M}}}f") or dv.findtext(f"{{{X14}}}formula2")
-                sq = dv.findtext(f"{{{X14}}}sqref") or dv.get("sqref", "")
+                # `xm:` first — that is where Excel actually writes them.
+                f1 = (dv.findtext(f"{{{X14}}}formula1/{{{XM}}}f")
+                      or dv.findtext(f"{{{X14}}}formula1/{{{M}}}f")
+                      or dv.findtext(f"{{{X14}}}formula1"))
+                f2 = (dv.findtext(f"{{{X14}}}formula2/{{{XM}}}f")
+                      or dv.findtext(f"{{{X14}}}formula2/{{{M}}}f")
+                      or dv.findtext(f"{{{X14}}}formula2"))
+                sq = (dv.findtext(f"{{{XM}}}sqref")
+                      or dv.findtext(f"{{{X14}}}sqref")
+                      or dv.get("sqref", ""))
                 res, rng = _classify_dv_resolution(f1, defined_set)
                 validations.append(
-                    ValidationRecord(name, "x14", dv.get("type", ""), sq, f1, f2, res, rng)  # type: ignore[arg-type]
+                    ValidationRecord(name, "x14", dv.get("type", ""), sq, f1, f2, res, rng,
+                                     dv.get("operator", ""))  # type: ignore[arg-type]
                 )
 
     return RawWorkbook(

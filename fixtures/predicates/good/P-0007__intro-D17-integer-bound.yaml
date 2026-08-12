@@ -1,0 +1,56 @@
+# P-0007 — the number of schemes is a non-negative integer.
+#
+# The second committed fixture is a QUALIFIED one, so `load_predicate`'s admission side has a
+# fixture at all. Without it the loader is a reject-everything baseline and NC-Q02 has no twin.
+#
+# The qualification block below is a FIXTURE, and it says so: the campaign id is
+# `CAMPAIGN-FIXTURE-0000` and its rates are not measured numbers. Nothing reads them as evidence;
+# `tests/golden/` pins measured rates from `reports/validation-ledger.jsonl`, never from here.
+id: P-0007
+version: 1
+kind: harvested
+template: 7d9a1960085785eefbe166fb5e04e94689780c490235fe55d8f3e8b620ceea39
+schema_keys:
+  - filing.intro.tbl11.n_schemes
+  - filing.intro.tbl11.__cell__
+host_fns: []
+
+obligation_id: OBL-TEMPLATE-Intro-D17
+obligation_source: TEMPLATE
+clause: null
+clause_absent_reason: derived_from_template_constant
+
+claims_fault_classes:
+  # F01 sign flip crosses `>= 0`; F03 off-by-one crosses the boundary; F06 is the rounding class
+  # and an integrality bound is exactly what it perturbs. NOT F02: a x10 on a positive value
+  # stays above a `>= 0` bound, so claiming the scale class would inflate the denominator with a
+  # class this predicate is structurally blind to — which G2 would then have to be lied to about.
+  - F01
+  - F03
+  - F06
+
+applicable: has(filing.intro.tbl11.n_schemes)
+expr: filing.intro.tbl11.n_schemes >= 0
+witness: '[filing.intro.tbl11.__cell__]'
+reason_if_inapplicable: the introductory table does not carry a scheme count in this filing
+rationale: >
+  The pinned blank's own bound on this cell. A count of schemes below zero is not a disagreement
+  about accounting policy; it is outside the range the regulator's artifact declares.
+tolerance: null
+external_deps: []
+
+# --- written by the qualification pipeline (P7), never by hand -----------------------------
+qualification:
+  campaign_id: CAMPAIGN-FIXTURE-0000
+  kill_rate_claimed: 0/0
+  kill_rate_all_classes: 0/0
+  false_failure_rate: 0/0
+  qualified_at: '2026-08-12'
+qualified_against:
+  evaluator_version: FIXTURE
+  fault_model_version: v3
+  corpus_sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+  template_sha256: 7d9a1960085785eefbe166fb5e04e94689780c490235fe55d8f3e8b620ceea39
+severity_tier: ADVISORY
+state: PROVISIONAL
+withdrawn_reason: null

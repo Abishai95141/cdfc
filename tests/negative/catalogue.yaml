@@ -182,18 +182,26 @@ entries:
     component: predicates
     break: a predicate with no qualification record loads
     measured_instance: "the admission rule the settled-fraction claim rests on"
-    injector: NONE
-    why_impossible: >
-      load_or_refuse refuses unconditionally from P0 to P4, so the admission-side twin —
-      a qualified predicate that DOES load — cannot exist until P4 gives the schema.
-      Reported PROVISIONAL and excluded from entries_caught.
+    injector: LoaderSkipsQualificationCheck
     guard_tests:
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q02b_the_predicate_loader_refuses_an_unqualified_envelope"
+        flips: true
+      - path: "tests/unit/test_envelope.py::test_load_predicate__missing_qualification_raises"
+        flips: true
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q02c_a_qualified_predicate_does_load"
+        flips: false
       - path: "tests/unit/test_registry.py::test_nc__Q02_unqualified_predicate_does_not_load"
         flips: false
-    positive_control: "IMPOSSIBLE UNTIL P4"
+    positive_control: "fixtures/predicates/good/P-0007 carries a qualification record and DOES load"
     status: active
-    provisional: true
-    why_provisional: "no admission-side twin until the predicate schema exists (P4)"
+    resolved: >
+      PROVISIONAL from P0 to P3 and RESOLVED at P4, dated 12 Aug 2026. The entry was reported in
+      its own column and excluded from entries_caught because its admission-side twin — a
+      QUALIFIED predicate that DOES load — could not be written until the predicate schema
+      existed. P4-B1 gives the schema, so both sides are now real: `load_predicate` refuses
+      P-NC02 and accepts P-0007, and `LoaderSkipsQualificationCheck` makes the refusal green.
+      The P0 registry stub stays as a `flips: false` guard: it refuses unconditionally and is
+      not the thing the injector touches, so it is the control on the control.
 
   - id: NC-CI12
     component: cli
@@ -545,4 +553,159 @@ entries:
       - path: "tests/unit/test_fact_table.py::test_units__tau_is_an_integer_count_not_a_percentage"
         flips: true
     positive_control: "tau(14) is 70 units regardless of the magnitude of the total"
+    status: active
+
+  # --- P4: the predicate envelope, the CEL substrate, the harvest --------------------
+  # Ids are inside this document's Q40-Q49 band (`02` R5a). NC-Q02 above is RESOLVED here:
+  # its admission-side twin became possible the moment the predicate schema existed.
+
+  - id: NC-Q41
+    component: predicates
+    break: a field is dropped from the canonical serialisation, so it leaves the identity
+    measured_instance: "the digest is the registry admission key; a field outside it can be changed after admission"
+    injector: ProjectionDropsAField
+    guard_tests:
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q41_every_record_field_is_inside_the_digest"
+        flips: true
+      - path: "tests/property/test_prop_envelope.py::test_prop__every_envelope_field_is_covered_by_the_digest"
+        flips: true
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q41b_two_envelopes_differing_only_in_a_claim_have_different_digests"
+        flips: true
+    positive_control: "two envelopes that genuinely differ still digest differently"
+    status: active
+    note: >
+      The property test reads the field list from dataclasses.fields() at runtime, so it covered
+      claims_fault_classes and clause_absent_reason the moment they were added to the record.
+
+  - id: NC-Q42
+    component: predicates
+    break: the two directions of the both-ways key check collapse into one exception type
+    measured_instance: "read-not-declared is a hole in the pre-flight guard; declared-not-read inflates the settled numerator"
+    injector: KeysMismatchCollapsed
+    guard_tests:
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q42_the_two_key_mismatches_raise_different_types"
+        flips: true
+      - path: "tests/unit/test_ast_walker.py::test_check_declared_keys__declared_unread_raises_DeclaredKeyUnread"
+        flips: true
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q42b_a_correct_envelope_raises_neither"
+        flips: false
+    positive_control: "a correct envelope raises neither type"
+    status: active
+
+  - id: NC-Q43
+    component: predicates
+    break: the admitted-subset walker stops walking, so every banned construct is admitted
+    measured_instance: "a nested comprehension is the only route to exponential blow-up the CEL spec itself names"
+    injector: PermissiveSubsetWalker
+    guard_tests:
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q43_a_banned_construct_is_refused"
+        flips: true
+      - path: "tests/unit/test_ast_walker.py::test_check_subset__nested_comprehension_raises_with_offset"
+        flips: true
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q43d_a_flat_comprehension_is_admitted"
+        flips: false
+    positive_control: "a flat comprehension is still admitted"
+    status: active
+
+  - id: NC-Q44
+    component: predicates
+    break: key extraction becomes lexical, reporting the comprehension binding as a document root
+    measured_instance: "the same defect class as `<f[ >][^>]*>` over OOXML, which returned a correct count with wrong bodies"
+    injector: LexicalKeyExtraction
+    guard_tests:
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q44_the_comprehension_binding_is_never_a_document_root"
+        flips: true
+      - path: "tests/property/test_prop_ast_walker.py::test_prop__read_keys_never_reports_a_comprehension_variable"
+        flips: true
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q44c_both_roots_are_reported"
+        flips: true
+    positive_control: "both document roots are reported, not just the filing"
+    status: active
+
+  - id: NC-Q45
+    component: measure
+    break: the harvest total renders without its per-workbook distribution
+    measured_instance: "508 of 592 come from two workbooks; the total alone reads as breadth"
+    injector: TotalWithoutDistribution
+    guard_tests:
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q45_the_distribution_renders_beside_the_total"
+        flips: true
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q45b_the_total_itself_still_renders"
+        flips: false
+    positive_control: "the total itself still renders — the repair is not to delete it"
+    status: active
+
+  - id: NC-Q46
+    component: predicates
+    break: the weak pile is dropped instead of counted
+    measured_instance: "58 formulas on FME are outside the class set; an undeclared suppression is a coverage lie"
+    injector: WeakPileDropped
+    guard_tests:
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q46_a_construct_outside_the_class_set_is_recorded"
+        flips: true
+      - path: "tests/unit/test_harvest_classes.py::test_harvest__the_weak_pile_is_typed_and_counted"
+        flips: true
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q46b_a_workbook_with_nothing_to_skip_records_nothing"
+        flips: false
+    positive_control: "a workbook with nothing to skip records nothing"
+    status: active
+
+  - id: NC-Q47
+    component: predicates
+    break: a candidate whose obligation is a TEMPLATE obligation carries no declared reason
+    measured_instance: "every harvested candidate cites no statute; the published pair is meaningless without the reason"
+    injector: ClauselessReasonOptional
+    guard_tests:
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q47_a_template_obligation_must_declare_why_it_cites_no_statute"
+        flips: true
+      - path: "tests/unit/test_envelope.py::test_envelope__clauseless_candidate_declares_why"
+        flips: true
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q47b_every_harvested_candidate_declares_why"
+        flips: false
+    positive_control: "every harvested candidate does declare one, so the guard has instances rather than zero"
+    status: active
+
+  - id: NC-Q48
+    component: predicates
+    break: the fault-class claim is derived per predicate instead of declared per class
+    measured_instance: "D-P4-06: a predicate that kills one class of one operator scores 1.00 and is admitted BLOCKING"
+    injector: ClaimsFromKillVector
+    guard_tests:
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q48_claims_precede_the_campaign_and_do_not_vary_per_predicate"
+        flips: true
+      - path: "tests/unit/test_harvest_classes.py::test_harvest__claims_are_a_pure_function_of_the_class"
+        flips: true
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q48b_the_declared_claims_are_non_empty_and_resolve"
+        flips: false
+    positive_control: "the declared per-class claims are non-empty and every member resolves"
+    status: active
+
+  - id: NC-Q49
+    component: predicates
+    break: a host function answers where it should refuse, or loses its third value
+    measured_instance: "reg 51(1) leaves the NAV frequency for close-ended Restricted Schemes undetermined by any field of the workbook"
+    injector: HostFnResolvesLive
+    guard_tests:
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q49_reg_resolves_never_answers_without_a_snapshot"
+        flips: true
+      - path: "tests/unit/test_celrt.py::test_reg_resolves__with_no_snapshot_the_run_is_INPUT_UNAVAILABLE_never_a_fetch"
+        flips: true
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q49b_with_a_snapshot_bound_it_answers"
+        flips: false
+    positive_control: "with a snapshot bound it answers"
+    status: active
+
+  - id: NC-Q40
+    component: predicates
+    break: a host function loses the third value that says the regulator did not legislate this
+    measured_instance: "29th IFSCA Authority Meeting, 24 July 2026: the owed frequency depends on 75%-by-value investor approval, which the workbook does not collect"
+    injector: HostFnLosesItsThirdValue
+    guard_tests:
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q49c_nav_interval_keeps_its_third_value"
+        flips: true
+      - path: "tests/unit/test_celrt.py::test_nav_interval__close_ended_restricted_returns_UNDERSPECIFIED"
+        flips: true
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q49d_nav_interval_still_answers_where_the_regulation_determines_it"
+        flips: false
+    positive_control: "it still answers where the regulation determines the answer"
     status: active

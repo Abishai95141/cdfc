@@ -51,6 +51,14 @@ EVIDENCE: dict[int, str] = {
     18: "NC-CI16",  # a total equals the sum of its rows
     19: "NC-CI17",  # no machine-local absolute path in the build
     20: "NC-E13",   # no float in the deterministic numeric core
+    # P4
+    21: "NC-Q44",   # key extraction is structural, not lexical
+    22: "NC-Q41",   # the digest covers every field of the record
+    23: "NC-Q42",   # the two key mismatches stay distinguishable
+    24: "NC-Q46",   # the weak pile is counted
+    25: "NC-Q48",   # the G2 denominator is declared per class
+    26: "NC-Q49",   # a host function never resolves live
+    27: "NC-Q02",   # the predicate schema and the loader invariant
 }
 
 

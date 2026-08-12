@@ -1,0 +1,82 @@
+{
+  "host_fn": "sum",
+  "note": "Integers only, and nothing that merely converts to one. A blank is not zero \u2014 that is F05's blank-and-zero conflation, which the fault model carries as two operators.",
+  "vectors": [
+    {
+      "args": [
+        []
+      ],
+      "expect": 0
+    },
+    {
+      "args": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "expect": 6
+    },
+    {
+      "args": [
+        [
+          -5,
+          5
+        ]
+      ],
+      "expect": 0
+    },
+    {
+      "args": [
+        [
+          12340,
+          1,
+          -1
+        ]
+      ],
+      "expect": 12340
+    },
+    {
+      "args": [
+        [
+          1.5
+        ]
+      ],
+      "raises": "TypeError"
+    },
+    {
+      "args": [
+        [
+          true
+        ]
+      ],
+      "raises": "TypeError"
+    },
+    {
+      "args": [
+        [
+          ""
+        ]
+      ],
+      "raises": "TypeError"
+    },
+    {
+      "args": [
+        [
+          "12"
+        ]
+      ],
+      "raises": "TypeError",
+      "why": "a numeric-looking string in a numeric column is a fact-model defect, not a value to coerce"
+    },
+    {
+      "args": [
+        [
+          null
+        ]
+      ],
+      "raises": "TypeError"
+    }
+  ]
+}

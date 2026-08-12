@@ -11,11 +11,27 @@ PY="${CDFC_PY:-/Users/abishaikc/Gift/.venv/bin/python}"
 "$PY" - <<'PYEOF'
 import json, pathlib, re, sys
 LEDGER = pathlib.Path("reports/validation-ledger.jsonl")
+# The ledger carries two ROW SHAPES: absence rows (`row_id` + `positive_control_count`) and
+# measurement rows (`metric` + `numerator`/`denominator`). This gate resolves the first kind.
+#
+# It refuses to guess about the third. A line it can classify as neither is a GATE FAILURE, not a
+# line to skip: a ledger the gate cannot read is a ledger whose citations it cannot check, and
+# skipping quietly is how a citation comes to resolve to nothing.
 rows = {}
+unclassifiable = []
 if LEDGER.exists():
-    for line in LEDGER.read_text(encoding="utf-8").splitlines():
-        if line.strip():
-            r = json.loads(line); rows[r["row_id"]] = r
+    for n, line in enumerate(LEDGER.read_text(encoding="utf-8").splitlines(), 1):
+        if not line.strip():
+            continue
+        r = json.loads(line)
+        if "row_id" in r:
+            rows[r["row_id"]] = r
+        elif "metric" not in r:
+            unclassifiable.append(f"reports/validation-ledger.jsonl:{n}: neither an absence row "
+                                  f"(no row_id) nor a measurement row (no metric)")
+if unclassifiable:
+    print("GATE FAIL:", *unclassifiable, sep="\n  ", file=sys.stderr)
+    sys.exit(1)
 
 ABSENCE = re.compile(r"(does not occur|zero hits|not present in|no occurrences)", re.I)
 CITE = re.compile(r"ledger:([0-9a-f]{8,})")

@@ -1,0 +1,512 @@
+{
+  "$defs": {
+    "Candidate": {
+      "additionalProperties": false,
+      "properties": {
+        "applicable": {
+          "type": "string"
+        },
+        "claims_fault_classes": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "clause": {
+          "additionalProperties": false,
+          "properties": {
+            "eId": {
+              "type": "string"
+            },
+            "instrument": {
+              "type": "string"
+            },
+            "provisos": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "disposal": {
+                    "enum": [
+                      "DECLARED",
+                      "IMPLEMENTED"
+                    ]
+                  },
+                  "emits": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "span": {
+                    "items": {
+                      "type": "integer"
+                    },
+                    "maxItems": 2,
+                    "minItems": 2,
+                    "type": "array"
+                  },
+                  "text": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "disposal",
+                  "emits",
+                  "span",
+                  "text"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "quote": {
+              "type": "string"
+            },
+            "span": {
+              "items": {
+                "type": "integer"
+              },
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            }
+          },
+          "required": [
+            "eId",
+            "instrument",
+            "quote",
+            "span"
+          ],
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "clause_absent_reason": {
+          "enum": [
+            "derived_from_data_validation",
+            "derived_from_template_constant",
+            "derived_from_template_formula",
+            null
+          ]
+        },
+        "expr": {
+          "type": "string"
+        },
+        "external_deps": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "endpoint": {
+                "type": "string"
+              },
+              "field": {
+                "type": "string"
+              },
+              "on_missing": {
+                "type": "string"
+              },
+              "snapshot": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "endpoint",
+              "field",
+              "on_missing",
+              "snapshot"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "host_fns": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "hand_authored",
+            "harvested",
+            "proposed",
+            "relation"
+          ]
+        },
+        "obligation_id": {
+          "type": "string"
+        },
+        "obligation_source": {
+          "enum": [
+            "STATUTE",
+            "TEMPLATE"
+          ]
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "reason_if_inapplicable": {
+          "type": "string"
+        },
+        "schema_keys": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "template": {
+          "type": "string"
+        },
+        "tolerance": {
+          "additionalProperties": false,
+          "properties": {
+            "tau_units_per_summand": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "tau_units_per_summand"
+          ],
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "version": {
+          "type": "integer"
+        },
+        "witness": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "applicable",
+        "claims_fault_classes",
+        "clause",
+        "clause_absent_reason",
+        "expr",
+        "host_fns",
+        "id",
+        "kind",
+        "obligation_id",
+        "obligation_source",
+        "rationale",
+        "reason_if_inapplicable",
+        "schema_keys",
+        "template",
+        "tolerance",
+        "version",
+        "witness"
+      ],
+      "type": "object"
+    },
+    "Predicate": {
+      "additionalProperties": false,
+      "properties": {
+        "applicable": {
+          "type": "string"
+        },
+        "claims_fault_classes": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "clause": {
+          "additionalProperties": false,
+          "properties": {
+            "eId": {
+              "type": "string"
+            },
+            "instrument": {
+              "type": "string"
+            },
+            "provisos": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "disposal": {
+                    "enum": [
+                      "DECLARED",
+                      "IMPLEMENTED"
+                    ]
+                  },
+                  "emits": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "span": {
+                    "items": {
+                      "type": "integer"
+                    },
+                    "maxItems": 2,
+                    "minItems": 2,
+                    "type": "array"
+                  },
+                  "text": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "disposal",
+                  "emits",
+                  "span",
+                  "text"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "quote": {
+              "type": "string"
+            },
+            "span": {
+              "items": {
+                "type": "integer"
+              },
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            }
+          },
+          "required": [
+            "eId",
+            "instrument",
+            "quote",
+            "span"
+          ],
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "clause_absent_reason": {
+          "enum": [
+            "derived_from_data_validation",
+            "derived_from_template_constant",
+            "derived_from_template_formula",
+            null
+          ]
+        },
+        "expr": {
+          "type": "string"
+        },
+        "external_deps": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "endpoint": {
+                "type": "string"
+              },
+              "field": {
+                "type": "string"
+              },
+              "on_missing": {
+                "type": "string"
+              },
+              "snapshot": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "endpoint",
+              "field",
+              "on_missing",
+              "snapshot"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "host_fns": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "hand_authored",
+            "harvested",
+            "proposed",
+            "relation"
+          ]
+        },
+        "obligation_id": {
+          "type": "string"
+        },
+        "obligation_source": {
+          "enum": [
+            "STATUTE",
+            "TEMPLATE"
+          ]
+        },
+        "qualification": {
+          "additionalProperties": false,
+          "properties": {
+            "campaign_id": {
+              "type": "string"
+            },
+            "false_failure_rate": {
+              "type": "string"
+            },
+            "kill_rate_all_classes": {
+              "type": "string"
+            },
+            "kill_rate_claimed": {
+              "type": "string"
+            },
+            "qualified_at": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "campaign_id",
+            "false_failure_rate",
+            "kill_rate_all_classes",
+            "kill_rate_claimed",
+            "qualified_at"
+          ],
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "qualified_against": {
+          "additionalProperties": false,
+          "properties": {
+            "corpus_sha256": {
+              "type": "string"
+            },
+            "evaluator_version": {
+              "type": "string"
+            },
+            "fault_model_version": {
+              "type": "string"
+            },
+            "template_sha256": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "corpus_sha256",
+            "evaluator_version",
+            "fault_model_version",
+            "template_sha256"
+          ],
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "reason_if_inapplicable": {
+          "type": "string"
+        },
+        "schema_keys": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "severity_tier": {
+          "enum": [
+            "ADVISORY",
+            "BLOCKING",
+            null
+          ]
+        },
+        "state": {
+          "enum": [
+            "ACTIVE",
+            "PROVISIONAL",
+            "QUARANTINED",
+            "WITHDRAWN",
+            null
+          ]
+        },
+        "template": {
+          "type": "string"
+        },
+        "tolerance": {
+          "additionalProperties": false,
+          "properties": {
+            "tau_units_per_summand": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "tau_units_per_summand"
+          ],
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "version": {
+          "type": "integer"
+        },
+        "withdrawn_reason": {
+          "enum": [
+            "ffr_exceeded_threshold",
+            "rule_amended",
+            "source_schema_changed",
+            "superseded_by",
+            null
+          ]
+        },
+        "witness": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "applicable",
+        "claims_fault_classes",
+        "clause",
+        "clause_absent_reason",
+        "expr",
+        "host_fns",
+        "id",
+        "kind",
+        "obligation_id",
+        "obligation_source",
+        "qualification",
+        "qualified_against",
+        "rationale",
+        "reason_if_inapplicable",
+        "schema_keys",
+        "severity_tier",
+        "state",
+        "template",
+        "tolerance",
+        "version",
+        "withdrawn_reason",
+        "witness"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://cdfc.invalid/schema/predicate.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "GENERATED from src/cdfc/predicates/envelope.py. Do not hand-edit: tests/contract/test_contract__predicate_schema.py asserts this file equals the generated schema, so an edit here without a change to the record fails the build. There is deliberately no result, status or pass property at any depth.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/Candidate"
+    },
+    {
+      "$ref": "#/$defs/Predicate"
+    }
+  ],
+  "title": "cdfc predicate envelope"
+}

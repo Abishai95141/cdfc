@@ -1,0 +1,6949 @@
+{
+ "ALR_V2_3_20250808_1024.xlsx": {
+  "file": "ALR_V2_3_20250808_1024.xlsx",
+  "sha256": "a414d8d3300d884e06c89eff92cf9f9857bad5690fd38266375979b784c8b998",
+  "predicates": [
+   {
+    "kind": "membership",
+    "sheet": "General Information",
+    "sqref": "B5",
+    "n_cells": 1,
+    "vocab": [
+     "Month",
+     "Jan",
+     "Feb",
+     "Mar",
+     "Apr",
+     "May",
+     "Jun",
+     "Jul",
+     "Aug",
+     "Sep",
+     "Oct",
+     "Nov",
+     "Dec"
+    ],
+    "vocab_size": 13,
+    "source": "range",
+    "formula1": "$E$5:$E$17"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "Assets",
+    "cell": "D3",
+    "expr": "'General Information'!B3",
+    "checks": "Assets!D3 == 'General Information'!B3"
+   },
+   {
+    "kind": "same_sheet_equality",
+    "sheet": "Assets",
+    "cell": "B40",
+    "expr": "B41",
+    "checks": "Assets!B40 == Assets!B41"
+   },
+   {
+    "kind": "same_sheet_equality",
+    "sheet": "Assets",
+    "cell": "C40",
+    "expr": "C41",
+    "checks": "Assets!C40 == Assets!C41"
+   },
+   {
+    "kind": "same_sheet_equality",
+    "sheet": "Assets",
+    "cell": "J40",
+    "expr": "J41",
+    "checks": "Assets!J40 == Assets!J41"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Assets",
+    "sqref": "B7:J93",
+    "n_cells": 783,
+    "formula1": "-100000000000000000"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "Liabilities",
+    "cell": "D3",
+    "expr": "'General Information'!B3",
+    "checks": "Liabilities!D3 == 'General Information'!B3"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Liabilities",
+    "sqref": "B7:J65",
+    "n_cells": 531,
+    "formula1": "-100000000000000000"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "Other products",
+    "cell": "D4",
+    "expr": "'General Information'!B3",
+    "checks": "Other products!D4 == 'General Information'!B3"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Other products",
+    "cell": "B11",
+    "expr": "SUM(B12:B13)",
+    "checks": "Other products!B11 == SUM(B12:B13)"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Other products",
+    "sqref": "B7:J17",
+    "n_cells": 99,
+    "formula1": "-100000000000000000"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "Business Volumes",
+    "cell": "C3",
+    "expr": "'General Information'!B3",
+    "checks": "Business Volumes!C3 == 'General Information'!B3"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "Structured Deposits Report",
+    "cell": "C3",
+    "expr": "'General Information'!B3",
+    "checks": "Structured Deposits Report!C3 == 'General Information'!B3"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "Off BS Exposure",
+    "cell": "C3",
+    "expr": "'General Information'!B3",
+    "checks": "Off BS Exposure!C3 == 'General Information'!B3"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Off BS Exposure",
+    "sqref": "C8:C15 G13",
+    "n_cells": 9,
+    "formula1": "-100000000000000000"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "Nostro",
+    "cell": "C3",
+    "expr": "'General Information'!B3",
+    "checks": "Nostro!C3 == 'General Information'!B3"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "Reconciliation",
+    "cell": "C3",
+    "expr": "'General Information'!B3",
+    "checks": "Reconciliation!C3 == 'General Information'!B3"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Reconciliation",
+    "sqref": "E13 C27 E20 C13 C20 E27",
+    "n_cells": 6,
+    "formula1": "-100000000000000000"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Reconciliation",
+    "sqref": "B9:B13 B23:B27 D16:D20 E9:E12 C16:C19 D9:D13 C9:C12 B16:B20 E16:E19 D23:D27 E23:E26 C23:C26",
+    "n_cells": 54,
+    "formula1": "0"
+   }
+  ],
+  "weak": [
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B7",
+    "expr": "ROUND(+B8+B9+B10,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "C7",
+    "expr": "ROUND(+C8+C9+C10,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J7",
+    "expr": "ROUND((J8+J9+J10),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J8",
+    "expr": "ROUND((B8+C8+D8+E8+F8+G8+H8+I8),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J9",
+    "expr": "ROUND((B9+C9+D9+E9+F9+G9+H9+I9),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B10",
+    "expr": "ROUND(SUM(B11:B12),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J10",
+    "expr": "ROUND((B10+C10+D10+E10+F10+G10+H10+I10),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J11",
+    "expr": "ROUND((B11+C11+D11+E11+F11+G11+H11+I11),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J12",
+    "expr": "ROUND((B12+C12+D12+E12+F12+G12+H12+I12),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B13",
+    "expr": "ROUND((B14+B15+B16+B17+B18),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "C13",
+    "expr": "ROUND((C14+C15+C16+C17+C18),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "D13",
+    "expr": "ROUND((D14+D15+D16+D17+D18),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "E13",
+    "expr": "ROUND((E14+E15+E16+E17+E18),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "F13",
+    "expr": "ROUND((F14+F15+F16+F17+F18),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "I13",
+    "expr": "ROUND((I14+I15+I16+I17+I18),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J13",
+    "expr": "ROUND((J14+J15+J16+J17+J18),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J14",
+    "expr": "ROUND((B14+C14+D14+E14+F14+G14+H14+I14),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B18",
+    "expr": "ROUND(SUM(B20:B21),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J19",
+    "expr": "ROUND((B19+C19+D19+E19+F19+G19+H19+I19),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J20",
+    "expr": "ROUND((B20+C20+D20+E20+F20+G20+H20+I20),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J22",
+    "expr": "ROUND((B22+C22+D22+E22+F22+G22+H22+I22),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B23",
+    "expr": "+B13-B22"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B24",
+    "expr": "ROUND((B25+B26),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "C24",
+    "expr": "ROUND((C25+C26),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "D24",
+    "expr": "ROUND((D25+D26),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "E24",
+    "expr": "ROUND((E25+E26),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "F24",
+    "expr": "ROUND((F25+F26),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J24",
+    "expr": "ROUND(+J25+J26,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B26",
+    "expr": "ROUND((B27+B28),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "C26",
+    "expr": "ROUND((C27+C28),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J26",
+    "expr": "ROUND(+J27+J28,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B29",
+    "expr": "ROUND((B30+B35),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "C29",
+    "expr": "ROUND((C30+C35),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J29",
+    "expr": "ROUND((J30+J35),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B30",
+    "expr": "+B31+B32"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "C30",
+    "expr": "+C31+C32"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J30",
+    "expr": "ROUND(+J31+J32,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B32",
+    "expr": "ROUND(SUM(B33:B34),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "C32",
+    "expr": "ROUND(SUM(C33:C34),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "D32",
+    "expr": "ROUND(SUM(D33:D34),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J33",
+    "expr": "ROUND((B33+C33+D33+E33+F33+G33+H33+I33),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B35",
+    "expr": "+B36+B37"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "C35",
+    "expr": "+C36+C37"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J35",
+    "expr": "ROUND(+J36+J37,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B37",
+    "expr": "ROUND(SUM(B38:B39),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "C37",
+    "expr": "ROUND(SUM(C38:C39),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "D37",
+    "expr": "ROUND(SUM(D38:D39),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "E37",
+    "expr": "ROUND(SUM(E38:E39),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "F37",
+    "expr": "ROUND(SUM(F38:F39),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "G37",
+    "expr": "ROUND(SUM(G38:G39),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "H37",
+    "expr": "ROUND(SUM(H38:H39),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "I37",
+    "expr": "ROUND(SUM(I38:I39),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J37",
+    "expr": "ROUND(SUM(J38:J39),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J38",
+    "expr": "ROUND((B38+C38+D38+E38+F38+G38+H38+I38),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B41",
+    "expr": "ROUND((B42+B43+B44+B67+B70+B71+B78),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J41",
+    "expr": "ROUND((B41+C41+D41+E41+F41+G41+H41+I41),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B44",
+    "expr": "ROUND((B45+B56),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B45",
+    "expr": "ROUND(+B46+B47+B48+B49+B52+B53,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J45",
+    "expr": "ROUND(+J46+J47+J48+J49+J52+J53,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J46",
+    "expr": "ROUND((B46+C46+D46+E46+F46+G46+H46+I46),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B49",
+    "expr": "ROUND(+B50+B51,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "C49",
+    "expr": "ROUND(+C50+C51,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B53",
+    "expr": "ROUND(SUM(B54:B55),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J54",
+    "expr": "ROUND((B54+C54+D54+E54+F54+G54+H54+I54),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J55",
+    "expr": "ROUND((B55+C55+D55+E55+F55+G55+H55+I55),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B56",
+    "expr": "ROUND(+B57+B58+B59+B60+B63+B64,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "C56",
+    "expr": "ROUND(+C57+C58+C59+C60+C63+C64,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B60",
+    "expr": "ROUND(+B61+B62,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "C60",
+    "expr": "ROUND(+C61+C62,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B64",
+    "expr": "ROUND(SUM(B65:B66),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "C64",
+    "expr": "ROUND(SUM(C65:C66),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "D64",
+    "expr": "ROUND(SUM(D65:D66),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "E64",
+    "expr": "ROUND(SUM(E65:E66),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "F64",
+    "expr": "ROUND(SUM(F65:F66),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "G64",
+    "expr": "ROUND(SUM(G65:G66),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "H64",
+    "expr": "ROUND(SUM(H65:H66),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "I64",
+    "expr": "ROUND(SUM(I65:I66),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J64",
+    "expr": "ROUND(SUM(J65:J66),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J65",
+    "expr": "ROUND((B65+C65+D65+E65+F65+G65+H65+I65),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B67",
+    "expr": "ROUND((B68+B69),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "C67",
+    "expr": "ROUND((C68+C69),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "D67",
+    "expr": "ROUND((D68+D69),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J67",
+    "expr": "ROUND((J68+J69),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B71",
+    "expr": "ROUND(+B72+B75,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "C71",
+    "expr": "ROUND(+C72+C75,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J71",
+    "expr": "ROUND(+J72+J75,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B72",
+    "expr": "ROUND(+B73+B74,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J72",
+    "expr": "ROUND(+J73+J74,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B75",
+    "expr": "ROUND(+B76+B77,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J75",
+    "expr": "ROUND(+J76+J77,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B78",
+    "expr": "ROUND(SUM(B79:B80),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J81",
+    "expr": "ROUND((B81+C81+D81+E81+F81+G81+H81+I81),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B83",
+    "expr": "ROUND((B84+B85),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J83",
+    "expr": "ROUND(+J84+J85,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B86",
+    "expr": "ROUND((B40-B83),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J87",
+    "expr": "ROUND((B87+C87+D87+E87+F87+G87+H87+I87),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B88",
+    "expr": "ROUND(SUM(B89:B92),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "C88",
+    "expr": "ROUND(SUM(C89:C92),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J90",
+    "expr": "ROUND((B90+C90+D90+E90+F90+G90+H90+I90),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J91",
+    "expr": "ROUND((B91+C91+D91+E91+F91+G91+H91+I91),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "J92",
+    "expr": "ROUND((B92+C92+D92+E92+F92+G92+H92+I92),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Assets",
+    "cell": "B93",
+    "expr": "ROUND((B7+B23+B24+B29+B86+B87+B88),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "B7",
+    "expr": "ROUND((B8+B9+B10+B11),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "C7",
+    "expr": "ROUND((C8+C9+C10+C11),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "J8",
+    "expr": "ROUND((B8+C8+D8+E8+F8+G8+H8+I8),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "B11",
+    "expr": "ROUND(SUM(B12:B13),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "C11",
+    "expr": "ROUND(SUM(C12:C13),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "B14",
+    "expr": "ROUND(B15+B18+B25+B28+B31,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "C14",
+    "expr": "ROUND(C15+C18+C25+C28+C31,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "D14",
+    "expr": "ROUND(D15+D18+D25+D28+D31,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "E14",
+    "expr": "ROUND(E15+E18+E25+E28+E31,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "F14",
+    "expr": "ROUND(F15+F18+F25+F28+F31,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "G14",
+    "expr": "ROUND(G15+G18+G25+G28+G31,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "H14",
+    "expr": "ROUND(H15+H18+H25+H28+H31,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "I14",
+    "expr": "ROUND(I15+I18+I25+I28+I31,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "J14",
+    "expr": "ROUND(J15+J18+J25+J28+J31,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "B15",
+    "expr": "ROUND(+B16+B17,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "C15",
+    "expr": "ROUND(+C16+C17,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "J15",
+    "expr": "ROUND(+J16+J17,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "J16",
+    "expr": "ROUND((B16+C16+D16+E16+F16+G16+H16+I16),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "J17",
+    "expr": "ROUND((B17+C17+D17+E17+F17+G17+H17+I17),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "B18",
+    "expr": "ROUND(+B19+B22,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "C18",
+    "expr": "ROUND(+C19+C22,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "J18",
+    "expr": "ROUND(+J19+J22,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "B19",
+    "expr": "ROUND(+B20+B21,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "C19",
+    "expr": "ROUND(+C20+C21,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "J19",
+    "expr": "ROUND(+J20+J21,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "J20",
+    "expr": "ROUND((B20+C20+D20+E20+F20+G20+H20+I20),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "B22",
+    "expr": "ROUND(+B23+B24,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "C22",
+    "expr": "ROUND(+C23+C24,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "J22",
+    "expr": "ROUND(+J23+J24,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "B25",
+    "expr": "ROUND(+B26+B27,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "C25",
+    "expr": "ROUND(+C26+C27,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "J25",
+    "expr": "ROUND(+J26+J27,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "B28",
+    "expr": "ROUND(+B29+B30,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "B31",
+    "expr": "ROUND(SUM(B32:B33),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "C31",
+    "expr": "ROUND(SUM(C32:C33),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "J31",
+    "expr": "ROUND(SUM(J32:J33),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "B34",
+    "expr": "ROUND((B35+B36),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "C34",
+    "expr": "ROUND((C35+C36),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "B37",
+    "expr": "ROUND((B38+B44),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "J37",
+    "expr": "ROUND((J38+J44),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "B38",
+    "expr": "ROUND((B39+B40+B41),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "C38",
+    "expr": "ROUND((C39+C40+C41),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "B41",
+    "expr": "ROUND(SUM(B42:B43),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "B44",
+    "expr": "ROUND((B45+B46+B47),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "C44",
+    "expr": "ROUND((C45+C46+C47),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "J45",
+    "expr": "ROUND((B45+C45+D45+E45+F45+G45+H45+I45),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "B47",
+    "expr": "ROUND(SUM(B48:B49),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "C47",
+    "expr": "ROUND(SUM(C48:C49),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "J50",
+    "expr": "ROUND((B50+C50+D50+E50+F50+G50+H50+I50),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "J51",
+    "expr": "ROUND((B51+C51+D51+E51+F51+G51+H51+I51),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "B52",
+    "expr": "ROUND(+B53+B54+B55+B56+B57,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "C52",
+    "expr": "ROUND(+C53+C54+C55+C56+C57,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "J52",
+    "expr": "ROUND(+J53+J54+J55+J56+J57,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "J53",
+    "expr": "ROUND((B53+C53+D53+E53+F53+G53+H53+I53),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "B57",
+    "expr": "ROUND(SUM(B58:B59),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "C57",
+    "expr": "ROUND(SUM(C58:C59),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "B60",
+    "expr": "ROUND(SUM(B61:B63),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "J62",
+    "expr": "ROUND((B62+C62+D62+E62+F62+G62+H62+I62),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "B64",
+    "expr": "ROUND((B7+B14+B34+B37+B50+B51+B52+B60),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "J64",
+    "expr": "ROUND((J7+J14+J34+J37+J50+J51+J52+J60),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "B65",
+    "expr": "Assets!B93-Liabilities!B64"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "C65",
+    "expr": "Assets!C93-Liabilities!C64"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "D65",
+    "expr": "Assets!D93-Liabilities!D64"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "E65",
+    "expr": "Assets!E93-Liabilities!E64"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "F65",
+    "expr": "Assets!F93-Liabilities!F64"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "G65",
+    "expr": "Assets!G93-Liabilities!G64"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "H65",
+    "expr": "Assets!H93-Liabilities!H64"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "I65",
+    "expr": "Assets!I93-Liabilities!I64"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Liabilities",
+    "cell": "J65",
+    "expr": "Assets!J93-Liabilities!J64"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Other products",
+    "cell": "J7",
+    "expr": "ROUND((B7+C7+D7+E7+F7+G7+H7+I7),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Other products",
+    "cell": "J8",
+    "expr": "ROUND((B8+C8+D8+E8+F8+G8+H8+I8),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Other products",
+    "cell": "J9",
+    "expr": "ROUND((B9+C9+D9+E9+F9+G9+H9+I9),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Other products",
+    "cell": "J11",
+    "expr": "ROUND((B11+C11+D11+E11+F11+G11+H11+I11),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Other products",
+    "cell": "J12",
+    "expr": "ROUND((B12+C12+D12+E12+F12+G12+H12+I12),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Other products",
+    "cell": "J13",
+    "expr": "ROUND((B13+C13+D13+E13+F13+G13+H13+I13),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Other products",
+    "cell": "B14",
+    "expr": "ROUND(+B7+B8+B9+B10+B11,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Other products",
+    "cell": "B15",
+    "expr": "Liabilities!B65+'Other products'!B14"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Other products",
+    "cell": "C15",
+    "expr": "Liabilities!C65+'Other products'!C14"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Other products",
+    "cell": "D15",
+    "expr": "Liabilities!D65+'Other products'!D14"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Other products",
+    "cell": "E15",
+    "expr": "Liabilities!E65+'Other products'!E14"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Other products",
+    "cell": "F15",
+    "expr": "Liabilities!F65+'Other products'!F14"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Other products",
+    "cell": "G15",
+    "expr": "Liabilities!G65+'Other products'!G14"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Other products",
+    "cell": "H15",
+    "expr": "Liabilities!H65+'Other products'!H14"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Other products",
+    "cell": "I15",
+    "expr": "Liabilities!I65+'Other products'!I14"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Other products",
+    "cell": "J15",
+    "expr": "Liabilities!J65+'Other products'!J14"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Other products",
+    "cell": "B16",
+    "expr": "+B15"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Other products",
+    "cell": "C16",
+    "expr": "+B16+C15"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Other products",
+    "cell": "D16",
+    "expr": "+C16+D15"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Other products",
+    "cell": "E16",
+    "expr": "+D16+E15"
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "Other products",
+    "cell": "B17",
+    "expr": "IF(Assets!B93=0,0,B15/Assets!B93)"
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "Other products",
+    "cell": "C17",
+    "expr": "IF(Assets!C93=0,0,C15/Assets!C93)"
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "Other products",
+    "cell": "D17",
+    "expr": "IF(Assets!D93=0,0,D15/Assets!D93)"
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "Other products",
+    "cell": "E17",
+    "expr": "IF(Assets!E93=0,0,E15/Assets!E93)"
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "Other products",
+    "cell": "F17",
+    "expr": "IF(Assets!F93=0,0,F15/Assets!F93)"
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "Other products",
+    "cell": "G17",
+    "expr": "IF(Assets!G93=0,0,G15/Assets!G93)"
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "Other products",
+    "cell": "H17",
+    "expr": "IF(Assets!H93=0,0,H15/Assets!H93)"
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "Other products",
+    "cell": "I17",
+    "expr": "IF(Assets!I93=0,0,I15/Assets!I93)"
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "Other products",
+    "cell": "J17",
+    "expr": "IF(Assets!J93=0,0,J15/Assets!J93)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Other products",
+    "cell": "G36",
+    "expr": "((106711.14+23229725.66)/73.0075)/10^6"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Business Volumes",
+    "cell": "D13",
+    "expr": "ROUND(D14+D17+D18+D19+D22+D23+D24+D25+D26,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Business Volumes",
+    "cell": "E13",
+    "expr": "ROUND(E14+E17+E18+E19+E22+E23+E24+E25+E26,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Business Volumes",
+    "cell": "F13",
+    "expr": "ROUND(F14+F17+F18+F19+F22+F23+F24+F25+F26,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Business Volumes",
+    "cell": "D14",
+    "expr": "ROUND(D15+D16,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Business Volumes",
+    "cell": "E14",
+    "expr": "ROUND(E15+E16,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Business Volumes",
+    "cell": "F14",
+    "expr": "ROUND(F15+F16,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Business Volumes",
+    "cell": "D19",
+    "expr": "ROUND(D20+D21,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Business Volumes",
+    "cell": "E19",
+    "expr": "ROUND(E20+E21,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Business Volumes",
+    "cell": "F19",
+    "expr": "ROUND(F20+F21,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Business Volumes",
+    "cell": "D30",
+    "expr": "ROUND(+D31+D38,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Business Volumes",
+    "cell": "E30",
+    "expr": "ROUND(+E31+E38,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Business Volumes",
+    "cell": "D31",
+    "expr": "ROUND(SUM(D32:D35),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Business Volumes",
+    "cell": "E31",
+    "expr": "ROUND(SUM(E32:E35),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Business Volumes",
+    "cell": "D35",
+    "expr": "ROUND(SUM(D36:D37),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Business Volumes",
+    "cell": "E35",
+    "expr": "ROUND(SUM(E36:E37),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Business Volumes",
+    "cell": "D38",
+    "expr": "ROUND(SUM(D39:D41),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Business Volumes",
+    "cell": "E38",
+    "expr": "ROUND(SUM(E39:E41),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Business Volumes",
+    "cell": "D41",
+    "expr": "ROUND(SUM(D42:D43),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Business Volumes",
+    "cell": "E41",
+    "expr": "ROUND(SUM(E42:E43),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Off BS Exposure",
+    "cell": "C8",
+    "expr": "ROUND(+C9+C10,2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Off BS Exposure",
+    "cell": "C15",
+    "expr": "ROUND((C8+C11+C12+C13+C14),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Reconciliation",
+    "cell": "B13",
+    "expr": "ROUND((B9+B10+B11+B12),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Reconciliation",
+    "cell": "C13",
+    "expr": "ROUND((C9+C10+C11+C12),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Reconciliation",
+    "cell": "D13",
+    "expr": "ROUND((D9+D10+D11+D12),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Reconciliation",
+    "cell": "E13",
+    "expr": "ROUND((E9+E10+E11+E12),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Reconciliation",
+    "cell": "B20",
+    "expr": "ROUND((B16+B17+B18+B19),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Reconciliation",
+    "cell": "C20",
+    "expr": "ROUND((C16+C17+C18+C19),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Reconciliation",
+    "cell": "D20",
+    "expr": "ROUND((D16+D17+D18+D19),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Reconciliation",
+    "cell": "E20",
+    "expr": "ROUND((E16+E17+E18+E19),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Reconciliation",
+    "cell": "B27",
+    "expr": "ROUND((B23+B24+B25+B26),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Reconciliation",
+    "cell": "C27",
+    "expr": "ROUND((C23+C24+C25+C26),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Reconciliation",
+    "cell": "D27",
+    "expr": "ROUND((D23+D24+D25+D26),2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Reconciliation",
+    "cell": "E27",
+    "expr": "ROUND((E23+E24+E25+E26),2)"
+   }
+  ]
+ },
+ "AL_monthly_report_updated_final_20260717_0257.xlsx": {
+  "file": "AL_monthly_report_updated_final_20260717_0257.xlsx",
+  "sha256": "79e43a7fdbbec9d993fb983c1bcbfc3162be13c2fe3a40ffb3a28abead87c6a9",
+  "predicates": [
+   {
+    "kind": "membership",
+    "sheet": "Entity Details",
+    "sqref": "E10 E13",
+    "n_cells": 2,
+    "vocab": [
+     "Select Day",
+     "1",
+     "2",
+     "3",
+     "4",
+     "5",
+     "6",
+     "7",
+     "8",
+     "9",
+     "10",
+     "11",
+     "12",
+     "13",
+     "14",
+     "15",
+     "16",
+     "17",
+     "18",
+     "19",
+     "20",
+     "21",
+     "22",
+     "23",
+     "24",
+     "25",
+     "26",
+     "27",
+     "28",
+     "29",
+     "30",
+     "31"
+    ],
+    "vocab_size": 32,
+    "source": "range",
+    "formula1": "'0 Validation'!$D$4:$D$35"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Entity Details",
+    "sqref": "F10 E9 F13",
+    "n_cells": 3,
+    "vocab": [
+     "Select Month",
+     "January",
+     "February",
+     "March",
+     "April",
+     "May",
+     "June",
+     "July",
+     "August",
+     "September",
+     "October",
+     "November",
+     "December"
+    ],
+    "vocab_size": 13,
+    "source": "range",
+    "formula1": "'0 Validation'!$E$4:$E$16"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Entity Details",
+    "sqref": "E12:G12",
+    "n_cells": 3,
+    "vocab": [
+     "Select Lessor Type",
+     "Operating",
+     "Financial",
+     "Hybrid"
+    ],
+    "vocab_size": 4,
+    "source": "range",
+    "formula1": "'0 Validation'!$B$4:$B$7"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Entity Details",
+    "sqref": "F9 G10",
+    "n_cells": 2,
+    "vocab": [
+     "Select Year",
+     "2025",
+     "2026",
+     "2027",
+     "2028",
+     "2029",
+     "2030"
+    ],
+    "vocab_size": 7,
+    "source": "range",
+    "formula1": "'0 Validation'!$F$4:$F$10"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Entity Details",
+    "sqref": "G13",
+    "n_cells": 1,
+    "vocab": [
+     "Select Year",
+     "2015",
+     "2016",
+     "2017",
+     "2018",
+     "2019",
+     "2020",
+     "2021",
+     "2022",
+     "2023",
+     "2024",
+     "2025",
+     "2026"
+    ],
+    "vocab_size": 13,
+    "source": "range",
+    "formula1": "'0 Validation'!$G$4:$G$16"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Asset Details",
+    "cell": "H160",
+    "expr": "SUM(H16:H159)",
+    "checks": "Asset Details!H160 == SUM(H16:H159)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Asset Details",
+    "cell": "R160",
+    "expr": "SUM(R10:R159)",
+    "checks": "Asset Details!R160 == SUM(R10:R159)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Asset Details",
+    "cell": "S160",
+    "expr": "SUM(S10:S159)",
+    "checks": "Asset Details!S160 == SUM(S10:S159)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Asset Details",
+    "cell": "U160",
+    "expr": "SUM(U10:U159)",
+    "checks": "Asset Details!U160 == SUM(U10:U159)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Asset Details",
+    "cell": "W160",
+    "expr": "SUM(W10:W159)",
+    "checks": "Asset Details!W160 == SUM(W10:W159)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Asset Details",
+    "cell": "Y160",
+    "expr": "SUM(Y10:Y159)",
+    "checks": "Asset Details!Y160 == SUM(Y10:Y159)"
+   },
+   {
+    "kind": "conditional_required",
+    "sheet": "Asset Details",
+    "sqref": "J10:J159",
+    "n_cells": 150,
+    "formula1": "$F10<>\"Purchased\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "Asset Details",
+    "sqref": "D10:D159",
+    "n_cells": 150,
+    "vocab": [
+     "Select Asset Type",
+     "Narrow Body Aircraft",
+     "Wide Body Aircraft",
+     "Regional Aircraft",
+     "Private Jet",
+     "Cargo Aircraft",
+     "Trainer Aircraft",
+     "Helicopter",
+     "Engines of Aircraft or Helicopter",
+     "Any other part thereof",
+     "Aircraft Ground Support Equipment",
+     "Aviation Training Simulation Device",
+     "Others"
+    ],
+    "vocab_size": 13,
+    "source": "range",
+    "formula1": "'0 Validation'!$I$4:$I$16"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Asset Details",
+    "sqref": "F10:F159",
+    "n_cells": 150,
+    "vocab": [
+     "Select Acquisition Mode",
+     "Purchased",
+     "Operating Lease-in",
+     "Finance Lease-in",
+     "Other"
+    ],
+    "vocab_size": 5,
+    "source": "range",
+    "formula1": "'0 Validation'!$B$11:$B$15"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Asset Details",
+    "sqref": "L10:L159",
+    "n_cells": 150,
+    "vocab": [
+     "Select Lease Mode",
+     "Operating Lease",
+     "Financial Lease",
+     "Hybrid Lease",
+     "Other"
+    ],
+    "vocab_size": 5,
+    "source": "range",
+    "formula1": "'0 Validation'!$B$17:$B$21"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Asset Details",
+    "sqref": "M10:M159",
+    "n_cells": 150,
+    "vocab": [
+     "Select Lease Type",
+     "Dry Lease",
+     "Wet Lease",
+     "Damp Lease",
+     "Other"
+    ],
+    "vocab_size": 5,
+    "source": "range",
+    "formula1": "'0 Validation'!$B$22:$B$26"
+   }
+  ],
+  "weak": [
+   {
+    "kind": "other_formula",
+    "sheet": "0 Validation",
+    "cell": "D6",
+    "expr": "+D5+1"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "0 Validation",
+    "cell": "F6",
+    "expr": "+F5+1"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "0 Validation",
+    "cell": "D7",
+    "expr": "+D6+1"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "0 Validation",
+    "cell": "F7",
+    "expr": "+F6+1"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "0 Validation",
+    "cell": "D16",
+    "expr": "+D15+1"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "0 Validation",
+    "cell": "D24",
+    "expr": "+D23+1"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Entity Details",
+    "cell": "C10",
+    "expr": "+C9+1"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Entity Details",
+    "cell": "C11",
+    "expr": "+C10+1"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Entity Details",
+    "cell": "C13",
+    "expr": "+C12+1"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Entity Details",
+    "cell": "C14",
+    "expr": "+C13+1"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Entity Details",
+    "cell": "C19",
+    "expr": "+C18+1"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Entity Details",
+    "cell": "C20",
+    "expr": "+C19+1"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Entity Details",
+    "cell": "C21",
+    "expr": "+C20+1"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Entity Details",
+    "cell": "C22",
+    "expr": "+C21+1"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Mode of transaction",
+    "cell": "E2",
+    "expr": "+'Entity Details'!E11"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Mode of transaction",
+    "cell": "E3",
+    "expr": "_xlfn.CONCAT('Entity Details'!E9,\" \",'Entity Details'!F9)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Mode of transaction",
+    "cell": "L8",
+    "expr": "+F8-H8+J8"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Mode of transaction",
+    "cell": "M8",
+    "expr": "+G8-I8+K8"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Mode of transaction",
+    "cell": "M10",
+    "expr": "+G10-I10+K10"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Mode of transaction",
+    "cell": "E11",
+    "expr": "+SUM(E12:E15)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Mode of transaction",
+    "cell": "M11",
+    "expr": "+G11-I11+K11"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Mode of transaction",
+    "cell": "M12",
+    "expr": "+G12-I12+K12"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Mode of transaction",
+    "cell": "M16",
+    "expr": "+G16-I16+K16"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Mode of transaction",
+    "cell": "F18",
+    "expr": "+F8+F9+F10+F11+F16+F17"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Mode of transaction",
+    "cell": "L24",
+    "expr": "+F24-H24+J24"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Mode of transaction",
+    "cell": "M24",
+    "expr": "+G24-I24+K24"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Mode of transaction",
+    "cell": "E27",
+    "expr": "+SUM(E28:E31)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Mode of transaction",
+    "cell": "M27",
+    "expr": "+G27-I27+K27"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Mode of transaction",
+    "cell": "M28",
+    "expr": "+G28-I28+K28"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Mode of transaction",
+    "cell": "M29",
+    "expr": "+G29-I29+K29"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Mode of transaction",
+    "cell": "M32",
+    "expr": "+G32-I32+K32"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Mode of transaction",
+    "cell": "F34",
+    "expr": "+F24+F25+F26+F27+F32+F33"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Mode of transaction",
+    "cell": "L40",
+    "expr": "+F40-H40+J40"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Mode of transaction",
+    "cell": "M40",
+    "expr": "+G40-I40+K40"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Mode of transaction",
+    "cell": "E43",
+    "expr": "+SUM(E44:E47)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Mode of transaction",
+    "cell": "J43",
+    "expr": "+SUM(J44:J47)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Mode of transaction",
+    "cell": "M43",
+    "expr": "+G43-I43+K43"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Mode of transaction",
+    "cell": "M48",
+    "expr": "+G48-I48+K48"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Mode of transaction",
+    "cell": "F50",
+    "expr": "+F40+F41+F42+F43+F48+F49"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Asset Details",
+    "cell": "E2",
+    "expr": "+'Entity Details'!E11"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Asset Details",
+    "cell": "E3",
+    "expr": "+'Entity Details'!E9"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Asset Details",
+    "cell": "E5",
+    "expr": "+'Entity Details'!E14"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Asset Details",
+    "cell": "E6",
+    "expr": "_xlfn.CONCAT('Entity Details'!E9,\" \",'Entity Details'!F9)"
+   }
+  ]
+ },
+ "Draft_ACAC_Format_20260605_0631.xlsx": {
+  "file": "Draft_ACAC_Format_20260605_0631.xlsx",
+  "sha256": "74ba7b894b429bbe939a296cacf39196ad9f5b93ec238037f2c47c277dd79e5e",
+  "predicates": [],
+  "weak": [
+   {
+    "kind": "other_formula",
+    "sheet": "Debenture Trustee",
+    "cell": "A5",
+    "expr": "A4+1"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Debenture Trustee",
+    "cell": "A13",
+    "expr": "A11+1"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Debenture Trustee",
+    "cell": "A14",
+    "expr": "A13+1"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Distributor",
+    "cell": "A5",
+    "expr": "A4+1"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Distributor",
+    "cell": "A6",
+    "expr": "A5+1"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Investment Adviser",
+    "cell": "A5",
+    "expr": "A4+1"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Investment Banker",
+    "cell": "A5",
+    "expr": "A4+1"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Research Entity",
+    "cell": "A5",
+    "expr": "A4+1"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Research Entity",
+    "cell": "A19",
+    "expr": "A18+1"
+   }
+  ]
+ },
+ "EDR_1__Exposure_Data_Report_1__V2_3_20250808_1030.xlsx": {
+  "file": "EDR_1__Exposure_Data_Report_1__V2_3_20250808_1030.xlsx",
+  "sha256": "230a6f0c7f1bfad504167e52002e4dfb5f0014bf2c2968787b4e6f785f5774c1",
+  "predicates": [
+   {
+    "kind": "membership",
+    "sheet": "General Information",
+    "sqref": "B5",
+    "n_cells": 1,
+    "vocab": [
+     "Quarter",
+     "Jan-Mar",
+     "Apr-Jun",
+     "Jul-Sep",
+     "Oct-Dec"
+    ],
+    "vocab_size": 5,
+    "source": "range",
+    "formula1": "$E$19:$E$23"
+   }
+  ],
+  "weak": []
+ },
+ "IBU_Operations_Report_V2_3_20250808_1033.xlsx": {
+  "file": "IBU_Operations_Report_V2_3_20250808_1033.xlsx",
+  "sha256": "bf6bbf6b810f8afc571232e9b72c070a5f6a04519b13b8676d72a36682803556",
+  "predicates": [
+   {
+    "kind": "membership",
+    "sheet": "General Information",
+    "sqref": "B5",
+    "n_cells": 1,
+    "vocab": [
+     "Month",
+     "Jan",
+     "Feb",
+     "Mar",
+     "Apr",
+     "May",
+     "Jun",
+     "Jul",
+     "Aug",
+     "Sep",
+     "Oct",
+     "Nov",
+     "Dec"
+    ],
+    "vocab_size": 13,
+    "source": "range",
+    "formula1": "$E$5:$E$17"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "Outsourcing Details",
+    "cell": "D2",
+    "expr": "'General Information'!B3",
+    "checks": "Outsourcing Details!D2 == 'General Information'!B3"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Outsourcing Details",
+    "sqref": "C6:C8 C11:C13",
+    "n_cells": 6,
+    "vocab": [
+     "Yes/No",
+     "Yes",
+     "No"
+    ],
+    "vocab_size": 3,
+    "source": "range",
+    "formula1": "$C$16:$C$18"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "Staff Information",
+    "cell": "D2",
+    "expr": "'General Information'!B3",
+    "checks": "Staff Information!D2 == 'General Information'!B3"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "Currency of Transactions",
+    "cell": "D2",
+    "expr": "'General Information'!B3",
+    "checks": "Currency of Transactions!D2 == 'General Information'!B3"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "List of policies",
+    "cell": "B2",
+    "expr": "'General Information'!B3",
+    "checks": "List of policies!B2 == 'General Information'!B3"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "Reg. Compliance Information",
+    "cell": "B3",
+    "expr": "'General Information'!B3",
+    "checks": "Reg. Compliance Information!B3 == 'General Information'!B3"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Reg. Compliance Information",
+    "sqref": "B13",
+    "n_cells": 1,
+    "vocab": [
+     "Yes/No",
+     "Yes",
+     "No"
+    ],
+    "vocab_size": 3,
+    "source": "literal",
+    "formula1": "\"Yes/No,Yes,No\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "Account opening details",
+    "sqref": "C29:C31",
+    "n_cells": 3,
+    "vocab": [
+     "Yes/No",
+     "Yes",
+     "No"
+    ],
+    "vocab_size": 3,
+    "source": "literal",
+    "formula1": "\"Yes/No,Yes,No\""
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "Reg. Customer Grievances ",
+    "cell": "B2",
+    "expr": "'General Information'!B3",
+    "checks": "Reg. Customer Grievances !B2 == 'General Information'!B3"
+   }
+  ],
+  "weak": [
+   {
+    "kind": "other_formula",
+    "sheet": "Account opening details",
+    "cell": "C3",
+    "expr": "'[1]General Information'!B3"
+   }
+  ]
+ },
+ "IFSCA_Annual_Reporting_Format_30April_2026_Approved_20260504_1247.xlsx": {
+  "file": "IFSCA_Annual_Reporting_Format_30April_2026_Approved_20260504_1247.xlsx",
+  "sha256": "4b2d4a2bb0416ae22048c7cf1fcbb5c581c19933ca85663ab69f311a8846395d",
+  "predicates": [],
+  "weak": []
+ },
+ "ITFS_Monthly_report201220241626.xlsx": {
+  "file": "ITFS_Monthly_report201220241626.xlsx",
+  "sha256": "446b811a2b06922c8f18f5a15af47ef803fe0f0f6b9963e381cf6a414dec8c16",
+  "predicates": [
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "Montly Report",
+    "cell": "D13",
+    "expr": "'Validation Sheet'!H2",
+    "checks": "Montly Report!D13 == 'Validation Sheet'!H2"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Montly Report",
+    "cell": "C19",
+    "expr": "SUM(C20:C24)",
+    "checks": "Montly Report!C19 == SUM(C20:C24)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Montly Report",
+    "cell": "E19",
+    "expr": "SUM(E20:E24)",
+    "checks": "Montly Report!E19 == SUM(E20:E24)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Montly Report",
+    "cell": "G29",
+    "expr": "SUM(G30:G31)",
+    "checks": "Montly Report!G29 == SUM(G30:G31)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Montly Report",
+    "cell": "H29",
+    "expr": "SUM(H30:H31)",
+    "checks": "Montly Report!H29 == SUM(H30:H31)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Montly Report",
+    "cell": "I29",
+    "expr": "SUM(I30:I30)",
+    "checks": "Montly Report!I29 == SUM(I30:I30)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Montly Report",
+    "cell": "J29",
+    "expr": "SUM(J30:J30)",
+    "checks": "Montly Report!J29 == SUM(J30:J30)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Montly Report",
+    "cell": "E35",
+    "expr": "SUM(E36:E37)",
+    "checks": "Montly Report!E35 == SUM(E36:E37)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Montly Report",
+    "cell": "F35",
+    "expr": "SUM(F36:F37)",
+    "checks": "Montly Report!F35 == SUM(F36:F37)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Montly Report",
+    "cell": "G35",
+    "expr": "SUM(G36:G37)",
+    "checks": "Montly Report!G35 == SUM(G36:G37)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Montly Report",
+    "cell": "H35",
+    "expr": "SUM(H36:H37)",
+    "checks": "Montly Report!H35 == SUM(H36:H37)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Montly Report",
+    "cell": "E43",
+    "expr": "SUM(E44:F45)",
+    "checks": "Montly Report!E43 == SUM(E44:F45)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Montly Report",
+    "cell": "E45",
+    "expr": "SUM(E46:F47)",
+    "checks": "Montly Report!E45 == SUM(E46:F47)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Montly Report",
+    "cell": "E48",
+    "expr": "SUM(E49:F50)",
+    "checks": "Montly Report!E48 == SUM(E49:F50)"
+   },
+   {
+    "kind": "conditional_required",
+    "sheet": "Montly Report",
+    "sqref": "F12",
+    "n_cells": 1,
+    "formula1": "AND(G12>=DATE(2020,10,1), G12<=TODAY())"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Montly Report",
+    "sqref": "F24 D24 C20:C26 E20:E26",
+    "n_cells": 16,
+    "formula1": "0"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Montly Report",
+    "sqref": "D21:D23 D25:D26 F20:F23 F25:F26",
+    "n_cells": 11,
+    "formula1": "0"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Montly Report",
+    "sqref": "C11",
+    "n_cells": 1,
+    "vocab": [
+     "Year",
+     "2020",
+     "2021",
+     "2022",
+     "2023",
+     "2024",
+     "2025",
+     "2026",
+     "2027",
+     "2028",
+     "2029"
+    ],
+    "vocab_size": 11,
+    "source": "range",
+    "formula1": "'Validation Sheet'!$A$1:$A$11"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Montly Report",
+    "sqref": "D11:E11",
+    "n_cells": 2,
+    "vocab": [
+     "Month",
+     "January",
+     "February",
+     "March",
+     "April",
+     "May",
+     "June",
+     "July",
+     "August",
+     "September",
+     "October",
+     "November",
+     "December"
+    ],
+    "vocab_size": 13,
+    "source": "range",
+    "formula1": "'Validation Sheet'!$B$1:$B$13"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Montly Report",
+    "sqref": "C12",
+    "n_cells": 1,
+    "vocab": [
+     "Day",
+     "1",
+     "2",
+     "3",
+     "4",
+     "5",
+     "6",
+     "7",
+     "8",
+     "9",
+     "10",
+     "11",
+     "12",
+     "13",
+     "14",
+     "15",
+     "16",
+     "17",
+     "18",
+     "19",
+     "20",
+     "21",
+     "22",
+     "23",
+     "24",
+     "25",
+     "26",
+     "27",
+     "28",
+     "29",
+     "30",
+     "31"
+    ],
+    "vocab_size": 32,
+    "source": "range",
+    "formula1": "'Validation Sheet'!$C$1:$C$32"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Montly Report",
+    "sqref": "D12",
+    "n_cells": 1,
+    "vocab": [
+     "Month",
+     "January",
+     "February",
+     "March",
+     "April",
+     "May",
+     "June",
+     "July",
+     "August",
+     "September",
+     "October",
+     "November"
+    ],
+    "vocab_size": 12,
+    "source": "range",
+    "formula1": "'Validation Sheet'!$B$1:$B$12"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Montly Report",
+    "sqref": "E12",
+    "n_cells": 1,
+    "vocab": [
+     "Year",
+     "2020",
+     "2021",
+     "2022",
+     "2023",
+     "2024",
+     "2025",
+     "2026",
+     "2027",
+     "2028",
+     "2029"
+    ],
+    "vocab_size": 11,
+    "source": "range",
+    "formula1": "'Validation Sheet'!$A$1:$A$11"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Montly Report",
+    "sqref": "D15:D16",
+    "n_cells": 2,
+    "vocab": [
+     "Yes/No",
+     "Yes",
+     "No"
+    ],
+    "vocab_size": 3,
+    "source": "range",
+    "formula1": "'Validation Sheet'!$L$5:$L$7"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Montly Report",
+    "sqref": "B30:B31 C8:E10",
+    "n_cells": 11,
+    "vocab": [
+     "Export Invoice Trade Financing",
+     "Reverse Trade Financing",
+     "Bill discounting under Letter of Credit",
+     "Supply Chain Finance for Exporters",
+     "Export Credit (Packing Credit)",
+     "Insurance / Credit Guarantee",
+     "Factoring system ",
+     "other trade product"
+    ],
+    "vocab_size": 8,
+    "source": "range",
+    "formula1": "'Validation Sheet'!$H$14:$H$22"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Montly Report",
+    "sqref": "D30:D31",
+    "n_cells": 2,
+    "vocab": [
+     "Air Waybill",
+     "Bill of Lading",
+     "Certificate of Origin",
+     "Combined Transport Document",
+     "Draft (or Bill of Exchange)",
+     "Insurance Policy (or Certificate)",
+     "Packing List/Specification",
+     "Inspection Certificate",
+     "Invoice",
+     "other trade document"
+    ],
+    "vocab_size": 10,
+    "source": "range",
+    "formula1": "'Validation Sheet'!$H$23:$H$33"
+   },
+   {
+    "kind": "date_bound",
+    "sheet": "Montly Report",
+    "sqref": "D13:E13",
+    "n_cells": 2,
+    "formula1": "'Validation Sheet'!E2"
+   }
+  ],
+  "weak": [
+   {
+    "kind": "other_formula",
+    "sheet": "Montly Report",
+    "cell": "E51",
+    "expr": "E43-E48"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Montly Report",
+    "cell": "E53",
+    "expr": "E51-E52"
+   },
+   {
+    "kind": "dv_no_type",
+    "sheet": "Montly Report",
+    "sqref": "E15:E16",
+    "formula1": ""
+   },
+   {
+    "kind": "dv_no_type",
+    "sheet": "Montly Report",
+    "sqref": "D43",
+    "formula1": ""
+   },
+   {
+    "kind": "dv_no_type",
+    "sheet": "Montly Report",
+    "sqref": "D27 F27 K27 C30:C31 C36:D38 C33:D33 C40:D42 I30:J39",
+    "formula1": ""
+   },
+   {
+    "kind": "dv_no_type",
+    "sheet": "Montly Report",
+    "sqref": "E43:F43",
+    "formula1": ""
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Validation Sheet",
+    "cell": "H2",
+    "expr": "DATE('Montly Report'!E12,F4,G4)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Validation Sheet",
+    "cell": "E3",
+    "expr": "YEAR(E2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Validation Sheet",
+    "cell": "F3",
+    "expr": "MONTH(E2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Validation Sheet",
+    "cell": "G3",
+    "expr": "DAY(E2)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Validation Sheet",
+    "cell": "E4",
+    "expr": "YEAR(TODAY())"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Validation Sheet",
+    "cell": "F4",
+    "expr": "MONTH(DATEVALUE('Montly Report'!D12 & \"1\"))"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Validation Sheet",
+    "cell": "G4",
+    "expr": "DAY('Montly Report'!C12)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Validation Sheet",
+    "cell": "H4",
+    "expr": "DATE('Montly Report'!C11,H6,30)"
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "Validation Sheet",
+    "cell": "E5",
+    "expr": "IF(MOD(YEAR(E4),4)=0,IF(MOD(YEAR(E4),100)=0,IF(MOD(YEAR(E4),400)=0,TRUE,FALSE),TRUE),FALSE)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Validation Sheet",
+    "cell": "E6",
+    "expr": "'Montly Report'!C12>29"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Validation Sheet",
+    "cell": "H6",
+    "expr": "MONTH(DATEVALUE('Montly Report'!D11 & \"1\"))"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Validation Sheet",
+    "cell": "E7",
+    "expr": "'Montly Report'!D12<>\"February\""
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Validation Sheet",
+    "cell": "E8",
+    "expr": "AND(E5=TRUE,E6=TRUE,E7=TRUE)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Validation Sheet",
+    "cell": "E9",
+    "expr": "AND('Montly Report'!C12>28,E7=FALSE)"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Validation Sheet",
+    "cell": "E10",
+    "expr": "'Montly Report'!C12>30"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Validation Sheet",
+    "cell": "E11",
+    "expr": "OR('Montly Report'!D12=\"April\",'Montly Report'!D12=\"June\",'Montly Report'!D12=\"September\",'Montly Report'!D12=\"November\")"
+   }
+  ]
+ },
+ "Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx": {
+  "file": "Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx",
+  "sha256": "7d9a1960085785eefbe166fb5e04e94689780c490235fe55d8f3e8b620ceea39",
+  "predicates": [
+   {
+    "kind": "sum_identity",
+    "sheet": "1. Introduction",
+    "cell": "D17",
+    "expr": "SUM(D18:D20)",
+    "checks": "1. Introduction!D17 == SUM(D18:D20)"
+   },
+   {
+    "kind": "tally_identity",
+    "sheet": "1. Introduction",
+    "cell": "D18",
+    "expr": "COUNTIF(G54:G63,\"*Angel*\") + COUNTIF(G54:G63,\"*Venture*\")",
+    "checks": "1. Introduction!D18 == COUNTIF(G54:G63,\"*Angel*\") + COUNTIF(G54:G63,\"*Venture*\")"
+   },
+   {
+    "kind": "tally_identity",
+    "sheet": "1. Introduction",
+    "cell": "D19",
+    "expr": "COUNTIF(G54:G63, \"*Restricted*\")",
+    "checks": "1. Introduction!D19 == COUNTIF(G54:G63, \"*Restricted*\")"
+   },
+   {
+    "kind": "tally_identity",
+    "sheet": "1. Introduction",
+    "cell": "D20",
+    "expr": "COUNTIF(G54:G63,\"*Retail*\")+COUNTIF(G54:G63,\"*Exchange Traded Fund*\")",
+    "checks": "1. Introduction!D20 == COUNTIF(G54:G63,\"*Retail*\")+COUNTIF(G54:G63,\"*Exchange Traded Fund*\")"
+   },
+   {
+    "kind": "same_sheet_equality",
+    "sheet": "1. Introduction",
+    "cell": "D40",
+    "expr": "D11",
+    "checks": "1. Introduction!D40 == 1. Introduction!D11"
+   },
+   {
+    "kind": "same_sheet_equality",
+    "sheet": "1. Introduction",
+    "cell": "D46",
+    "expr": "D14",
+    "checks": "1. Introduction!D46 == 1. Introduction!D14"
+   },
+   {
+    "kind": "same_sheet_equality",
+    "sheet": "1. Introduction",
+    "cell": "C75",
+    "expr": "C54",
+    "checks": "1. Introduction!C75 == 1. Introduction!C54"
+   },
+   {
+    "kind": "same_sheet_equality",
+    "sheet": "1. Introduction",
+    "cell": "D75",
+    "expr": "D54",
+    "checks": "1. Introduction!D75 == 1. Introduction!D54"
+   },
+   {
+    "kind": "same_sheet_equality",
+    "sheet": "1. Introduction",
+    "cell": "E75",
+    "expr": "F54",
+    "checks": "1. Introduction!E75 == 1. Introduction!F54"
+   },
+   {
+    "kind": "same_sheet_equality",
+    "sheet": "1. Introduction",
+    "cell": "C76",
+    "expr": "C55",
+    "checks": "1. Introduction!C76 == 1. Introduction!C55"
+   },
+   {
+    "kind": "same_sheet_equality",
+    "sheet": "1. Introduction",
+    "cell": "D76",
+    "expr": "D55",
+    "checks": "1. Introduction!D76 == 1. Introduction!D55"
+   },
+   {
+    "kind": "same_sheet_equality",
+    "sheet": "1. Introduction",
+    "cell": "C77",
+    "expr": "C56",
+    "checks": "1. Introduction!C77 == 1. Introduction!C56"
+   },
+   {
+    "kind": "same_sheet_equality",
+    "sheet": "1. Introduction",
+    "cell": "C78",
+    "expr": "C57",
+    "checks": "1. Introduction!C78 == 1. Introduction!C57"
+   },
+   {
+    "kind": "date_bound",
+    "sheet": "1. Introduction",
+    "sqref": "D11",
+    "n_cells": 1,
+    "formula1": "32874"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "1. Introduction",
+    "sqref": "D19:D20",
+    "n_cells": 2,
+    "formula1": "0"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "1. Introduction",
+    "sqref": "D17",
+    "n_cells": 1,
+    "formula1": "0"
+   },
+   {
+    "kind": "date_bound",
+    "sheet": "1. Introduction",
+    "sqref": "D41",
+    "n_cells": 1,
+    "formula1": "40179"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "1. Introduction",
+    "sqref": "D35",
+    "n_cells": 1,
+    "formula1": "0"
+   },
+   {
+    "kind": "date_bound",
+    "sheet": "1. Introduction",
+    "sqref": "E54:E63",
+    "n_cells": 10,
+    "formula1": "40179"
+   },
+   {
+    "kind": "membership",
+    "sheet": "1. Introduction",
+    "sqref": "N54:N63",
+    "n_cells": 10,
+    "vocab": [
+     "Yes",
+     "No",
+     "Not Applicable"
+    ],
+    "vocab_size": 3,
+    "source": "named-range",
+    "formula1": "Choicelist"
+   },
+   {
+    "kind": "membership",
+    "sheet": "1. Introduction",
+    "sqref": "D2",
+    "n_cells": 1,
+    "vocab": [
+     "April - June",
+     "July - September",
+     "October - December",
+     "January - March"
+    ],
+    "vocab_size": 4,
+    "source": "range",
+    "formula1": "Dropdown!$D$3:$D$6"
+   },
+   {
+    "kind": "membership",
+    "sheet": "1. Introduction",
+    "sqref": "D10",
+    "n_cells": 1,
+    "vocab": [
+     "Registered FME (Retail)",
+     "Registered FME (Non-Retail)",
+     "Authorised FME"
+    ],
+    "vocab_size": 3,
+    "source": "range",
+    "formula1": "Dropdown!$J$3:$J$5"
+   },
+   {
+    "kind": "membership",
+    "sheet": "1. Introduction",
+    "sqref": "D12",
+    "n_cells": 1,
+    "vocab": [
+     "Company",
+     "Limited Liability Partnership",
+     "Branch of a Company",
+     "Branch of a LLP",
+     "Trust"
+    ],
+    "vocab_size": 5,
+    "source": "range",
+    "formula1": "Dropdown!$G$3:$G$7"
+   },
+   {
+    "kind": "membership",
+    "sheet": "1. Introduction",
+    "sqref": "D21:D22 L54:L63",
+    "n_cells": 12,
+    "vocab": [
+     "Yes",
+     "No",
+     "Not Applicable"
+    ],
+    "vocab_size": 3,
+    "source": "range",
+    "formula1": "Dropdown!$H$3:$H$5"
+   },
+   {
+    "kind": "membership",
+    "sheet": "1. Introduction",
+    "sqref": "D39 J54:K63 M54:M63",
+    "n_cells": 31,
+    "vocab": [
+     "Yes",
+     "No"
+    ],
+    "vocab_size": 2,
+    "source": "range",
+    "formula1": "Dropdown!$H$3:$H$4"
+   },
+   {
+    "kind": "membership",
+    "sheet": "1. Introduction",
+    "sqref": "D3",
+    "n_cells": 1,
+    "vocab": [
+     "2025-26",
+     "2026-27",
+     "2027-28",
+     "2028-29"
+    ],
+    "vocab_size": 4,
+    "source": "range",
+    "formula1": "Dropdown!$E$3:$E$6"
+   },
+   {
+    "kind": "membership",
+    "sheet": "1. Introduction",
+    "sqref": "F54:F63",
+    "n_cells": 10,
+    "vocab": [
+     "Trust",
+     "Limited Liability Partnership",
+     "Company"
+    ],
+    "vocab_size": 3,
+    "source": "range",
+    "formula1": "Dropdown!$K$3:$K$5"
+   },
+   {
+    "kind": "membership",
+    "sheet": "1. Introduction",
+    "sqref": "G54:G63",
+    "n_cells": 10,
+    "vocab": [
+     "Venture Capital Scheme",
+     "Angel Scheme",
+     "Restricted Scheme (Category I)",
+     "Restricted Scheme (Category II)",
+     "Restricted Scheme (Category III)",
+     "Retail Scheme",
+     "Exchange Traded Fund",
+     "Special Situation Fund",
+     "Family Investment Fund"
+    ],
+    "vocab_size": 9,
+    "source": "range",
+    "formula1": "Dropdown!$F$3:$F$11"
+   },
+   {
+    "kind": "membership",
+    "sheet": "1. Introduction",
+    "sqref": "H54:H63",
+    "n_cells": 10,
+    "vocab": [
+     "Open-Ended",
+     "Close-Ended"
+    ],
+    "vocab_size": 2,
+    "source": "range",
+    "formula1": "Dropdown!$I$3:$I$4"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "B5",
+    "expr": "'1. Introduction'!C54",
+    "checks": "2. Summary!B5 == '1. Introduction'!C54"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "C5",
+    "expr": "'1. Introduction'!D54",
+    "checks": "2. Summary!C5 == '1. Introduction'!D54"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "D5",
+    "expr": "'1. Introduction'!G54",
+    "checks": "2. Summary!D5 == '1. Introduction'!G54"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "E5",
+    "expr": "'1. Introduction'!H54",
+    "checks": "2. Summary!E5 == '1. Introduction'!H54"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "H5",
+    "expr": "'4. Investors'!AB21",
+    "checks": "2. Summary!H5 == '4. Investors'!AB21"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "B6",
+    "expr": "'1. Introduction'!C55",
+    "checks": "2. Summary!B6 == '1. Introduction'!C55"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "C6",
+    "expr": "'1. Introduction'!D55",
+    "checks": "2. Summary!C6 == '1. Introduction'!D55"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "D6",
+    "expr": "'1. Introduction'!G55",
+    "checks": "2. Summary!D6 == '1. Introduction'!G55"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "E6",
+    "expr": "'1. Introduction'!H55",
+    "checks": "2. Summary!E6 == '1. Introduction'!H55"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "H6",
+    "expr": "'4. Investors'!AB22",
+    "checks": "2. Summary!H6 == '4. Investors'!AB22"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "B7",
+    "expr": "'1. Introduction'!C56",
+    "checks": "2. Summary!B7 == '1. Introduction'!C56"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "C7",
+    "expr": "'1. Introduction'!D56",
+    "checks": "2. Summary!C7 == '1. Introduction'!D56"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "D7",
+    "expr": "'1. Introduction'!G56",
+    "checks": "2. Summary!D7 == '1. Introduction'!G56"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "E7",
+    "expr": "'1. Introduction'!H56",
+    "checks": "2. Summary!E7 == '1. Introduction'!H56"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "H7",
+    "expr": "'4. Investors'!AB23",
+    "checks": "2. Summary!H7 == '4. Investors'!AB23"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "B8",
+    "expr": "'1. Introduction'!C57",
+    "checks": "2. Summary!B8 == '1. Introduction'!C57"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "C8",
+    "expr": "'1. Introduction'!D57",
+    "checks": "2. Summary!C8 == '1. Introduction'!D57"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "D8",
+    "expr": "'1. Introduction'!G57",
+    "checks": "2. Summary!D8 == '1. Introduction'!G57"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "E8",
+    "expr": "'1. Introduction'!H57",
+    "checks": "2. Summary!E8 == '1. Introduction'!H57"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "H8",
+    "expr": "'4. Investors'!AB24",
+    "checks": "2. Summary!H8 == '4. Investors'!AB24"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "B9",
+    "expr": "'1. Introduction'!C58",
+    "checks": "2. Summary!B9 == '1. Introduction'!C58"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "C9",
+    "expr": "'1. Introduction'!D58",
+    "checks": "2. Summary!C9 == '1. Introduction'!D58"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "D9",
+    "expr": "'1. Introduction'!G58",
+    "checks": "2. Summary!D9 == '1. Introduction'!G58"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "E9",
+    "expr": "'1. Introduction'!H58",
+    "checks": "2. Summary!E9 == '1. Introduction'!H58"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "H9",
+    "expr": "'4. Investors'!AB25",
+    "checks": "2. Summary!H9 == '4. Investors'!AB25"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "B10",
+    "expr": "'1. Introduction'!C59",
+    "checks": "2. Summary!B10 == '1. Introduction'!C59"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "C10",
+    "expr": "'1. Introduction'!D59",
+    "checks": "2. Summary!C10 == '1. Introduction'!D59"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "D10",
+    "expr": "'1. Introduction'!G59",
+    "checks": "2. Summary!D10 == '1. Introduction'!G59"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "E10",
+    "expr": "'1. Introduction'!H59",
+    "checks": "2. Summary!E10 == '1. Introduction'!H59"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "H10",
+    "expr": "'4. Investors'!AB26",
+    "checks": "2. Summary!H10 == '4. Investors'!AB26"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "B11",
+    "expr": "'1. Introduction'!C60",
+    "checks": "2. Summary!B11 == '1. Introduction'!C60"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "C11",
+    "expr": "'1. Introduction'!D60",
+    "checks": "2. Summary!C11 == '1. Introduction'!D60"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "D11",
+    "expr": "'1. Introduction'!G60",
+    "checks": "2. Summary!D11 == '1. Introduction'!G60"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "E11",
+    "expr": "'1. Introduction'!H60",
+    "checks": "2. Summary!E11 == '1. Introduction'!H60"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "H11",
+    "expr": "'4. Investors'!AB27",
+    "checks": "2. Summary!H11 == '4. Investors'!AB27"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "B12",
+    "expr": "'1. Introduction'!C61",
+    "checks": "2. Summary!B12 == '1. Introduction'!C61"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "C12",
+    "expr": "'1. Introduction'!D61",
+    "checks": "2. Summary!C12 == '1. Introduction'!D61"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "D12",
+    "expr": "'1. Introduction'!G61",
+    "checks": "2. Summary!D12 == '1. Introduction'!G61"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "E12",
+    "expr": "'1. Introduction'!H61",
+    "checks": "2. Summary!E12 == '1. Introduction'!H61"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "H12",
+    "expr": "'4. Investors'!AB28",
+    "checks": "2. Summary!H12 == '4. Investors'!AB28"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "B13",
+    "expr": "'1. Introduction'!C62",
+    "checks": "2. Summary!B13 == '1. Introduction'!C62"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "C13",
+    "expr": "'1. Introduction'!D62",
+    "checks": "2. Summary!C13 == '1. Introduction'!D62"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "D13",
+    "expr": "'1. Introduction'!G62",
+    "checks": "2. Summary!D13 == '1. Introduction'!G62"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "E13",
+    "expr": "'1. Introduction'!H62",
+    "checks": "2. Summary!E13 == '1. Introduction'!H62"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "H13",
+    "expr": "'4. Investors'!AB29",
+    "checks": "2. Summary!H13 == '4. Investors'!AB29"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "B14",
+    "expr": "'1. Introduction'!C63",
+    "checks": "2. Summary!B14 == '1. Introduction'!C63"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "C14",
+    "expr": "'1. Introduction'!D63",
+    "checks": "2. Summary!C14 == '1. Introduction'!D63"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "D14",
+    "expr": "'1. Introduction'!G63",
+    "checks": "2. Summary!D14 == '1. Introduction'!G63"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "E14",
+    "expr": "'1. Introduction'!H63",
+    "checks": "2. Summary!E14 == '1. Introduction'!H63"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "2. Summary",
+    "cell": "H14",
+    "expr": "'4. Investors'!AB30",
+    "checks": "2. Summary!H14 == '4. Investors'!AB30"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "2. Summary",
+    "sqref": "I5:I14",
+    "n_cells": 10,
+    "formula1": "0"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "2. Summary",
+    "sqref": "F5:G14 I5:T14 V5:X14",
+    "n_cells": 170,
+    "formula1": "0"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "2. Summary",
+    "sqref": "U5:U14",
+    "n_cells": 10,
+    "formula1": "9.99999999999999E+26"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B3",
+    "expr": "'1. Introduction'!D54",
+    "checks": "3. Portfolio!B3 == '1. Introduction'!D54"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "3. Portfolio",
+    "cell": "O3",
+    "expr": "SUM(C3:N3)",
+    "checks": "3. Portfolio!O3 == SUM(C3:N3)"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B4",
+    "expr": "'1. Introduction'!D55",
+    "checks": "3. Portfolio!B4 == '1. Introduction'!D55"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B5",
+    "expr": "'1. Introduction'!D56",
+    "checks": "3. Portfolio!B5 == '1. Introduction'!D56"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B6",
+    "expr": "'1. Introduction'!D57",
+    "checks": "3. Portfolio!B6 == '1. Introduction'!D57"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B7",
+    "expr": "'1. Introduction'!D58",
+    "checks": "3. Portfolio!B7 == '1. Introduction'!D58"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B8",
+    "expr": "'1. Introduction'!D59",
+    "checks": "3. Portfolio!B8 == '1. Introduction'!D59"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B9",
+    "expr": "'1. Introduction'!D60",
+    "checks": "3. Portfolio!B9 == '1. Introduction'!D60"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B10",
+    "expr": "'1. Introduction'!D61",
+    "checks": "3. Portfolio!B10 == '1. Introduction'!D61"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B11",
+    "expr": "'1. Introduction'!D62",
+    "checks": "3. Portfolio!B11 == '1. Introduction'!D62"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B12",
+    "expr": "'1. Introduction'!D63",
+    "checks": "3. Portfolio!B12 == '1. Introduction'!D63"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B17",
+    "expr": "'1. Introduction'!D54",
+    "checks": "3. Portfolio!B17 == '1. Introduction'!D54"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B18",
+    "expr": "'1. Introduction'!D55",
+    "checks": "3. Portfolio!B18 == '1. Introduction'!D55"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B19",
+    "expr": "'1. Introduction'!D56",
+    "checks": "3. Portfolio!B19 == '1. Introduction'!D56"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B20",
+    "expr": "'1. Introduction'!D57",
+    "checks": "3. Portfolio!B20 == '1. Introduction'!D57"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B21",
+    "expr": "'1. Introduction'!D58",
+    "checks": "3. Portfolio!B21 == '1. Introduction'!D58"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B22",
+    "expr": "'1. Introduction'!D59",
+    "checks": "3. Portfolio!B22 == '1. Introduction'!D59"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B23",
+    "expr": "'1. Introduction'!D60",
+    "checks": "3. Portfolio!B23 == '1. Introduction'!D60"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B24",
+    "expr": "'1. Introduction'!D61",
+    "checks": "3. Portfolio!B24 == '1. Introduction'!D61"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B25",
+    "expr": "'1. Introduction'!D62",
+    "checks": "3. Portfolio!B25 == '1. Introduction'!D62"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B26",
+    "expr": "'1. Introduction'!D63",
+    "checks": "3. Portfolio!B26 == '1. Introduction'!D63"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B41",
+    "expr": "'1. Introduction'!D54",
+    "checks": "3. Portfolio!B41 == '1. Introduction'!D54"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "3. Portfolio",
+    "cell": "G41",
+    "expr": "SUM(C41:F41)",
+    "checks": "3. Portfolio!G41 == SUM(C41:F41)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "3. Portfolio",
+    "cell": "L41",
+    "expr": "SUM(H41:K41)",
+    "checks": "3. Portfolio!L41 == SUM(H41:K41)"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B42",
+    "expr": "'1. Introduction'!D55",
+    "checks": "3. Portfolio!B42 == '1. Introduction'!D55"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "3. Portfolio",
+    "cell": "L42",
+    "expr": "SUM(H42:K42)",
+    "checks": "3. Portfolio!L42 == SUM(H42:K42)"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B43",
+    "expr": "'1. Introduction'!D56",
+    "checks": "3. Portfolio!B43 == '1. Introduction'!D56"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B44",
+    "expr": "'1. Introduction'!D57",
+    "checks": "3. Portfolio!B44 == '1. Introduction'!D57"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B45",
+    "expr": "'1. Introduction'!D58",
+    "checks": "3. Portfolio!B45 == '1. Introduction'!D58"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B46",
+    "expr": "'1. Introduction'!D59",
+    "checks": "3. Portfolio!B46 == '1. Introduction'!D59"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B47",
+    "expr": "'1. Introduction'!D60",
+    "checks": "3. Portfolio!B47 == '1. Introduction'!D60"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B48",
+    "expr": "'1. Introduction'!D61",
+    "checks": "3. Portfolio!B48 == '1. Introduction'!D61"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B49",
+    "expr": "'1. Introduction'!D62",
+    "checks": "3. Portfolio!B49 == '1. Introduction'!D62"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B50",
+    "expr": "'1. Introduction'!D63",
+    "checks": "3. Portfolio!B50 == '1. Introduction'!D63"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B55",
+    "expr": "'1. Introduction'!D54",
+    "checks": "3. Portfolio!B55 == '1. Introduction'!D54"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B56",
+    "expr": "'1. Introduction'!D55",
+    "checks": "3. Portfolio!B56 == '1. Introduction'!D55"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B57",
+    "expr": "'1. Introduction'!D56",
+    "checks": "3. Portfolio!B57 == '1. Introduction'!D56"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B58",
+    "expr": "'1. Introduction'!D57",
+    "checks": "3. Portfolio!B58 == '1. Introduction'!D57"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B59",
+    "expr": "'1. Introduction'!D58",
+    "checks": "3. Portfolio!B59 == '1. Introduction'!D58"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B60",
+    "expr": "'1. Introduction'!D59",
+    "checks": "3. Portfolio!B60 == '1. Introduction'!D59"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B61",
+    "expr": "'1. Introduction'!D60",
+    "checks": "3. Portfolio!B61 == '1. Introduction'!D60"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B62",
+    "expr": "'1. Introduction'!D61",
+    "checks": "3. Portfolio!B62 == '1. Introduction'!D61"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B63",
+    "expr": "'1. Introduction'!D62",
+    "checks": "3. Portfolio!B63 == '1. Introduction'!D62"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B64",
+    "expr": "'1. Introduction'!D63",
+    "checks": "3. Portfolio!B64 == '1. Introduction'!D63"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B73",
+    "expr": "'2. Summary'!C5",
+    "checks": "3. Portfolio!B73 == '2. Summary'!C5"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "G73",
+    "expr": "'2. Summary'!C6",
+    "checks": "3. Portfolio!G73 == '2. Summary'!C6"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "L73",
+    "expr": "'2. Summary'!C7",
+    "checks": "3. Portfolio!L73 == '2. Summary'!C7"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "Q73",
+    "expr": "'2. Summary'!C8",
+    "checks": "3. Portfolio!Q73 == '2. Summary'!C8"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "V73",
+    "expr": "'2. Summary'!C9",
+    "checks": "3. Portfolio!V73 == '2. Summary'!C9"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B86",
+    "expr": "'2. Summary'!C10",
+    "checks": "3. Portfolio!B86 == '2. Summary'!C10"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "G86",
+    "expr": "'2. Summary'!C11",
+    "checks": "3. Portfolio!G86 == '2. Summary'!C11"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "L86",
+    "expr": "'2. Summary'!C12",
+    "checks": "3. Portfolio!L86 == '2. Summary'!C12"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "Q86",
+    "expr": "'2. Summary'!C13",
+    "checks": "3. Portfolio!Q86 == '2. Summary'!C13"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "V86",
+    "expr": "'2. Summary'!C14",
+    "checks": "3. Portfolio!V86 == '2. Summary'!C14"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B101",
+    "expr": "'2. Summary'!C5",
+    "checks": "3. Portfolio!B101 == '2. Summary'!C5"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "F101",
+    "expr": "'2. Summary'!C6",
+    "checks": "3. Portfolio!F101 == '2. Summary'!C6"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "J101",
+    "expr": "'2. Summary'!C7",
+    "checks": "3. Portfolio!J101 == '2. Summary'!C7"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "N101",
+    "expr": "'2. Summary'!C8",
+    "checks": "3. Portfolio!N101 == '2. Summary'!C8"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "R101",
+    "expr": "'2. Summary'!C9",
+    "checks": "3. Portfolio!R101 == '2. Summary'!C9"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B114",
+    "expr": "'2. Summary'!C10",
+    "checks": "3. Portfolio!B114 == '2. Summary'!C10"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "F114",
+    "expr": "'2. Summary'!C11",
+    "checks": "3. Portfolio!F114 == '2. Summary'!C11"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "J114",
+    "expr": "'2. Summary'!C12",
+    "checks": "3. Portfolio!J114 == '2. Summary'!C12"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "N114",
+    "expr": "'2. Summary'!C13",
+    "checks": "3. Portfolio!N114 == '2. Summary'!C13"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "R114",
+    "expr": "'2. Summary'!C14",
+    "checks": "3. Portfolio!R114 == '2. Summary'!C14"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "C134",
+    "expr": "'2. Summary'!C5",
+    "checks": "3. Portfolio!C134 == '2. Summary'!C5"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "E134",
+    "expr": "'2. Summary'!C6",
+    "checks": "3. Portfolio!E134 == '2. Summary'!C6"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "G134",
+    "expr": "'2. Summary'!C7",
+    "checks": "3. Portfolio!G134 == '2. Summary'!C7"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "I134",
+    "expr": "'2. Summary'!C8",
+    "checks": "3. Portfolio!I134 == '2. Summary'!C8"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "K134",
+    "expr": "'2. Summary'!C9",
+    "checks": "3. Portfolio!K134 == '2. Summary'!C9"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "M134",
+    "expr": "'2. Summary'!C10",
+    "checks": "3. Portfolio!M134 == '2. Summary'!C10"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "O134",
+    "expr": "'2. Summary'!C11",
+    "checks": "3. Portfolio!O134 == '2. Summary'!C11"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "Q134",
+    "expr": "'2. Summary'!C12",
+    "checks": "3. Portfolio!Q134 == '2. Summary'!C12"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "S134",
+    "expr": "'2. Summary'!C13",
+    "checks": "3. Portfolio!S134 == '2. Summary'!C13"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "U134",
+    "expr": "'2. Summary'!C14",
+    "checks": "3. Portfolio!U134 == '2. Summary'!C14"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "C154",
+    "expr": "'2. Summary'!C5",
+    "checks": "3. Portfolio!C154 == '2. Summary'!C5"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "D154",
+    "expr": "'2. Summary'!C6",
+    "checks": "3. Portfolio!D154 == '2. Summary'!C6"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "E154",
+    "expr": "'2. Summary'!C7",
+    "checks": "3. Portfolio!E154 == '2. Summary'!C7"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "F154",
+    "expr": "'2. Summary'!C8",
+    "checks": "3. Portfolio!F154 == '2. Summary'!C8"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "G154",
+    "expr": "'2. Summary'!C9",
+    "checks": "3. Portfolio!G154 == '2. Summary'!C9"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "H154",
+    "expr": "'2. Summary'!C10",
+    "checks": "3. Portfolio!H154 == '2. Summary'!C10"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "I154",
+    "expr": "'2. Summary'!C11",
+    "checks": "3. Portfolio!I154 == '2. Summary'!C11"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "J154",
+    "expr": "'2. Summary'!C12",
+    "checks": "3. Portfolio!J154 == '2. Summary'!C12"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "K154",
+    "expr": "'2. Summary'!C13",
+    "checks": "3. Portfolio!K154 == '2. Summary'!C13"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "L154",
+    "expr": "'2. Summary'!C14",
+    "checks": "3. Portfolio!L154 == '2. Summary'!C14"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "3. Portfolio",
+    "cell": "C167",
+    "expr": "SUM(C156:C166)",
+    "checks": "3. Portfolio!C167 == SUM(C156:C166)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "3. Portfolio",
+    "cell": "D167",
+    "expr": "SUM(D156:D166)",
+    "checks": "3. Portfolio!D167 == SUM(D156:D166)"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B178",
+    "expr": "'2. Summary'!C5",
+    "checks": "3. Portfolio!B178 == '2. Summary'!C5"
+   },
+   {
+    "kind": "same_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "C178",
+    "expr": "O3",
+    "checks": "3. Portfolio!C178 == 3. Portfolio!O3"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B179",
+    "expr": "'2. Summary'!C6",
+    "checks": "3. Portfolio!B179 == '2. Summary'!C6"
+   },
+   {
+    "kind": "same_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "C179",
+    "expr": "O4",
+    "checks": "3. Portfolio!C179 == 3. Portfolio!O4"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B180",
+    "expr": "'2. Summary'!C7",
+    "checks": "3. Portfolio!B180 == '2. Summary'!C7"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B181",
+    "expr": "'2. Summary'!C8",
+    "checks": "3. Portfolio!B181 == '2. Summary'!C8"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B182",
+    "expr": "'2. Summary'!C9",
+    "checks": "3. Portfolio!B182 == '2. Summary'!C9"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B183",
+    "expr": "'2. Summary'!C10",
+    "checks": "3. Portfolio!B183 == '2. Summary'!C10"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B184",
+    "expr": "'2. Summary'!C11",
+    "checks": "3. Portfolio!B184 == '2. Summary'!C11"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B185",
+    "expr": "'2. Summary'!C12",
+    "checks": "3. Portfolio!B185 == '2. Summary'!C12"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B186",
+    "expr": "'2. Summary'!C13",
+    "checks": "3. Portfolio!B186 == '2. Summary'!C13"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "3. Portfolio",
+    "cell": "B187",
+    "expr": "'2. Summary'!C14",
+    "checks": "3. Portfolio!B187 == '2. Summary'!C14"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "3. Portfolio",
+    "sqref": "K2 L132 H132 I74 D132 P132 I87",
+    "n_cells": 7,
+    "formula1": "0"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "3. Portfolio",
+    "sqref": "C136:C145 S75:S84 E136:E145 G136:G145 S136:S145 C41:K50 X75:X84 I75:I84 D75:D84 C55:F64 N75:N84 C27:D27 I136:I145 K136:K145 M136:M145 O136:O145 Q136:Q145 U136:U145 C17:G26 S88:S98 N88:N97 K98 O98 I88:I97 G98 D88:D97 C98 X88:X97 C178:D188",
+    "n_cells": 409,
+    "formula1": "0"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "3. Portfolio",
+    "sqref": "D98 L98 O116:O126 C116:C126 G116:G126 K116:K126 H98 P98 S116:S126 G103:G112 C103:C112 O103:O112 K103:K112 S103:S112 C156:L167 T98",
+    "n_cells": 230,
+    "formula1": "0"
+   },
+   {
+    "kind": "date_bound",
+    "sheet": "3. Portfolio",
+    "sqref": "E188:F188",
+    "n_cells": 2,
+    "formula1": "32874"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "3. Portfolio",
+    "sqref": "M3:M12 O3:O12",
+    "n_cells": 20,
+    "formula1": "0"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "3. Portfolio",
+    "sqref": "F136:F145 H136:H145 J136:J145 L136:L145 D136:D145 N136:N145 P136:P145 R136:R145 T136:T145 V136:V145",
+    "n_cells": 100,
+    "formula1": "0"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "3. Portfolio",
+    "sqref": "E27:F27",
+    "n_cells": 2,
+    "formula1": "-5000000"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "3. Portfolio",
+    "sqref": "J17:N26",
+    "n_cells": 50,
+    "formula1": "9.99999999999999E+21"
+   },
+   {
+    "kind": "date_bound",
+    "sheet": "3. Portfolio",
+    "sqref": "F178:F187",
+    "n_cells": 10,
+    "formula1": "32874"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "3. Portfolio",
+    "sqref": "C3:L12",
+    "n_cells": 100,
+    "formula1": "0"
+   },
+   {
+    "kind": "membership",
+    "sheet": "3. Portfolio",
+    "sqref": "I116:I126 M116:M126 Q116:Q126 U116:U126 F75:F84 U75:U84 P75:P84 K75:K84 E116:E126 Q103:Q112 M103:M112 I103:I112 E103:E112 Z75:Z84 U103:U112 K88:K97 I98 Z88:Z97 F88:F97 E98 U88:U98 Q98 P88:P97 M98",
+    "n_cells": 210,
+    "vocab": [
+     "Yes",
+     "No"
+    ],
+    "vocab_size": 2,
+    "source": "range",
+    "formula1": "Dropdown!$H$3:$H$4"
+   },
+   {
+    "kind": "membership",
+    "sheet": "3. Portfolio",
+    "sqref": "W88:W97 W75:W84 R88:R97 M88:M97 H88:H97 C88:C97 R75:R84 M75:M84 H75:H84 C75:C84",
+    "n_cells": 100,
+    "vocab": [
+     "Equity shares listed or to be listed on Stock Exchange",
+     "Unlisted equity shares",
+     "Debt securities listed or to be listed on Stock Exchange",
+     "Unlisted debt securities",
+     "Other Schemes in IFSC",
+     "Other Schemes in India",
+     "Other Schemes in Foreign Jurisdictions",
+     "LLP interest",
+     "Physical Assets",
+     "Cash equivalents",
+     "Actual amount paid towards derivative contracts",
+     "Other instruments"
+    ],
+    "vocab_size": 12,
+    "source": "range",
+    "formula1": "Dropdown!$M$3:$M$14"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "4. Investors",
+    "cell": "N5",
+    "expr": "SUM(C5:M5)",
+    "checks": "4. Investors!N5 == SUM(C5:M5)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "4. Investors",
+    "cell": "N6",
+    "expr": "SUM(C6:M6)",
+    "checks": "4. Investors!N6 == SUM(C6:M6)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "4. Investors",
+    "cell": "N14",
+    "expr": "SUM(C14:M14)",
+    "checks": "4. Investors!N14 == SUM(C14:M14)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "4. Investors",
+    "cell": "N15",
+    "expr": "SUM(C15:M15)",
+    "checks": "4. Investors!N15 == SUM(C15:M15)"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B21",
+    "expr": "'2. Summary'!C5",
+    "checks": "4. Investors!B21 == '2. Summary'!C5"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "4. Investors",
+    "cell": "AA21",
+    "expr": "SUM(C21,E21,G21,I21,K21,M21,O21,Q21,S21,U21,W21,Y21)",
+    "checks": "4. Investors!AA21 == SUM(C21,E21,G21,I21,K21,M21,O21,Q21,S21,U21,W21,Y21)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "4. Investors",
+    "cell": "AB21",
+    "expr": "SUM(D21,F21,H21,J21,L21,N21,P21,R21,T21,V21,X21,Z21)",
+    "checks": "4. Investors!AB21 == SUM(D21,F21,H21,J21,L21,N21,P21,R21,T21,V21,X21,Z21)"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B22",
+    "expr": "'2. Summary'!C6",
+    "checks": "4. Investors!B22 == '2. Summary'!C6"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "4. Investors",
+    "cell": "AA22",
+    "expr": "SUM(C22,E22,G22,I22,K22,M22,O22,Q22,S22,U22,W22,Y22)",
+    "checks": "4. Investors!AA22 == SUM(C22,E22,G22,I22,K22,M22,O22,Q22,S22,U22,W22,Y22)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "4. Investors",
+    "cell": "AB22",
+    "expr": "SUM(D22,F22,H22,J22,L22,N22,P22,R22,T22,V22,X22,Z22)",
+    "checks": "4. Investors!AB22 == SUM(D22,F22,H22,J22,L22,N22,P22,R22,T22,V22,X22,Z22)"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B23",
+    "expr": "'2. Summary'!C7",
+    "checks": "4. Investors!B23 == '2. Summary'!C7"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B24",
+    "expr": "'2. Summary'!C8",
+    "checks": "4. Investors!B24 == '2. Summary'!C8"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B25",
+    "expr": "'2. Summary'!C9",
+    "checks": "4. Investors!B25 == '2. Summary'!C9"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B26",
+    "expr": "'2. Summary'!C10",
+    "checks": "4. Investors!B26 == '2. Summary'!C10"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B27",
+    "expr": "'2. Summary'!C11",
+    "checks": "4. Investors!B27 == '2. Summary'!C11"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B28",
+    "expr": "'2. Summary'!C12",
+    "checks": "4. Investors!B28 == '2. Summary'!C12"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B29",
+    "expr": "'2. Summary'!C13",
+    "checks": "4. Investors!B29 == '2. Summary'!C13"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B30",
+    "expr": "'2. Summary'!C14",
+    "checks": "4. Investors!B30 == '2. Summary'!C14"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B42",
+    "expr": "'2. Summary'!C5",
+    "checks": "4. Investors!B42 == '2. Summary'!C5"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "4. Investors",
+    "cell": "G42",
+    "expr": "SUM(C42,E42)",
+    "checks": "4. Investors!G42 == SUM(C42,E42)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "4. Investors",
+    "cell": "H42",
+    "expr": "SUM(D42,F42)",
+    "checks": "4. Investors!H42 == SUM(D42,F42)"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B43",
+    "expr": "'2. Summary'!C6",
+    "checks": "4. Investors!B43 == '2. Summary'!C6"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "4. Investors",
+    "cell": "G43",
+    "expr": "SUM(C43,E43)",
+    "checks": "4. Investors!G43 == SUM(C43,E43)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "4. Investors",
+    "cell": "H43",
+    "expr": "SUM(D43,F43)",
+    "checks": "4. Investors!H43 == SUM(D43,F43)"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B44",
+    "expr": "'2. Summary'!C7",
+    "checks": "4. Investors!B44 == '2. Summary'!C7"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B45",
+    "expr": "'2. Summary'!C8",
+    "checks": "4. Investors!B45 == '2. Summary'!C8"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B46",
+    "expr": "'2. Summary'!C9",
+    "checks": "4. Investors!B46 == '2. Summary'!C9"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B47",
+    "expr": "'2. Summary'!C10",
+    "checks": "4. Investors!B47 == '2. Summary'!C10"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B48",
+    "expr": "'2. Summary'!C11",
+    "checks": "4. Investors!B48 == '2. Summary'!C11"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B49",
+    "expr": "'2. Summary'!C12",
+    "checks": "4. Investors!B49 == '2. Summary'!C12"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B50",
+    "expr": "'2. Summary'!C13",
+    "checks": "4. Investors!B50 == '2. Summary'!C13"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B51",
+    "expr": "'2. Summary'!C14",
+    "checks": "4. Investors!B51 == '2. Summary'!C14"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "C58",
+    "expr": "'2. Summary'!C5",
+    "checks": "4. Investors!C58 == '2. Summary'!C5"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "E58",
+    "expr": "'2. Summary'!C6",
+    "checks": "4. Investors!E58 == '2. Summary'!C6"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "G58",
+    "expr": "'2. Summary'!C7",
+    "checks": "4. Investors!G58 == '2. Summary'!C7"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "I58",
+    "expr": "'2. Summary'!C8",
+    "checks": "4. Investors!I58 == '2. Summary'!C8"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "K58",
+    "expr": "'2. Summary'!C9",
+    "checks": "4. Investors!K58 == '2. Summary'!C9"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "M58",
+    "expr": "'2. Summary'!C10",
+    "checks": "4. Investors!M58 == '2. Summary'!C10"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "O58",
+    "expr": "'2. Summary'!C11",
+    "checks": "4. Investors!O58 == '2. Summary'!C11"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "Q58",
+    "expr": "'2. Summary'!C12",
+    "checks": "4. Investors!Q58 == '2. Summary'!C12"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "S58",
+    "expr": "'2. Summary'!C13",
+    "checks": "4. Investors!S58 == '2. Summary'!C13"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "U58",
+    "expr": "'2. Summary'!C14",
+    "checks": "4. Investors!U58 == '2. Summary'!C14"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B80",
+    "expr": "'2. Summary'!C5",
+    "checks": "4. Investors!B80 == '2. Summary'!C5"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B81",
+    "expr": "'2. Summary'!C6",
+    "checks": "4. Investors!B81 == '2. Summary'!C6"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B82",
+    "expr": "'2. Summary'!C7",
+    "checks": "4. Investors!B82 == '2. Summary'!C7"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B83",
+    "expr": "'2. Summary'!C8",
+    "checks": "4. Investors!B83 == '2. Summary'!C8"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B84",
+    "expr": "'2. Summary'!C9",
+    "checks": "4. Investors!B84 == '2. Summary'!C9"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B85",
+    "expr": "'2. Summary'!C10",
+    "checks": "4. Investors!B85 == '2. Summary'!C10"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B86",
+    "expr": "'2. Summary'!C11",
+    "checks": "4. Investors!B86 == '2. Summary'!C11"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B87",
+    "expr": "'2. Summary'!C12",
+    "checks": "4. Investors!B87 == '2. Summary'!C12"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B88",
+    "expr": "'2. Summary'!C13",
+    "checks": "4. Investors!B88 == '2. Summary'!C13"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "4. Investors",
+    "cell": "B89",
+    "expr": "'2. Summary'!C14",
+    "checks": "4. Investors!B89 == '2. Summary'!C14"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "4. Investors",
+    "sqref": "C14:P17 C52:H52 M52:Y55 I52:L53 H55:L55",
+    "n_cells": 127,
+    "formula1": "0"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "4. Investors",
+    "sqref": "W21:W31 E42:E51 C41:C51 I42:I51 G21:G31 K21:K31 E21:E31 Y21:Y31 I21:I31 C21:C31 G42:G51 Q60:Q69 O60:O69 M60:M69 S60:S69 I60:I70 C60:C70 E60:E70 G60:G70 K60:K70 U60:U69 AA21:AA30 Q21:Q31 O21:O30 M21:M31 S20:S31 U21:U31 F80:F89 D80:D89",
+    "n_cells": 308,
+    "formula1": "0"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "4. Investors",
+    "sqref": "G80:G89 F42:F51 D42:D51 J42:J51 J21:J31 H21:H31 F21:F31 D21:D31 L21:L31 H42:H51 O31 Z21:Z31 X21:X31 V21:V31 T21:T31 R21:R31 AB21:AB30 P21:P31 N21:N31 D60:D70 F60:F70 H60:H70 J60:J70 L60:L70 N60:N69 P60:P69 R60:R69 T60:T69 V60:V69 E80:E89 C80:C89",
+    "n_cells": 318,
+    "formula1": "0"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "5. PMS",
+    "cell": "M4",
+    "expr": "SUM(C4:L4)",
+    "checks": "5. PMS!M4 == SUM(C4:L4)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "5. PMS",
+    "cell": "M5",
+    "expr": "SUM(C5:L5)",
+    "checks": "5. PMS!M5 == SUM(C5:L5)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "5. PMS",
+    "cell": "AA23",
+    "expr": "SUM(C23,E23,G23,I23,K23,M23,O23,Q23,S23,U23,W23,Y23)",
+    "checks": "5. PMS!AA23 == SUM(C23,E23,G23,I23,K23,M23,O23,Q23,S23,U23,W23,Y23)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "5. PMS",
+    "cell": "AB23",
+    "expr": "SUM(D23,F23,H23,J23,P23,R23,L23,N23,T23,V23,X23,Z23)",
+    "checks": "5. PMS!AB23 == SUM(D23,F23,H23,J23,P23,R23,L23,N23,T23,V23,X23,Z23)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "5. PMS",
+    "cell": "AA24",
+    "expr": "SUM(C24,E24,G24,I24,K24,M24,O24,Q24,S24,U24,W24,Y24)",
+    "checks": "5. PMS!AA24 == SUM(C24,E24,G24,I24,K24,M24,O24,Q24,S24,U24,W24,Y24)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "5. PMS",
+    "cell": "AB24",
+    "expr": "SUM(D24,F24,H24,J24,P24,R24,L24,N24,T24,V24,X24,Z24)",
+    "checks": "5. PMS!AB24 == SUM(D24,F24,H24,J24,P24,R24,L24,N24,T24,V24,X24,Z24)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "5. PMS",
+    "cell": "C26",
+    "expr": "SUM(C23:C25)",
+    "checks": "5. PMS!C26 == SUM(C23:C25)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "5. PMS",
+    "cell": "D26",
+    "expr": "SUM(D23:D25)",
+    "checks": "5. PMS!D26 == SUM(D23:D25)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "5. PMS",
+    "cell": "O26",
+    "expr": "SUM(O23:O25)",
+    "checks": "5. PMS!O26 == SUM(O23:O25)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "5. PMS",
+    "cell": "Q26",
+    "expr": "SUM(Q23:Q25)",
+    "checks": "5. PMS!Q26 == SUM(Q23:Q25)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "5. PMS",
+    "cell": "G37",
+    "expr": "SUM(C37,E37)",
+    "checks": "5. PMS!G37 == SUM(C37,E37)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "5. PMS",
+    "cell": "H37",
+    "expr": "SUM(D37,F37)",
+    "checks": "5. PMS!H37 == SUM(D37,F37)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "5. PMS",
+    "cell": "G38",
+    "expr": "SUM(C38,E38)",
+    "checks": "5. PMS!G38 == SUM(C38,E38)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "5. PMS",
+    "cell": "H38",
+    "expr": "SUM(D38,F38)",
+    "checks": "5. PMS!H38 == SUM(D38,F38)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "5. PMS",
+    "cell": "C40",
+    "expr": "SUM(C37:C39)",
+    "checks": "5. PMS!C40 == SUM(C37:C39)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "5. PMS",
+    "cell": "D40",
+    "expr": "SUM(D37:D39)",
+    "checks": "5. PMS!D40 == SUM(D37:D39)"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "5. PMS",
+    "sqref": "N4:T5 I41:I42 D41:H41",
+    "n_cells": 21,
+    "formula1": "0"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "5. PMS",
+    "sqref": "O23:O26 C4:M5 C23:C26 E23:E26 G23:G26 I23:I26 K23:K26 M23:M26 S23:S26 U23:U26 W23:W26 Y23:Y26 Q23:Q26",
+    "n_cells": 70,
+    "formula1": "0"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "5. PMS",
+    "sqref": "D23:D26 F23:F26 H23:H26 J23:J26 L23:L26 H49:H58 T23:T26 V23:V26 X23:X26 Z23:Z26 R23:R26 P23:P26 F37:F40 N23:N26 D49:D58 D37:D40 F49:F58 D69:D78 F69:F78",
+    "n_cells": 106,
+    "formula1": "0"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "5. PMS",
+    "sqref": "D10:E11",
+    "n_cells": 4,
+    "formula1": "-5000000"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "5. PMS",
+    "sqref": "C49:C58 C36:C40 E37:E40 G49:G58 E49:E58 C69:C78 E69:E78",
+    "n_cells": 59,
+    "formula1": "0"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "5. PMS",
+    "sqref": "C10:C11",
+    "n_cells": 2,
+    "formula1": "-9999999999"
+   },
+   {
+    "kind": "cross_sheet_equality",
+    "sheet": "6. Complaints",
+    "cell": "C5",
+    "expr": "'1. Introduction'!D8",
+    "checks": "6. Complaints!C5 == '1. Introduction'!D8"
+   },
+   {
+    "kind": "date_bound",
+    "sheet": "6. Complaints",
+    "sqref": "C7",
+    "n_cells": 1,
+    "formula1": "40179"
+   },
+   {
+    "kind": "membership",
+    "sheet": "6. Complaints",
+    "sqref": "C6",
+    "n_cells": 1,
+    "vocab": [
+     "Yes",
+     "No"
+    ],
+    "vocab_size": 2,
+    "source": "range",
+    "formula1": "Dropdown!$H$3:$H$4"
+   },
+   {
+    "kind": "membership",
+    "sheet": "7. AML-CFT",
+    "sqref": "C13",
+    "n_cells": 1,
+    "vocab": [
+     "Completed",
+     "In-progress",
+     "Not initiated"
+    ],
+    "vocab_size": 3,
+    "source": "range",
+    "formula1": "Dropdown!$N$3:$N$5"
+   },
+   {
+    "kind": "membership",
+    "sheet": "7. AML-CFT",
+    "sqref": "C16 C18",
+    "n_cells": 2,
+    "vocab": [
+     "Yes",
+     "No"
+    ],
+    "vocab_size": 2,
+    "source": "range",
+    "formula1": "Dropdown!$H$3:$H$4"
+   },
+   {
+    "kind": "membership",
+    "sheet": "7. AML-CFT",
+    "sqref": "C20",
+    "n_cells": 1,
+    "vocab": [
+     "Manual",
+     "Automated"
+    ],
+    "vocab_size": 2,
+    "source": "range",
+    "formula1": "Dropdown!$O$3:$O$4"
+   },
+   {
+    "kind": "membership",
+    "sheet": "7. AML-CFT",
+    "sqref": "C22",
+    "n_cells": 1,
+    "vocab": [
+     "System",
+     "Manual"
+    ],
+    "vocab_size": 2,
+    "source": "range",
+    "formula1": "Dropdown!$P$3:$P$4"
+   },
+   {
+    "kind": "membership",
+    "sheet": "7. AML-CFT",
+    "sqref": "C32",
+    "n_cells": 1,
+    "vocab": [
+     "No",
+     "0-50",
+     "51-100",
+     "Above 100"
+    ],
+    "vocab_size": 4,
+    "source": "range",
+    "formula1": "Dropdown!$Q$3:$Q$6"
+   },
+   {
+    "kind": "membership",
+    "sheet": "8. Compliance Status",
+    "sqref": "C12",
+    "n_cells": 1,
+    "vocab": [
+     "Yes",
+     "No",
+     "Not Applicable"
+    ],
+    "vocab_size": 3,
+    "source": "range",
+    "formula1": "Dropdown!$H$3:$H$5"
+   },
+   {
+    "kind": "membership",
+    "sheet": "8. Compliance Status",
+    "sqref": "C4:C9",
+    "n_cells": 6,
+    "vocab": [
+     "Yes",
+     "No"
+    ],
+    "vocab_size": 2,
+    "source": "range",
+    "formula1": "Dropdown!$H$3:$H$4"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Dropdown",
+    "sqref": "M11",
+    "n_cells": 1,
+    "formula1": "0"
+   }
+  ],
+  "weak": [
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "C92",
+    "expr": "IFERROR(\n  INDEX($C$54:$C$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($C$54:$C$63)-ROW($C$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($C$92:C92)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "D92",
+    "expr": "IFERROR(_xlfn.SINGLE(\n  INDEX($D$54:$D$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($D$54:$D$63)-ROW($D$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($D$92:D92)\n    )\n  )),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "E92",
+    "expr": "IFERROR(\n  INDEX($G$54:$G$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($G$54:$G$63)-ROW($G$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($E$92:E92)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "C93",
+    "expr": "IFERROR(\n  INDEX($C$54:$C$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($C$54:$C$63)-ROW($C$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($C$92:C93)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "D93",
+    "expr": "IFERROR(\n  INDEX($D$54:$D$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($D$54:$D$63)-ROW($D$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($D$92:D93)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "E93",
+    "expr": "IFERROR(\n  INDEX($G$54:$G$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($G$54:$G$63)-ROW($G$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($E$92:E93)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "C94",
+    "expr": "IFERROR(\n  INDEX($C$54:$C$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($C$54:$C$63)-ROW($C$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($C$92:C94)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "D94",
+    "expr": "IFERROR(\n  INDEX($D$54:$D$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($D$54:$D$63)-ROW($D$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($D$92:D94)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "E94",
+    "expr": "IFERROR(\n  INDEX($G$54:$G$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($G$54:$G$63)-ROW($G$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($E$92:E94)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "C95",
+    "expr": "IFERROR(\n  INDEX($C$54:$C$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($C$54:$C$63)-ROW($C$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($C$92:C95)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "D95",
+    "expr": "IFERROR(\n  INDEX($D$54:$D$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($D$54:$D$63)-ROW($D$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($D$92:D95)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "E95",
+    "expr": "IFERROR(\n  INDEX($G$54:$G$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($G$54:$G$63)-ROW($G$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($E$92:E95)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "C96",
+    "expr": "IFERROR(\n  INDEX($C$54:$C$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($C$54:$C$63)-ROW($C$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($C$92:C96)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "D96",
+    "expr": "IFERROR(\n  INDEX($D$54:$D$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($D$54:$D$63)-ROW($D$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($D$92:D96)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "E96",
+    "expr": "IFERROR(\n  INDEX($G$54:$G$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($G$54:$G$63)-ROW($G$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($E$92:E96)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "C97",
+    "expr": "IFERROR(\n  INDEX($C$54:$C$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($C$54:$C$63)-ROW($C$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($C$92:C97)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "D97",
+    "expr": "IFERROR(\n  INDEX($D$54:$D$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($D$54:$D$63)-ROW($D$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($D$92:D97)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "E97",
+    "expr": "IFERROR(\n  INDEX($G$54:$G$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($G$54:$G$63)-ROW($G$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($E$92:E97)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "C98",
+    "expr": "IFERROR(\n  INDEX($C$54:$C$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($C$54:$C$63)-ROW($C$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($C$92:C98)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "D98",
+    "expr": "IFERROR(\n  INDEX($D$54:$D$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($D$54:$D$63)-ROW($D$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($D$92:D98)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "E98",
+    "expr": "IFERROR(\n  INDEX($G$54:$G$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($G$54:$G$63)-ROW($G$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($E$92:E98)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "C99",
+    "expr": "IFERROR(\n  INDEX($C$54:$C$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($C$54:$C$63)-ROW($C$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($C$92:C99)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "D99",
+    "expr": "IFERROR(\n  INDEX($D$54:$D$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($D$54:$D$63)-ROW($D$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($D$92:D99)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "E99",
+    "expr": "IFERROR(\n  INDEX($G$54:$G$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($G$54:$G$63)-ROW($G$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($E$92:E99)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "C100",
+    "expr": "IFERROR(\n  INDEX($C$54:$C$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($C$54:$C$63)-ROW($C$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($C$92:C100)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "D100",
+    "expr": "IFERROR(\n  INDEX($D$54:$D$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($D$54:$D$63)-ROW($D$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($D$92:D100)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "E100",
+    "expr": "IFERROR(\n  INDEX($G$54:$G$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($G$54:$G$63)-ROW($G$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($E$92:E100)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "C101",
+    "expr": "IFERROR(\n  INDEX($C$54:$C$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($C$54:$C$63)-ROW($C$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($C$92:C101)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "D101",
+    "expr": "IFERROR(\n  INDEX($D$54:$D$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($D$54:$D$63)-ROW($D$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($D$92:D101)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "1. Introduction",
+    "cell": "E101",
+    "expr": "IFERROR(\n  INDEX($G$54:$G$63,\n    _xlfn.AGGREGATE(15,6,\n      (ROW($G$54:$G$63)-ROW($G$54)+1)/($N$54:$N$63=\"yes\"),\n      ROWS($E$92:E101)\n    )\n  ),\n\"NA\")"
+   },
+   {
+    "kind": "dv_no_type",
+    "sheet": "1. Introduction",
+    "sqref": "D13:D15",
+    "formula1": ""
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "3. Portfolio",
+    "cell": "L3",
+    "expr": "IF('2. Summary'!D5=\"Retail Scheme\",'2. Summary'!W5,'2. Summary'!N5)"
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "3. Portfolio",
+    "cell": "L4",
+    "expr": "IF('2. Summary'!D6=\"Retail Scheme\",'2. Summary'!W6,'2. Summary'!N6)"
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "3. Portfolio",
+    "cell": "L5",
+    "expr": "IF('2. Summary'!D7=\"Retail Scheme\",'2. Summary'!W7,'2. Summary'!N7)"
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "3. Portfolio",
+    "cell": "L6",
+    "expr": "IF('2. Summary'!D8=\"Retail Scheme\",'2. Summary'!W8,'2. Summary'!N8)"
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "3. Portfolio",
+    "cell": "L7",
+    "expr": "IF('2. Summary'!D9=\"Retail Scheme\",'2. Summary'!W9,'2. Summary'!N9)"
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "3. Portfolio",
+    "cell": "L8",
+    "expr": "IF('2. Summary'!D10=\"Retail Scheme\",'2. Summary'!W10,'2. Summary'!N10)"
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "3. Portfolio",
+    "cell": "L9",
+    "expr": "IF('2. Summary'!D11=\"Retail Scheme\",'2. Summary'!W11,'2. Summary'!N11)"
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "3. Portfolio",
+    "cell": "L10",
+    "expr": "IF('2. Summary'!D12=\"Retail Scheme\",'2. Summary'!W12,'2. Summary'!N12)"
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "3. Portfolio",
+    "cell": "L11",
+    "expr": "IF('2. Summary'!D13=\"Retail Scheme\",'2. Summary'!W13,'2. Summary'!N13)"
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "3. Portfolio",
+    "cell": "L12",
+    "expr": "IF('2. Summary'!D14=\"Retail Scheme\",'2. Summary'!W14,'2. Summary'!N14)"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "3. Portfolio",
+    "cell": "E75",
+    "expr": "IFERROR(D75/$O$3,0)"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "3. Portfolio",
+    "cell": "J75",
+    "expr": "IFERROR(I75/$O$4,0)"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "3. Portfolio",
+    "cell": "O75",
+    "expr": "IFERROR(N75/$O$5,0)"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "3. Portfolio",
+    "cell": "T75",
+    "expr": "IFERROR(S75/$O$6,0)"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "3. Portfolio",
+    "cell": "Y75",
+    "expr": "IFERROR(X75/$O$7,0)"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "3. Portfolio",
+    "cell": "E76",
+    "expr": "IFERROR(D76/$O$3,0)"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "3. Portfolio",
+    "cell": "J76",
+    "expr": "IFERROR(I76/$O$4,0)"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "3. Portfolio",
+    "cell": "O76",
+    "expr": "IFERROR(N76/$O$5,0)"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "3. Portfolio",
+    "cell": "T76",
+    "expr": "IFERROR(S76/$O$6,0)"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "3. Portfolio",
+    "cell": "Y76",
+    "expr": "IFERROR(X76/$O$7,0)"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "3. Portfolio",
+    "cell": "E88",
+    "expr": "IFERROR(D88/$O$8,0)"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "3. Portfolio",
+    "cell": "J88",
+    "expr": "IFERROR(I88/$O$9,0)"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "3. Portfolio",
+    "cell": "O88",
+    "expr": "IFERROR(N88/$O$10,0)"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "3. Portfolio",
+    "cell": "T88",
+    "expr": "IFERROR(S88/$O$11,0)"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "3. Portfolio",
+    "cell": "Y88",
+    "expr": "IFERROR(X88/$O$12,0)"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "3. Portfolio",
+    "cell": "E89",
+    "expr": "IFERROR(D89/$O$8,0)"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "3. Portfolio",
+    "cell": "J89",
+    "expr": "IFERROR(I89/$O$9,0)"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "3. Portfolio",
+    "cell": "O89",
+    "expr": "IFERROR(N89/$O$10,0)"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "3. Portfolio",
+    "cell": "T89",
+    "expr": "IFERROR(S89/$O$11,0)"
+   },
+   {
+    "kind": "iferror_wrapper",
+    "sheet": "3. Portfolio",
+    "cell": "Y89",
+    "expr": "IFERROR(X89/$O$12,0)"
+   },
+   {
+    "kind": "dv_no_type",
+    "sheet": "3. Portfolio",
+    "sqref": "H17:I26",
+    "formula1": ""
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "8. Compliance Status",
+    "cell": "B19",
+    "expr": "IF(C5=\"No\",'1. Introduction'!D9,\"NA\")"
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "8. Compliance Status",
+    "cell": "C19",
+    "expr": "IF(C5=\"No\",'1. Introduction'!D8,\"NA\")"
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "8. Compliance Status",
+    "cell": "D19",
+    "expr": "IF(C5=\"No\",'1. Introduction'!D11,\"NA\")"
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "8. Compliance Status",
+    "cell": "E19",
+    "expr": "IF(C5=\"No\",'1. Introduction'!D17,\"NA\")"
+   },
+   {
+    "kind": "list_unresolved",
+    "sheet": "8. Compliance Status",
+    "sqref": "C10",
+    "formula1": "IF(C5=\"No\",Choicelist,YesNolist)",
+    "why": "unresolved:IF(C5=\"No\",Choicelist,YesNolist)"
+   },
+   {
+    "kind": "list_unresolved",
+    "sheet": "8. Compliance Status",
+    "sqref": "C11",
+    "formula1": "IF(C5=\"No\",Choicelist,YesNolist)",
+    "why": "unresolved:IF(C5=\"No\",Choicelist,YesNolist)"
+   }
+  ]
+ },
+ "Updated___Quarterly_Reporting_Format_for_Capital_Market_Intermediaries_20260409_1019.xlsx": {
+  "file": "Updated___Quarterly_Reporting_Format_for_Capital_Market_Intermediaries_20260409_1019.xlsx",
+  "sha256": "82dd291f5a7d6667f10b39ffb8770b4eae589bc03d31869e6d5e2f6564452671",
+  "predicates": [
+   {
+    "kind": "membership",
+    "sheet": "General Information",
+    "sqref": "C3",
+    "n_cells": 1,
+    "vocab": [
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "vocab_size": 9,
+    "source": "literal",
+    "formula1": "\"FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "General Information",
+    "sqref": "C45 C56 C48:C49 C87",
+    "n_cells": 5,
+    "vocab": [
+     "YES",
+     "NO"
+    ],
+    "vocab_size": 2,
+    "source": "literal",
+    "formula1": "\"YES, NO\""
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "General Information",
+    "sqref": "C32",
+    "n_cells": 1,
+    "formula1": "-9.99999999999999E+42"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "General Information",
+    "sqref": "C27",
+    "n_cells": 1,
+    "formula1": "1"
+   },
+   {
+    "kind": "membership",
+    "sheet": "General Information",
+    "sqref": "C10:C21",
+    "n_cells": 12,
+    "vocab": [
+     "SELECT",
+     "BROKER DEALER",
+     "CLEARING MEMBER",
+     "DEPOSITORY PARTICIPANT",
+     "CUSTODIAN",
+     "INVESTMEN ADVISER",
+     "INVESTMENT BANKER",
+     "REGISTERED DISTRIBUTOR",
+     "DEBENTURE TRUSTEE",
+     "CREDIT RATING AGENCY",
+     "ESG RATINGS PROVIDER",
+     "RESEARCH ENTITY",
+     "GLOBAL ACCESS PROVIDER"
+    ],
+    "vocab_size": 13,
+    "source": "literal",
+    "formula1": "\"SELECT, BROKER DEALER, CLEARING MEMBER, DEPOSITORY PARTICIPANT, CUSTODIAN, INVESTMEN ADVISER, INVESTMENT BANKER, REGISTERED DISTRIBUTOR, DEBENTURE TRUSTEE, CREDIT RATING AGENCY, ESG RATINGS PROVIDER,RESEARCH ENTITY, GLOBAL ACCESS PROVIDER\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "General Information",
+    "sqref": "C23",
+    "n_cells": 1,
+    "vocab": [
+     "SELECT",
+     "COMPANY",
+     "BRANCH OF A COMPANY",
+     "LIMITED LIABILITY PARTNERSHIP (LLP)",
+     "BRANCH OF AN LLP",
+     "PARTNERSHIP FIRM",
+     "TRUST",
+     "PROPRIETORSHIP",
+     "SEPARATE BUSINESS UNIT (SBU)",
+     "OTHER"
+    ],
+    "vocab_size": 10,
+    "source": "literal",
+    "formula1": "\"SELECT, COMPANY, BRANCH OF A COMPANY, LIMITED LIABILITY PARTNERSHIP (LLP), BRANCH OF AN LLP, PARTNERSHIP FIRM, TRUST, PROPRIETORSHIP, SEPARATE BUSINESS UNIT (SBU), OTHER\""
+   },
+   {
+    "kind": "date_bound",
+    "sheet": "General Information",
+    "sqref": "C39",
+    "n_cells": 1,
+    "formula1": "32874"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "General Information",
+    "sqref": "C9",
+    "n_cells": 1,
+    "formula1": "1"
+   },
+   {
+    "kind": "membership",
+    "sheet": "General Information",
+    "sqref": "C57",
+    "n_cells": 1,
+    "vocab": [
+     "YES",
+     "NO",
+     "Not Applicable"
+    ],
+    "vocab_size": 3,
+    "source": "literal",
+    "formula1": "\"YES, NO, Not Applicable\""
+   },
+   {
+    "kind": "conditional_required",
+    "sheet": "General Information",
+    "sqref": "C46",
+    "n_cells": 1,
+    "formula1": "IF(C45=\"YES\",TRUE,FALSE)"
+   },
+   {
+    "kind": "conditional_required",
+    "sheet": "General Information",
+    "sqref": "C47 C89 C50",
+    "n_cells": 3,
+    "formula1": "IF(C45=\"YES\",TRUE,FALSE)"
+   },
+   {
+    "kind": "conditional_required",
+    "sheet": "General Information",
+    "sqref": "C90 C51",
+    "n_cells": 2,
+    "formula1": "IF(C48=\"YES\",TRUE,FALSE)"
+   },
+   {
+    "kind": "conditional_required",
+    "sheet": "General Information",
+    "sqref": "C91",
+    "n_cells": 1,
+    "formula1": "IF(C87=\"YES\",TRUE,FALSE)"
+   },
+   {
+    "kind": "membership",
+    "sheet": "General Information",
+    "sqref": "C2",
+    "n_cells": 1,
+    "vocab": [
+     "Q1",
+     "Q2",
+     "Q3",
+     "Q4"
+    ],
+    "vocab_size": 4,
+    "source": "literal",
+    "formula1": "\"Q1,Q2,Q3,Q4\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "General Information",
+    "sqref": "C34",
+    "n_cells": 1,
+    "vocab": [
+     "YES",
+     "NO",
+     "NA"
+    ],
+    "vocab_size": 3,
+    "source": "literal",
+    "formula1": "\"YES, NO, NA\""
+   },
+   {
+    "kind": "conditional_required",
+    "sheet": "General Information",
+    "sqref": "C79",
+    "n_cells": 1,
+    "formula1": "IF(C56=\"Yes\",TRUE,FALSE)"
+   },
+   {
+    "kind": "conditional_required",
+    "sheet": "General Information",
+    "sqref": "C59:C78",
+    "n_cells": 20,
+    "formula1": "OR(C$56=\"No\", C$57=\"No\")"
+   },
+   {
+    "kind": "conditional_required",
+    "sheet": "General Information",
+    "sqref": "C88",
+    "n_cells": 1,
+    "formula1": "IF(C87=\"YES\",TRUE,FALSE)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Broker Dealer",
+    "cell": "C27",
+    "expr": "SUM(C21:C26)",
+    "checks": "Broker Dealer!C27 == SUM(C21:C26)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Broker Dealer",
+    "cell": "C35",
+    "expr": "SUM(C29:C34)",
+    "checks": "Broker Dealer!C35 == SUM(C29:C34)"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Broker Dealer",
+    "sqref": "C6",
+    "n_cells": 1,
+    "vocab": [
+     "NSEIX",
+     "IndiaINX",
+     "Both"
+    ],
+    "vocab_size": 3,
+    "source": "literal",
+    "formula1": "\"NSEIX, IndiaINX, Both\""
+   },
+   {
+    "kind": "date_bound",
+    "sheet": "Broker Dealer",
+    "sqref": "C4",
+    "n_cells": 1,
+    "formula1": "32874"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Broker Dealer",
+    "sqref": "D85:D87 D78:D80 D57:D59 D92:D94 D71:D73 D99:D101 D64:D66 C21:C26 C29:C34 C13 D106:D108 C77:C79 C70:C72 C56:C58 C84:C86 C91:C93 C63:C65 C105:C107 C98:C100",
+    "n_cells": 61,
+    "formula1": "0"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Broker Dealer",
+    "sqref": "C36:C37 C17",
+    "n_cells": 3,
+    "formula1": "0"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Broker Dealer",
+    "sqref": "D81:D83 D95:D97 D102:D104 D60:D76 D109:D111 D88:D90 C80:C82 C73:C75 C87:C89 C108:C110 C59:C69 C94:C103",
+    "n_cells": 65,
+    "formula1": "-9.99999999999999E+137"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Broker Dealer",
+    "sqref": "C49 C14:C15",
+    "n_cells": 3,
+    "vocab": [
+     "Yes",
+     "No"
+    ],
+    "vocab_size": 2,
+    "source": "literal",
+    "formula1": "\"Yes, No\""
+   },
+   {
+    "kind": "conditional_required",
+    "sheet": "Broker Dealer",
+    "sqref": "C51",
+    "n_cells": 1,
+    "formula1": "IF(C49=\"YES\",TRUE,FALSE)"
+   },
+   {
+    "kind": "conditional_required",
+    "sheet": "Broker Dealer",
+    "sqref": "C50",
+    "n_cells": 1,
+    "formula1": "IF(C49=\"YES\",TRUE,FALSE)"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Broker Dealer",
+    "sqref": "C41:C44",
+    "n_cells": 4,
+    "formula1": "-9.99999999999999E+64"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Broker Dealer",
+    "sqref": "C9 C12",
+    "n_cells": 2,
+    "formula1": "999999999"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Global Access Provider",
+    "cell": "G15",
+    "expr": "SUM(G12:G14)",
+    "checks": "Global Access Provider!G15 == SUM(G12:G14)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Global Access Provider",
+    "cell": "H15",
+    "expr": "SUM(H12:H14)",
+    "checks": "Global Access Provider!H15 == SUM(H12:H14)"
+   },
+   {
+    "kind": "date_bound",
+    "sheet": "Global Access Provider",
+    "sqref": "C4 C27 G19:G34",
+    "n_cells": 18,
+    "formula1": "41640"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Global Access Provider",
+    "sqref": "C26 C34 C37:C48 C20:C21",
+    "n_cells": 16,
+    "formula1": "-9.99999999999999E+36"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Global Access Provider",
+    "sqref": "C13:C14",
+    "n_cells": 2,
+    "formula1": "-9.99999999999999E+42"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Global Access Provider",
+    "sqref": "C12 C31 C15",
+    "n_cells": 3,
+    "vocab": [
+     "YES",
+     "NO"
+    ],
+    "vocab_size": 2,
+    "source": "literal",
+    "formula1": "\"YES, NO\""
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Global Access Provider",
+    "sqref": "C52:C57 C61:C66 C5 C95:C97 C88:C90 C74:C76 C102:C104 C109:C111 C81:C83 C123:C125 C116:C118 E206:E220 D206:D220",
+    "n_cells": 67,
+    "formula1": "0"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Global Access Provider",
+    "sqref": "J7 G4:H4 J4:K5",
+    "n_cells": 7,
+    "formula1": "-9.99999999999999E+24"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Global Access Provider",
+    "sqref": "C6",
+    "n_cells": 1,
+    "vocab": [
+     "Client-Prop (both)",
+     "Client-Prop (Derivatives)",
+     "Client-Prop (Other than Derivatives)",
+     "Prop Trade (Derivatives)",
+     "Prop Trade (Other than Derivatives)",
+     "Prop Trade (Both)",
+     "Client Trade (Derivatives)",
+     "Client Trade (Other Than Derivatives)",
+     "Client Trade (Both)"
+    ],
+    "vocab_size": 9,
+    "source": "literal",
+    "formula1": "\"Client-Prop (both), Client-Prop (Derivatives), Client-Prop (Other than Derivatives), Prop Trade (Derivatives), Prop Trade (Other than Derivatives), Prop Trade (Both), Client Trade (Derivatives), Client Trade (Other Than Derivatives), Client Trade (Both)\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "Global Access Provider",
+    "sqref": "C7",
+    "n_cells": 1,
+    "vocab": [
+     "Omnibus Account Structure",
+     "Fully Discosed Model",
+     "Combination of both",
+     "Other"
+    ],
+    "vocab_size": 4,
+    "source": "literal",
+    "formula1": "\"Omnibus Account Structure, Fully Discosed Model, Combination of both, Other\""
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Global Access Provider",
+    "sqref": "C98:C100 C91:C93 C105:C107 C126:C128 C77:C87 C112:C121",
+    "n_cells": 33,
+    "formula1": "-9.99999999999999E+137"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Global Access Provider",
+    "sqref": "C30",
+    "n_cells": 1,
+    "vocab": [
+     "FY 2025-26",
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "vocab_size": 10,
+    "source": "literal",
+    "formula1": "\"FY 2025-26, FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\""
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Global Access Provider",
+    "sqref": "C69",
+    "n_cells": 1,
+    "formula1": "0"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Global Access Provider",
+    "sqref": "C29",
+    "n_cells": 1,
+    "vocab": [
+     "Q1",
+     "Q2",
+     "Q3",
+     "Q4"
+    ],
+    "vocab_size": 4,
+    "source": "literal",
+    "formula1": "\"Q1,Q2,Q3,Q4\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "Global Access Provider",
+    "sqref": "H19:H38",
+    "n_cells": 20,
+    "vocab": [
+     "GAP-International Broker",
+     "GAP- GAP",
+     "GAP-Introducing Broker",
+     "Other"
+    ],
+    "vocab_size": 4,
+    "source": "literal",
+    "formula1": "\"GAP-International Broker, GAP- GAP, GAP-Introducing Broker, Other\""
+   },
+   {
+    "kind": "conditional_required",
+    "sheet": "Global Access Provider",
+    "sqref": "C32",
+    "n_cells": 1,
+    "formula1": "IF(C31=\"Yes\", TRUE, FALSE)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Clearing Member",
+    "cell": "C31",
+    "expr": "SUM(C24:C29)",
+    "checks": "Clearing Member!C31 == SUM(C24:C29)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Clearing Member",
+    "cell": "C40",
+    "expr": "SUM(C33:C38)",
+    "checks": "Clearing Member!C40 == SUM(C33:C38)"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Clearing Member",
+    "sqref": "B58",
+    "n_cells": 1,
+    "vocab": [
+     "NSEIX",
+     "IndiaINX"
+    ],
+    "vocab_size": 2,
+    "source": "literal",
+    "formula1": "\"NSEIX, IndiaINX\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "Clearing Member",
+    "sqref": "C6",
+    "n_cells": 1,
+    "vocab": [
+     "NSEICC",
+     "IndiaICC",
+     "Both"
+    ],
+    "vocab_size": 3,
+    "source": "literal",
+    "formula1": "\"NSEICC, IndiaICC, Both\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "Clearing Member",
+    "sqref": "C7",
+    "n_cells": 1,
+    "vocab": [
+     "Self Clearing Member (SCM)",
+     "Clearing Member (CM)",
+     "Professional Clearing Member (PCM)"
+    ],
+    "vocab_size": 3,
+    "source": "literal",
+    "formula1": "\"Self Clearing Member (SCM), Clearing Member (CM), Professional Clearing Member (PCM)\""
+   },
+   {
+    "kind": "date_bound",
+    "sheet": "Clearing Member",
+    "sqref": "C10 C4",
+    "n_cells": 2,
+    "formula1": "41640"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Clearing Member",
+    "sqref": "C8:C9",
+    "n_cells": 2,
+    "formula1": "-10"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Clearing Member",
+    "sqref": "C56 D86:D88 D100:D102 D107:D109 D65:D81 D114:D116 D93:D95 C85:C87 C78:C80 C92:C94 C113:C115 C64:C74 C99:C108",
+    "n_cells": 66,
+    "formula1": "-9.99999999999999E+137"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Clearing Member",
+    "sqref": "C24:C30 C33:C39 C19 D90:D92 D83:D85 D62:D64 D97:D99 D76:D78 D104:D106 D69:D71 D111:D113 C82:C84 C75:C77 C61:C63 C89:C91 C96:C98 C68:C70 C110:C112 C103:C105",
+    "n_cells": 63,
+    "formula1": "0"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Clearing Member",
+    "sqref": "C12",
+    "n_cells": 1,
+    "vocab": [
+     "FY 2025-26",
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "vocab_size": 10,
+    "source": "literal",
+    "formula1": "\"FY 2025-26, FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\""
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Clearing Member",
+    "sqref": "C41",
+    "n_cells": 1,
+    "formula1": "0"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Clearing Member",
+    "sqref": "C46:C47",
+    "n_cells": 2,
+    "formula1": "-9.99999999999999E+36"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Depository Participant",
+    "cell": "C35",
+    "expr": "SUM(C29:C34)",
+    "checks": "Depository Participant!C35 == SUM(C29:C34)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Depository Participant",
+    "cell": "C43",
+    "expr": "SUM(C37:C42)",
+    "checks": "Depository Participant!C43 == SUM(C37:C42)"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Depository Participant",
+    "sqref": "C38:C42 C30:C34 C17:C18",
+    "n_cells": 12,
+    "formula1": "0"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Depository Participant",
+    "sqref": "C7",
+    "n_cells": 1,
+    "formula1": "-10"
+   },
+   {
+    "kind": "date_bound",
+    "sheet": "Depository Participant",
+    "sqref": "C8 C4",
+    "n_cells": 2,
+    "formula1": "41640"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Depository Participant",
+    "sqref": "C10",
+    "n_cells": 1,
+    "vocab": [
+     "FY 2025-26",
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "vocab_size": 10,
+    "source": "literal",
+    "formula1": "\"FY 2025-26, FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\""
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Depository Participant",
+    "sqref": "C44",
+    "n_cells": 1,
+    "formula1": "0"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Depository Participant",
+    "sqref": "C22:C23",
+    "n_cells": 2,
+    "formula1": "-9.99999999999999E+36"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Custodian",
+    "cell": "C36",
+    "expr": "SUM(C30:C35)",
+    "checks": "Custodian!C36 == SUM(C30:C35)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Custodian",
+    "cell": "D36",
+    "expr": "SUM(D30:D35)",
+    "checks": "Custodian!D36 == SUM(D30:D35)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Custodian",
+    "cell": "C44",
+    "expr": "SUM(C38:C43)",
+    "checks": "Custodian!C44 == SUM(C38:C43)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Custodian",
+    "cell": "D44",
+    "expr": "SUM(D38:D43)",
+    "checks": "Custodian!D44 == SUM(D38:D43)"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Custodian",
+    "sqref": "H6 C7",
+    "n_cells": 2,
+    "formula1": "-10"
+   },
+   {
+    "kind": "date_bound",
+    "sheet": "Custodian",
+    "sqref": "H4 C8 C4",
+    "n_cells": 3,
+    "formula1": "41640"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Custodian",
+    "sqref": "C39:C43 F31:F34 C31:C35 F29 C17 D57:D66",
+    "n_cells": 26,
+    "formula1": "0"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Custodian",
+    "sqref": "H20:H22 D30:D35 C22:C25 D50:D52 C57:C66 D38:D43",
+    "n_cells": 32,
+    "formula1": "-9.99999999999999E+36"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Custodian",
+    "sqref": "G29:H29 G31:H34",
+    "n_cells": 10,
+    "formula1": "0"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Custodian",
+    "sqref": "C50:C52",
+    "n_cells": 3,
+    "formula1": "-999999999999"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Custodian",
+    "sqref": "C10",
+    "n_cells": 1,
+    "vocab": [
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "vocab_size": 9,
+    "source": "literal",
+    "formula1": "\"FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\""
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Custodian",
+    "sqref": "C45",
+    "n_cells": 1,
+    "formula1": "0"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Custodian",
+    "sqref": "C13 C16",
+    "n_cells": 2,
+    "formula1": "999999999"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Investment Banker",
+    "sqref": "H22:H24 C53 C39 C42 C45 C22:C24 G29:G33 F34 O29:P33 N34:O34",
+    "n_cells": 28,
+    "formula1": "-9.99999999999999E+36"
+   },
+   {
+    "kind": "date_bound",
+    "sheet": "Investment Banker",
+    "sqref": "H4 C8 C4 M29:M33 L34 H29:I33 G34:H34",
+    "n_cells": 21,
+    "formula1": "41640"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Investment Banker",
+    "sqref": "H6 C7",
+    "n_cells": 2,
+    "formula1": "-10"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Investment Banker",
+    "sqref": "B48 B54",
+    "n_cells": 2,
+    "vocab": [
+     "NSEICC",
+     "IndiaICC"
+    ],
+    "vocab_size": 2,
+    "source": "literal",
+    "formula1": "\"NSEICC, IndiaICC\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "Investment Banker",
+    "sqref": "C10",
+    "n_cells": 1,
+    "vocab": [
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "vocab_size": 9,
+    "source": "literal",
+    "formula1": "\"FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\""
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Investment Banker",
+    "sqref": "C17 C52",
+    "n_cells": 2,
+    "formula1": "0"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Investment Banker",
+    "sqref": "D29:D33",
+    "n_cells": 5,
+    "vocab": [
+     "Indian",
+     "IFSC",
+     "Foreign"
+    ],
+    "vocab_size": 3,
+    "source": "literal",
+    "formula1": "\"Indian, IFSC, Foreign\""
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Investment Banker",
+    "sqref": "C13 C16",
+    "n_cells": 2,
+    "formula1": "999999999"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Debenture Trustee",
+    "cell": "C41",
+    "expr": "SUM(C38:C40)",
+    "checks": "Debenture Trustee!C41 == SUM(C38:C40)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Debenture Trustee",
+    "cell": "C46",
+    "expr": "SUM(C43:C45)",
+    "checks": "Debenture Trustee!C46 == SUM(C43:C45)"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Debenture Trustee",
+    "sqref": "H6 C7",
+    "n_cells": 2,
+    "formula1": "-10"
+   },
+   {
+    "kind": "date_bound",
+    "sheet": "Debenture Trustee",
+    "sqref": "H4 C8 C4 C52 C57 C62 C67 C72",
+    "n_cells": 8,
+    "formula1": "41640"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Debenture Trustee",
+    "sqref": "H19:H21 H26 H28 C68 C32 C53 C58 C63 C22:C24 C30 C73",
+    "n_cells": 15,
+    "formula1": "-9.99999999999999E+36"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Debenture Trustee",
+    "sqref": "H25 H27 C43:C46 C38:C40 C17 C29 C31",
+    "n_cells": 12,
+    "formula1": "0"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Debenture Trustee",
+    "sqref": "C10",
+    "n_cells": 1,
+    "vocab": [
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "vocab_size": 9,
+    "source": "literal",
+    "formula1": "\"FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\""
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Debenture Trustee",
+    "sqref": "C13 C16",
+    "n_cells": 2,
+    "formula1": "999999999"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Investment Adviser",
+    "cell": "C36",
+    "expr": "SUM(C30:C35)",
+    "checks": "Investment Adviser!C36 == SUM(C30:C35)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Investment Adviser",
+    "cell": "C44",
+    "expr": "SUM(C38:C43)",
+    "checks": "Investment Adviser!C44 == SUM(C38:C43)"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Investment Adviser",
+    "sqref": "H6 C7",
+    "n_cells": 2,
+    "formula1": "-10"
+   },
+   {
+    "kind": "date_bound",
+    "sheet": "Investment Adviser",
+    "sqref": "H4 C8 C4",
+    "n_cells": 3,
+    "formula1": "41640"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Investment Adviser",
+    "sqref": "H19:H21 C22:C24 D50:D59",
+    "n_cells": 16,
+    "formula1": "-9.99999999999999E+36"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Investment Adviser",
+    "sqref": "G26:H31 C30:C35 C17 C38:C43",
+    "n_cells": 25,
+    "formula1": "0"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Investment Adviser",
+    "sqref": "C50:C59",
+    "n_cells": 10,
+    "vocab": [
+     "With Execution",
+     "Without Execution"
+    ],
+    "vocab_size": 2,
+    "source": "literal",
+    "formula1": "\"With Execution, Without Execution\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "Investment Adviser",
+    "sqref": "C10",
+    "n_cells": 1,
+    "vocab": [
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "vocab_size": 9,
+    "source": "literal",
+    "formula1": "\"FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\""
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Investment Adviser",
+    "sqref": "C45",
+    "n_cells": 1,
+    "formula1": "0"
+   },
+   {
+    "kind": "date_bound",
+    "sheet": "Investment Adviser",
+    "sqref": "C5",
+    "n_cells": 1,
+    "formula1": "36193"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Investment Adviser",
+    "sqref": "C13 C16",
+    "n_cells": 2,
+    "formula1": "999999999"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Registered Distributor",
+    "cell": "C29",
+    "expr": "SUM(C30:C33)",
+    "checks": "Registered Distributor!C29 == SUM(C30:C33)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Registered Distributor",
+    "cell": "C34",
+    "expr": "SUM(C35:C38)",
+    "checks": "Registered Distributor!C34 == SUM(C35:C38)"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Registered Distributor",
+    "sqref": "H6 C7",
+    "n_cells": 2,
+    "formula1": "-10"
+   },
+   {
+    "kind": "date_bound",
+    "sheet": "Registered Distributor",
+    "sqref": "H4 C8 C4",
+    "n_cells": 3,
+    "formula1": "41640"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Registered Distributor",
+    "sqref": "H20:H22 C22:C24",
+    "n_cells": 6,
+    "formula1": "-9.99999999999999E+36"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Registered Distributor",
+    "sqref": "H35:H41 G28:H30 D28:D30 C44:C47 C29:C38 C17",
+    "n_cells": 31,
+    "formula1": "0"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Registered Distributor",
+    "sqref": "C39:C40",
+    "n_cells": 2,
+    "formula1": "0"
+   },
+   {
+    "kind": "date_bound",
+    "sheet": "Registered Distributor",
+    "sqref": "C5",
+    "n_cells": 1,
+    "formula1": "36193"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Registered Distributor",
+    "sqref": "C10",
+    "n_cells": 1,
+    "vocab": [
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "vocab_size": 9,
+    "source": "literal",
+    "formula1": "\"FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\""
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Registered Distributor",
+    "sqref": "C13 C16",
+    "n_cells": 2,
+    "formula1": "999999999"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Registered Distributor",
+    "sqref": "D52:F76",
+    "n_cells": 75,
+    "formula1": "-1"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Credit Rating Agency",
+    "cell": "C88",
+    "expr": "SUM(C77:C87)",
+    "checks": "Credit Rating Agency!C88 == SUM(C77:C87)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "Credit Rating Agency",
+    "cell": "D88",
+    "expr": "SUM(D77:D87)",
+    "checks": "Credit Rating Agency!D88 == SUM(D77:D87)"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Credit Rating Agency",
+    "sqref": "E55 G41",
+    "n_cells": 2,
+    "vocab": [
+     "LONG TERM",
+     "SHORT TERM"
+    ],
+    "vocab_size": 2,
+    "source": "literal",
+    "formula1": "\"LONG TERM, SHORT TERM\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "Credit Rating Agency",
+    "sqref": "K55 L41",
+    "n_cells": 2,
+    "vocab": [
+     "LISTED",
+     "UNLISTED",
+     "ABOUT TO BE LISTED"
+    ],
+    "vocab_size": 3,
+    "source": "literal",
+    "formula1": "\"LISTED, UNLISTED, ABOUT TO BE LISTED\""
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Credit Rating Agency",
+    "sqref": "C6:C7",
+    "n_cells": 2,
+    "formula1": "-10"
+   },
+   {
+    "kind": "date_bound",
+    "sheet": "Credit Rating Agency",
+    "sqref": "C4 C8 J29:K40 N45:O54",
+    "n_cells": 46,
+    "formula1": "41640"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Credit Rating Agency",
+    "sqref": "C22:C25 E45:E54 D76:D88 D93:D102 F29:F40",
+    "n_cells": 49,
+    "formula1": "-9.99999999999999E+36"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Credit Rating Agency",
+    "sqref": "C76:C88 C59:C71 C17",
+    "n_cells": 27,
+    "formula1": "0"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Credit Rating Agency",
+    "sqref": "C10",
+    "n_cells": 1,
+    "vocab": [
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "vocab_size": 9,
+    "source": "literal",
+    "formula1": "\"FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "Credit Rating Agency",
+    "sqref": "C93:C102",
+    "n_cells": 10,
+    "vocab": [
+     "Indian",
+     "IFSC",
+     "Foreign"
+    ],
+    "vocab_size": 3,
+    "source": "literal",
+    "formula1": "\"Indian, IFSC, Foreign\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "Credit Rating Agency",
+    "sqref": "E29:E41",
+    "n_cells": 13,
+    "vocab": [
+     "PUBLIC",
+     "PRIVATE"
+    ],
+    "vocab_size": 2,
+    "source": "literal",
+    "formula1": "\"PUBLIC, PRIVATE\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "Credit Rating Agency",
+    "sqref": "H55 I45:I54",
+    "n_cells": 11,
+    "vocab": [
+     "Upgrade",
+     "Downgrade",
+     "Default",
+     "Withdrawn"
+    ],
+    "vocab_size": 4,
+    "source": "literal",
+    "formula1": "\"Upgrade, Downgrade, Default, Withdrawn\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "Credit Rating Agency",
+    "sqref": "I55 J45:J54",
+    "n_cells": 11,
+    "vocab": [
+     "REQUESTED BY ISSUER",
+     "SUO MOTO"
+    ],
+    "vocab_size": 2,
+    "source": "literal",
+    "formula1": "\"REQUESTED BY ISSUER, SUO MOTO\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "Credit Rating Agency",
+    "sqref": "H29:H40 F45:F54",
+    "n_cells": 22,
+    "vocab": [
+     "LONG TERM",
+     "SHORT TERM",
+     "OTHER"
+    ],
+    "vocab_size": 3,
+    "source": "literal",
+    "formula1": "\"LONG TERM, SHORT TERM, OTHER\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "Credit Rating Agency",
+    "sqref": "L45:L54 M29:M40",
+    "n_cells": 22,
+    "vocab": [
+     "LISTED",
+     "UNLISTED",
+     "ABOUT TO BE LISTED",
+     "OTHER"
+    ],
+    "vocab_size": 4,
+    "source": "literal",
+    "formula1": "\"LISTED, UNLISTED, ABOUT TO BE LISTED, OTHER\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "Credit Rating Agency",
+    "sqref": "K41 L29:L40",
+    "n_cells": 13,
+    "vocab": [
+     "SOLICITED",
+     "UN-SOLICITED"
+    ],
+    "vocab_size": 2,
+    "source": "literal",
+    "formula1": "\"SOLICITED, UN-SOLICITED\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "Credit Rating Agency",
+    "sqref": "M45:M54",
+    "n_cells": 10,
+    "vocab": [
+     "INVESTMENT GRADE TO INVESTMENT GRADE",
+     "INVESTMENT GRADE TO NON INVESTMENT GRADE",
+     "NON INVESTMENT GRADE TO INVESTMENT GRADE",
+     "NON INVESTMENT GRADE TO NON INVESTMENT GRADE",
+     "OTHER"
+    ],
+    "vocab_size": 5,
+    "source": "literal",
+    "formula1": "\"INVESTMENT GRADE TO INVESTMENT GRADE, INVESTMENT GRADE TO NON INVESTMENT GRADE, NON INVESTMENT GRADE TO INVESTMENT GRADE, NON INVESTMENT GRADE TO NON INVESTMENT GRADE, OTHER\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "Credit Rating Agency",
+    "sqref": "C29:C40 C45:C54",
+    "n_cells": 22,
+    "vocab": [
+     "Indian",
+     "IFSC",
+     "Foreign",
+     "Sovereign"
+    ],
+    "vocab_size": 4,
+    "source": "literal",
+    "formula1": "\"Indian, IFSC, Foreign, Sovereign\""
+   },
+   {
+    "kind": "date_bound",
+    "sheet": "Credit Rating Agency",
+    "sqref": "C5",
+    "n_cells": 1,
+    "formula1": "36193"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Credit Rating Agency",
+    "sqref": "C13 C16",
+    "n_cells": 2,
+    "formula1": "999999999"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "ERDPP",
+    "cell": "C64",
+    "expr": "SUM(C52:C63)",
+    "checks": "ERDPP!C64 == SUM(C52:C63)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "ERDPP",
+    "cell": "C81",
+    "expr": "SUM(C69:C80)",
+    "checks": "ERDPP!C81 == SUM(C69:C80)"
+   },
+   {
+    "kind": "sum_identity",
+    "sheet": "ERDPP",
+    "cell": "D81",
+    "expr": "SUM(D69:D80)",
+    "checks": "ERDPP!D81 == SUM(D69:D80)"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "ERDPP",
+    "sqref": "C6:C7",
+    "n_cells": 2,
+    "formula1": "-10"
+   },
+   {
+    "kind": "date_bound",
+    "sheet": "ERDPP",
+    "sqref": "N43:N47 C8 I29:J38 C4",
+    "n_cells": 27,
+    "formula1": "41640"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "ERDPP",
+    "sqref": "C22:C25 F29:F38 D43:D47 D69:D81 C88",
+    "n_cells": 33,
+    "formula1": "-9.99999999999999E+36"
+   },
+   {
+    "kind": "membership",
+    "sheet": "ERDPP",
+    "sqref": "H43:H47",
+    "n_cells": 5,
+    "vocab": [
+     "Upgrade",
+     "Downgrade",
+     "Default",
+     "Withdrawn"
+    ],
+    "vocab_size": 4,
+    "source": "literal",
+    "formula1": "\"Upgrade, Downgrade, Default, Withdrawn\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "ERDPP",
+    "sqref": "I43:I47",
+    "n_cells": 5,
+    "vocab": [
+     "REQUESTED BY ISSUER",
+     "SUO MOTO"
+    ],
+    "vocab_size": 2,
+    "source": "literal",
+    "formula1": "\"REQUESTED BY ISSUER, SUO MOTO\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "ERDPP",
+    "sqref": "L43:L46",
+    "n_cells": 4,
+    "vocab": [
+     "INVESTMENT GRADE TO NON INVESTMENT GRADE",
+     "NON INVESTMENT GRADE TO INVESTMENT GRADE"
+    ],
+    "vocab_size": 2,
+    "source": "literal",
+    "formula1": "\"INVESTMENT GRADE TO NON INVESTMENT GRADE, NON INVESTMENT GRADE TO INVESTMENT GRADE\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "ERDPP",
+    "sqref": "E29:E39",
+    "n_cells": 11,
+    "vocab": [
+     "PUBLIC",
+     "PRIVATE"
+    ],
+    "vocab_size": 2,
+    "source": "literal",
+    "formula1": "\"PUBLIC, PRIVATE\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "ERDPP",
+    "sqref": "E43:E47 G29:G30 G32:G39",
+    "n_cells": 15,
+    "vocab": [
+     "LONG TERM",
+     "SHORT TERM"
+    ],
+    "vocab_size": 2,
+    "source": "literal",
+    "formula1": "\"LONG TERM, SHORT TERM\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "ERDPP",
+    "sqref": "L29:L39 K43:K47",
+    "n_cells": 16,
+    "vocab": [
+     "LISTED",
+     "UNLISTED",
+     "ABOUT TO BE LISTED"
+    ],
+    "vocab_size": 3,
+    "source": "literal",
+    "formula1": "\"LISTED, UNLISTED, ABOUT TO BE LISTED\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "ERDPP",
+    "sqref": "K29:K39",
+    "n_cells": 11,
+    "vocab": [
+     "SOLICITED",
+     "UN-SOLICITED"
+    ],
+    "vocab_size": 2,
+    "source": "literal",
+    "formula1": "\"SOLICITED, UN-SOLICITED\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "ERDPP",
+    "sqref": "C39",
+    "n_cells": 1,
+    "vocab": [
+     "CORPORATE",
+     "SOVEREIGN",
+     "OTHER"
+    ],
+    "vocab_size": 3,
+    "source": "literal",
+    "formula1": "\"CORPORATE, SOVEREIGN, OTHER\""
+   },
+   {
+    "kind": "date_bound",
+    "sheet": "ERDPP",
+    "sqref": "I39:J39 M43:M47",
+    "n_cells": 7,
+    "formula1": "36161"
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "ERDPP",
+    "sqref": "C69:C81 C52:C64 C17 C87",
+    "n_cells": 28,
+    "formula1": "0"
+   },
+   {
+    "kind": "membership",
+    "sheet": "ERDPP",
+    "sqref": "C10",
+    "n_cells": 1,
+    "vocab": [
+     "FY 2025-26",
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "vocab_size": 10,
+    "source": "literal",
+    "formula1": "\"FY 2025-26, FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\""
+   },
+   {
+    "kind": "membership",
+    "sheet": "ERDPP",
+    "sqref": "C29:C38",
+    "n_cells": 10,
+    "vocab": [
+     "Indian",
+     "IFSC",
+     "Foreign"
+    ],
+    "vocab_size": 3,
+    "source": "literal",
+    "formula1": "\"Indian, IFSC, Foreign\""
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "ERDPP",
+    "sqref": "C16 C13",
+    "n_cells": 2,
+    "formula1": "99999999"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Research Entity",
+    "sqref": "C6:C7",
+    "n_cells": 2,
+    "formula1": "-10"
+   },
+   {
+    "kind": "date_bound",
+    "sheet": "Research Entity",
+    "sqref": "C8:C9 C4",
+    "n_cells": 3,
+    "formula1": "41640"
+   },
+   {
+    "kind": "numeric_bound",
+    "sheet": "Research Entity",
+    "sqref": "C22:C24",
+    "n_cells": 3,
+    "formula1": "-9.99999999999999E+36"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Research Entity",
+    "sqref": "C29",
+    "n_cells": 1,
+    "vocab": [
+     "Yes",
+     "No"
+    ],
+    "vocab_size": 2,
+    "source": "literal",
+    "formula1": "\"Yes, No\""
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Research Entity",
+    "sqref": "C30 C17 C42:C55 C32:C40",
+    "n_cells": 25,
+    "formula1": "0"
+   },
+   {
+    "kind": "membership",
+    "sheet": "Research Entity",
+    "sqref": "C10",
+    "n_cells": 1,
+    "vocab": [
+     "FY 2026-27",
+     "FY 2027-28",
+     "FY 2028-29",
+     "FY 2029-30",
+     "FY 2030-31",
+     "FY 2031-32",
+     "FY 2032-33",
+     "FY 2033-34",
+     "FY 2034-35"
+    ],
+    "vocab_size": 9,
+    "source": "literal",
+    "formula1": "\"FY 2026-27, FY 2027-28, FY 2028-29, FY 2029-30, FY 2030-31, FY 2031-32, FY 2032-33, FY 2033-34, FY 2034-35\""
+   },
+   {
+    "kind": "integer_bound",
+    "sheet": "Research Entity",
+    "sqref": "C13 C16",
+    "n_cells": 2,
+    "formula1": "99999999"
+   }
+  ],
+  "weak": [
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "Broker Dealer",
+    "cell": "U1",
+    "expr": "IF(COUNTIF('General Information'!$C$10:$C$21, \"Broker Dealer\")>0,\"Open\",\"Locked\")"
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "Global Access Provider",
+    "cell": "AA1",
+    "expr": "IF(COUNTIF('General Information'!$C$10:$C$21, \"Global Access Provider\")>0,\"Open\",\"Locked\")"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Global Access Provider",
+    "cell": "G7",
+    "expr": "SUM(G6+I6)+H6"
+   },
+   {
+    "kind": "other_formula",
+    "sheet": "Global Access Provider",
+    "cell": "J7",
+    "expr": "+J6+K6"
+   },
+   {
+    "kind": "dv_no_type",
+    "sheet": "Global Access Provider",
+    "sqref": "C28",
+    "formula1": ""
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "Clearing Member",
+    "cell": "U1",
+    "expr": "IF(COUNTIF('General Information'!$C$10:$C$21, \"Clearing Member\")>0,\"Open\",\"Locked\")"
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "Debenture Trustee",
+    "cell": "Z1",
+    "expr": "IF(COUNTIF('General Information'!$C$10:$C$21, \"Debenture Trustee\")>0,\"Open\",\"Locked\")"
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "Investment Adviser",
+    "cell": "Z1",
+    "expr": "IF(COUNTIF('General Information'!$C$10:$C$21, \"Investment adviser\")>0,\"Open\",\"Locked\")"
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "Registered Distributor",
+    "cell": "Z1",
+    "expr": "IF(COUNTIF('General Information'!$C$10:$C$21, \"Registered Distributor\")>0,\"Open\",\"Locked\")"
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "Credit Rating Agency",
+    "cell": "Z1",
+    "expr": "IF(COUNTIF('General Information'!$C$10:$C$21, \"Credit Rating Agency\")>0,\"Open\",\"Locked\")"
+   },
+   {
+    "kind": "dv_no_type",
+    "sheet": "Credit Rating Agency",
+    "sqref": "G29:G40",
+    "formula1": ""
+   },
+   {
+    "kind": "if_conditional_carry",
+    "sheet": "Research Entity",
+    "cell": "U1",
+    "expr": "IF(COUNTIF('General Information'!$C$10:$C$21, \"Research Entity\")>0,\"Open\",\"Locked\")"
+   }
+  ]
+ }
+}

@@ -1,0 +1,87 @@
+{
+  "host_fn": "gstin_valid",
+  "note": "Check digit over the 36-character alphabet, weights alternating 1 and 2, each product folded by quotient+remainder on 36. One vector in this file was authored wrong (a remembered example number) and was corrected against an independent trace of the algorithm \u2014 which is what vectors are for.",
+  "vectors": [
+    {
+      "args": [
+        "27AAPFU0939F1ZV"
+      ],
+      "expect": true
+    },
+    {
+      "args": [
+        "07AABCU9603R1ZP"
+      ],
+      "expect": true,
+      "why": "check digit computed independently from the published algorithm, not read off this implementation; the first hand-authored value was wrong (M) and the vector caught it"
+    },
+    {
+      "args": [
+        "29AAGCB7383J1Z4"
+      ],
+      "expect": true
+    },
+    {
+      "args": [
+        "27AAPFU0939F1ZW"
+      ],
+      "expect": false,
+      "why": "check digit changed"
+    },
+    {
+      "args": [
+        "27AAPFU0993F1ZV"
+      ],
+      "expect": false,
+      "why": "interior transposition a regex admits"
+    },
+    {
+      "args": [
+        "27AAPFU0939F1Z"
+      ],
+      "expect": false,
+      "why": "14 characters"
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expect": false
+    },
+    {
+      "args": [
+        "27aapfu0939f1zv"
+      ],
+      "expect": false,
+      "why": "lower case is outside the alphabet"
+    },
+    {
+      "args": [
+        "27AIPFU0939F1ZE"
+      ],
+      "expect": true,
+      "why": "position 3 is 'I' (index 18) at weight 2, so the product is exactly 36 \u2014 the only value in this alphabet's range at which the modulus constant is observable. Added because the mutation harness showed `36 -> 37` surviving every other vector."
+    },
+    {
+      "args": [
+        "27AIPFU0939F1ZG"
+      ],
+      "expect": false,
+      "why": "the check digit the `36 -> 37` mutant would compute"
+    },
+    {
+      "args": [
+        "27AAPFU0439F1Z0"
+      ],
+      "expect": true,
+      "why": "the weighted total is congruent to 0 mod 36, so the check character is '0' \u2014 the only case that exercises the outer modulus in `(36 - total % 36) % 36`. Added because the mutation harness showed `% 36 -> % 37` surviving every other vector; under that mutant this row indexes past the end of the alphabet."
+    },
+    {
+      "args": [
+        "27AAPFU0439F1Z1"
+      ],
+      "expect": false,
+      "why": "the same prefix with a wrong check character"
+    }
+  ]
+}

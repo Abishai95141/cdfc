@@ -11,6 +11,7 @@ from __future__ import annotations
 import ast
 import sys
 import zipfile
+from contextlib import closing
 from pathlib import Path
 
 import pytest
@@ -147,9 +148,9 @@ def test_nc__P04_golden_the_round_trip_really_is_destructive(tmp_path: Path) -> 
 
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        wb = openpyxl.load_workbook(FME)
-        out = tmp_path / "roundtripped.xlsx"
-        wb.save(out)
+        with closing(openpyxl.load_workbook(FME)) as wb:
+            out = tmp_path / "roundtripped.xlsx"
+            wb.save(out)
 
     before_bytes = FME.stat().st_size
     after_bytes = out.stat().st_size
@@ -193,7 +194,8 @@ def test_nc__P05b_the_hardened_parser_neutralises_an_external_entity() -> None:
     from cdfc.ingest import xmlsafe
 
     adv = REPO / "fixtures" / "adversarial" / "xxe-entity__passwd.xlsx"
-    raw = zipfile.ZipFile(adv).read("xl/workbook.xml")
+    with zipfile.ZipFile(adv) as _z:
+        raw = _z.read("xl/workbook.xml")
     ns = "{http://schemas.openxmlformats.org/spreadsheetml/2006/main}"
 
     el = xmlsafe.fromstring(raw)

@@ -2,3 +2,21 @@ lxml==6.1.1
 openpyxl==3.1.5
 pytest==8.3.4
 hypothesis==6.122.3
+# PyYAML was used by tools/nc_sweep.py and tests/contract from P0 and was never pinned — it
+# happened to be present in the development venv. A fresh environment built from this lockfile
+# did not have it, so the sweep would have failed at import on any other machine. Pinned at P4,
+# which is also the phase that makes it a RUNTIME dependency: predicate envelopes are YAML.
+PyYAML==6.0.2
+# P4. The CEL parser and runtime. Apache-2.0. See docs/decisions/D-P4-03-no-regex-in-cel.md for
+# what is admitted from it and what is banned.
+cel-python==0.5.0
+# P4, TEST ONLY. The differential oracle for src/cdfc/predicates/validate.py — a hand-rolled
+# validator that is silently permissive is this project's own failure mode, so it is checked
+# against an independent implementation on a corpus of good and broken envelopes. It is NOT in
+# the runtime set declared to ci/licence-denylist.sh and nothing under src/ imports it.
+jsonschema==4.23.0
+# P4, TEST ONLY. The second arm of the CEL differential: Google's own CEL runtime with the C++
+# core — the reference implementation, not a second Python port. It is a native extension, so it
+# is deliberately NOT on the verdict path: a verdict path that depends on a wheel building is a
+# verdict path that can vanish. celpy is what the registry root is qualified against.
+cel-expr-python==0.1.3

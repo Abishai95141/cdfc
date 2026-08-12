@@ -1,0 +1,58 @@
+{
+  "host_fn": "reg_resolves",
+  "note": "Tri-state. UNDERSPECIFIED is returned when the bound snapshot has nothing to say, which is a different fact from FALSE. Calling with no snapshot bound raises.",
+  "vectors": [
+    {
+      "args": [
+        "IFSCA-FME-001"
+      ],
+      "expect": "TRUE",
+      "snapshot": {
+        "IFSCA-FME-001": true
+      }
+    },
+    {
+      "args": [
+        "IFSCA-FME-002"
+      ],
+      "expect": "FALSE",
+      "snapshot": {
+        "IFSCA-FME-002": false
+      }
+    },
+    {
+      "args": [
+        "IFSCA-FME-999"
+      ],
+      "expect": "UNDERSPECIFIED",
+      "snapshot": {
+        "IFSCA-FME-001": true
+      },
+      "why": "absent from the snapshot is not absent from the register"
+    },
+    {
+      "args": [
+        "IFSCA\u2011FME\u2011001"
+      ],
+      "expect": "UNDERSPECIFIED",
+      "snapshot": {
+        "IFSCA-FME-001": true
+      },
+      "why": "MEASURED: a live entity's number carries U+2011 NON-BREAKING HYPHEN, visually identical and byte-wise different"
+    },
+    {
+      "args": [
+        "   "
+      ],
+      "expect": "UNDERSPECIFIED",
+      "snapshot": {}
+    },
+    {
+      "args": [
+        "IFSCA-FME-001"
+      ],
+      "raises": "SnapshotMissing",
+      "snapshot": null
+    }
+  ]
+}

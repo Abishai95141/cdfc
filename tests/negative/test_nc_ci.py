@@ -12,6 +12,7 @@ from __future__ import annotations
 import subprocess
 import sys
 import warnings
+from contextlib import closing
 from pathlib import Path
 
 import pytest
@@ -77,7 +78,7 @@ def test_nc__CI02_openpyxl_warning_is_an_error() -> None:
     with warnings.catch_warnings():
         warnings.simplefilter("error")
         with pytest.raises(UserWarning, match="[Dd]ata ?[Vv]alidation"):
-            openpyxl.load_workbook(FME)
+            openpyxl.load_workbook(FME)  # raises before it can return a handle
 
 
 def test_nc__CI02b_the_warning_is_real_not_a_test_artifact() -> None:
@@ -91,7 +92,8 @@ def test_nc__CI02b_the_warning_is_real_not_a_test_artifact() -> None:
 
     with warnings.catch_warnings(record=True) as caught:
         warnings.simplefilter("always")
-        openpyxl.load_workbook(FME)
+        with closing(openpyxl.load_workbook(FME)):
+            pass
     msgs = [str(w.message) for w in caught]
     assert any("Data Validation" in m for m in msgs), (
         f"expected openpyxl to warn about data validations on the FME workbook; got {msgs!r}"

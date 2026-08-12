@@ -1,0 +1,12 @@
+{
+  "declared_equivalent": 0,
+  "host_fn": "nav_interval",
+  "killed": 3,
+  "mutants_generated": 3,
+  "note": "Mutants are generated from this host function's own AST and killed by its PUBLISHED vectors. Survivors are listed by line and operator rather than absorbed into the denominator: a survivor is either a hole in the vectors or a genuinely equivalent program, and only reading it tells you which. This is a LOCAL score over the function, not P6's campaign over the workbooks.",
+  "score": "3/3",
+  "score_excluding_declared_equivalent": "3/3",
+  "survived": 0,
+  "survivors": [],
+  "unexplained_survivors": 0
+}

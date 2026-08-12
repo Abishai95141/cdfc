@@ -1,0 +1,37 @@
+{
+  "host_fn": "template_current",
+  "note": "The pinned blanks, read from the hash-verified vendored manifest.",
+  "vectors": [
+    {
+      "args": [
+        "7d9a1960085785eefbe166fb5e04e94689780c490235fe55d8f3e8b620ceea39"
+      ],
+      "expect": true
+    },
+    {
+      "args": [
+        "446b811a2b06922c8f18f5a15af47ef803fe0f0f6b9963e381cf6a414dec8c16"
+      ],
+      "expect": true
+    },
+    {
+      "args": [
+        "0000000000000000000000000000000000000000000000000000000000000000"
+      ],
+      "expect": false
+    },
+    {
+      "args": [
+        "7d9a1960"
+      ],
+      "expect": false,
+      "why": "a prefix is not a digest"
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expect": false
+    }
+  ]
+}

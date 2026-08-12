@@ -1,0 +1,52 @@
+# NC-Q02. A PREDICATE-shaped envelope with no qualification record. `load_predicate` must
+# refuse it and name the missing keys. Its admission-side twin is
+# fixtures/predicates/good/P-0007, which carries one and loads.
+# P-0041 — Type of Scheme is drawn from the template's own vocabulary.
+#
+# D-P4-02's key grammar, with the root restored. The specification's example writes
+# `intro.tbl15.row[*].scheme_type` — root dropped, segment pluralised differently from the `expr`
+# beside it. A key grammar that cannot say WHICH DOCUMENT it read cannot express the defect
+# NC-D01c exists to catch: a vocabulary resolved from `filing` instead of `template`.
+#
+# The workbook is FME 7d9a1960 because it is the only one whose vocabularies live on a hidden,
+# unprotected `Dropdown` sheet — the case the root-qualified grammar exists to express.
+id: P-NC02
+version: 1
+kind: harvested
+template: 7d9a1960085785eefbe166fb5e04e94689780c490235fe55d8f3e8b620ceea39
+schema_keys:
+  # `__cell__` is declared, not implicit. The witness reads it, and if pre-flight does not guard
+  # it a missing anchor produces a finding a filer cannot open — an item naming no cell.
+  - filing.intro.tbl15.rows
+  - filing.intro.tbl15.rows[*].scheme_type
+  - filing.intro.tbl15.rows[*].__cell__
+  - template.vocab.scheme_type
+host_fns: []
+
+# C2: every candidate carries an obligation. A harvested one implements a relation the
+# REGULATOR'S TEMPLATE encodes, not a clause the statute states, so its obligation is minted
+# OBL-TEMPLATE-<sheet>-<ref> with source TEMPLATE — and G0 runs against it for real.
+obligation_id: OBL-TEMPLATE-Intro-C25
+obligation_source: TEMPLATE
+clause: null
+clause_absent_reason: derived_from_data_validation
+
+claims_fault_classes:
+  # F12 (vocabulary drift, including the homoglyph and whitespace forms) and NOT F10. A LEGAL
+  # enum substituted for another legal enum is invisible to a membership test by construction;
+  # claiming F10 here would be the exact lie this field exists to prevent.
+  - F12
+
+applicable: has(filing.intro.tbl15.rows)
+expr: filing.intro.tbl15.rows.all(r, r.scheme_type == "" || r.scheme_type in template.vocab.scheme_type)
+witness: filing.intro.tbl15.rows.filter(r, r.scheme_type != "" && !(r.scheme_type in template.vocab.scheme_type)).map(r, r.__cell__)
+reason_if_inapplicable: the Type of Scheme table is absent from this filing, so there is nothing to draw from a vocabulary
+rationale: >
+  The pinned blank attaches a list-type data validation to this column whose members are the nine
+  legal Type-of-Scheme values. A value outside that list is outside the template's own declared
+  vocabulary. It says nothing about whether the value is correct — only that the regulator's own
+  artifact does not admit it.
+tolerance: null
+external_deps: []
+severity_tier: BLOCKING
+state: ACTIVE

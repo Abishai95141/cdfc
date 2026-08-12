@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import warnings
 from collections.abc import Mapping
+from contextlib import closing
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -49,34 +50,39 @@ def read_formula_text_and_cached(blob_path: Path) -> ReaderBView:
 
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
+        # openpyxl keeps the container's file handle open until `close()`. Leaving it to the
+        # garbage collector raises a ResourceWarning at whatever line happens to be executing
+        # when the finaliser runs — which, under `filterwarnings = ["error"]`, fails an
+        # unrelated test and points the reader at innocent code. Found at P4 when a new
+        # dependency shifted collection order; it had been leaking a handle per read since P1.
         wb = openpyxl.load_workbook(blob_path)
         wbv = openpyxl.load_workbook(blob_path, data_only=True)
+        with closing(wb), closing(wbv):
+            names, hidden, merged = [], [], []
+            dv = n_cells = n_formula = 0
+            ftext: dict[tuple[str, str], str] = {}
+            cached: dict[tuple[str, str], object] = {}
 
-        names, hidden, merged = [], [], []
-        dv = n_cells = n_formula = 0
-        ftext: dict[tuple[str, str], str] = {}
-        cached: dict[tuple[str, str], object] = {}
+            for ws in wb.worksheets:
+                names.append(ws.title)
+                if ws.sheet_state != "visible":
+                    hidden.append(ws.title)
+                merged.extend(str(r) for r in ws.merged_cells.ranges)
+                dv += len(ws.data_validations.dataValidation)
+                for row in ws.iter_rows():
+                    for c in row:
+                        if c.value is not None:
+                            n_cells += 1
+                            if isinstance(c.value, str) and c.value.startswith("="):
+                                n_formula += 1
+                                ftext[(ws.title, c.coordinate)] = c.value
+            for ws in wbv.worksheets:
+                for row in ws.iter_rows():
+                    for c in row:
+                        if c.value is not None:
+                            cached[(ws.title, c.coordinate)] = c.value
 
-        for ws in wb.worksheets:
-            names.append(ws.title)
-            if ws.sheet_state != "visible":
-                hidden.append(ws.title)
-            merged.extend(str(r) for r in ws.merged_cells.ranges)
-            dv += len(ws.data_validations.dataValidation)
-            for row in ws.iter_rows():
-                for c in row:
-                    if c.value is not None:
-                        n_cells += 1
-                        if isinstance(c.value, str) and c.value.startswith("="):
-                            n_formula += 1
-                            ftext[(ws.title, c.coordinate)] = c.value
-        for ws in wbv.worksheets:
-            for row in ws.iter_rows():
-                for c in row:
-                    if c.value is not None:
-                        cached[(ws.title, c.coordinate)] = c.value
-
-        n_defined = len(list(wb.defined_names))
+            n_defined = len(list(wb.defined_names))
 
     return ReaderBView(
         n_sheets=len(names),

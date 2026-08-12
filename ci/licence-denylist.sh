@@ -1,38 +1,125 @@
 #!/usr/bin/env bash
 # Registry row 11. No copyleft-incompatible licence in the resolved runtime set.
+#
+# EXTENDED AT P4, dated 12 Aug 2026, and the reason is a silent pass in this gate.
+# `cel-python==0.5.0` declares NO `License` field and NO licence classifier. Under the original
+# gate its licence blob was the empty string, no denylisted token matched it, and the row rendered
+# with an empty licence cell — **a package with no declared licence passed by having nothing to
+# check.** That is absence read as permission, which is the defect this whole project is about,
+# occurring inside the gate written to prevent its legal analogue.
+#
+# So: an empty metadata licence is NOT a pass. The gate opens the wheel's own LICENSE file, and if
+# neither the metadata nor the file yields a licence the build fails. A licence nobody can read is
+# not a permissive licence.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-PY="${CDFC_PY:-/Users/abishaikc/Gift/.venv/bin/python}"
+PY="${CDFC_PY:-.venv/bin/python}"
 "$PY" - <<'PYEOF'
-import sys, json, pathlib
+import sys, pathlib, re
 from importlib import metadata
+
 DENY = {"GPL-3.0", "GPL-3.0-only", "GPL-3.0-or-later", "AGPL-3.0", "AGPL-3.0-only", "SSPL-1.0"}
-RUNTIME = {"lxml", "openpyxl", "et-xmlfile", "et_xmlfile"}
-rows, bad = [], []
-for name in sorted(RUNTIME):
+
+# The resolved RUNTIME set. Test-only dependencies (pytest, hypothesis, jsonschema) are absent by
+# design: they are not distributed with the product, and listing them would make this file a
+# report about the development environment rather than about what ships.
+RUNTIME = {
+    "lxml", "openpyxl", "et_xmlfile", "PyYAML",
+    # P4: the CEL parser and runtime, and its transitive runtime set.
+    "cel-python", "lark", "pendulum", "google-re2", "jmespath", "tzdata",
+}
+
+# What a LICENSE file's opening lines say when it is the licence it claims to be. Read from the
+# file, so the warrant on that row is PRIMARY rather than METADATA.
+FILE_MARKERS = [
+    ("Apache License", "Apache-2.0"), ("MIT License", "MIT"),
+    ("BSD 3-Clause", "BSD-3-Clause"), ("BSD 2-Clause", "BSD-2-Clause"),
+    ("Mozilla Public License", "MPL-2.0"),
+    ("GNU GENERAL PUBLIC LICENSE", "GPL"), ("GNU AFFERO", "AGPL"),
+]
+
+
+def from_files(dist) -> tuple[str, str] | None:
+    """Read the licence out of the wheel's own LICENSE file. PRIMARY evidence."""
+    for f in dist.files or ():
+        name = pathlib.PurePath(str(f)).name.upper()
+        if name.startswith(("LICENSE", "LICENCE", "COPYING")):
+            # `dist.read_text` resolves relative to the dist-info directory, so a RECORD entry
+            # that already starts with `<dist>-<ver>.dist-info/` doubles the segment and misses.
+            # `locate()` gives the real path.
+            try:
+                head = pathlib.Path(str(f.locate())).read_text(encoding="utf-8", errors="replace")
+            except (OSError, UnicodeDecodeError):
+                continue
+            head = head[:4000]
+            for marker, spdx in FILE_MARKERS:
+                if marker.lower() in head.lower():
+                    return spdx, str(f)
+    return None
+
+
+rows, bad, undeclared = [], [], []
+seen = set()
+for name in sorted(RUNTIME, key=str.lower):
     try:
         d = metadata.distribution(name)
     except metadata.PackageNotFoundError:
+        undeclared.append((name, "not installed — the runtime set names a package that is absent"))
         continue
+    canonical = re.sub(r"[-_.]+", "-", d.metadata["Name"]).lower()
+    if canonical in seen:
+        continue
+    seen.add(canonical)
+
     lic = (d.metadata.get("License") or "").strip()
+    if lic.lower() in ("unknown", "none"):
+        lic = ""
     classifiers = [c for c in d.metadata.get_all("Classifier") or [] if c.startswith("License ::")]
-    warrant = "METADATA (SECONDARY — the LICENSE file was not opened)"
-    rows.append({"name": d.metadata["Name"], "version": d.version, "licence": lic or classifiers,
-                 "warrant": warrant, "opened_by": None, "opened_at": None})
     blob = f"{lic} {' '.join(classifiers)}"
-    for d_ in DENY:
-        if d_.lower() in blob.lower():
-            bad.append((d.metadata["Name"], d_))
+    opened = from_files(d)
+
+    if lic or classifiers:
+        shown = lic or "; ".join(c.split("::")[-1].strip() for c in classifiers)
+        warrant, opened_at = "METADATA (SECONDARY — the LICENSE file was not opened)", "—"
+    elif opened:
+        shown, spdx_path = opened
+        blob = shown
+        warrant, opened_at = f"FILE (PRIMARY — `{spdx_path}`)", "12 Aug 2026"
+    else:
+        undeclared.append((d.metadata["Name"], "declares no licence in metadata and ships no readable LICENSE file"))
+        continue
+
+    rows.append({"name": d.metadata["Name"], "version": d.version, "licence": shown,
+                 "warrant": warrant, "opened_at": opened_at})
+    for token in DENY:
+        if token.lower() in blob.lower():
+            bad.append((d.metadata["Name"], token))
+
 out = pathlib.Path("docs/LICENCES.md")
-lines = ["# docs/LICENCES.md — resolved runtime dependency licences", "",
-         "**Every row here is SECONDARY.** The licence was read from package metadata, not from the",
-         "LICENSE file. A licence nobody opened is not a licence: spec §III lists this as a hard block",
-         "from P2, and the `opened_by` / `opened_at` columns stay empty until someone opens them.", "",
-         "| name | version | licence | warrant | opened_by | opened_at |", "|---|---|---|---|---|---|"]
+lines = [
+    "# docs/LICENCES.md — resolved runtime dependency licences", "",
+    "Generated by `ci/licence-denylist.sh`. TEST-only dependencies are deliberately absent: they",
+    "are not distributed with the product, and listing them would make this a report about the",
+    "development environment rather than about what ships.", "",
+    "**Warrant column.** `METADATA (SECONDARY)` means the licence was read from the package's",
+    "metadata and nobody opened the LICENSE file. `FILE (PRIMARY)` means the gate opened the",
+    "wheel's own LICENSE file, because the metadata declared nothing — and **an empty metadata",
+    "licence is not a pass**: a package with neither is a build failure, not a blank cell.", "",
+    "| name | version | licence | warrant | opened_at |", "|---|---|---|---|---|",
+]
 for r in rows:
-    lines.append(f"| {r['name']} | {r['version']} | {r['licence']} | {r['warrant']} | — | — |")
+    lines.append(f"| {r['name']} | {r['version']} | {r['licence']} | {r['warrant']} | {r['opened_at']} |")
 out.write_text("\n".join(lines) + "\n")
+
+if undeclared:
+    print("GATE FAIL: a runtime dependency has no readable licence:", file=sys.stderr)
+    for n, why in undeclared:
+        print(f"  {n}: {why}", file=sys.stderr)
+    print("  An absent licence is not a permissive licence.", file=sys.stderr)
+    sys.exit(1)
 if bad:
-    print(f"GATE FAIL: denylisted licence: {bad}", file=sys.stderr); sys.exit(1)
-print(f"licence-denylist: OK ({len(rows)} runtime deps, all SECONDARY)")
+    print(f"GATE FAIL: denylisted licence: {bad}", file=sys.stderr)
+    sys.exit(1)
+primary = sum(1 for r in rows if r["warrant"].startswith("FILE"))
+print(f"licence-denylist: OK ({len(rows)} runtime deps, {primary} read from the LICENSE file)")
 PYEOF

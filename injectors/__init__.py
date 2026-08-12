@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import contextlib
 import hashlib
+import shutil
 import subprocess
 from collections.abc import Iterator
 from dataclasses import dataclass, field
@@ -169,16 +170,30 @@ class BareExcept(Injector):
 
 
 class RemoveScanRoot(Injector):
-    """A declared scan root does not exist, so every grep over it passes trivially."""
+    """A declared scan root does not exist, so every grep over it passes trivially.
+
+    REPAIRED AT P4, dated 12 Aug 2026, and the repair is the reason to read this class.
+    The first version deleted `src/cdfc/evaluate/__init__.py` and then `rmdir`-ed the directory,
+    with the failure suppressed. That worked while `evaluate/` held exactly one file. P4-B3 added
+    `celrt.py`, so the `rmdir` began failing silently, **the directory went on existing, the gate
+    stayed green, and the flagship P0 negative control proved nothing** — while still reporting
+    itself as caught.
+
+    Nothing about the sweep could see this: the injector applied cleanly, the tree restored
+    exactly, and the digest check passed. It was found only because the guard test went red, which
+    it did for the right reason. The injector now removes **every** file under the root, so it
+    cannot quietly become a no-op again as the package grows.
+    """
 
     def __init__(self) -> None:
-        super().__init__(name="remove_scan_root", touches=[EVALUATE_INIT])
+        root = EVALUATE_INIT.parent
+        files = sorted(p for p in root.rglob("*") if p.is_file() and p.suffix != ".pyc")
+        super().__init__(name="remove_scan_root", touches=files or [EVALUATE_INIT])
 
     def apply(self) -> None:
-        EVALUATE_INIT.unlink()
-        # remove the directory too, so the root is genuinely missing
-        with contextlib.suppress(OSError):
-            EVALUATE_INIT.parent.rmdir()
+        root = EVALUATE_INIT.parent
+        if root.is_dir():
+            shutil.rmtree(root)
 
     def _restore(self) -> None:
         EVALUATE_INIT.parent.mkdir(parents=True, exist_ok=True)
@@ -969,5 +984,228 @@ class ToleranceBecomesRelative(Injector):
 
 ALL_INJECTORS = ALL_INJECTORS + (
     MoneyScaledTwice, WarrantComposesByStrongest, LeafWithoutCellAllowed, ToleranceBecomesRelative,
+)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+# --------------------------------------------------------------------------------
+# The P4 injectors — the predicate envelope, the CEL substrate, the harvest
+# --------------------------------------------------------------------------------
+
+PRED = REPO_ROOT / "src" / "cdfc" / "predicates"
+MEASURE = REPO_ROOT / "src" / "cdfc" / "measure"
+
+
+class ProjectionDropsAField(Injector):
+    """A field leaves the canonical serialisation, so it leaves the predicate's IDENTITY.
+
+    The consequence is not abstract: a predicate could then be re-issued with a narrowed
+    `claims_fault_classes` under the SAME `code_sha256`, and the registry would treat it as the
+    same predicate it already qualified.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="projection_drops_a_field", touches=[PRED / "canonical.py"])
+
+    def apply(self) -> None:
+        p = PRED / "canonical.py"
+        p.write_text(p.read_text().replace(
+            "    out = {f.name: _plain(getattr(c, f.name)) for f in fields(c)}",
+            "    out = {f.name: _plain(getattr(c, f.name)) for f in fields(c)\n"
+            "           if f.name != 'claims_fault_classes'}"))
+
+
+class KeysMismatchCollapsed(Injector):
+    """Both directions of the both-ways check raise ONE type, so the two are indistinguishable.
+
+    NC-Q04's subject. A key read-but-not-declared means the pre-flight set is too small; a key
+    declared-but-not-read means the settled numerator is overstated. A repair applied to the wrong
+    side of a collapsed message is a repair that fixes nothing.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="keys_mismatch_collapsed", touches=[PRED / "ast_walker.py"])
+
+    def apply(self) -> None:
+        p = PRED / "ast_walker.py"
+        p.write_text(p.read_text().replace(
+            "    unread = tuple(sorted(declared - read))\n    if unread:\n        raise DeclaredKeyUnread(pid, unread)",
+            "    unread = tuple(sorted(declared - read))\n    if unread:\n        raise UndeclaredKeyRead(pid, unread)"))
+
+
+class PermissiveSubsetWalker(Injector):
+    """The subset checker stops walking, so every banned construct is admitted."""
+
+    def __init__(self) -> None:
+        super().__init__(name="permissive_subset_walker", touches=[PRED / "cel_profile.py"])
+
+    def apply(self) -> None:
+        p = PRED / "cel_profile.py"
+        p.write_text(p.read_text().replace(
+            "    tree = parse(source, slot=slot)\n    _walk(",
+            "    tree = parse(source, slot=slot)\n    return None\n    _walk("))
+
+
+class LexicalKeyExtraction(Injector):
+    """`read_keys` becomes a regex over the source.
+
+    It reports the comprehension binding as a document root and loses `[*]` — the same defect
+    class as `<f[ >][^>]*>` over OOXML, one level up, where the key set is the settled fraction's
+    denominator.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="lexical_key_extraction", touches=[PRED / "ast_walker.py"])
+
+    def apply(self) -> None:
+        p = PRED / "ast_walker.py"
+        p.write_text(p.read_text().replace(
+            "def walk_source(source: str, *, slot: Slot) -> WalkResult:\n    w = _Walker()",
+            "def walk_source(source: str, *, slot: Slot) -> WalkResult:\n"
+            "    import re as _re\n"
+            "    _lex = frozenset(_re.findall(r'[A-Za-z_][A-Za-z0-9_.]*\\\\.[A-Za-z_][A-Za-z0-9_]*', source))\n"
+            "    return WalkResult(keys=_lex, host_fns=frozenset(), refs=(), types={})\n"
+            "    w = _Walker()"))
+
+
+class TotalWithoutDistribution(Injector):
+    """The harvest measurement renders its total and drops the per-workbook table.
+
+    515 alone reads as breadth. 443 of it came from two workbooks, and the reader cannot tell.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="total_without_distribution", touches=[MEASURE / "harvest_report.py"])
+
+    def apply(self) -> None:
+        p = MEASURE / "harvest_report.py"
+        p.write_text(p.read_text().replace(
+            "    for r in rows:\n        cells = \" | \".join(str(r.by_class.get(k, 0)) for k in all_classes)",
+            "    for r in []:\n        cells = \" | \".join(str(r.by_class.get(k, 0)) for k in all_classes)"))
+
+
+class WeakPileDropped(Injector):
+    """A construct the class set cannot express is dropped instead of recorded.
+
+    The coverage claim then counts what was harvested and says nothing about what was passed over,
+    which is the definition of an undeclared suppression.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="weak_pile_dropped", touches=[PRED / "harvest.py"])
+
+    def apply(self) -> None:
+        p = PRED / "harvest.py"
+        p.write_text(p.read_text().replace(
+            "    def skip(self, kind: SkipKind, sheet: str, ref: str, detail: str) -> None:\n"
+            "        self.skips.append(SkipRecord(kind=kind, sheet=sheet, ref=ref, detail=detail))",
+            "    def skip(self, kind: SkipKind, sheet: str, ref: str, detail: str) -> None:\n"
+            "        return None"))
+
+
+class ClauselessReasonOptional(Injector):
+    """A TEMPLATE-obligation candidate may cite no statute and say nothing about why.
+
+    The published pair then reports `0 / N` with no way to tell a deliberate absence from an
+    unfilled field.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="clauseless_reason_optional", touches=[PRED / "envelope.py"])
+
+    def apply(self) -> None:
+        p = PRED / "envelope.py"
+        p.write_text(p.read_text().replace(
+            "        if c.clause_absent_reason not in CLAUSE_ABSENT_REASONS:",
+            "        if False and c.clause_absent_reason not in CLAUSE_ABSENT_REASONS:"))
+
+
+class ClaimsFromKillVector(Injector):
+    """The fault-class claim is narrowed per predicate instead of declared per class.
+
+    This is D-P4-06's whole subject: a claim tuned after a campaign lets a predicate that killed
+    one class of one operator score 1.00 and be admitted BLOCKING.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(
+            name="claims_from_kill_vector",
+            touches=[PRED / "harvest_classes" / "sum_identity.py"],
+        )
+
+    def apply(self) -> None:
+        p = PRED / "harvest_classes" / "sum_identity.py"
+        p.write_text(p.read_text().replace(
+            "            claims_fault_classes=CLAIMS_FAULT_CLASSES,",
+            "            claims_fault_classes=(CLAIMS_FAULT_CLASSES[0],) if int(ref[1:] or 0) % 2 "
+            "else CLAIMS_FAULT_CLASSES,"))
+
+
+class HostFnResolvesLive(Injector):
+    """`reg_resolves` falls back to an answer when no snapshot is bound.
+
+    A verdict that depends on what a remote endpoint said at run time cannot be re-derived from the
+    filing's bytes, and the fallback is invisible in the report.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(
+            name="host_fn_resolves_live",
+            touches=[PRED / "host_fns" / "reg_resolves.py"],
+        )
+
+    def apply(self) -> None:
+        p = PRED / "host_fns" / "reg_resolves.py"
+        p.write_text(p.read_text().replace(
+            "    record = _REGISTRY.lookup(key)   # raises SnapshotMissing when nothing is bound",
+            "    try:\n"
+            "        record = _REGISTRY.lookup(key)\n"
+            "    except Exception:\n"
+            "        record = True   # the silent live-ish fallback this control exists to catch"))
+
+
+class HostFnLosesItsThirdValue(Injector):
+    """`nav_interval` becomes two-valued, so *the regulator did not legislate this* disappears.
+
+    The item then reports a frequency we picked, and the report presents our guess as the rule.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(
+            name="host_fn_loses_its_third_value",
+            touches=[PRED / "host_fns" / "nav_interval.py"],
+        )
+
+    def apply(self) -> None:
+        p = PRED / "host_fns" / "nav_interval.py"
+        p.write_text(p.read_text().replace(
+            "        return celtypes.StringType(UNDERSPECIFIED)\n"
+            "    return celtypes.StringType(_DETERMINED.get((st, oc), UNKNOWN_COMBINATION))",
+            "        return celtypes.StringType(\"P6M\")\n"
+            "    return celtypes.StringType(_DETERMINED.get((st, oc), \"P6M\"))"))
+
+
+class LoaderSkipsQualificationCheck(Injector):
+    """`load_predicate` accepts an envelope with no qualification record.
+
+    NC-Q02's injector, which becomes possible at P4 because the schema now exists. Before P4 the
+    entry was PROVISIONAL: the admission-side twin — a QUALIFIED predicate that DOES load — could
+    not be written, and a green entry with no information in it is not evidence.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="loader_skips_qualification_check", touches=[PRED / "loader.py"])
+
+    def apply(self) -> None:
+        p = PRED / "loader.py"
+        p.write_text(p.read_text().replace(
+            "    missing = [k for k in PREDICATE_KEYS if raw.get(k) is None]",
+            "    missing = []  # the admission rule the settled-fraction claim rests on"))
+
+
+ALL_INJECTORS = ALL_INJECTORS + (
+    ProjectionDropsAField, KeysMismatchCollapsed, PermissiveSubsetWalker, LexicalKeyExtraction,
+    TotalWithoutDistribution, WeakPileDropped, ClauselessReasonOptional, ClaimsFromKillVector,
+    HostFnResolvesLive, HostFnLosesItsThirdValue, LoaderSkipsQualificationCheck,
 )
 BY_NAME = {c.__name__: c for c in ALL_INJECTORS}

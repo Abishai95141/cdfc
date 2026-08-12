@@ -184,6 +184,7 @@ def probe_openpyxl(path: Path) -> dict[str, Any]:
             n = len(ws.data_validations.dataValidation)
             dv += n
             per_sheet[ws.title] = n
+        wb.close()
     return {"openpyxl_data_validations": dv, "openpyxl_dv_per_sheet": per_sheet}
 
 

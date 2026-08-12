@@ -1,0 +1,73 @@
+{
+  "host_fn": "nav_interval",
+  "note": "UNDERSPECIFIED wherever the regulation does not determine the answer from a fact this workbook collects. Close-ended Restricted Schemes are the named case. UNKNOWN_COMBINATION is a different fact from UNDERSPECIFIED: the first is our missing row, the second is the regulator's missing rule.",
+  "vectors": [
+    {
+      "args": [
+        "Retail",
+        "Open-ended",
+        "NA"
+      ],
+      "expect": "P1M"
+    },
+    {
+      "args": [
+        "Retail",
+        "Close-ended",
+        "NA"
+      ],
+      "expect": "P3M"
+    },
+    {
+      "args": [
+        "Non-Retail",
+        "Open-ended",
+        "NA"
+      ],
+      "expect": "P3M"
+    },
+    {
+      "args": [
+        "Non-Retail",
+        "Close-ended",
+        "NA"
+      ],
+      "expect": "P6M"
+    },
+    {
+      "args": [
+        "Venture Capital",
+        "Close-ended",
+        "NA"
+      ],
+      "expect": "P1Y"
+    },
+    {
+      "args": [
+        "Restricted",
+        "Close-ended",
+        "NA"
+      ],
+      "expect": "UNDERSPECIFIED",
+      "why": "29th IFSCA Authority Meeting, 24 July 2026: depends on 75%-by-value investor approval, which the workbook does not collect"
+    },
+    {
+      "args": [
+        "Something The Regulator Has Not Named",
+        "Open-ended",
+        "NA"
+      ],
+      "expect": "UNKNOWN_COMBINATION",
+      "why": "our table has no row: that is our gap, not the regulator's"
+    },
+    {
+      "args": [
+        "",
+        "",
+        ""
+      ],
+      "expect": "UNKNOWN_COMBINATION",
+      "why": "our table has no row: that is our gap, not the regulator's"
+    }
+  ]
+}

@@ -37,7 +37,15 @@ def build_parser() -> argparse.ArgumentParser:
     init = sub.add_parser("init", help="apply db/schema.sql and record its digest (P1)")
     init.add_argument("--db", type=Path, default=Path("cdfc.db"))
 
-    for name in ("ingest", "induce", "harvest", "run", "qualify", "attest", "verify"):
+    # P4: `harvest` is built. Every other command below is specified and not built, and says so.
+    harvest = sub.add_parser("harvest", help="derive predicate envelopes from a pinned blank (P4)")
+    harvest.add_argument("--template", type=Path, help="one .xlsx; omit with --all")
+    harvest.add_argument("--all", action="store_true", help="every workbook in the pinned corpus")
+    harvest.add_argument("--out", type=Path, default=Path("predicates/harvested"))
+    harvest.add_argument("--report", type=Path, default=None,
+                         help="re-render the distribution measurement to this path")
+
+    for name in ("ingest", "induce", "run", "qualify", "attest", "verify"):
         sub.add_parser(name, help=f"{name} (not implemented at phase {PHASE})")
     return p
 
@@ -52,6 +60,9 @@ def main(argv: list[str] | None = None) -> int:
     if args.command is None:
         print(f"cdfc: no command given. Try `cdfc --version`. Phase {PHASE}.", file=sys.stderr)
         return EXIT_NOT_IMPLEMENTED
+
+    if args.command == "harvest":
+        return _harvest(args)
 
     # Every command below is specified and not built. It exits non-zero and says which
     # phase builds it, so a caller cannot mistake absence for success.
@@ -70,6 +81,37 @@ def main(argv: list[str] | None = None) -> int:
         file=sys.stderr,
     )
     return EXIT_NOT_IMPLEMENTED
+
+
+def _harvest(args: argparse.Namespace) -> int:
+    """`cdfc harvest`. Cannot fail on a readable workbook; it can only under-produce, and every
+    thing it could not express is a typed, counted, rendered skip."""
+    from cdfc.predicates.harvest import distribution, emit_envelopes, harvest, harvest_all
+
+    corpus = Path(__file__).resolve().parents[2] / "fixtures" / "prescribed"
+    if args.all:
+        results = harvest_all(corpus)
+    elif args.template:
+        results = [harvest(args.template)]
+    else:
+        print("cdfc harvest: give --template <file.xlsx> or --all", file=sys.stderr)
+        return EXIT_NOT_IMPLEMENTED
+
+    written = 0
+    for r in results:
+        written += len(emit_envelopes(r, args.out))
+        print(f"{len(r.candidates):5d} candidates  {len(r.skipped):4d} skipped  "
+              f"{len(r.cells_reachable):5d} cells reachable  {r.workbook}")
+    rows = distribution(results)
+    print(f"{sum(x.n for x in rows)} candidates from {sum(1 for x in rows if x.n)} of "
+          f"{len(rows)} workbooks; {written} envelopes written under {args.out}")
+
+    if args.report is not None:
+        from cdfc.measure.harvest_report import render_report
+
+        args.report.write_text(render_report(results), encoding="utf-8")
+        print(f"wrote {args.report}")
+    return 0
 
 
 if __name__ == "__main__":

@@ -17,13 +17,19 @@ from cdfc.gates import RegistryError, live_ids, parse, pending_ids  # noqa: E402
 # `gates_written` meant "the gates whose subject exists" -- decided by the same person
 # deciding whether a gate can be demonstrated. Any gate that resisted demonstration
 # could be moved to PENDING and the ratio would become n/n. The gate could not fail.
+# Each phase's additions are a SEPARATE frozen literal, never an edit to an earlier one. A row
+# that was LIVE at P0 stays in `LIVE_AT_P0` for ever, so a row cannot quietly leave the LIVE set
+# by being edited out of a growing list — which is the failure the pre-registration exists to
+# prevent, and which a single mutable set would permit.
 LIVE_AT_P0 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 17, 18, 19, 20}
+ADDED_LIVE_AT_P4 = {21, 22, 23, 24, 25, 26, 27}   # docs/GATE-CHANGES.md, 12 Aug 2026
+LIVE_EXPECTED = LIVE_AT_P0 | ADDED_LIVE_AT_P4
 PENDING_AT_P0 = {14, 15, 16}
 
 
 def test_contract__gates_registry_schema() -> None:
     gates = parse()
-    assert len(gates) == 20
+    assert len(gates) == len(LIVE_EXPECTED | PENDING_AT_P0)
     assert len({g.id for g in gates}) == len(gates), "gate ids must be unique"
     for g in gates:
         assert g.kind and g.gate and g.broken_build
@@ -37,10 +43,14 @@ def test_contract__pending_rows_name_a_phase() -> None:
 
 def test_contract__live_set_is_pre_registered() -> None:
     gates = parse()
-    assert live_ids(gates) == LIVE_AT_P0, "the LIVE set changed without a dated argument"
+    assert live_ids(gates) == LIVE_EXPECTED, "the LIVE set changed without a dated argument"
     assert pending_ids(gates) == PENDING_AT_P0, "the PENDING set changed without a dated argument"
-    assert LIVE_AT_P0 & PENDING_AT_P0 == set()
-    assert len(LIVE_AT_P0 | PENDING_AT_P0) == len(gates)
+    assert LIVE_EXPECTED & PENDING_AT_P0 == set()
+    assert len(LIVE_EXPECTED | PENDING_AT_P0) == len(gates)
+    assert LIVE_AT_P0 <= live_ids(gates), (
+        "a gate that was LIVE at P0 has left the LIVE set. Demoting a gate is exactly what the "
+        "pre-registration exists to make impossible without a dated argument."
+    )
 
 
 def test_contract__registry_parser_rejects_a_duplicate_id(tmp_path: Path) -> None:
