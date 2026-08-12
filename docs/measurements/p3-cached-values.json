@@ -1,0 +1,137 @@
+{
+ "warrant": "MEASURED",
+ "workbooks": {
+  "ALR_V2_3_20250808_1024.xlsx": {
+   "distinct_cached_values": 2,
+   "formula_cells": 645,
+   "top": [
+    [
+     "0",
+     644
+    ],
+    [
+     "0.31964437626271275",
+     1
+    ]
+   ],
+   "trivial": 644,
+   "trivial_share_pct": 99.8
+  },
+  "AL_monthly_report_updated_final_20260717_0257.xlsx": {
+   "distinct_cached_values": 38,
+   "formula_cells": 161,
+   "top": [
+    [
+     "0",
+     114
+    ],
+    [
+     "3",
+     3
+    ],
+    [
+     "4",
+     3
+    ],
+    [
+     "5",
+     3
+    ]
+   ],
+   "trivial": 114,
+   "trivial_share_pct": 70.8
+  },
+  "Draft_ACAC_Format_20260605_0631.xlsx": {
+   "distinct_cached_values": 44,
+   "formula_cells": 112,
+   "top": [
+    [
+     "2",
+     5
+    ],
+    [
+     "3",
+     5
+    ],
+    [
+     "4",
+     5
+    ],
+    [
+     "5",
+     5
+    ]
+   ],
+   "trivial": 0,
+   "trivial_share_pct": 0.0
+  },
+  "IBU_Operations_Report_V2_3_20250808_1033.xlsx": {
+   "distinct_cached_values": 1,
+   "formula_cells": 7,
+   "top": [
+    [
+     "0",
+     7
+    ]
+   ],
+   "trivial": 7,
+   "trivial_share_pct": 100.0
+  },
+  "ITFS_Monthly_report201220241626.xlsx": {
+   "distinct_cached_values": 7,
+   "formula_cells": 32,
+   "top": [
+    [
+     "0",
+     19
+    ],
+    [
+     "#VALUE!",
+     6
+    ],
+    [
+     "1",
+     3
+    ],
+    [
+     "2021",
+     1
+    ]
+   ],
+   "trivial": 19,
+   "trivial_share_pct": 59.4
+  },
+  "Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx": {
+   "distinct_cached_values": 2,
+   "formula_cells": 505,
+   "top": [
+    [
+     "0",
+     301
+    ],
+    [
+     "NA",
+     204
+    ]
+   ],
+   "trivial": 505,
+   "trivial_share_pct": 100.0
+  },
+  "Updated___Quarterly_Reporting_Format_for_Capital_Market_Intermediaries_20260409_1019.xlsx": {
+   "distinct_cached_values": 2,
+   "formula_cells": 33,
+   "top": [
+    [
+     "0",
+     25
+    ],
+    [
+     "Locked",
+     8
+    ]
+   ],
+   "trivial": 25,
+   "trivial_share_pct": 75.8
+  }
+ }
+}
