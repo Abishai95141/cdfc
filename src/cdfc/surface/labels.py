@@ -79,6 +79,13 @@ BANNED_PHRASES: tuple[str, ...] = (
     "passed all checks",
     "fully compliant",
     "100% compliant",
+    # From DESIGN.md (Meta commerce), excluded by docs/DESIGN-ADAPTATION.md. The design
+    # system ships `badge-success` for "In stock / Verified / Free shipping" — an
+    # affirmative green pill, which is precisely the all-clear this product refuses to
+    # render. The exclusion is a gate rather than a note.
+    "badge-success",
+    "badge-promo-yellow",
+    "promo-banner",
 )
 
 # Words that may appear in code but never in rendered user-facing copy.

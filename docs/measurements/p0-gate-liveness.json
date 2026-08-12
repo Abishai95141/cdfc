@@ -47,10 +47,10 @@
  },
  "phase": "P0",
  "sweep": {
-  "entries_active": 18,
-  "entries_caught": 18,
-  "guards_expected_to_flip": 19,
-  "guards_flipped": 19,
+  "entries_active": 23,
+  "entries_caught": 23,
+  "guards_expected_to_flip": 25,
+  "guards_flipped": 25,
   "none_count": 1,
   "provisional_count": 1
  },

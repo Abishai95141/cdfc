@@ -590,3 +590,96 @@ class BreakCriticalPathTotal(Injector):
 
 ALL_INJECTORS = ALL_INJECTORS + (BreakCriticalPathTotal,)
 BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+# --------------------------------------------------------------------------------
+# P1 injectors
+# --------------------------------------------------------------------------------
+
+READER_AP = REPO_ROOT / "src" / "cdfc" / "ingest" / "reader_lxml_b.py"
+MANIFEST_PY = REPO_ROOT / "src" / "cdfc" / "ingest" / "manifest.py"
+RECEIPT_PY = REPO_ROOT / "src" / "cdfc" / "ingest" / "receipt.py"
+GUARD_PY = REPO_ROOT / "src" / "cdfc" / "ingest" / "container_guard.py"
+
+
+class ReaderAPrimeMiscounts(Injector):
+    """Reader A' returns a wrong sheet count.
+
+    The control on the agreement matrix itself: 72/72 AGREE is evidence only if the
+    comparator has been observed reporting something else.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="reader_a_prime_miscounts", touches=[READER_AP])
+
+    def apply(self) -> None:
+        READER_AP.write_text(
+            READER_AP.read_text().replace("n_sheets=len(sheet_els),", "n_sheets=len(sheet_els) + 1,")
+        )
+
+
+class ManifestSwallowsConstruct(Injector):
+    """The manifest stops recording constructs it did not understand."""
+
+    def __init__(self) -> None:
+        super().__init__(name="manifest_swallows_construct", touches=[MANIFEST_PY])
+
+    def apply(self) -> None:
+        MANIFEST_PY.write_text(
+            MANIFEST_PY.read_text().replace(
+                "        counts[tag] = counts.get(tag, 0) + 1",
+                "        continue  # INJECTED: the residue is swallowed",
+            )
+        )
+
+
+class SkipWithoutReasonAllowed(Injector):
+    """A part may be skipped with no stated reason."""
+
+    def __init__(self) -> None:
+        super().__init__(name="skip_without_reason_allowed", touches=[MANIFEST_PY])
+
+    def apply(self) -> None:
+        t = MANIFEST_PY.read_text()
+        MANIFEST_PY.write_text(t.replace("            if not reason or not reason.strip():",
+                                         "            if False:"))
+
+
+class SecondParserFactory(Injector):
+    """lxml is constructed outside the single sanctioned factory, defeating the spy."""
+
+    def __init__(self) -> None:
+        super().__init__(name="second_parser_factory", touches=[GUARD_PY])
+
+    def apply(self) -> None:
+        GUARD_PY.write_text(
+            GUARD_PY.read_text()
+            + "\n\ndef _sneaky(b: bytes):\n"
+            "    from lxml import etree\n"
+            "    return etree.fromstring(b)\n"
+        )
+
+
+class ReceiptNormalisesBytes(Injector):
+    """The receipt hashes a normalised form instead of the exact received bytes."""
+
+    def __init__(self) -> None:
+        super().__init__(name="receipt_normalises_bytes", touches=[RECEIPT_PY])
+
+    def apply(self) -> None:
+        RECEIPT_PY.write_text(
+            RECEIPT_PY.read_text().replace(
+                "    digest_hex = hashlib.sha256(data).hexdigest()",
+                "    digest_hex = hashlib.sha256(data.rstrip(b'\\x00')).hexdigest()",
+            )
+        )
+
+
+ALL_INJECTORS = ALL_INJECTORS + (
+    ReaderAPrimeMiscounts,
+    ManifestSwallowsConstruct,
+    SkipWithoutReasonAllowed,
+    SecondParserFactory,
+    ReceiptNormalisesBytes,
+)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}

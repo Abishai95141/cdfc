@@ -266,3 +266,64 @@ entries:
         flips: false
     positive_control: "the real plan row sums to its displayed total"
     status: active
+
+  - id: NC-P01
+    component: ingest
+    break: the agreement matrix cannot report anything other than AGREE
+    measured_instance: "the matrix reports 72/72; a comparator that cannot disagree is a vacuous pass"
+    injector: ReaderAPrimeMiscounts
+    guard_tests:
+      - path: "tests/negative/test_nc_ingest.py::test_nc__P01b_the_unperturbed_matrix_agrees"
+        flips: true
+      - path: "tests/negative/test_nc_ingest.py::test_nc__P01_the_matrix_can_report_a_structural_disagreement"
+        flips: false
+    positive_control: "the unperturbed readers agree and the run is not INVALID"
+    status: active
+
+  - id: NC-P10
+    component: ingest
+    break: a construct the reader did not understand is swallowed instead of surfaced
+    measured_instance: "the residue field is the only record of what the reader could not model"
+    injector: ManifestSwallowsConstruct
+    guard_tests:
+      - path: "tests/unit/test_extraction_manifest.py::test_nc__P10_unknown_construct_must_surface"
+        flips: true
+      - path: "tests/unit/test_extraction_manifest.py::test_manifest__unknown_qname_is_recorded"
+        flips: true
+    positive_control: "a real unmodelled qname surfaces with its count and first reference"
+    status: active
+
+  - id: NC-P11
+    component: ingest
+    break: a part may be skipped with no stated reason
+    measured_instance: "a skip with no reason is indistinguishable from a part nobody looked at"
+    injector: SkipWithoutReasonAllowed
+    guard_tests:
+      - path: "tests/unit/test_extraction_manifest.py::test_manifest__every_skipped_part_has_a_reason"
+        flips: true
+      - path: "tests/unit/test_extraction_manifest.py::test_manifest__a_skip_with_a_reason_is_accepted"
+        flips: false
+    positive_control: "a skip WITH a reason is still accepted"
+    status: active
+
+  - id: NC-P08
+    component: ingest
+    break: lxml is constructed outside the single sanctioned parser factory
+    measured_instance: "NC-P05a spies on xmlsafe.fromstring; a spy can only watch one door"
+    injector: SecondParserFactory
+    guard_tests:
+      - path: "tests/negative/test_nc_ingest.py::test_nc__P08_only_one_parser_factory"
+        flips: true
+    positive_control: "the real tree constructs lxml only in xmlsafe.py"
+    status: active
+
+  - id: NC-P12
+    component: ingest
+    break: the receipt hashes a normalised form instead of the exact received bytes
+    measured_instance: "if the hash is not over what the filer sent, a re-derivation proves nothing"
+    injector: ReceiptNormalisesBytes
+    guard_tests:
+      - path: "tests/unit/test_receipt.py::test_receive__hash_is_over_exact_bytes"
+        flips: true
+    positive_control: "the FME digest is 7d9a1960... over 3,663,391 bytes"
+    status: active

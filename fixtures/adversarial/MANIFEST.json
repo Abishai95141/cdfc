@@ -1,0 +1,12 @@
+{
+ "files": {
+  "disallowed-suffix__shell.xlsx": "3b1643dba20d0ed82200c0d4edbfac5d4f55818a99e9da9b9544753b0097bb71",
+  "missing-part__no-workbook.xlsx": "790022cfb9523485c602e9a07b5c89e0b6ec0f668f93ecbfd7fe9dfa91fdf82a",
+  "not-a-zip__renamed.xlsx": "473aa97766dea129276c2d21d6e005f5a1b26c160e3f1253931bd6d0322687ce",
+  "xxe-entity__passwd.xlsx": "e049b01c17ebe8bb0cae3e84d992484a238a56f31ca4a27d7b5ab0fac2ea034a",
+  "zipbomb-entrycount__x1200.xlsx": "baf3a0fc7e6cbe0645fcd228a49d2c30f2c2fb8410feac8628e3d88483468318",
+  "zipbomb-entrysize__17mb.xlsx": "db47e97ba26626896c51f465896eb0d549a8458950a691857689cd2f9aad1a4c",
+  "zipbomb-ratio__x1000.xlsx": "16e0ca6268e9d27c3d3af5dcea0e4271eea338918617a70889ce20005e34cea5"
+ },
+ "generated_by": "tools/fixtures/make_adversarial.py"
+}

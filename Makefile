@@ -33,19 +33,28 @@ negative:
 determinism:
 	$(PY) -m pytest tests/determinism -q
 
-property:
-	@echo "no property exists at P0 — stated, not skipped (DoD requires it to be stated)"
-
 golden:
 	$(PY) -m pytest tests/golden -q
 
 corpus-verify:
 	$(PY) tools/measure/corpus_verify.py
 
+fixtures:
+	$(PY) tools/fixtures/make_adversarial.py
+
+agreement:
+	$(PY) tools/measure/agreement_matrix.py
+
+property:
+	$(PY) -m pytest tests/property -q
+
+differential:
+	$(PY) -m pytest tests/differential -q
+
 nc-sweep:
 	$(PY) tools/nc_sweep.py
 
-differential e2e demo:
+e2e demo:
 	@echo "$@: subject does not exist at P0"; exit 0
 
 perf:
@@ -57,7 +66,7 @@ mutation-pr:
 gates: nc-sweep
 	$(PY) tools/gate_liveness.py
 
-measure-foundation: gates
+measure-foundation: gates agreement
 	@echo "wrote docs/measurements/p0-gate-liveness.json"
 
 nightly: all
