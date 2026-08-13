@@ -1,0 +1,58 @@
+{
+  "fetched_by": "tools/corpus/fetch_register.py — a ONE-OFF snapshot; nothing in src/ reaches the network (NC-X01)",
+  "format_regex": "^IFSCA/FME/(I|II|III)/\\d{4}-\\d{2}/\\d+$",
+  "format_regex_fires": 87,
+  "membership_fires": 0,
+  "n": 229,
+  "n_resolving": 229,
+  "normalisation": [
+    [
+      "nfkc",
+      "compatibility forms fold; a full-width digit is a digit"
+    ],
+    [
+      "dashes_to_u002d",
+      "a LIVE registration number carries U+2011 NON-BREAKING HYPHEN, and the whole dash family folds to U+002D here. **AFTER NFKC, and the order is a defect this module's own golden test caught**: NFKC maps U+2011 to U+2010 (HYPHEN), not to U+002D, so a `replace(U+2011, U+002D)` written before NFKC silently stopped matching the one number it existed for. Folding is done HERE, at the membership boundary, and NOT in the instrument text — `textsource.REFUSED_TRANSFORMATIONS` keeps them distinct so a homoglyph planted in a QUOTE is still catchable"
+    ],
+    [
+      "strip",
+      "leading and trailing whitespace is a transport artefact"
+    ],
+    [
+      "casefold",
+      "the register is not case-consistent across its two identifier schemes"
+    ]
+  ],
+  "snapshot_sha8": "54f0dbdc",
+  "source": "https://ifsca.gov.in/DirectoryList/DirectoryDetailGet",
+  "stragglers": [
+    {
+      "codepoints_of_non_alphanumerics": [],
+      "entity": "Teak Blossom C FME 2023 IFSC Private Limited",
+      "registration_number": "100"
+    },
+    {
+      "codepoints_of_non_alphanumerics": [
+        "U+002F",
+        "U+002F",
+        "U+002F",
+        "U+2011",
+        "U+002F"
+      ],
+      "entity": "MARCELLUS INVESTMENT MANAGERS PRIVATE LIMITED (IFSC Branch)",
+      "registration_number": "IFSCA/FME/III/2022‑23/037"
+    },
+    {
+      "codepoints_of_non_alphanumerics": [
+        "U+002F",
+        "U+002F",
+        "U+002F",
+        "U+002D",
+        "U+002F"
+      ],
+      "entity": "ASK Investment Managers Limited (IFSC Branch)",
+      "registration_number": "IFSCA/FME/IV/2023-24/033"
+    }
+  ],
+  "what_this_is": "THE WORKED EXAMPLE for counterEvidence[]. The obvious format regex any competent engineer would write fires on 87 of 229 LIVE registration numbers. Every one of those 87 is a FALSE FAILURE: the entity is validly registered, so a membership assertion cannot have a true positive in this population. It ships as a fixture, not as an anecdote."
+}

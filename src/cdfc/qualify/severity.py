@@ -39,6 +39,16 @@ BLOCKING_MAX: Final[Decimal] = Decimal("0.02")
 ADVISORY_MAX: Final[Decimal] = Decimal("0.10")
 BLOCKING_MIN_NON_SYNTHETIC: Final[int] = 30  # F2 / F12
 
+# **ADDED 13 Aug 2026, and it is a hole this build opened and then closed.** Firewall rule 5 lets
+# Person A be a MODEL INSTANCE when no human is available, and records `person_a_kind` so the
+# weakening renders wherever the rate renders. But recording it is not enforcing it: a corpus filled
+# by an instance of the same model that wrote the predicates is nearer to *"we generated it"* than
+# to *"the world produced it"*, and nothing stopped 30 such filings from buying BLOCKING.
+#
+# **That is F2 at the level of the MIND rather than of the code**, and the same answer applies: keep
+# the evidence, refuse the tier.
+BLOCKING_REQUIRES_PERSON_A: Final[str] = "human"
+
 
 class Severity(StrEnum):
     BLOCKING = "BLOCKING"
@@ -80,10 +90,21 @@ def tier(g4: Mapping[str, Any]) -> TierDecision:
     hi = Decimal(str(g4["wilson"][1]))
     n = int(g4["n"])
     n_ns = int(g4["n_non_synthetic"])
+    person_a = str(g4.get("person_a_kind", "n/a"))
 
     if hi > ADVISORY_MAX:
         return TierDecision(Severity.NOT_ADMITTED,
                             f"the Wilson upper bound exceeds {ADVISORY_MAX}", hi, n, n_ns)
+    if hi <= BLOCKING_MAX and n_ns >= BLOCKING_MIN_NON_SYNTHETIC \
+            and person_a != BLOCKING_REQUIRES_PERSON_A:
+        return TierDecision(
+            Severity.ADVISORY,
+            f"the interval clears {BLOCKING_MAX} on {n_ns} non-synthetic filings, but "
+            f"person_a_kind is {person_a!r}. A corpus filled by an instance of the same model that "
+            "wrote the predicates is nearer to 'we generated it' than to 'the world produced it'. "
+            "The evidence is kept; the tier is refused.",
+            hi, n, n_ns,
+        )
     if hi <= BLOCKING_MAX and n_ns < BLOCKING_MIN_NON_SYNTHETIC:
         # THE ADVERSARY'S ONE-COMMAND ATTACK, REFUSED. The evidence is kept; the tier is not.
         return TierDecision(

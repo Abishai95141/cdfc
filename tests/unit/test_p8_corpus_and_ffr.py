@@ -314,16 +314,31 @@ def test_g4__the_wildcard_predicate_is_refused(fme):
 # --- severity ------------------------------------------------------------------------------
 
 
-def _rec(k, n, ns, prov="TEMPLATE-COMPUTED", independent=True):
+def _rec(k, n, ns, prov="TEMPLATE-COMPUTED", independent=True, person_a="human"):
     _p, lo, hi = wilson.wilson(k, n)
     return {"wilson": [str(lo), str(hi)], "n": n, "n_non_synthetic": ns,
-            "corpus_provenance": prov, "clean_corpus_independent_of_predicate": independent}
+            "corpus_provenance": prov, "clean_corpus_independent_of_predicate": independent,
+            "person_a_kind": person_a}
 
 
 def test_severity__uses_wilson_upper():
     assert severity.tier(_rec(0, 4, 0)).tier is severity.Severity.NOT_ADMITTED
     assert severity.tier(_rec(2, 96, 96)).tier is severity.Severity.ADVISORY
     assert severity.tier(_rec(0, 189, 30)).tier is severity.Severity.BLOCKING
+
+
+def test_severity__a_model_instance_filler_cannot_buy_blocking():
+    """**The hole this build opened and then closed.** Firewall rule 5 lets Person A be a model
+    instance and RECORDS `person_a_kind` — but recording is not enforcing. A corpus filled by an
+    instance of the same model that wrote the predicates is nearer to *we generated it* than to
+    *the world produced it*: F2 at the level of the MIND rather than of the code, and the same
+    answer applies — keep the evidence, refuse the tier."""
+    human = severity.tier(_rec(0, 189, 30, person_a="human"))
+    model = severity.tier(_rec(0, 189, 30, person_a="model-instance"))
+    assert human.tier is severity.Severity.BLOCKING
+    assert model.tier is severity.Severity.ADVISORY
+    assert "same model that wrote the predicates" in model.reason
+    assert severity.BLOCKING_REQUIRES_PERSON_A == "human"
 
 
 def test_severity__synthetic_corpus_cannot_buy_blocking():
