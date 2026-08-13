@@ -374,3 +374,200 @@ def test_nc__Q50c_an_agreed_region_locates_and_passes() -> None:
     assert len(spans) == 1
     assert it.slice(spans[0]) == "an agreed sentence"
     assert not it.is_disputed(spans[0])
+
+
+# --------------------------------------------------------------------------------
+# P7-B2 — NC-Q01, NC-Q11, NC-Q35, NC-Q39, NC-Q51
+# --------------------------------------------------------------------------------
+
+
+def _fme_world():
+    from cdfc.evaluate.celrt import CelRuntime
+    from cdfc.facts.build import fact_set_for
+    from cdfc.predicates.harvest import harvest
+    from cdfc.predicates.host_fns import default_registry
+    from cdfc.predicates.obligations import generate_template_obligations
+    from cdfc.qualify.instruments import InstrumentStore
+    from cdfc.qualify.template_instrument import emit
+
+    root = Path(__file__).resolve().parents[2]
+    fme = root / "fixtures/prescribed/Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx"
+    filing = root / "fixtures/synthetic/clean__independently-computed__fme-q1.xlsx"
+    r = harvest(fme)
+    it = emit(fme)
+    store = InstrumentStore(root / "corpus/instruments")
+    store.in_memory(it)
+    hf = default_registry()
+    return (r, it, store, generate_template_obligations(r, it), fact_set_for(filing, fme), hf,
+            CelRuntime(profile_version="P7", host_fns=hf))
+
+
+def test_nc__Q01_a_zero_binding_candidate_is_refused_at_G1() -> None:
+    """NC-Q01, and it is the P7-side tooth. `all([])` is True: a predicate binding nothing returns
+    a clean pass over nothing at all, and the settled fraction counts it for free."""
+    import dataclasses
+
+    from cdfc.qualify import g1_binds
+
+    r, _it, _store, _tbl, facts, hf, rt = _fme_world()
+    c = next(x for x in r.candidates if x.id == "P-0001")
+    vocab = next(k for k in c.schema_keys if k.startswith("template."))
+    zero = dataclasses.replace(c, schema_keys=(vocab,), applicable="true", expr="true", witness="[]")
+    out = g1_binds.check(zero, r.schema, facts, rt, hf)
+    assert not out.passed and out.reason == g1_binds.Reason.CELLS_BOUND_ZERO
+    assert out.measured["cells_bound"] == 0
+    assert "expr_outcome" not in out.measured, "it must never reach the expression"
+
+
+def test_nc__Q01b_a_binding_candidate_is_admitted() -> None:
+    """The admission-side twin: without it the rule is a reject-everything baseline."""
+    from cdfc.qualify import g1_binds
+
+    r, _it, _store, _tbl, facts, hf, rt = _fme_world()
+    c = next(x for x in r.candidates if x.id == "P-0001")
+    out = g1_binds.check(c, r.schema, facts, rt, hf)
+    assert out.passed and out.measured["cells_bound"] > 0
+
+
+def test_nc__Q39_unresolved_key_blocks_admission() -> None:
+    """NC-Q39. An UNRESOLVED key BLOCKS; it never degrades to a guess. Paired with NC-D04a so the
+    same defect is caught at induction AND at admission."""
+    from cdfc.predicates.ast_walker import TemplateSchema
+    from cdfc.qualify import g1_binds
+
+    r, _it, _store, _tbl, facts, hf, rt = _fme_world()
+    c = next(x for x in r.candidates if x.id == "P-0041")
+    victim = sorted(k for k in c.schema_keys if k.startswith("filing."))[0]
+    holed = TemplateSchema(
+        {k: (frozenset() if k == victim else r.schema.cells_for(k)) for k in r.schema.keys()},
+        r.schema.template_sha256,
+    )
+    out = g1_binds.check(c, holed, facts, rt, hf)
+    assert not out.passed and out.reason == g1_binds.Reason.KEY_UNRESOLVED
+
+
+def test_nc__Q35_empty_marker_list_is_detected() -> None:
+    """NC-Q35. A G0 run reporting `provisos_total == 0` across every STATUTE candidate raises
+    rather than passing, because a real instrument is measurably full of provisos."""
+    from cdfc.qualify.errors import SuspiciousUniformityError
+    from cdfc.qualify.g0_scope import assert_not_uniformly_proviso_free
+
+    class Statutory:
+        id = "P-S1"
+        obligation_source = "STATUTE"
+
+    class Zero:
+        measured = {"provisos_total": 0}
+
+    with pytest.raises(SuspiciousUniformityError):
+        assert_not_uniformly_proviso_free({"P-S1": Zero()}, [Statutory()])
+
+
+def test_nc__Q35b_a_proviso_free_clause_is_allowed() -> None:
+    """The admission-side twin: one statutory candidate reporting a non-zero count is enough for
+    the guard to hold, so a genuinely proviso-free clause among others is not a build failure."""
+    from cdfc.qualify.g0_scope import assert_not_uniformly_proviso_free
+
+    class S:
+        def __init__(self, i):
+            self.id = i
+            self.obligation_source = "STATUTE"
+
+    class M:
+        def __init__(self, n):
+            self.measured = {"provisos_total": n}
+
+    assert_not_uniformly_proviso_free({"a": M(0), "b": M(2)}, [S("a"), S("b")])
+
+
+def test_nc__Q35c_uniformity_guard_is_scoped_to_statute() -> None:
+    """**The scoping is asserted, not assumed.** All 349 harvested FME candidates are
+    `source: TEMPLATE` with a legitimate `provisos_total == 0`, so an unscoped guard would fire on
+    a correct build — and would then be "fixed" by deleting it."""
+    from cdfc.qualify.g0_scope import assert_not_uniformly_proviso_free, check
+
+    r, _it, store, tbl, _facts, _hf, _rt = _fme_world()
+    outcomes = {c.id: check(c, tbl, store) for c in r.candidates}
+    assert all(o.measured["provisos_total"] == 0 for o in outcomes.values())
+    assert_not_uniformly_proviso_free(outcomes, r.candidates)  # must NOT raise
+
+
+def test_nc__Q11a_undeclared_proviso_rejected(tmp_path, monkeypatch) -> None:
+    """NC-Q11. The empirical gates cannot see a dropped proviso: a predicate that silently ignores
+    an exception still kills mutants and still fires on nothing clean. Only G0 can see it."""
+    import json
+
+    import cdfc.qualify.provisos as P
+    from cdfc.predicates.envelope import Clause
+    from cdfc.predicates.obligations import Obligation, ObligationSource, ObligationTable
+    from cdfc.qualify.g0_scope import Reason, check
+    from cdfc.qualify.instruments import InstrumentStore
+    from cdfc.qualify.textsource import Extraction, Unit, build
+
+    labels = tmp_path / "labels.json"
+    labels.write_text(json.dumps({
+        "labeller": "A. Reader", "labelled_at": "2026-08-13",
+        "spans": [{"text": "Provided that x is so", "kind": "proviso"}]}), encoding="utf-8")
+    monkeypatch.setattr(P, "LABELS_PATH", labels)
+
+    quote = "The scheme shall report quarterly. Provided that the scheme is close-ended."
+    it = build("fm-regulations-NCQ11", [
+        Extraction(extractor="a", version="t", external=False, blind_to={},
+                   units=(Unit(key="reg", text=quote, page=3),)),
+        Extraction(extractor="b", version="t", external=True, blind_to={},
+                   units=(Unit(key="reg", text=quote, page=3),)),
+    ])
+    store = InstrumentStore(Path(__file__).resolve().parents[2] / "corpus/instruments")
+    store.in_memory(it, kind="STATUTE")
+    tbl = ObligationTable({"OBL-014": Obligation(
+        obligation_id="OBL-014", source=ObligationSource.STATUTE, instrument_id=it.instrument_id,
+        frbr_uri=None, eId="reg_9", quote=quote, span=(0, len(quote)), ingest_source="hand")})
+
+    class Silent:
+        id = "P-S1"
+        obligation_id = "OBL-014"
+        obligation_source = "STATUTE"
+        clause = Clause(instrument=it.instrument_id, eId="reg_9", span=(0, len(quote)),
+                        quote=quote, provisos=())
+
+    out = check(Silent(), tbl, store)
+    assert not out.passed and out.reason == Reason.PROVISO_UNDISPOSED
+    assert out.measured["provisos_total"] == 1
+
+
+def test_nc__Q51_disposition_of_a_clauseless_candidate_is_specified_and_counted() -> None:
+    """NC-Q51 (the plan's NC-Q48, renumbered: that id has been taken since P4).
+
+    Every candidate has exactly ONE G0 disposition from the closed set,
+    `entered == skipped + rejected + survived`, and `skipped` is never added to survivors.
+    """
+    from cdfc.qualify.g0_scope import CLOSED_REASONS, check
+
+    r, _it, store, tbl, _facts, _hf, _rt = _fme_world()
+    entered = skipped = rejected = survived = 0
+    for c in r.candidates:
+        out = check(c, tbl, store)
+        entered += 1
+        if out.skipped is not None:
+            skipped += 1
+        elif out.passed:
+            survived += 1
+        else:
+            rejected += 1
+            assert out.reason in CLOSED_REASONS
+        assert out.measured, "a G0 outcome with an empty record computed nothing"
+        assert "instrument_id" in out.measured and "occurrences" in out.measured
+    assert entered == 349 == skipped + rejected + survived
+    assert skipped == 0
+
+
+def test_nc__Q51b_a_template_candidate_passes_with_zero_provisos() -> None:
+    """The admission-side twin: a template-derived candidate whose construct locates passes G0
+    with `provisos_total == 0` and no error."""
+    from cdfc.qualify.g0_scope import check
+
+    r, _it, store, tbl, _facts, _hf, _rt = _fme_world()
+    out = check(r.candidates[0], tbl, store)
+    assert out.passed
+    assert out.measured["provisos_total"] == 0
+    assert out.measured["obligation_source"] == "TEMPLATE"

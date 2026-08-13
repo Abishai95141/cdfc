@@ -1638,3 +1638,104 @@ class TextsourceSingleExtraction(Injector):
 
 ALL_INJECTORS = ALL_INJECTORS + (TextsourceSingleExtraction,)
 BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+class ProvisoMarkersEmpty(Injector):
+    """The proviso detector's marker list is emptied.
+
+    NC-Q35. G0 then reports `provisos_total == 0` for every candidate and passes everything —
+    **scope truncation applied to the gate that exists to catch scope truncation.**
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="proviso_markers_empty", touches=[QUALIFY / "provisos.py"])
+
+    def apply(self) -> None:
+        p = QUALIFY / "provisos.py"
+        p.write_text(p.read_text().replace(
+            "_COMPILED: Final[tuple[tuple[re.Pattern[str], Marker], ...]] = tuple(\n"
+            "    (re.compile(m.pattern, re.IGNORECASE), m) for m in MARKERS\n"
+            ")",
+            "_COMPILED: Final[tuple[tuple[re.Pattern[str], Marker], ...]] = ()", 1))
+
+
+class G1IgnoresUnresolved(Injector):
+    """G1 admits a predicate whose declared key is UNRESOLVED.
+
+    NC-Q39. A version bump then silently rebinds it to a different row of the same table, and the
+    predicate goes on reporting a clean pass about a cell nobody meant.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="g1_ignores_unresolved", touches=[QUALIFY / "g1_binds.py"])
+
+    def apply(self) -> None:
+        p = QUALIFY / "g1_binds.py"
+        p.write_text(p.read_text().replace(
+            "    unresolved = sorted(k for k in cand.schema_keys if _is_unresolved(schema, k))",
+            "    unresolved = []  # INJECTED", 1))
+
+
+class G1IgnoresZeroBind(Injector):
+    """G1 admits a predicate that binds zero cells.
+
+    NC-Q01. `all([])` is True, so the predicate returns a clean pass over nothing at all and the
+    settled fraction counts it for free. This is the vacuous pass in its purest form.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="g1_ignores_zero_bind", touches=[QUALIFY / "g1_binds.py"])
+
+    def apply(self) -> None:
+        p = QUALIFY / "g1_binds.py"
+        p.write_text(p.read_text().replace(
+            "    if not cells:\n"
+            "        return reject(Reason.CELLS_BOUND_ZERO, cells_bound=0)",
+            "    if False:  # INJECTED\n"
+            "        return reject(Reason.CELLS_BOUND_ZERO, cells_bound=0)", 1))
+
+
+class G0SkipsProvisos(Injector):
+    """G0 stops asking whether a detected proviso was disposed of.
+
+    NC-Q11. Frontier models ground clause spans well and wire exception structure badly, and the
+    EMPIRICAL gates cannot see a dropped proviso: a predicate that silently ignores an exception
+    still kills mutants and still fires on nothing clean.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="g0_skips_provisos", touches=[QUALIFY / "g0_scope.py"])
+
+    def apply(self) -> None:
+        p = QUALIFY / "g0_scope.py"
+        p.write_text(p.read_text().replace(
+            "    uncovered = [d for d in provisos if not any(d.text in (p.text or \"\") for p in recorded)]",
+            "    uncovered = []  # INJECTED", 1))
+
+
+class G0SkipsClauseless(Injector):
+    """G0 returns a passing outcome, computing nothing, for a candidate with no clause.
+
+    NC-Q51 (the plan's NC-Q48, renumbered — that id has been taken since P4). Stage one of the
+    funnel then reads `N -> N`, **a constant wearing the shape of a measurement**, and a gate stage
+    that cannot fail is this product's own failure mode wearing a gate's clothes.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="g0_skips_clauseless", touches=[QUALIFY / "g0_scope.py"])
+
+    def apply(self) -> None:
+        p = QUALIFY / "g0_scope.py"
+        p.write_text(p.read_text().replace(
+            "    # --- 1. the span must be addressable at all "
+            "-------------------------------------------",
+            "    if getattr(cand, 'clause', None) is None:  # INJECTED\n"
+            "        return GateOutcome(gate=GateId.G0, passed=True, measured={})\n"
+            "    # --- 1. the span must be addressable at all "
+            "-------------------------------------------", 1))
+
+
+ALL_INJECTORS = ALL_INJECTORS + (
+    ProvisoMarkersEmpty, G1IgnoresUnresolved, G1IgnoresZeroBind, G0SkipsProvisos, G0SkipsClauseless,
+)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}

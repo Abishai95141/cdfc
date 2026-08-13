@@ -143,3 +143,6 @@ audit:
 # --- P7 ------------------------------------------------------------------------------
 instruments:
 	$(PY) tools/build_instruments.py
+
+proviso-markers:
+	$(PY) tools/gen_proviso_markers_doc.py

@@ -151,3 +151,17 @@ def test_qualification_record__carries_exactly_one_rejection():
     assert one.rejecting is not None and one.rejecting.gate is GateId.G1
     assert not one.passed
     assert one.ran_in_order()
+
+
+def test_contract__proviso_markers_doc_is_generated():
+    """A marker list a document and the code disagree about is a list nobody is applying."""
+    import subprocess
+
+    sys.path.insert(0, str(REPO / "tools"))
+    import gen_proviso_markers_doc as gen
+
+    assert (REPO / "docs" / "PROVISO-MARKERS-v1.md").read_text(encoding="utf-8") == gen.render(), (
+        "run `make proviso-markers`; the committed document is stale"
+    )
+    assert subprocess.run([sys.executable, str(REPO / "tools" / "gen_proviso_markers_doc.py")],
+                          cwd=REPO, capture_output=True).returncode == 0

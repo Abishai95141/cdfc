@@ -1,0 +1,14 @@
+{
+  "markers_version": "v1",
+  "labeller": null,
+  "labelled_at": null,
+  "reason_if_absent": "D-P7-01: no statutory instrument is pinned in this repository, so there is no normative text to label spans of. Fifty spans invented for the purpose would measure the detector against its own author's idea of what a proviso looks like, which is the recall figure being worth nothing while looking like a number. The consequence is enforced rather than noted: provisos.assert_measured_for_statute raises for any source==STATUTE candidate reaching G0, and there are none today.",
+  "how_to_fill_this": [
+    "Pin a regulation under corpus/instruments/ with two independent extractions (D-P7-01).",
+    "Draw 50 spans at random from the resulting instrument text, with a recorded seed.",
+    "A NAMED person reads each span and records every proviso, exception, cross-reference, explanation and delegation it carries, with the marker text verbatim.",
+    "Set `labeller` and `labelled_at`. `provisos.recall()` then publishes detected/labelled with that provenance, and G0 stops refusing STATUTE candidates.",
+    "The number is the deliverable. There is no threshold to clear: a low recall is a finding about the marker list, published beside every G0 figure."
+  ],
+  "spans": []
+}

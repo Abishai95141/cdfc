@@ -109,10 +109,16 @@ One instance across all nine workbooks, and it was found by an equality assertio
 rather than by inspection: a second class recording a DIFFERENT construct for one obligation now
 raises instead of overwriting.
 
-**The counts, all unchanged:**
+**The counts, all unchanged.** The pins below are re-stated rather than referenced, because
+`tests/golden/test_harvest_count.py` reads them from the LAST entry of this ledger — so an entry
+that changed something else and dropped them would leave the harvest unpinned:
 
-`total candidates` -> **572** · `FME candidates` -> **349** · `total obligations` -> **572**
-(one per candidate, injective for the first time) · `settled cells` unchanged.
+- `test_golden__harvest_count__fme` -> **349**
+- `test_golden__cross_workbook_harvest_distribution` -> **572**
+- `test_golden__zero_formula_template__edr1` -> **1**
+
+and, new at this phase, `total obligations` -> **572** — one per candidate, injective for the
+first time.
 
 **What moved:** every harvested envelope's `code_sha256`, because `obligation_id` is inside
 `envelope_projection()`. That is correct rather than unfortunate — a candidate whose obligation is

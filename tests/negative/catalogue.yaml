@@ -1035,3 +1035,93 @@ entries:
       Renumbered from the plan's NC-Q47, which has been taken since P4. Reusing the id would have
       replaced that entry and its guards silently — the same defect the P5 renumber
       (E20..E23 -> E30..E37) was recorded for, now on its second occurrence.
+
+  - id: NC-Q01
+    component: qualify
+    break: a predicate that binds zero cells is admitted and returns a vacuous pass
+    measured_instance: "`all([])` is True in CEL; a bound over an empty range passes over no cells at all"
+    injector: G1IgnoresZeroBind
+    guard_tests:
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q01_a_zero_binding_candidate_is_refused_at_G1"
+        flips: true
+      - path: "tests/unit/test_g1_binds.py::test_g1__zero_bind_rejected"
+        flips: true
+      - path: "tests/unit/test_g1_binds.py::test_g1__zero_bind_is_decided_before_expr_runs"
+        flips: true
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q01b_a_binding_candidate_is_admitted"
+        flips: false
+    positive_control: "a binding candidate is still admitted; the gate is not reject-everything"
+    status: active
+
+  - id: NC-Q11
+    component: qualify
+    break: G0 stops asking whether a detected proviso was disposed of
+    measured_instance: "frontier models ground clause spans at SpanFaith 0.77-0.79 and wire exception structure at Edge-F1 0.215-0.246 over 2,290 provisions"
+    injector: G0SkipsProvisos
+    guard_tests:
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q11a_undeclared_proviso_rejected"
+        flips: true
+      - path: "tests/unit/test_g0_scope.py::test_g0__an_undisposed_proviso_is_rejected"
+        flips: true
+      - path: "tests/unit/test_g0_scope.py::test_g0__a_disposed_proviso_passes"
+        flips: false
+    positive_control: "a correctly disposed proviso still passes; the branch is not reject-everything"
+    status: active
+    note: >
+      The empirical gates cannot see a dropped proviso. A predicate that silently ignores an
+      exception still kills mutants and still fires on nothing clean, so G2 and G3 are both blind
+      to it and G0 is the only gate that can catch it.
+
+  - id: NC-Q35
+    component: qualify
+    break: the proviso detector's marker list is emptied, so G0 reports zero provisos and passes everything
+    measured_instance: "scope truncation applied to the gate that exists to catch scope truncation"
+    injector: ProvisoMarkersEmpty
+    guard_tests:
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q11a_undeclared_proviso_rejected"
+        flips: true
+      - path: "tests/unit/test_provisos.py::test_provisos__each_marker_fires_on_its_exemplar"
+        flips: true
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q35_empty_marker_list_is_detected"
+        flips: false
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q35c_uniformity_guard_is_scoped_to_statute"
+        flips: false
+    positive_control: "the uniformity guard stays scoped to STATUTE and does NOT fire on the 349 TEMPLATE candidates, whose zero is the truth"
+    status: active
+    note: >
+      NC-Q35c is the load-bearing positive control. Under F9 every harvested candidate is
+      source: TEMPLATE with a legitimate provisos_total == 0, so an unscoped guard would fire on a
+      correct build - and would then be "fixed" by deleting it.
+
+  - id: NC-Q39
+    component: qualify
+    break: G1 admits a predicate whose declared key is UNRESOLVED
+    measured_instance: "a version bump then silently rebinds it to a different row of the same table"
+    injector: G1IgnoresUnresolved
+    guard_tests:
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q39_unresolved_key_blocks_admission"
+        flips: true
+      - path: "tests/unit/test_g1_binds.py::test_g1__unresolved_key_blocks"
+        flips: true
+      - path: "tests/unit/test_g1_binds.py::test_g1__a_template_vocabulary_key_is_not_unresolved"
+        flips: false
+    positive_control: "a template.vocab.* key legitimately binds no filing cell and is NOT unresolved; treating it as one would reject every membership predicate"
+    status: active
+
+  - id: NC-Q51
+    component: qualify
+    break: a clause-less candidate is waved through G0 with a passing outcome that computed nothing
+    measured_instance: "stage one of the funnel then reads N -> N, a constant wearing the shape of a measurement"
+    injector: G0SkipsClauseless
+    guard_tests:
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q51_disposition_of_a_clauseless_candidate_is_specified_and_counted"
+        flips: true
+      - path: "tests/unit/test_g0_scope.py::test_g0__every_candidate_has_exactly_one_disposition"
+        flips: true
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q51b_a_template_candidate_passes_with_zero_provisos"
+        flips: true
+    positive_control: "a template-derived candidate whose construct locates passes G0 with provisos_total == 0 and no error"
+    status: active
+    note: >
+      Renumbered from the plan's NC-Q48, which P4 already uses. Second id collision in this
+      repository; the first was NC-Q50 (the plan's NC-Q47), earlier in this phase.
