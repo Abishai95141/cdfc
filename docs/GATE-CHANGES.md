@@ -54,3 +54,16 @@ Row 33 carries the product's headline claim: **nothing derived from the filing's
 remove a cell from the in-scope denominator.** `LIVE_AT_P0` and `ADDED_LIVE_AT_P4` are unchanged
 and `ADDED_LIVE_AT_P5` is a third frozen literal, so no row that was ever LIVE can leave the set by
 being edited out of a growing list.
+
+---
+
+## 13 Aug 2026 — P6 adds rows 37–47, all LIVE
+
+Row 37 (`ci/no-bare-rate.sh`) found **fourteen** bare rates on its first run, including one in a
+published measurement file. `docs/measurements/P3-evaluator.md` now renders `n/d` in place of a
+percentage column, and two prose sites carry a declared `rate-ok:` marker with a reason — a
+regulatory threshold quoted from a rule, and a historical figure named as the defect it was.
+Both are quotations, not measurements.
+
+`ADDED_LIVE_AT_P6` is a fourth frozen literal, so no row that was ever LIVE can leave the set by
+being edited out of a growing list.

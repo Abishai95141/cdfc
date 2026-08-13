@@ -38,7 +38,19 @@ def test_golden__an_untouched_filing_produces_no_findings() -> None:
 def test_golden__the_output_declares_what_it_did_not_check() -> None:
     out = _run()
     assert "NOT CHECKED, each with a declared reason" in out
-    assert "495 of 505 derived cells checked" in out
+    # MOVED AT P6, from 495/505 to 475/505, and the direction is the point.
+    #
+    # Comparing our recalculation against LibreOffice's on the FME filing showed 29 cells where we
+    # produced a value and LibreOffice produced a different one. Every one was
+    # `AGGREGATE(15, 6, ...)` — option 6 means IGNORE ERROR VALUES, which this build does not
+    # implement. We computed over the wrong operand set, returned `#NUM!`, and **IFERROR caught it
+    # and wrote the literal "NA"**: a clean, confident, wrong value in 29 cells with nothing red.
+    #
+    # `AGGREGATE` now REFUSES an ignore option it does not implement, so those cells are NOT_RUN.
+    # The product declares 30 cells it cannot check instead of silently answering 29 of them
+    # wrongly. **The number got worse and the output got truer**, which is this product's whole
+    # thesis applied to itself.
+    assert "475 of 505 derived cells checked" in out
     assert "It does not state that the filing is correct" in out
 
 

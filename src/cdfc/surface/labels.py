@@ -78,7 +78,7 @@ BANNED_PHRASES: tuple[str, ...] = (
     "certified clean",
     "passed all checks",
     "fully compliant",
-    "100% compliant",
+    "100% compliant",  # rate-ok: this list IS the banned vocabulary
     # From DESIGN.md (Meta commerce), excluded by docs/DESIGN-ADAPTATION.md. The design
     # system ships `badge-success` for "In stock / Verified / Free shipping" — an
     # affirmative green pill, which is precisely the all-clear this product refuses to

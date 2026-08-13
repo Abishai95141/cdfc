@@ -1349,3 +1349,261 @@ ALL_INJECTORS = ALL_INJECTORS + (
     ValueDerivedRemoval, InformationalOnlyLeaves, ContractTableEdit, PreflightDisabled,
 )
 BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+# --------------------------------------------------------------------------------
+# The P6 injectors — the fault model, surgery, observability, the site universe
+# --------------------------------------------------------------------------------
+
+QUALIFY = REPO_ROOT / "src" / "cdfc" / "qualify"
+
+
+class FaultDigestConstant(Injector):
+    """The fault model is version-pinned in NAME ONLY: `model_digest` ignores the operator table.
+
+    A silently edited operator then keeps its `v3` label, and every kill rate ever quoted is
+    qualified against a model that no longer exists.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="fault_digest_constant", touches=[QUALIFY / "fault_model.py"])
+
+    def apply(self) -> None:
+        p = QUALIFY / "fault_model.py"
+        p.write_text(p.read_text().replace(
+            "    return sha256_hex(canonical_json(canonical_table(version)))",
+            "    return sha256_hex(canonical_json({'version': version}))"))
+
+
+class MutantViaOpenpyxl(Injector):
+    """Mutants written by a re-serialising writer instead of raw-zip surgery.
+
+    The mutant loses 24 parts and 19 `x14` validations, so the observability diff is a diff of THE
+    WRITER rather than of the fault, and `U/G` collapses to zero.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="mutant_via_openpyxl", touches=[QUALIFY / "surgery.py"])
+
+    def apply(self) -> None:
+        p = QUALIFY / "surgery.py"
+        src = p.read_text()
+        # The writer REALLY becomes openpyxl. The one-part check has to come out with it, because
+        # the check is what would otherwise catch the swap — and an injector that trips the guard
+        # it is meant to bypass demonstrates nothing.
+        src = src.replace(
+            '    out.parent.mkdir(parents=True, exist_ok=True)\n'
+            '    with zipfile.ZipFile(out, "w") as w:',
+            '    out.parent.mkdir(parents=True, exist_ok=True)\n'
+            '    import openpyxl, warnings\n'
+            '    with warnings.catch_warnings():\n'
+            '        warnings.simplefilter("ignore")\n'
+            '        _wb = openpyxl.load_workbook(base)\n'
+            '        _wb.save(out)\n'
+            '        _wb.close()\n'
+            '    with zipfile.ZipFile(out, "a") as w:')
+        src = src.replace(
+            "    changed = differing_parts(base, out)\n    expected = set(named_parts.values())\n"
+            "    if changed != expected:",
+            "    changed = differing_parts(base, out)\n    expected = set(named_parts.values())\n"
+            "    if False:")
+        p.write_text(src)
+
+
+class ObservabilityCachedGrid(Injector):
+    """The filter reads the mutant's CACHED values instead of recalculating.
+
+    A raw-zip edit does not update Excel's cached values, so the filter reports a difference at
+    exactly the edited cell and nowhere else — it measures the EDIT, not its PROPAGATION, and
+    returns `U = 0` on every campaign.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="observability_cached_grid", touches=[QUALIFY / "observability.py"])
+
+    def apply(self) -> None:
+        p = QUALIFY / "observability.py"
+        p.write_text(p.read_text().replace(
+            "    if cone is None:\n        return recalculate(",
+            "    if True:\n        return _cached_grid(blob)\n    if cone is None:\n        return recalculate(",
+        ).replace(
+            "def grid_of(",
+            "def _cached_grid(blob: Path) -> ValueGrid:\n"
+            "    ex = extract(blob)\n"
+            "    return ValueGrid(values=dict(ex.literals), not_run={},\n"
+            "                     computed_cells=frozenset(ex.literals), formula_source='FILING')\n\n\n"
+            "def grid_of(", 1))
+
+
+class NotrunCountsAsIdentical(Injector):
+    """F18: `INDETERMINATE_OBSERVABILITY` is folded back into `UNOBSERVABLE`.
+
+    A cell our evaluator could not compute is then banked as evidence that the MUTANT is invisible.
+    Those mutants leave `O`, and because `O = G − U − I` the kill rate RISES.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="notrun_counts_as_identical", touches=[QUALIFY / "observability.py"])
+
+    def apply(self) -> None:
+        p = QUALIFY / "observability.py"
+        p.write_text(p.read_text().replace(
+            "    blocked = frozenset(set(clean.not_run) | set(mutant.not_run))\n    if blocked:",
+            "    blocked = frozenset(set(clean.not_run) | set(mutant.not_run))\n    if False:"))
+
+
+class ObservabilityUsesTemplateFormulas(Injector):
+    """F19: observability recalculates with the TEMPLATE's formulas.
+
+    An F11 override is then overwritten by the very formula it deleted, the flagship class
+    classifies UNOBSERVABLE with `O = 0`, and `TEMPLATE_DIFF` becomes unadmittable at G2.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(
+            name="observability_uses_template_formulas", touches=[QUALIFY / "observability.py"]
+        )
+
+    def apply(self) -> None:
+        # The REAL break is reading the TEMPLATE's `<f>` elements, not relabelling the argument.
+        # The first version only flipped the literal `"FILING"` to `"TEMPLATE"` — and since
+        # `grid_of` extracts from the file it is handed, the classification did not change at all.
+        # An injector that renames a label demonstrates nothing.
+        p = QUALIFY / "observability.py"
+        p.write_text(p.read_text().replace(
+            "    ex = extract(blob)\n    if cone is None:",
+            "    ex = extract(_TEMPLATE_FOR_F19)\n    if cone is None:",
+        ).replace(
+            "CellRef = tuple[str, str]",
+            "CellRef = tuple[str, str]\n_TEMPLATE_FOR_F19 = Path(__file__).resolve().parents[3] / "
+            "'fixtures' / 'prescribed' / "
+            "'Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx'",
+        ).replace('formula_source="FILING"', 'formula_source="TEMPLATE"'))
+
+
+class DiscardUnobservable(Injector):
+    """An unobservable mutant is DESTROYED rather than retained with its reason.
+
+    `U/G` becomes unauditable and P10 loses its residue feedstock.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="discard_unobservable", touches=[QUALIFY / "runner.py"])
+
+    def apply(self) -> None:
+        p = QUALIFY / "runner.py"
+        p.write_text(p.read_text().replace(
+            '        "unobservable.jsonl": [o for o in outcomes if o.observability is Observability.UNOBSERVABLE],',
+            '        "unobservable.jsonl": [],'))
+
+
+class SitesFromReadSet(Injector):
+    """Mutation sites sampled from the predicates' read set. v0 scored 100.0% on 3,574 mutants."""
+
+    def __init__(self) -> None:
+        super().__init__(name="sites_from_read_set", touches=[QUALIFY / "sites.py"])
+
+    def apply(self) -> None:
+        p = QUALIFY / "sites.py"
+        p.write_text(p.read_text().replace(
+            "def site_universe(\n    field_surface: Iterable[tuple[str, str]] | Iterable[CellKey],\n    *,\n    excluded: Iterable[CellKey] = (),\n) -> frozenset[CellKey]:",
+            "def site_universe(\n    field_surface: Iterable[tuple[str, str]] | Iterable[CellKey],\n    read_set: Iterable[CellKey] = (),\n    *,\n    excluded: Iterable[CellKey] = (),\n) -> frozenset[CellKey]:"))
+
+
+class ControlFromReadSetComplement(Injector):
+    """The control arm excludes only the READ SET, not the upstream cone.
+
+    Legitimate propagation is then counted as a spurious fire, the threshold has to be softened to
+    a fudge factor, and the fudge factor hides a real flag-everything predicate.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="control_from_read_set_complement", touches=[QUALIFY / "sites.py"])
+
+    def apply(self) -> None:
+        p = QUALIFY / "sites.py"
+        p.write_text(p.read_text().replace(
+            "    cone: set[CellKey] = set(reads)\n    for cell in reads:\n        cone |= upstream.get(cell, frozenset())",
+            "    cone: set[CellKey] = set(reads)\n    for cell in reads:\n        pass"))
+
+
+class ToleranceOnCounts(Injector):
+    """`tau(n) = 5n` applied to a COUNT cell. A person is not a rounded quantity."""
+
+    def __init__(self) -> None:
+        super().__init__(name="tolerance_on_counts", touches=[QUALIFY / "fault_model.py"])
+
+    def apply(self) -> None:
+        p = QUALIFY / "fault_model.py"
+        p.write_text(p.read_text().replace(
+            '"F06", "round_to_integer", frozenset({MONEY})',
+            '"F06", "round_to_integer", frozenset({MONEY, Dtype.COUNT})'))
+
+
+ALL_INJECTORS = ALL_INJECTORS + (
+    FaultDigestConstant, MutantViaOpenpyxl, ObservabilityCachedGrid, NotrunCountsAsIdentical,
+    ObservabilityUsesTemplateFormulas, DiscardUnobservable, SitesFromReadSet,
+    ControlFromReadSetComplement, ToleranceOnCounts,
+)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+class ClosureDropsABucket(Injector):
+    """A bucket leaves the seven-term sum, so a cell of the denominator is in no bucket.
+
+    Gate 16's registered broken build. Closure then holds over a smaller total and every fraction
+    is a fraction of something nobody enumerated.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="closure_drops_a_bucket", touches=[VERDICT / "closure.py"])
+
+    def apply(self) -> None:
+        p = VERDICT / "closure.py"
+        p.write_text(p.read_text().replace(
+            '    "outOfScope", "informational", "settled", "indeterminate", "notRun", "noPredicate", "error"',
+            '    "outOfScope", "informational", "settled", "indeterminate", "notRun", "noPredicate"'))
+
+
+class ModelClientInVerdictPath(Injector):
+    """A model client is imported into the verdict path.
+
+    Gate 14's registered broken build. The headline number would then depend on a sampling
+    temperature, and the coverage claim rests on it being re-derivable from the filing's bytes.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="model_client_in_verdict_path", touches=[VERDICT / "closure.py"])
+
+    def apply(self) -> None:
+        p = VERDICT / "closure.py"
+        p.write_text(p.read_text().replace(
+            "from cdfc.verdict.reasons import ReasonCode",
+            "import anthropic  # noqa: F401\nfrom cdfc.verdict.reasons import ReasonCode"))
+
+
+ALL_INJECTORS = ALL_INJECTORS + (ClosureDropsABucket, ModelClientInVerdictPath)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+class RenderBareRate(Injector):
+    """A published rate loses the two integers of its fraction.
+
+    Gate 37's registered broken build. The v0 harness printed `MS = 18.09%` over a denominator
+    nobody could reconstruct, and a later one printed **100.1%** — impossible, and unnoticed
+    because a percentage carries no evidence of its own arithmetic.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="render_bare_rate", touches=[QUALIFY / "campaign.py"])
+
+    def apply(self) -> None:
+        p = QUALIFY / "campaign.py"
+        p.write_text(p.read_text().replace(
+            '            f"  U/G = {t.U}/{t.G}   I/G = {t.I}/{t.G}   '
+            '(I is OUR EVALUATOR, not the fault model)",',
+            '            f"  unobservable {100 * t.U / max(t.G, 1):.1f}%",'))
+
+
+ALL_INJECTORS = ALL_INJECTORS + (RenderBareRate,)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}

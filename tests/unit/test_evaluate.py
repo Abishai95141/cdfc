@@ -173,3 +173,31 @@ def test_eval__arm1_has_zero_disagreements_on_the_corpus() -> None:
     discriminating = [r for r in rows if r["trivial_share_pct"] < 10]
     assert discriminating, "no workbook in the corpus discriminates; arm 1 proves nothing"
     assert discriminating[0]["compared"] > 0
+
+
+def test_eval__shape_only_references_are_not_value_dependencies() -> None:
+    """NC-E15's direct guard, and it exists because the indirect one stopped being sensitive.
+
+    `ROWS($C$92:C92)` asks HOW MANY ROWS a range spans. It does not read their values, so it is
+    not a dependency edge. Treating it as one invented **thirty circular references** in the FME
+    workbook that do not exist — and reported them as a finding about the regulator's template
+    rather than as a defect in our own dependency analyser.
+
+    The guard used to be the demo's NOT-CHECKED count. At P6 the `AGGREGATE` repair moved those
+    same thirty cells into `not_run` for a different and correct reason, so the phantom cycles
+    landed on cells that were already excluded and **the count stopped moving**. An indirect guard
+    can be absorbed by an unrelated repair; a direct one cannot.
+    """
+    from cdfc.calc.evaluate import SHAPE_ONLY_FUNCTIONS, parse_formula, refs_of
+
+    assert SHAPE_ONLY_FUNCTIONS, "the shape-only set is empty: every ROWS() is a dependency edge"
+    assert {"ROW", "ROWS", "COLUMN", "COLUMNS"} <= SHAPE_ONLY_FUNCTIONS
+
+    ast_ = parse_formula("ROWS($C$92:C92)+SUM($D$1:$D$3)")
+    values = set(refs_of(ast_, values_only=True))
+    all_refs = set(refs_of(ast_))
+    assert "$D$1:$D$3" in all_refs
+    assert not any("C92" in r for r in values), (
+        f"a shape-only reference is being counted as a value dependency: {sorted(values)}"
+    )
+    assert values, "the positive control: a genuine value reference IS reported"

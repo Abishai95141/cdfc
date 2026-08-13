@@ -38,9 +38,9 @@ a row between sets fails the build.
 | 11 | shell | `ci/licence-denylist.sh` — no denylisted licence in the resolved set | P0 | P0 | two denylisted packages are installed right now | LIVE |
 | 12 | shell | `ci/catalogue-ids.sh` — `NC-` ids unique, defined, non-dangling, UTF-8 | P0 | P0 | duplicate an id in the registry | LIVE |
 | 13 | pytest | `test_nc__CI01_missing_scan_root_fails` — a grep over a missing root is red | P0 | P0 | `injectors/remove_scan_root.py` | LIVE |
-| 14 | ast | `test_no_model_in_verdict_path` — no model client reachable from L5/L6/L7 | P5 | P5 | import a model client in `verdict/` | PENDING |
+| 14 | ast | `test_no_model_in_verdict_path` — no model client reachable from L5/L6/L7 | P5 | P5 | import a model client in `verdict/` | LIVE |
 | 15 | schema | attestation schema has no `result`/`status`/`pass` at any depth | P11 | P11 | add the field to the schema | PENDING |
-| 16 | pytest | `test_closure` — the seven-term closure invariant holds | P5 | P5 | drop a bucket from the sum | PENDING |
+| 16 | pytest | `test_prop__closure_seven_terms` — the seven-term closure invariant holds | P5 | P5 | `injectors/closure_drops_a_bucket.py` | LIVE |
 | 17 | shell | `ci/no-timing-in-hashed-payload.sh` — no duration field inside a hashed object | P0 | P0 | `injectors/elapsed_us_in_canary_row.py` | LIVE |
 | 18 | pytest | `test_plan__critical_path_total_equals_sum_of_rows` — a total equals its parts | P0 | P0 | change a per-phase figure without the total | LIVE |
 | 19 | shell | `ci/no-external-paths.sh` — no machine-local absolute path in the build | P0 | P1 | `injectors/external_fixture_path.py` | LIVE |
@@ -61,6 +61,17 @@ a row between sets fails the build.
 | 34 | pytest | `test_nc__E25_an_informational_only_cell_is_no_predicate` — a template defect cannot raise the headline | P5 | P5 | `injectors/informational_only_leaves.py` | LIVE |
 | 35 | pytest | `test_nc__E03b_contract_is_generated_not_edited` — EVALUATION-CONTRACT.md is generated | P5 | P5 | `injectors/contract_table_edit.py` | LIVE |
 | 36 | pytest | `test_nc__E02b_preflight_blocks_expr_when_a_declared_key_is_absent` — a disjunction never returns PASS over an unchecked key | P5 | P5 | `injectors/preflight_disabled.py` | LIVE |
+| 37 | shell | `ci/no-bare-rate.sh` — a rate never renders without both integers of its fraction | P6 | P6 | remove the fraction beside any published rate | LIVE |
+| 38 | shell | `ci/no-openpyxl-writer.sh` — nothing under `qualify/` writes a workbook except `surgery.py` | P6 | P6 | `injectors/mutant_via_openpyxl.py` | LIVE |
+| 39 | pytest | `test_nc__Q33_operator_edit_moves_the_digest` — `v3` is a checkable claim, not a label | P6 | P6 | `injectors/fault_digest_constant.py` | LIVE |
+| 40 | pytest | `test_nc__Q31_filter_recalculates` — the observability filter recalculates, never reads cached values | P6 | P6 | `injectors/observability_cached_grid.py` | LIVE |
+| 41 | pytest | `test_nc__Q60_unevaluable_cells_do_not_become_unobservable` — F18: our apparatus is not the fault model | P6 | P6 | `injectors/notrun_counts_as_identical.py` | LIVE |
+| 42 | pytest | `test_nc__Q61_observability_uses_filing_formulas` — F19: the flagship class reaches the denominator | P6 | P6 | `injectors/observability_uses_template_formulas.py` | LIVE |
+| 43 | pytest | `test_nc__Q37_unobservable_are_retained` — an unobservable mutant keeps its reason on disk | P6 | P6 | `injectors/discard_unobservable.py` | LIVE |
+| 44 | pytest | `test_nc__Q32_control_excludes_the_cone` — the spurious-fire threshold is exactly zero | P6 | P6 | `injectors/control_from_read_set_complement.py` | LIVE |
+| 45 | pytest | `test_nc__Q06a_site_set_is_the_field_surface` — the universe cannot see the predicates | P6 | P6 | `injectors/sites_from_read_set.py` | LIVE |
+| 46 | pytest | `test_nc__E08_counts_get_zero_tolerance` — a person is not a rounded quantity | P6 | P6 | `injectors/tolerance_on_counts.py` | LIVE |
+| 47 | contract | `test_contract__fault_model_doc_is_generated` — the taxonomy document is generated from the code | P6 | P6 | hand-edit `docs/FAULT-MODEL-v3.md` | LIVE |
 
 **Rows 17 and 18 exist as gates from the first commit, dated 11 Aug 2026, and their reason is recorded
 rather than assumed.** Row 17: a `CanaryRow.elapsed_us` inside a canonicalised payload was found in the
@@ -68,7 +79,7 @@ plan and would have made byte-identical re-derivation impossible; the gate exist
 Row 18: a displayed critical-path total that did not equal the sum of its own rows was found in the plan,
 which is the shared-denominator error in a schedule; the gate exists before any other total does.
 
-**LIVE = {1,…,13,17,…,36} (33 rows). PENDING = {14,15,16} (3 rows). Total 36.**
+**LIVE = {1,…,14,16,…,47} (46 rows). PENDING = {15} (1 row). Total 47.**
 
 **Row 20 was added at P3, dated 11 Aug 2026.** R4 requires the evaluator to be `Decimal` from its first line rather than converted later; the gate exists so that cannot drift in unnoticed.
 
@@ -114,3 +125,29 @@ Row 33 is the one the product's headline number depends on. A cell may leave the
 denominator only for a reason that is a function of the template, the selection, or a declared
 filer characteristic — **never a function of the filing's own cell values.** Without it a filer who
 fills in less gets a better settled fraction.
+
+**Rows 37–47 were added at P6, dated 13 Aug 2026.**
+
+Row 37's reason is arithmetic history. The v0 harness printed `MS = 18.09%` over a denominator
+nobody could reconstruct — `|mutants| − |equivalent|`, where `equivalent` is a THEOREM that was
+asserted rather than proved — and a later harness printed **100.1%**, which is impossible and went
+unnoticed because *a percentage carries no evidence of its own arithmetic*. On its first run this
+gate found fourteen bare rates in this repository, including one in a published measurement file.
+
+Rows 41 and 42 are F18 and F19, and both are failures of the *measurement* rather than of the
+product. F18: a cell our evaluator cannot compute is identical in both grids by construction, so a
+two-way classification banks its mutants as unobservable, removes them from `O`, and — because
+`O = G − U − I` — **raises** our own kill rate. F19: recalculating an F11 override through the
+TEMPLATE's formula graph overwrites the literal with the formula's value, so the flagship class
+classifies unobservable with `O = 0` and `TEMPLATE_DIFF` could never clear G2.
+
+**Rows 14 and 16 moved PENDING to LIVE at P6, dated 13 Aug 2026, and the audit is why.**
+
+Both were registered `PENDING` at P0 because their subjects did not exist. **Both subjects shipped
+at P5** — `src/cdfc/verdict/` and the seven-term closure — and the P6 audit found the rows still
+`PENDING`. That matters: `PENDING` is the state that lets a gate avoid demonstration, and the whole
+reason this file is a registry rather than a list is that a gate which resists demonstration must
+not be able to sit in a set nobody has to keep green. **A gate whose subject has shipped and which
+is still PENDING is a gate nobody has to keep green.**
+
+Row 15 (the attestation schema) stays `PENDING` honestly: its subject is P11's and does not exist.

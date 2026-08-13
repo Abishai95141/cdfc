@@ -2,8 +2,8 @@
 """G-EVAL arm 1 — our evaluator against the regulator's own cached values.
 
 REPORTED PER WORKBOOK, NEVER AS ONE CORPUS FIGURE. A single percentage would average one
-control that discriminates (Draft ACAC: 112 cells, 44 distinct values, 0% trivial) against
-six that do not (FME: 505 cells, 2 distinct values — a constant scores 100%). That is the
+control that discriminates (Draft ACAC: 112 cells, 44 distinct values, 0 of 112 trivial) against
+six that do not (FME: 505 cells, 2 distinct values — a constant scores 505 of 505). That is the
 same defect as a single agreement figure over the reader matrix.
 
 Every row carries its trivial share, so a reader can see at a glance which rows are
@@ -163,9 +163,11 @@ def main() -> int:
         worth = ("EVIDENCE" if r["trivial_share_pct"] < 10 else
                  "partial" if r["trivial_share_pct"] < 80 else "a constant scores here")
         L.append(f"| {r['workbook'][:38]} | {r['formula_cells']} | {r['compared']} | {r['agree']} "
-                 f"| {r['disagree']} | {r['not_run']} | {r['trivial_share_pct']}% | {worth} |")
+                 f"| {r['disagree']} | {r['not_run']} | "
+                 f"{r.get('trivial_cells', '?')}/{r['cells']} | {worth} |")
         print(f"  {r['workbook'][:38]:38s} {r['formula_cells']:>6} {r['agree']:>6} "
-              f"{r['disagree']:>5} {r['not_run']:>6} {r['trivial_share_pct']:>7}%  {worth}")
+              f"{r['disagree']:>5} {r['not_run']:>6} "
+              f"{r.get('trivial_cells', '?')}/{r['cells']:<6}  {worth}")
     L.append("")
     OUT_MD.write_text("\n".join(L))
     print(f"\nwrote {OUT_MD}")

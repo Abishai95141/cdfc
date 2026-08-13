@@ -69,6 +69,20 @@ EVIDENCE: dict[int, str] = {
     34: "NC-E35",   # an INFORMATIONAL-only cell stays counted
     35: "NC-E36",   # the contract is generated
     36: "NC-E37",   # pre-flight blocks expr
+    # P6
+    37: "NC-Q64",   # no bare rate
+    38: "NC-Q30",   # no openpyxl writer
+    39: "NC-Q33",   # the digest covers the operator table
+    40: "NC-Q31",   # the filter recalculates
+    41: "NC-Q60",   # F18
+    42: "NC-Q61",   # F19
+    43: "NC-Q37",   # unobservable mutants are retained
+    44: "NC-Q32",   # the control arm excludes the cone
+    45: "NC-Q63",   # the universe cannot see the predicates
+    46: "NC-Q62",   # counts get zero tolerance
+    47: "NC-Q33",   # the taxonomy document is generated
+    14: "NC-E33",   # no model client in the verdict path (promoted at P6)
+    16: "NC-E30",   # the seven-term closure invariant (promoted at P6)
 }
 
 

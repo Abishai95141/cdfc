@@ -25,6 +25,8 @@ greps:
 	bash ci/no-float-money.sh
 	bash ci/no-regex-over-cel.sh
 	bash ci/no-regex-over-xml.sh
+	bash ci/no-bare-rate.sh
+	bash ci/no-openpyxl-writer.sh
 
 contract:
 	$(PY) -m pytest tests/contract -q
@@ -120,3 +122,13 @@ filings:
 
 run-fme:
 	$(PY) tools/measure/p5_runtime_closure.py
+
+# --- P6 ------------------------------------------------------------------------------
+fault-model:
+	$(PY) tools/gen_fault_model_doc.py
+
+campaign:
+	$(PY) tools/measure/p6_campaign.py
+
+audit:
+	$(PY) tools/audit.py

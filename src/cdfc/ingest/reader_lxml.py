@@ -116,7 +116,7 @@ class RawWorkbook:
         """Every <c> containing an <f> child, ANY encoding.
 
         The definition matters: counting only formulas with TEXT misses the 211 shared
-        dependents in the FME workbook, which is 42% of its formula cells.
+        dependents in the FME workbook, which is 211 of 505 formula cells.
         """
         return len(self.formulas)
 

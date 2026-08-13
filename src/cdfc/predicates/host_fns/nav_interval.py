@@ -4,7 +4,7 @@
 **The third value is the whole point of this function.** Regulation 51(1) makes the owed NAV
 frequency, in part, *"in such manner as specified by the Authority"* — and for **close-ended
 Restricted Schemes** the 29th IFSCA Authority Meeting of 24 July 2026 made it depend on approval by
-investors holding 75% by value, **which the workbook does not collect**. There is no fact in the
+investors holding 75% by value, **which the workbook does not collect**. There is no fact in the  # rate-ok: a regulatory threshold quoted from reg 51(1), not a rate this build computed
 filing that determines the answer.
 
 An item over an `UNDERSPECIFIED` interval becomes `NO_PREDICATE(no_predicate.no_obligation_specified)`
@@ -62,7 +62,7 @@ def nav_interval(scheme_type: Any, open_closed: Any, tenure: Any) -> Any:
     st, oc = _norm(scheme_type), _norm(open_closed)
     oc = "OPEN" if oc.startswith("OPEN") else ("CLOSE" if oc.startswith("CLOSE") else oc)
     if st == "RESTRICTED" and oc == "CLOSE":
-        # The 75%-by-value investor approval is not a field of this workbook.
+        # The 75%-by-value investor approval is not a field of this workbook.  # rate-ok: a threshold in the rule, not a measurement
         return celtypes.StringType(UNDERSPECIFIED)
     return celtypes.StringType(_DETERMINED.get((st, oc), UNKNOWN_COMBINATION))
 

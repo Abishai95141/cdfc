@@ -487,9 +487,14 @@ entries:
     guard_tests:
       - path: "tests/unit/test_evaluate.py::test_eval__arm1_has_zero_disagreements_on_the_corpus"
         flips: false
-      - path: "tests/golden/test_template_diff.py::test_golden__the_output_declares_what_it_did_not_check"
+      - path: "tests/unit/test_evaluate.py::test_eval__shape_only_references_are_not_value_dependencies"
         flips: true
-    positive_control: "a genuine circular reference is still detected"
+    positive_control: "a genuine value reference IS still reported as a dependency"
+    note: >
+      The guard was the demo's NOT-CHECKED count until P6. The AGGREGATE repair then moved the
+      same thirty cells into not_run for a different and correct reason, so the phantom cycles
+      landed on cells that were already excluded and the count stopped moving. **An indirect
+      guard can be absorbed by an unrelated repair; a direct one cannot.**
     status: active
 
   - id: NC-E16
@@ -841,4 +846,171 @@ entries:
       - path: "tests/negative/test_nc_verdict.py::test_nc__E02c_a_complete_fact_set_proceeds_to_expr"
         flips: false
     positive_control: "a complete fact set still reaches `expr`"
+    status: active
+
+  # --- P6: the fault-seeding harness -------------------------------------------------
+  # This document's band is Q30-Q39 and Q60-Q69, per `02` R5a.
+
+  - id: NC-Q30
+    component: qualify
+    break: mutants are written by a re-serialising writer instead of raw-zip surgery
+    measured_instance: "an openpyxl round-trip of FME drops 24 parts and all 19 x14 validations, 3.66 MB to 66 kB"
+    injector: MutantViaOpenpyxl
+    guard_tests:
+      - path: "tests/negative/test_nc_campaign.py::test_nc__Q30_mutant_writer_is_raw_zip"
+        flips: true
+      - path: "tests/unit/test_surgery.py::test_surgery__a_part_nobody_named_is_refused"
+        flips: true
+      - path: "tests/unit/test_campaign.py::test_campaign__kill_rate_is_over_observable"
+        flips: false
+    positive_control: "the campaign arithmetic is untouched; only the writer changed"
+    status: active
+    note: >
+      The injector swaps the writer for a real openpyxl round-trip AND removes the parts check,
+      because the check is what would otherwise catch the swap — an injector that trips the guard
+      it is meant to bypass demonstrates nothing.
+
+      `test_surgery__exactly_one_part_differs` and `..__x14_validations_survive` also go red under
+      this injection, but as pytest ERRORs at fixture setup rather than as failed assertions. They
+      are deliberately NOT declared: **a guard that errors names the fixture, a guard that fails
+      names the property**, and the exact-set contract should be satisfied by guards whose red
+      says what broke.
+
+  - id: NC-Q31
+    component: qualify
+    break: the observability filter reads the mutant's cached values instead of recalculating
+    measured_instance: "a raw-zip edit does not update Excel's cached values, so U collapses to 0 on every campaign"
+    injector: ObservabilityCachedGrid
+    guard_tests:
+      - path: "tests/negative/test_nc_campaign.py::test_nc__Q31_filter_recalculates"
+        flips: true
+      - path: "tests/unit/test_campaign.py::test_campaign__kill_rate_is_over_observable"
+        flips: false
+    positive_control: "the campaign arithmetic is unaffected; only the classification changes"
+    status: active
+
+  - id: NC-Q32
+    component: qualify
+    break: the control arm draws sites from inside the predicate's upstream cone
+    measured_instance: "legitimate propagation then counts as a spurious fire and the threshold becomes a fudge factor"
+    injector: ControlFromReadSetComplement
+    guard_tests:
+      - path: "tests/negative/test_nc_campaign.py::test_nc__Q32_control_excludes_the_cone"
+        flips: true
+      - path: "tests/unit/test_sites.py::test_sites__control_excludes_the_upstream_cone"
+        flips: true
+      - path: "tests/negative/test_nc_campaign.py::test_nc__Q32b_a_genuine_outside_site_is_in_control"
+        flips: false
+    positive_control: "a cell with no path to the predicate is still in the control arm"
+    status: active
+
+  - id: NC-Q33
+    component: qualify
+    break: model_digest ignores the operator table, so an edited operator keeps its v3 label
+    measured_instance: "every quoted kill rate would be qualified against a model that no longer exists"
+    injector: FaultDigestConstant
+    guard_tests:
+      - path: "tests/negative/test_nc_campaign.py::test_nc__Q33_operator_edit_moves_the_digest"
+        flips: true
+      - path: "tests/unit/test_fault_model.py::test_fault_model__the_baseline_pins_the_digest_and_the_f11_fragment"
+        flips: true
+      - path: "tests/negative/test_nc_campaign.py::test_nc__Q33b_every_operator_contributes_to_the_digest"
+        flips: false
+    positive_control: "the operator bodies are digested individually, not as one opaque blob"
+    status: active
+
+  - id: NC-Q37
+    component: qualify
+    break: an unobservable mutant is destroyed rather than retained with its reason
+    measured_instance: "U/G becomes unauditable and P10 loses its residue feedstock"
+    injector: DiscardUnobservable
+    guard_tests:
+      - path: "tests/negative/test_nc_campaign.py::test_nc__Q37_unobservable_are_retained"
+        flips: true
+      - path: "tests/negative/test_nc_campaign.py::test_nc__Q37b_the_committed_campaign_agrees_with_its_manifest"
+        flips: false
+      - path: "tests/unit/test_campaign.py::test_campaign__totals_sum_the_classes"
+        flips: false
+    positive_control: "the campaign's own totals are unchanged; only the retention is broken"
+    status: active
+
+  - id: NC-Q60
+    component: qualify
+    break: a cell the evaluator could not compute is banked as evidence that the mutant is invisible
+    measured_instance: "not_run cells are identical in both grids BY CONSTRUCTION, so U grows and K/O rises"
+    injector: NotrunCountsAsIdentical
+    guard_tests:
+      - path: "tests/negative/test_nc_campaign.py::test_nc__Q60_unevaluable_cells_do_not_become_unobservable"
+        flips: true
+      - path: "tests/unit/test_observability.py::test_indeterminate_is_not_unobservable"
+        flips: true
+      - path: "tests/negative/test_nc_campaign.py::test_nc__Q60b_fully_evaluable_propagation_is_observable"
+        flips: false
+      - path: "tests/negative/test_nc_campaign.py::test_nc__Q60c_the_clean_filing_actually_has_indeterminate_cells"
+        flips: false
+    positive_control: "a mutant propagating only through evaluable cells is OBSERVABLE, never INDETERMINATE"
+    status: active
+
+  - id: NC-Q61
+    component: qualify
+    break: observability recalculates with the TEMPLATE's formulas, so F11 is unobservable
+    measured_instance: "the override is overwritten by the very formula it deleted; TEMPLATE_DIFF becomes unadmittable at G2"
+    injector: ObservabilityUsesTemplateFormulas
+    guard_tests:
+      - path: "tests/negative/test_nc_campaign.py::test_nc__Q61_observability_uses_filing_formulas"
+        flips: true
+      - path: "tests/unit/test_observability.py::test_observability_recalculates_with_filing_formulas"
+        flips: true
+      - path: "tests/unit/test_observability.py::test_f11_mutant_is_observable"
+        flips: true
+      - path: "tests/unit/test_campaign.py::test_campaign__render_never_shows_UG_without_I"
+        flips: false
+    positive_control: "the campaign renderer is unaffected; only the classification changes"
+    status: active
+
+  - id: NC-Q62
+    component: qualify
+    break: a COUNT cell receives the rounding operator, so a person becomes a rounded quantity
+    measured_instance: "F06 produced all 22 of v0's 'equivalents'; applied to a count it makes an off-by-one invisible"
+    injector: ToleranceOnCounts
+    guard_tests:
+      - path: "tests/negative/test_nc_campaign.py::test_nc__E08_counts_get_zero_tolerance"
+        flips: true
+      - path: "tests/unit/test_fault_model.py::test_fault_model__counts_never_receive_f06"
+        flips: true
+      - path: "tests/negative/test_nc_campaign.py::test_nc__E08b_money_gets_tau"
+        flips: false
+    positive_control: "money still receives F06; the class is not simply emptied"
+    status: active
+
+  - id: NC-Q63
+    component: qualify
+    break: the site universe takes a predicate parameter, so sites can be drawn from the read set
+    measured_instance: "v0 scored 100.0% on 3,574 mutants this way — the degenerate-baseline failure"
+    injector: SitesFromReadSet
+    guard_tests:
+      - path: "tests/negative/test_nc_campaign.py::test_nc__Q06a_site_set_is_the_field_surface"
+        flips: true
+      - path: "tests/unit/test_sites.py::test_sites__universe_takes_no_predicate"
+        flips: true
+      - path: "tests/unit/test_sites.py::test_sites__import_closure_does_not_reach_cdfc_predicates"
+        flips: false
+    positive_control: "the import closure is still clean; the signature is the thing that moved"
+    status: active
+
+  - id: NC-Q64
+    component: qualify
+    break: a published rate renders without the two integers of its fraction
+    measured_instance: "v0 printed MS = 18.09% over a denominator nobody could reconstruct; a later harness printed 100.1%"
+    injector: RenderBareRate
+    guard_tests:
+      - path: "tests/negative/test_nc_campaign.py::test_nc__Q64_no_bare_rate_reaches_a_surface"
+        flips: true
+      - path: "tests/unit/test_campaign.py::test_campaign__render_never_bare"
+        flips: true
+      - path: "tests/unit/test_campaign.py::test_campaign__render_never_shows_UG_without_I"
+        flips: true
+      - path: "tests/unit/test_campaign.py::test_campaign__totals_sum_the_classes"
+        flips: false
+    positive_control: "the campaign's own arithmetic is untouched; only the rendering changed"
     status: active

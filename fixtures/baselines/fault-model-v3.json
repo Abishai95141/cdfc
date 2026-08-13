@@ -1,0 +1,376 @@
+{
+  "digest": "4b14132ef9add6c2ef9158a90082360c9a6d69471efcd1a75d6c7aab684ab372",
+  "table": {
+    "classes": [
+      {
+        "applies_to": [
+          "COUNT",
+          "MILLI_USD_MILLION"
+        ],
+        "arity": "cell",
+        "citation": "R. Abraham and M. Erwig, 'Mutation Operators for Spreadsheets', IEEE Transactions on Software Engineering 35(1):94-108, 2009, pp. 97-100",
+        "id": "F01",
+        "name": "sign_flip",
+        "operators": [
+          {
+            "body": "d0bd1026bb136010",
+            "id": "F01.a",
+            "is_pair": false,
+            "name": "negate",
+            "note": ""
+          }
+        ],
+        "rationale": "The operator that kills a `>= 0` bound and does NOT kill a `>= -1e17` bound \u2014 which is how ALR's five vacuous bounds become visible as a per-class zero rather than as an opinion.",
+        "source": "abraham_erwig_2009"
+      },
+      {
+        "applies_to": [
+          "MILLI_USD_MILLION"
+        ],
+        "arity": "cell",
+        "citation": "R. Abraham and M. Erwig, 'Mutation Operators for Spreadsheets', IEEE Transactions on Software Engineering 35(1):94-108, 2009, pp. 97-100",
+        "id": "F02",
+        "name": "scale_error",
+        "operators": [
+          {
+            "body": "d0bd1026bb136010",
+            "id": "F02.a",
+            "is_pair": false,
+            "name": "times_ten",
+            "note": ""
+          },
+          {
+            "body": "d0bd1026bb136010",
+            "id": "F02.b",
+            "is_pair": false,
+            "name": "divide_ten",
+            "note": ""
+          },
+          {
+            "body": "d0bd1026bb136010",
+            "id": "F02.c",
+            "is_pair": false,
+            "name": "times_thousand",
+            "note": ""
+          }
+        ],
+        "rationale": "The sheet's unit is USD Million; a filer entering USD is the modal unit slip.",
+        "source": "abraham_erwig_2009"
+      },
+      {
+        "applies_to": [
+          "COUNT",
+          "MILLI_USD_MILLION"
+        ],
+        "arity": "cell",
+        "citation": "R. Abraham and M. Erwig, 'Mutation Operators for Spreadsheets', IEEE Transactions on Software Engineering 35(1):94-108, 2009, pp. 97-100",
+        "id": "F03",
+        "name": "off_by_one",
+        "operators": [
+          {
+            "body": "d0bd1026bb136010",
+            "id": "F03.a",
+            "is_pair": false,
+            "name": "plus_one",
+            "note": ""
+          },
+          {
+            "body": "d0bd1026bb136010",
+            "id": "F03.b",
+            "is_pair": false,
+            "name": "minus_one",
+            "note": ""
+          }
+        ],
+        "rationale": "Boundary. Counts get ZERO tolerance \u2014 a person is not a rounded quantity.",
+        "source": "abraham_erwig_2009"
+      },
+      {
+        "applies_to": [
+          "MILLI_USD_MILLION"
+        ],
+        "arity": "cell",
+        "citation": "R. Abraham and M. Erwig, 'Mutation Operators for Spreadsheets', IEEE Transactions on Software Engineering 35(1):94-108, 2009, pp. 97-100",
+        "id": "F04",
+        "name": "digit_transposition",
+        "operators": [
+          {
+            "body": "a42331eadf91e4ff",
+            "id": "F04.a",
+            "is_pair": false,
+            "name": "swap_adjacent_digits",
+            "note": ""
+          }
+        ],
+        "rationale": "Keying error; survives a magnitude check, which is why a bound predicate cannot see it.",
+        "source": "abraham_erwig_2009"
+      },
+      {
+        "applies_to": [
+          "COUNT",
+          "DATE",
+          "ENUM",
+          "MILLI_USD_MILLION",
+          "TEXT"
+        ],
+        "arity": "cell",
+        "citation": "R. Abraham and M. Erwig, 'Mutation Operators for Spreadsheets', IEEE Transactions on Software Engineering 35(1):94-108, 2009, pp. 97-100",
+        "id": "F05",
+        "name": "zero_out_or_blank",
+        "operators": [
+          {
+            "body": "22a6019c43b2eec5",
+            "id": "F05.a",
+            "is_pair": false,
+            "name": "zero",
+            "note": ""
+          },
+          {
+            "body": "88b05f01d9318617",
+            "id": "F05.b",
+            "is_pair": false,
+            "name": "blank",
+            "note": "empties the cell; never writes 0"
+          }
+        ],
+        "rationale": "TWO operators, not one. `0` and blank are different facts, and `sum([]) == 0` is NC-Q01. A class that carried only one of them would make the two indistinguishable in the vector.",
+        "source": "abraham_erwig_2009"
+      },
+      {
+        "applies_to": [
+          "MILLI_USD_MILLION"
+        ],
+        "arity": "cell",
+        "citation": "R. Abraham and M. Erwig, 'Mutation Operators for Spreadsheets', IEEE Transactions on Software Engineering 35(1):94-108, 2009, pp. 97-100",
+        "id": "F06",
+        "name": "round_to_integer",
+        "operators": [
+          {
+            "body": "b030b31b671b28e7",
+            "id": "F06.a",
+            "is_pair": false,
+            "name": "round_to_usd_million",
+            "note": ""
+          }
+        ],
+        "rationale": "The `tau(n) = 5n` straddle generator, and the source of `indeterminate.tolerance_straddle`. It produced all 22 of v0's 'equivalents'. COUNT is deliberately absent: rounding a count is not a rounding error, it is a different count.",
+        "source": "abraham_erwig_2009"
+      },
+      {
+        "applies_to": [
+          "COUNT",
+          "DATE",
+          "ENUM",
+          "MILLI_USD_MILLION",
+          "TEXT"
+        ],
+        "arity": "range",
+        "citation": "R. Abraham and M. Erwig, 'Mutation Operators for Spreadsheets', IEEE Transactions on Software Engineering 35(1):94-108, 2009, pp. 97-100",
+        "id": "F07",
+        "name": "row_omission",
+        "operators": [
+          {
+            "body": "88b05f01d9318617",
+            "id": "F07.a",
+            "is_pair": false,
+            "name": "delete_row_values",
+            "note": "applied to every cell of one table row"
+          }
+        ],
+        "rationale": "Where a missing investor or holding hides. A RANGE operator: it edits every cell of one table row, which is still exactly one worksheet part.",
+        "source": "abraham_erwig_2009"
+      },
+      {
+        "applies_to": [
+          "COUNT",
+          "DATE",
+          "ENUM",
+          "MILLI_USD_MILLION",
+          "TEXT"
+        ],
+        "arity": "range",
+        "citation": "R. Abraham and M. Erwig, 'Mutation Operators for Spreadsheets', IEEE Transactions on Software Engineering 35(1):94-108, 2009, pp. 97-100",
+        "id": "F08",
+        "name": "row_duplication",
+        "operators": [
+          {
+            "body": "835224e61609aaea",
+            "id": "F08.a",
+            "is_pair": false,
+            "name": "duplicate_the_value_above",
+            "note": "the cell takes the value of the cell one row up, which is what a duplicated row looks like cell-wise"
+          }
+        ],
+        "rationale": "Double count; the tally identities exist for this.",
+        "source": "abraham_erwig_2009"
+      },
+      {
+        "applies_to": [
+          "DATE"
+        ],
+        "arity": "cell",
+        "citation": "R. Abraham and M. Erwig, 'Mutation Operators for Spreadsheets', IEEE Transactions on Software Engineering 35(1):94-108, 2009, pp. 97-100",
+        "id": "F09",
+        "name": "date_shift",
+        "operators": [
+          {
+            "body": "51678555e78d1c8d",
+            "id": "F09.a",
+            "is_pair": false,
+            "name": "plus_one_day",
+            "note": ""
+          },
+          {
+            "body": "51678555e78d1c8d",
+            "id": "F09.b",
+            "is_pair": false,
+            "name": "minus_one_quarter",
+            "note": ""
+          },
+          {
+            "body": "9615089573248091",
+            "id": "F09.c",
+            "is_pair": false,
+            "name": "swap_day_and_month",
+            "note": ""
+          }
+        ],
+        "rationale": "FME carries six date bounds. `DD<->MM` is the one a reader cannot see in a rendered date.",
+        "source": "abraham_erwig_2009"
+      },
+      {
+        "applies_to": [
+          "ENUM"
+        ],
+        "arity": "cell",
+        "citation": "R. Abraham and M. Erwig, 'Mutation Operators for Spreadsheets', IEEE Transactions on Software Engineering 35(1):94-108, 2009, pp. 97-100",
+        "id": "F10",
+        "name": "enum_substitution",
+        "operators": [
+          {
+            "body": "2e892c17355c852a",
+            "id": "F10.a",
+            "is_pair": false,
+            "name": "another_legal_member",
+            "note": ""
+          }
+        ],
+        "rationale": "One LEGAL vocabulary term for another. A membership predicate CANNOT see this, by construction \u2014 it is a DESIGNED MISS and it belongs in the residue. A non-zero kill rate here would be evidence that something is wrong with the campaign, not that we are good.",
+        "source": "abraham_erwig_2009"
+      },
+      {
+        "applies_to": [
+          "COUNT",
+          "MILLI_USD_MILLION"
+        ],
+        "arity": "pair",
+        "citation": "",
+        "id": "F11",
+        "name": "formula_override",
+        "operators": [
+          {
+            "body": "768377c673f091e0",
+            "id": "F11.a",
+            "is_pair": false,
+            "name": "literal_over_formula",
+            "note": ""
+          },
+          {
+            "body": "768377c673f091e0",
+            "id": "F11.b",
+            "is_pair": true,
+            "name": "literal_over_formula_pair",
+            "note": "PAIR: the override plus a consistent input change, so the filing stays self-consistent and only TEMPLATE_DIFF can see it"
+          }
+        ],
+        "rationale": "THE FLAGSHIP. A cell the pinned blank declares a formula for carries a literal. The pair form leaves the filing perfectly self-consistent because the inconsistency was deleted with the formula, and TEMPLATE_DIFF is the only thing in the design that detects it.",
+        "source": "cdfc"
+      },
+      {
+        "applies_to": [
+          "ENUM",
+          "TEXT"
+        ],
+        "arity": "cell",
+        "citation": "",
+        "id": "F12",
+        "name": "vocabulary_drift",
+        "operators": [
+          {
+            "body": "b4d4a1082f6012b9",
+            "id": "F12.a",
+            "is_pair": false,
+            "name": "outside_vocabulary",
+            "note": ""
+          },
+          {
+            "body": "5f88f6905e9d799a",
+            "id": "F12.b",
+            "is_pair": false,
+            "name": "homoglyph",
+            "note": ""
+          },
+          {
+            "body": "eb1eb17f48cf21f4",
+            "id": "F12.c",
+            "is_pair": false,
+            "name": "trailing_whitespace",
+            "note": ""
+          }
+        ],
+        "rationale": "MEASURED: one live regulated entity's registration number carries `U+2011 NON-BREAKING HYPHEN` \u2014 visually identical, byte-wise different, invisible in any screenshot.",
+        "source": "cdfc"
+      },
+      {
+        "applies_to": [
+          "COUNT",
+          "MILLI_USD_MILLION"
+        ],
+        "arity": "pair",
+        "citation": "",
+        "id": "F13",
+        "name": "carry_desync",
+        "operators": [
+          {
+            "body": "581953a85b51edd7",
+            "id": "F13.a",
+            "is_pair": false,
+            "name": "move_the_target",
+            "note": ""
+          },
+          {
+            "body": "581953a85b51edd7",
+            "id": "F13.b",
+            "is_pair": true,
+            "name": "move_both_ends",
+            "note": "PAIR: both ends of the carry move by the same amount, so every cross-sheet equality still holds and the number is wrong on both sheets"
+          }
+        ],
+        "rationale": "181 cross-sheet equalities on FME. This is the class they exist for, and the pair form is the coordinated-misstatement seed.",
+        "source": "cdfc"
+      },
+      {
+        "applies_to": [
+          "ENUM"
+        ],
+        "arity": "cell",
+        "citation": "",
+        "id": "F14",
+        "name": "vocabulary_gap_exploitation",
+        "operators": [
+          {
+            "body": "ee4fe2ef4130185f",
+            "id": "F14.a",
+            "is_pair": false,
+            "name": "legal_but_uncounted",
+            "note": ""
+          }
+        ],
+        "rationale": "MEASURED: the regulator's template computes a scheme total with three COUNTIFs that between them MISS TWO of its nine legal Type-of-Scheme values. A filing exploiting that gap is undetectable by any relation the template encodes \u2014 P10's residue feedstock.",
+        "source": "cdfc"
+      }
+    ],
+    "version": "v3"
+  },
+  "version": "v3"
+}

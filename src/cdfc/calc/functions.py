@@ -239,6 +239,27 @@ def AGGREGATE(fn: Any, options: Any, *rest: Any) -> Any:
     which = int(n[0])
     if which != 15:
         raise Unimplemented(f"AGGREGATE function_num={which}")
+
+    # THE `options` ARGUMENT IS NOT DECORATION, and ignoring it produced a clean wrong answer.
+    #
+    # FOUND AT P6, by comparing our recalculation against LibreOffice's on the FME filing: 29 of
+    # 505 formula cells disagreed. Every one was `AGGREGATE(15, 6, (ROW(r)-ROW(c)+1)/(r2="yes"),
+    # ROWS(...))` — the standard "nth matching row" idiom. Option 6 means IGNORE ERROR VALUES: the
+    # division by FALSE is *meant* to produce `#DIV/0!` for non-matching rows, and AGGREGATE is
+    # meant to drop them. We do not implement array arithmetic, so we computed over the wrong
+    # operand set, returned `#NUM!`, and **`IFERROR` caught it and wrote the literal "NA"** — a
+    # clean, confident, wrong value in 29 cells, with nothing red.
+    #
+    # Refusing is the honest outcome and it is what the module's own docstring already demanded:
+    # an aggregate silently computing the wrong statistic is exactly the failure this project
+    # exists to prevent. The cell becomes NOT_RUN and the campaign counts it under
+    # INDETERMINATE_OBSERVABILITY rather than banking it as evidence.
+    opts = _nums([options])
+    if opts and int(opts[0]) != 0:
+        raise Unimplemented(
+            f"AGGREGATE options={int(opts[0])} — this build implements no ignore behaviour, and "
+            "an aggregate computing over the wrong operand set is a clean wrong answer"
+        )
     if len(rest) < 2:
         return VALUE
     vals = sorted(_nums(_flat([rest[0]])))
