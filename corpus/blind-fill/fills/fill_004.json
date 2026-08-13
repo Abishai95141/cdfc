@@ -1,0 +1,1807 @@
+{
+ "1. Introduction|D|10": [
+  "Registered FME (Non-Retail)"
+ ],
+ "1. Introduction|D|11": [
+  45170
+ ],
+ "1. Introduction|D|12": [
+  "Company"
+ ],
+ "1. Introduction|D|2": [
+  "April - June"
+ ],
+ "1. Introduction|D|21": [
+  "Yes"
+ ],
+ "1. Introduction|D|22": [
+  "No"
+ ],
+ "1. Introduction|D|3": [
+  "2026-27"
+ ],
+ "1. Introduction|D|35": [
+  11
+ ],
+ "1. Introduction|D|39": [
+  "Yes"
+ ],
+ "1. Introduction|D|41": [
+  46127,
+  46122
+ ],
+ "1. Introduction|E|54": [
+  45245,
+  45474
+ ],
+ "1. Introduction|E|57": [
+  45245,
+  45474
+ ],
+ "1. Introduction|F|54": [
+  "Trust"
+ ],
+ "1. Introduction|F|57": [
+  "Trust"
+ ],
+ "1. Introduction|G|54": [
+  "Restricted Scheme (Category II)",
+  "Restricted Scheme (Category III)"
+ ],
+ "1. Introduction|G|57": [
+  "Restricted Scheme (Category II)",
+  "Restricted Scheme (Category III)"
+ ],
+ "1. Introduction|H|54": [
+  "Close-Ended",
+  "Open-Ended"
+ ],
+ "1. Introduction|H|57": [
+  "Close-Ended",
+  "Open-Ended"
+ ],
+ "1. Introduction|J|54": [
+  "No"
+ ],
+ "1. Introduction|J|57": [
+  "No"
+ ],
+ "1. Introduction|K|54": [
+  "No"
+ ],
+ "1. Introduction|K|57": [
+  "No"
+ ],
+ "1. Introduction|L|54": [
+  "No"
+ ],
+ "1. Introduction|L|57": [
+  "No"
+ ],
+ "1. Introduction|M|54": [
+  "No"
+ ],
+ "1. Introduction|M|57": [
+  "No"
+ ],
+ "1. Introduction|N|54": [
+  "Not Applicable"
+ ],
+ "1. Introduction|N|55": [
+  "Not Applicable"
+ ],
+ "2. Summary|F|5": [
+  11,
+  28
+ ],
+ "2. Summary|F|8": [
+  11,
+  28
+ ],
+ "2. Summary|G|5": [
+  150.0,
+  0.0
+ ],
+ "2. Summary|G|8": [
+  150.0,
+  0.0
+ ],
+ "2. Summary|I|5": [
+  22,
+  41
+ ],
+ "2. Summary|I|5#2": [
+  22,
+  41
+ ],
+ "2. Summary|I|8": [
+  22,
+  41
+ ],
+ "2. Summary|I|8#2": [
+  22,
+  41
+ ],
+ "2. Summary|J|5": [
+  118.0,
+  76.0
+ ],
+ "2. Summary|J|8": [
+  118.0,
+  76.0
+ ],
+ "2. Summary|K|5": [
+  92.5,
+  76.0
+ ],
+ "2. Summary|K|8": [
+  92.5,
+  76.0
+ ],
+ "2. Summary|L|5": [
+  0.0,
+  3.5
+ ],
+ "2. Summary|L|8": [
+  0.0,
+  3.5
+ ],
+ "2. Summary|M|5": [
+  84.3,
+  71.4
+ ],
+ "2. Summary|M|8": [
+  84.3,
+  71.4
+ ],
+ "2. Summary|N|5": [
+  7.9,
+  6.3
+ ],
+ "2. Summary|N|8": [
+  7.9,
+  6.3
+ ],
+ "2. Summary|O|5": [
+  2.85,
+  1.95
+ ],
+ "2. Summary|O|8": [
+  2.85,
+  1.95
+ ],
+ "2. Summary|P|5": [
+  9.6,
+  3.1
+ ],
+ "2. Summary|P|8": [
+  9.6,
+  3.1
+ ],
+ "2. Summary|Q|5": [
+  92.5,
+  76.0
+ ],
+ "2. Summary|Q|8": [
+  92.5,
+  76.0
+ ],
+ "2. Summary|R|5": [
+  8.5,
+  4.2
+ ],
+ "2. Summary|R|8": [
+  8.5,
+  4.2
+ ],
+ "2. Summary|S|5": [
+  0.0,
+  12.5
+ ],
+ "2. Summary|S|8": [
+  0.0,
+  12.5
+ ],
+ "2. Summary|T|5": [
+  0.0,
+  2.1
+ ],
+ "2. Summary|T|8": [
+  0.0,
+  2.1
+ ],
+ "2. Summary|U|5": [
+  8.5,
+  2.1
+ ],
+ "2. Summary|U|8": [
+  8.5,
+  2.1
+ ],
+ "2. Summary|V|5": [
+  90.2,
+  81.8
+ ],
+ "2. Summary|V|8": [
+  90.2,
+  81.8
+ ],
+ "2. Summary|W|5": [
+  7.9,
+  6.3
+ ],
+ "2. Summary|W|8": [
+  7.9,
+  6.3
+ ],
+ "2. Summary|X|5": [
+  87.1,
+  79.5
+ ],
+ "2. Summary|X|8": [
+  87.1,
+  79.5
+ ],
+ "3. Portfolio|C|103": [
+  9.5,
+  22.0,
+  14.5
+ ],
+ "3. Portfolio|C|104": [
+  12.5,
+  24.0,
+  6.5
+ ],
+ "3. Portfolio|C|106": [
+  9.5,
+  22.0,
+  14.5
+ ],
+ "3. Portfolio|C|136": [
+  7.8,
+  12.4,
+  5.2
+ ],
+ "3. Portfolio|C|156": [
+  4.0
+ ],
+ "3. Portfolio|C|157": [
+  6.5
+ ],
+ "3. Portfolio|C|158": [
+  18.0
+ ],
+ "3. Portfolio|C|159": [
+  9.5
+ ],
+ "3. Portfolio|C|160": [
+  5.0
+ ],
+ "3. Portfolio|C|161": [
+  12.0
+ ],
+ "3. Portfolio|C|162": [
+  16.5
+ ],
+ "3. Portfolio|C|163": [
+  7.0
+ ],
+ "3. Portfolio|C|164": [
+  3.5
+ ],
+ "3. Portfolio|C|165": [
+  4.0
+ ],
+ "3. Portfolio|C|166": [
+  9.0
+ ],
+ "3. Portfolio|C|17": [
+  0.0,
+  2.0
+ ],
+ "3. Portfolio|C|3": [
+  8.2,
+  4.92
+ ],
+ "3. Portfolio|C|41": [
+  28.0,
+  18.5
+ ],
+ "3. Portfolio|C|55": [
+  7.25,
+  4.0
+ ],
+ "3. Portfolio|C|6": [
+  3.5,
+  6.2
+ ],
+ "3. Portfolio|C|75": [
+  "Unlisted debt securities",
+  "Equity shares listed or to be listed on Stock Exchange",
+  "Cash equivalents",
+  "Unlisted equity shares"
+ ],
+ "3. Portfolio|C|78": [
+  "Unlisted debt securities",
+  "Equity shares listed or to be listed on Stock Exchange",
+  "Cash equivalents",
+  "Unlisted equity shares"
+ ],
+ "3. Portfolio|D|136": [
+  3,
+  5,
+  4,
+  2
+ ],
+ "3. Portfolio|D|139": [
+  3,
+  5,
+  4,
+  2
+ ],
+ "3. Portfolio|D|156": [
+  3.0
+ ],
+ "3. Portfolio|D|157": [
+  4.0
+ ],
+ "3. Portfolio|D|158": [
+  9.0
+ ],
+ "3. Portfolio|D|159": [
+  11.0
+ ],
+ "3. Portfolio|D|160": [
+  6.0
+ ],
+ "3. Portfolio|D|161": [
+  13.0
+ ],
+ "3. Portfolio|D|162": [
+  17.0
+ ],
+ "3. Portfolio|D|163": [
+  22.0
+ ],
+ "3. Portfolio|D|164": [
+  6.5
+ ],
+ "3. Portfolio|D|165": [
+  2.5
+ ],
+ "3. Portfolio|D|166": [
+  4.0
+ ],
+ "3. Portfolio|D|17": [
+  0.0,
+  1.5
+ ],
+ "3. Portfolio|D|178": [
+  3.5,
+  6.2
+ ],
+ "3. Portfolio|D|3": [
+  6.5,
+  3.9
+ ],
+ "3. Portfolio|D|41": [
+  32.0,
+  22.0
+ ],
+ "3. Portfolio|D|55": [
+  3,
+  2
+ ],
+ "3. Portfolio|D|6": [
+  3.5,
+  6.2
+ ],
+ "3. Portfolio|D|75": [
+  3.2,
+  1.5,
+  0.8,
+  2.4
+ ],
+ "3. Portfolio|E|103": [
+  "No",
+  "No",
+  "Yes"
+ ],
+ "3. Portfolio|E|106": [
+  "No",
+  "No",
+  "Yes"
+ ],
+ "3. Portfolio|E|136": [
+  7.8,
+  12.4,
+  5.2
+ ],
+ "3. Portfolio|E|156": [
+  4.0
+ ],
+ "3. Portfolio|E|157": [
+  6.5
+ ],
+ "3. Portfolio|E|158": [
+  18.0
+ ],
+ "3. Portfolio|E|159": [
+  9.5
+ ],
+ "3. Portfolio|E|160": [
+  5.0
+ ],
+ "3. Portfolio|E|161": [
+  12.0
+ ],
+ "3. Portfolio|E|162": [
+  16.5
+ ],
+ "3. Portfolio|E|163": [
+  7.0
+ ],
+ "3. Portfolio|E|164": [
+  3.5
+ ],
+ "3. Portfolio|E|165": [
+  4.0
+ ],
+ "3. Portfolio|E|166": [
+  9.0
+ ],
+ "3. Portfolio|E|17": [
+  0.0,
+  0.0
+ ],
+ "3. Portfolio|E|3": [
+  22.0,
+  13.2
+ ],
+ "3. Portfolio|E|41": [
+  0.0,
+  1.2
+ ],
+ "3. Portfolio|E|55": [
+  5.5,
+  0.0
+ ],
+ "3. Portfolio|E|6": [
+  3.5,
+  6.2
+ ],
+ "3. Portfolio|F|136": [
+  3,
+  5,
+  4,
+  2
+ ],
+ "3. Portfolio|F|139": [
+  3,
+  5,
+  4,
+  2
+ ],
+ "3. Portfolio|F|156": [
+  3.0
+ ],
+ "3. Portfolio|F|157": [
+  4.0
+ ],
+ "3. Portfolio|F|158": [
+  9.0
+ ],
+ "3. Portfolio|F|159": [
+  11.0
+ ],
+ "3. Portfolio|F|160": [
+  6.0
+ ],
+ "3. Portfolio|F|161": [
+  13.0
+ ],
+ "3. Portfolio|F|162": [
+  17.0
+ ],
+ "3. Portfolio|F|163": [
+  22.0
+ ],
+ "3. Portfolio|F|164": [
+  6.5
+ ],
+ "3. Portfolio|F|165": [
+  2.5
+ ],
+ "3. Portfolio|F|166": [
+  4.0
+ ],
+ "3. Portfolio|F|17": [
+  0.0,
+  3.5
+ ],
+ "3. Portfolio|F|178": [
+  46112,
+  46022
+ ],
+ "3. Portfolio|F|181": [
+  46112
+ ],
+ "3. Portfolio|F|3": [
+  34.5,
+  20.7
+ ],
+ "3. Portfolio|F|41": [
+  24.3,
+  29.7
+ ],
+ "3. Portfolio|F|55": [
+  2,
+  0
+ ],
+ "3. Portfolio|F|6": [
+  3.5,
+  6.2
+ ],
+ "3. Portfolio|F|75": [
+  "No",
+  "No",
+  "Yes"
+ ],
+ "3. Portfolio|F|78": [
+  "No",
+  "No",
+  "Yes"
+ ],
+ "3. Portfolio|G|103": [
+  9.5,
+  22.0,
+  14.5
+ ],
+ "3. Portfolio|G|126": [
+  6.0,
+  11.5
+ ],
+ "3. Portfolio|G|136": [
+  7.8,
+  12.4,
+  5.2
+ ],
+ "3. Portfolio|G|156": [
+  4.0
+ ],
+ "3. Portfolio|G|157": [
+  6.5
+ ],
+ "3. Portfolio|G|158": [
+  18.0
+ ],
+ "3. Portfolio|G|159": [
+  9.5
+ ],
+ "3. Portfolio|G|160": [
+  5.0
+ ],
+ "3. Portfolio|G|161": [
+  12.0
+ ],
+ "3. Portfolio|G|162": [
+  16.5
+ ],
+ "3. Portfolio|G|163": [
+  7.0
+ ],
+ "3. Portfolio|G|164": [
+  3.5
+ ],
+ "3. Portfolio|G|165": [
+  4.0
+ ],
+ "3. Portfolio|G|166": [
+  9.0
+ ],
+ "3. Portfolio|G|17": [
+  0.5,
+  3.5
+ ],
+ "3. Portfolio|G|3": [
+  2.0,
+  1.2
+ ],
+ "3. Portfolio|G|6": [
+  3.5,
+  6.2
+ ],
+ "3. Portfolio|H|136": [
+  3,
+  5,
+  4,
+  2
+ ],
+ "3. Portfolio|H|139": [
+  3,
+  5,
+  4,
+  2
+ ],
+ "3. Portfolio|H|156": [
+  9.0,
+  15.5,
+  5.5
+ ],
+ "3. Portfolio|H|3": [
+  1.5,
+  0.9
+ ],
+ "3. Portfolio|H|41": [
+  28.0,
+  18.5
+ ],
+ "3. Portfolio|H|6": [
+  3.5,
+  6.2
+ ],
+ "3. Portfolio|H|75": [
+  "Unlisted debt securities",
+  "Equity shares listed or to be listed on Stock Exchange",
+  "Cash equivalents",
+  "Unlisted equity shares"
+ ],
+ "3. Portfolio|H|78": [
+  "Unlisted debt securities",
+  "Equity shares listed or to be listed on Stock Exchange",
+  "Cash equivalents",
+  "Unlisted equity shares"
+ ],
+ "3. Portfolio|I|103": [
+  "No",
+  "No",
+  "Yes"
+ ],
+ "3. Portfolio|I|106": [
+  "No",
+  "No",
+  "Yes"
+ ],
+ "3. Portfolio|I|136": [
+  7.8,
+  12.4,
+  5.2
+ ],
+ "3. Portfolio|I|156": [
+  9.0,
+  15.5,
+  5.5
+ ],
+ "3. Portfolio|I|3": [
+  1.0,
+  0.6
+ ],
+ "3. Portfolio|I|41": [
+  32.0,
+  22.0
+ ],
+ "3. Portfolio|I|6": [
+  3.5,
+  6.2
+ ],
+ "3. Portfolio|I|74": [
+  2,
+  4
+ ],
+ "3. Portfolio|I|75": [
+  3.2,
+  1.5,
+  0.8,
+  2.4
+ ],
+ "3. Portfolio|I|78": [
+  3.2,
+  1.5,
+  0.8,
+  2.4
+ ],
+ "3. Portfolio|J|136": [
+  3,
+  5,
+  4,
+  2
+ ],
+ "3. Portfolio|J|139": [
+  3,
+  5,
+  4,
+  2
+ ],
+ "3. Portfolio|J|156": [
+  9.0,
+  15.5,
+  5.5
+ ],
+ "3. Portfolio|J|17": [
+  1.5,
+  0.8
+ ],
+ "3. Portfolio|J|3": [
+  0.8,
+  0.48
+ ],
+ "3. Portfolio|J|41": [
+  0.0,
+  1.2
+ ],
+ "3. Portfolio|J|6": [
+  3.5,
+  6.2
+ ],
+ "3. Portfolio|K|103": [
+  9.5,
+  22.0,
+  14.5
+ ],
+ "3. Portfolio|K|106": [
+  9.5,
+  22.0,
+  14.5
+ ],
+ "3. Portfolio|K|136": [
+  7.8,
+  12.4,
+  5.2
+ ],
+ "3. Portfolio|K|156": [
+  9.0,
+  15.5,
+  5.5
+ ],
+ "3. Portfolio|K|17": [
+  2.0,
+  1.2
+ ],
+ "3. Portfolio|K|2": [
+  1,
+  2
+ ],
+ "3. Portfolio|K|3": [
+  1.2,
+  0.72
+ ],
+ "3. Portfolio|K|41": [
+  24.3,
+  29.7
+ ],
+ "3. Portfolio|K|6": [
+  3.5,
+  6.2
+ ],
+ "3. Portfolio|K|75": [
+  "No",
+  "No",
+  "Yes"
+ ],
+ "3. Portfolio|K|78": [
+  "No",
+  "No",
+  "Yes"
+ ],
+ "3. Portfolio|L|136": [
+  3,
+  5,
+  4,
+  2
+ ],
+ "3. Portfolio|L|139": [
+  3,
+  5,
+  4,
+  2
+ ],
+ "3. Portfolio|L|156": [
+  9.0,
+  15.5,
+  5.5
+ ],
+ "3. Portfolio|L|17": [
+  0.6,
+  -0.4
+ ],
+ "3. Portfolio|L|20": [
+  3.5,
+  6.2
+ ],
+ "3. Portfolio|M|103": [
+  "No",
+  "No",
+  "Yes"
+ ],
+ "3. Portfolio|M|136": [
+  7.8,
+  12.4,
+  5.2
+ ],
+ "3. Portfolio|M|17": [
+  0.35,
+  -0.15
+ ],
+ "3. Portfolio|M|3": [
+  0.6,
+  0.36
+ ],
+ "3. Portfolio|M|6": [
+  3.5,
+  6.2
+ ],
+ "3. Portfolio|M|75": [
+  "Unlisted debt securities",
+  "Equity shares listed or to be listed on Stock Exchange",
+  "Cash equivalents",
+  "Unlisted equity shares"
+ ],
+ "3. Portfolio|M|78": [
+  "No",
+  "No",
+  "Yes"
+ ],
+ "3. Portfolio|N|136": [
+  3,
+  5,
+  4,
+  2
+ ],
+ "3. Portfolio|N|139": [
+  3,
+  5,
+  4,
+  2
+ ],
+ "3. Portfolio|N|17": [
+  0.2,
+  -0.3
+ ],
+ "3. Portfolio|N|20": [
+  3.5,
+  6.2
+ ],
+ "3. Portfolio|N|75": [
+  3.2,
+  1.5,
+  0.8,
+  2.4
+ ],
+ "3. Portfolio|N|78": [
+  3.2,
+  1.5,
+  0.8,
+  2.4
+ ],
+ "3. Portfolio|O|103": [
+  9.5,
+  22.0,
+  14.5
+ ],
+ "3. Portfolio|O|106": [
+  9.5,
+  22.0,
+  14.5
+ ],
+ "3. Portfolio|O|126": [
+  6.0,
+  11.5
+ ],
+ "3. Portfolio|O|136": [
+  7.8,
+  12.4,
+  5.2
+ ],
+ "3. Portfolio|P|136": [
+  3,
+  5,
+  4,
+  2
+ ],
+ "3. Portfolio|P|139": [
+  3,
+  5,
+  4,
+  2
+ ],
+ "3. Portfolio|P|75": [
+  "No",
+  "No",
+  "Yes"
+ ],
+ "3. Portfolio|P|78": [
+  "No",
+  "No",
+  "Yes"
+ ],
+ "3. Portfolio|Q|103": [
+  "No",
+  "No",
+  "Yes"
+ ],
+ "3. Portfolio|Q|106": [
+  "No",
+  "No",
+  "Yes"
+ ],
+ "3. Portfolio|Q|136": [
+  7.8,
+  12.4,
+  5.2
+ ],
+ "3. Portfolio|Q|139": [
+  7.8,
+  12.4,
+  5.2
+ ],
+ "3. Portfolio|R|136": [
+  3,
+  5,
+  4,
+  2
+ ],
+ "3. Portfolio|R|139": [
+  3,
+  5,
+  4,
+  2
+ ],
+ "3. Portfolio|R|75": [
+  "Unlisted debt securities",
+  "Equity shares listed or to be listed on Stock Exchange",
+  "Cash equivalents",
+  "Unlisted equity shares"
+ ],
+ "3. Portfolio|R|78": [
+  "Unlisted debt securities",
+  "Equity shares listed or to be listed on Stock Exchange",
+  "Cash equivalents",
+  "Unlisted equity shares"
+ ],
+ "3. Portfolio|S|103": [
+  9.5,
+  22.0,
+  14.5
+ ],
+ "3. Portfolio|S|126": [
+  6.0,
+  11.5
+ ],
+ "3. Portfolio|S|136": [
+  7.8,
+  12.4,
+  5.2
+ ],
+ "3. Portfolio|S|75": [
+  3.2,
+  1.5,
+  0.8,
+  2.4
+ ],
+ "3. Portfolio|S|78": [
+  3.2,
+  1.5,
+  0.8,
+  2.4
+ ],
+ "3. Portfolio|T|136": [
+  3,
+  5,
+  4,
+  2
+ ],
+ "3. Portfolio|T|139": [
+  3,
+  5,
+  4,
+  2
+ ],
+ "3. Portfolio|U|103": [
+  "No",
+  "No",
+  "Yes"
+ ],
+ "3. Portfolio|U|136": [
+  7.8,
+  12.4,
+  5.2
+ ],
+ "3. Portfolio|U|139": [
+  7.8,
+  12.4,
+  5.2
+ ],
+ "3. Portfolio|U|75": [
+  "No",
+  "No",
+  "Yes"
+ ],
+ "3. Portfolio|U|78": [
+  "No",
+  "No",
+  "Yes"
+ ],
+ "3. Portfolio|V|136": [
+  3,
+  5,
+  4,
+  2
+ ],
+ "3. Portfolio|V|139": [
+  3,
+  5,
+  4,
+  2
+ ],
+ "3. Portfolio|W|75": [
+  "Unlisted debt securities",
+  "Equity shares listed or to be listed on Stock Exchange",
+  "Cash equivalents",
+  "Unlisted equity shares"
+ ],
+ "3. Portfolio|W|78": [
+  "Unlisted debt securities",
+  "Equity shares listed or to be listed on Stock Exchange",
+  "Cash equivalents",
+  "Unlisted equity shares"
+ ],
+ "3. Portfolio|X|75": [
+  3.2,
+  1.5,
+  0.8,
+  2.4
+ ],
+ "3. Portfolio|X|78": [
+  3.2,
+  1.5,
+  0.8,
+  2.4
+ ],
+ "3. Portfolio|Z|75": [
+  "No",
+  "No",
+  "Yes"
+ ],
+ "3. Portfolio|Z|78": [
+  "No",
+  "No",
+  "Yes"
+ ],
+ "4. Investors|C|14": [
+  1
+ ],
+ "4. Investors|C|17": [
+  1,
+  2
+ ],
+ "4. Investors|C|21": [
+  4.5,
+  2.475
+ ],
+ "4. Investors|C|24": [
+  4.5,
+  2.475
+ ],
+ "4. Investors|C|41": [
+  9.0
+ ],
+ "4. Investors|C|60": [
+  3.825,
+  2.104
+ ],
+ "4. Investors|C|80": [
+  2
+ ],
+ "4. Investors|C|83": [
+  1,
+  1
+ ],
+ "4. Investors|D|14": [
+  1
+ ],
+ "4. Investors|D|17": [
+  1,
+  2
+ ],
+ "4. Investors|D|21": [
+  1,
+  1
+ ],
+ "4. Investors|D|24": [
+  1,
+  1
+ ],
+ "4. Investors|D|60": [
+  1,
+  1
+ ],
+ "4. Investors|D|80": [
+  22.0,
+  15.0
+ ],
+ "4. Investors|D|83": [
+  1.87,
+  1.029
+ ],
+ "4. Investors|E|14": [
+  3
+ ],
+ "4. Investors|E|17": [
+  1,
+  2
+ ],
+ "4. Investors|E|21": [
+  1.1,
+  0.605
+ ],
+ "4. Investors|E|24": [
+  1.1,
+  0.605
+ ],
+ "4. Investors|E|60": [
+  0.935,
+  0.514
+ ],
+ "4. Investors|E|80": [
+  7,
+  5
+ ],
+ "4. Investors|E|83": [
+  3,
+  2
+ ],
+ "4. Investors|F|14": [
+  6
+ ],
+ "4. Investors|F|17": [
+  1,
+  2
+ ],
+ "4. Investors|F|21": [
+  6,
+  5
+ ],
+ "4. Investors|F|24": [
+  6,
+  5
+ ],
+ "4. Investors|F|60": [
+  6,
+  5
+ ],
+ "4. Investors|F|80": [
+  25.0,
+  18.0
+ ],
+ "4. Investors|F|83": [
+  40.8,
+  22.44
+ ],
+ "4. Investors|G|14": [
+  19
+ ],
+ "4. Investors|G|17": [
+  1,
+  2
+ ],
+ "4. Investors|G|21": [
+  32.5,
+  17.875
+ ],
+ "4. Investors|G|24": [
+  32.5,
+  17.875
+ ],
+ "4. Investors|G|60": [
+  27.625,
+  15.194
+ ],
+ "4. Investors|G|80": [
+  7,
+  5
+ ],
+ "4. Investors|G|83": [
+  19,
+  18
+ ],
+ "4. Investors|H|14": [
+  2
+ ],
+ "4. Investors|H|17": [
+  1,
+  2
+ ],
+ "4. Investors|H|21": [
+  2,
+  1
+ ],
+ "4. Investors|H|60": [
+  2,
+  1
+ ],
+ "4. Investors|I|14": [
+  3
+ ],
+ "4. Investors|I|17": [
+  1,
+  2
+ ],
+ "4. Investors|I|21": [
+  35.0,
+  19.25
+ ],
+ "4. Investors|I|24": [
+  35.0,
+  19.25
+ ],
+ "4. Investors|I|60": [
+  29.75,
+  16.363
+ ],
+ "4. Investors|J|14": [
+  1
+ ],
+ "4. Investors|J|17": [
+  1,
+  2
+ ],
+ "4. Investors|J|21": [
+  1,
+  1
+ ],
+ "4. Investors|J|60": [
+  1,
+  1
+ ],
+ "4. Investors|K|14": [
+  2
+ ],
+ "4. Investors|K|21": [
+  9.0,
+  4.95
+ ],
+ "4. Investors|K|24": [
+  9.0,
+  4.95
+ ],
+ "4. Investors|K|60": [
+  7.65,
+  4.208
+ ],
+ "4. Investors|L|14": [
+  2
+ ],
+ "4. Investors|L|21": [
+  4,
+  3
+ ],
+ "4. Investors|L|60": [
+  4,
+  3
+ ],
+ "4. Investors|M|14": [
+  1
+ ],
+ "4. Investors|M|17": [
+  1,
+  2
+ ],
+ "4. Investors|M|21": [
+  6.0,
+  3.3
+ ],
+ "4. Investors|M|24": [
+  6.0,
+  3.3
+ ],
+ "4. Investors|M|60": [
+  5.1,
+  2.805
+ ],
+ "4. Investors|N|21": [
+  3,
+  2
+ ],
+ "4. Investors|N|24": [
+  3,
+  2
+ ],
+ "4. Investors|N|60": [
+  3,
+  2
+ ],
+ "4. Investors|O|21": [
+  9.0,
+  4.95
+ ],
+ "4. Investors|O|24": [
+  9.0,
+  4.95
+ ],
+ "4. Investors|O|52": [
+  2,
+  4
+ ],
+ "4. Investors|O|60": [
+  7.65,
+  4.208
+ ],
+ "4. Investors|P|21": [
+  2,
+  1
+ ],
+ "4. Investors|P|24": [
+  2,
+  1
+ ],
+ "4. Investors|P|60": [
+  2,
+  1
+ ],
+ "4. Investors|Q|21": [
+  11.5,
+  6.325
+ ],
+ "4. Investors|Q|24": [
+  11.5,
+  6.325
+ ],
+ "4. Investors|Q|52": [
+  2,
+  4
+ ],
+ "4. Investors|Q|60": [
+  9.775,
+  5.376
+ ],
+ "4. Investors|R|21": [
+  2,
+  1
+ ],
+ "4. Investors|R|24": [
+  2,
+  1
+ ],
+ "4. Investors|R|60": [
+  2,
+  1
+ ],
+ "4. Investors|S|20": [
+  2.0
+ ],
+ "4. Investors|S|21": [
+  7.5,
+  4.125
+ ],
+ "4. Investors|S|24": [
+  7.5,
+  4.125
+ ],
+ "4. Investors|S|52": [
+  2,
+  4
+ ],
+ "4. Investors|S|60": [
+  6.375,
+  3.506
+ ],
+ "4. Investors|T|21": [
+  3,
+  2
+ ],
+ "4. Investors|T|24": [
+  3,
+  2
+ ],
+ "4. Investors|T|60": [
+  3,
+  2
+ ],
+ "4. Investors|U|21": [
+  7.5,
+  4.125
+ ],
+ "4. Investors|U|24": [
+  7.5,
+  4.125
+ ],
+ "4. Investors|U|52": [
+  2,
+  4
+ ],
+ "4. Investors|U|60": [
+  6.375,
+  3.506
+ ],
+ "4. Investors|V|21": [
+  2,
+  1
+ ],
+ "4. Investors|V|24": [
+  2,
+  1
+ ],
+ "4. Investors|V|60": [
+  2,
+  1
+ ],
+ "4. Investors|W|21": [
+  5.0,
+  2.75
+ ],
+ "4. Investors|W|24": [
+  5.0,
+  2.75
+ ],
+ "4. Investors|W|52": [
+  2,
+  4
+ ],
+ "4. Investors|X|21": [
+  2,
+  1
+ ],
+ "4. Investors|X|24": [
+  2,
+  1
+ ],
+ "4. Investors|Y|21": [
+  3.8,
+  2.09
+ ],
+ "4. Investors|Y|24": [
+  3.8,
+  2.09
+ ],
+ "4. Investors|Y|52": [
+  2,
+  4
+ ],
+ "4. Investors|Z|21": [
+  2,
+  1
+ ],
+ "4. Investors|Z|24": [
+  2,
+  1
+ ],
+ "5. PMS|C|10": [
+  1.5,
+  0.8
+ ],
+ "5. PMS|C|11": [
+  0.0,
+  0.2
+ ],
+ "5. PMS|C|23": [
+  38.5,
+  21.175
+ ],
+ "5. PMS|C|24": [
+  7.2,
+  3.96
+ ],
+ "5. PMS|C|25": [
+  9.8,
+  5.39
+ ],
+ "5. PMS|C|36": [
+  6.0
+ ],
+ "5. PMS|C|4": [
+  24.0
+ ],
+ "5. PMS|C|49": [
+  38.5,
+  21.175
+ ],
+ "5. PMS|C|5": [
+  5.0
+ ],
+ "5. PMS|C|52": [
+  38.5,
+  21.175
+ ],
+ "5. PMS|D|10": [
+  0.6,
+  0.25
+ ],
+ "5. PMS|D|11": [
+  0.0,
+  0.05
+ ],
+ "5. PMS|D|23": [
+  11,
+  7
+ ],
+ "5. PMS|D|24": [
+  3,
+  1
+ ],
+ "5. PMS|D|25": [
+  4,
+  1
+ ],
+ "5. PMS|D|4": [
+  3.0
+ ],
+ "5. PMS|D|49": [
+  11,
+  7
+ ],
+ "5. PMS|D|5": [
+  0.6
+ ],
+ "5. PMS|D|52": [
+  11,
+  7
+ ],
+ "5. PMS|D|69": [
+  8,
+  3
+ ],
+ "5. PMS|E|10": [
+  0.35,
+  -0.1
+ ],
+ "5. PMS|E|11": [
+  0.05,
+  -0.02
+ ],
+ "5. PMS|E|23": [
+  38.5,
+  21.175
+ ],
+ "5. PMS|E|24": [
+  7.2,
+  3.96
+ ],
+ "5. PMS|E|25": [
+  9.8,
+  5.39
+ ],
+ "5. PMS|E|4": [
+  3.5
+ ],
+ "5. PMS|E|49": [
+  38.5,
+  21.175
+ ],
+ "5. PMS|E|5": [
+  1.0
+ ],
+ "5. PMS|E|52": [
+  38.5,
+  21.175
+ ],
+ "5. PMS|F|23": [
+  11,
+  7
+ ],
+ "5. PMS|F|24": [
+  3,
+  1
+ ],
+ "5. PMS|F|25": [
+  4,
+  1
+ ],
+ "5. PMS|F|4": [
+  1.5
+ ],
+ "5. PMS|F|49": [
+  11,
+  7
+ ],
+ "5. PMS|F|5": [
+  0.3
+ ],
+ "5. PMS|F|52": [
+  11,
+  7
+ ],
+ "5. PMS|F|69": [
+  8,
+  3
+ ],
+ "5. PMS|G|23": [
+  38.5,
+  21.175
+ ],
+ "5. PMS|G|24": [
+  7.2,
+  3.96
+ ],
+ "5. PMS|G|25": [
+  9.8,
+  5.39
+ ],
+ "5. PMS|G|4": [
+  2.0
+ ],
+ "5. PMS|G|49": [
+  38.5,
+  21.175
+ ],
+ "5. PMS|G|5": [
+  0.3
+ ],
+ "5. PMS|G|52": [
+  38.5,
+  21.175
+ ],
+ "5. PMS|H|23": [
+  8,
+  4
+ ],
+ "5. PMS|H|4": [
+  1.5
+ ],
+ "5. PMS|H|49": [
+  8,
+  4
+ ],
+ "5. PMS|H|52": [
+  8,
+  4
+ ],
+ "5. PMS|I|23": [
+  30.8,
+  16.94
+ ],
+ "5. PMS|I|4": [
+  1.0
+ ],
+ "5. PMS|J|23": [
+  7,
+  3
+ ],
+ "5. PMS|J|4": [
+  1.3
+ ],
+ "5. PMS|K|23": [
+  32.725,
+  17.999
+ ],
+ "5. PMS|K|4": [
+  0.5
+ ],
+ "5. PMS|L|23": [
+  11,
+  7
+ ],
+ "5. PMS|L|4": [
+  0.2
+ ],
+ "5. PMS|M|23": [
+  34.65,
+  19.058
+ ],
+ "5. PMS|N|23": [
+  10,
+  6
+ ],
+ "5. PMS|N|4": [
+  2
+ ],
+ "5. PMS|O|23": [
+  36.575,
+  20.116
+ ],
+ "5. PMS|O|4": [
+  2
+ ],
+ "5. PMS|P|23": [
+  9,
+  5
+ ],
+ "5. PMS|P|4": [
+  2
+ ],
+ "5. PMS|Q|23": [
+  38.5,
+  21.175
+ ],
+ "5. PMS|Q|4": [
+  2
+ ],
+ "5. PMS|R|23": [
+  8,
+  4
+ ],
+ "5. PMS|R|4": [
+  2
+ ],
+ "5. PMS|S|23": [
+  40.425,
+  22.234
+ ],
+ "5. PMS|S|4": [
+  2
+ ],
+ "5. PMS|T|23": [
+  7,
+  3
+ ],
+ "5. PMS|T|4": [
+  2
+ ],
+ "5. PMS|U|23": [
+  42.35,
+  23.293
+ ],
+ "5. PMS|V|23": [
+  6,
+  2
+ ],
+ "5. PMS|W|23": [
+  44.275,
+  24.351
+ ],
+ "5. PMS|X|23": [
+  5,
+  1
+ ],
+ "5. PMS|Y|23": [
+  21.175,
+  11.646
+ ],
+ "5. PMS|Z|23": [
+  4,
+  1
+ ],
+ "6. Complaints|C|6": [
+  "Yes"
+ ],
+ "6. Complaints|C|7": [
+  45214
+ ],
+ "7. AML-CFT|C|13": [
+  "Completed"
+ ],
+ "7. AML-CFT|C|16": [
+  "Yes"
+ ],
+ "7. AML-CFT|C|18": [
+  "No"
+ ],
+ "7. AML-CFT|C|20": [
+  "Automated"
+ ],
+ "7. AML-CFT|C|22": [
+  "Manual"
+ ],
+ "7. AML-CFT|C|32": [
+  "No"
+ ],
+ "8. Compliance Status|C|10": [
+  "Yes"
+ ],
+ "8. Compliance Status|C|11": [
+  "Yes"
+ ],
+ "8. Compliance Status|C|12": [
+  "Yes"
+ ],
+ "8. Compliance Status|C|4": [
+  "Yes"
+ ],
+ "8. Compliance Status|C|5": [
+  "Yes"
+ ],
+ "8. Compliance Status|C|6": [
+  "Yes"
+ ],
+ "8. Compliance Status|C|7": [
+  "Yes"
+ ],
+ "8. Compliance Status|C|8": [
+  "Yes"
+ ],
+ "8. Compliance Status|C|9": [
+  "Yes"
+ ],
+ "Dropdown|M|11": [
+  0
+ ]
+}

@@ -1,0 +1,4861 @@
+[
+ {
+  "id": "1. Introduction|D|10",
+  "label": "Details | Category of Registration of FME",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$J$3:$J$5",
+  "max": null,
+  "choices": [
+   "Registered FME (Retail)",
+   "Registered FME (Non-Retail)",
+   "Authorised FME"
+  ],
+  "rows": 1
+ },
+ {
+  "id": "1. Introduction|D|11",
+  "label": "Date of Registration of FME ",
+  "kind": "date",
+  "operator": "",
+  "min": "32874",
+  "max": "73415",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "1. Introduction|D|12",
+  "label": "Legal Structure of FME",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$G$3:$G$7",
+  "max": null,
+  "choices": [
+   "Company",
+   "Limited Liability Partnership",
+   "Branch of a Company",
+   "Branch of a LLP",
+   "Trust"
+  ],
+  "rows": 1
+ },
+ {
+  "id": "1. Introduction|D|2",
+  "label": "Quarter",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$D$3:$D$6",
+  "max": null,
+  "choices": [
+   "April - June",
+   "July - September",
+   "October - December",
+   "January - March"
+  ],
+  "rows": 1
+ },
+ {
+  "id": "1. Introduction|D|21",
+  "label": "Whether FME has expressed its intent & paid applicable fee to IFSCA for providing Portfolio Management Service",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$5",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No",
+   "Not Applicable"
+  ],
+  "rows": 1
+ },
+ {
+  "id": "1. Introduction|D|22",
+  "label": "Whether FME has obtained authorization from IFSCA for providing Third-Party Fund Management Services in IFSC",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$5",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No",
+   "Not Applicable"
+  ],
+  "rows": 1
+ },
+ {
+  "id": "1. Introduction|D|3",
+  "label": "Financial Year",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$E$3:$E$6",
+  "max": null,
+  "choices": [
+   "2025-26",
+   "2026-27",
+   "2027-28",
+   "2028-29"
+  ],
+  "rows": 1
+ },
+ {
+  "id": "1. Introduction|D|35",
+  "label": "Total Number of employees on the payroll of FME in IFSC \n(including PO, CO & Additional KMP reported above)",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "1. Introduction|D|39",
+  "label": "Whether FME has paid the applicable recurring fees to IFSCA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 1
+ },
+ {
+  "id": "1. Introduction|D|41",
+  "label": "Date of payment of recurring fees",
+  "kind": "date",
+  "operator": "",
+  "min": "40179",
+  "max": "55152",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "1. Introduction|E|54",
+  "label": "Date of IFSCA Authorisation of Scheme | NA",
+  "kind": "date",
+  "operator": "",
+  "min": "40179",
+  "max": "55153",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "1. Introduction|E|57",
+  "label": "NA",
+  "kind": "date",
+  "operator": "",
+  "min": "40179",
+  "max": "55153",
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "1. Introduction|F|54",
+  "label": "Legal Structure of scheme | NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$K$3:$K$5",
+  "max": null,
+  "choices": [
+   "Trust",
+   "Limited Liability Partnership",
+   "Company"
+  ],
+  "rows": 3
+ },
+ {
+  "id": "1. Introduction|F|57",
+  "label": "NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$K$3:$K$5",
+  "max": null,
+  "choices": [
+   "Trust",
+   "Limited Liability Partnership",
+   "Company"
+  ],
+  "rows": 7
+ },
+ {
+  "id": "1. Introduction|G|54",
+  "label": "Type of Scheme | NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$F$3:$F$11",
+  "max": null,
+  "choices": [
+   "Venture Capital Scheme",
+   "Angel Scheme",
+   "Restricted Scheme (Category I)",
+   "Restricted Scheme (Category II)",
+   "Restricted Scheme (Category III)",
+   "Retail Scheme",
+   "Exchange Traded Fund",
+   "Special Situation Fund",
+   "Family Investment Fund"
+  ],
+  "rows": 3
+ },
+ {
+  "id": "1. Introduction|G|57",
+  "label": "NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$F$3:$F$11",
+  "max": null,
+  "choices": [
+   "Venture Capital Scheme",
+   "Angel Scheme",
+   "Restricted Scheme (Category I)",
+   "Restricted Scheme (Category II)",
+   "Restricted Scheme (Category III)",
+   "Retail Scheme",
+   "Exchange Traded Fund",
+   "Special Situation Fund",
+   "Family Investment Fund"
+  ],
+  "rows": 7
+ },
+ {
+  "id": "1. Introduction|H|54",
+  "label": "Open-Ended / Close-Ended | NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$I$3:$I$4",
+  "max": null,
+  "choices": [
+   "Open-Ended",
+   "Close-Ended"
+  ],
+  "rows": 3
+ },
+ {
+  "id": "1. Introduction|H|57",
+  "label": "NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$I$3:$I$4",
+  "max": null,
+  "choices": [
+   "Open-Ended",
+   "Close-Ended"
+  ],
+  "rows": 7
+ },
+ {
+  "id": "1. Introduction|J|54",
+  "label": "Whether Scheme is approved as an ESG Scheme",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 3
+ },
+ {
+  "id": "1. Introduction|J|57",
+  "label": "",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 7
+ },
+ {
+  "id": "1. Introduction|K|54",
+  "label": "Whether Scheme is set up as a Fund of Funds (FoF) Scheme",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 3
+ },
+ {
+  "id": "1. Introduction|K|57",
+  "label": "",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 7
+ },
+ {
+  "id": "1. Introduction|L|54",
+  "label": "Whether Scheme has stated intent  to have 50% or more contribution from NRIs, OCIs & RIs",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$5",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No",
+   "Not Applicable"
+  ],
+  "rows": 3
+ },
+ {
+  "id": "1. Introduction|L|57",
+  "label": "",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$5",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No",
+   "Not Applicable"
+  ],
+  "rows": 7
+ },
+ {
+  "id": "1. Introduction|M|54",
+  "label": "Whether Scheme is relocated from a foreign jurisdiction",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 3
+ },
+ {
+  "id": "1. Introduction|M|57",
+  "label": "",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 7
+ },
+ {
+  "id": "1. Introduction|N|54",
+  "label": "Whether Scheme is managed under the Third-Party Fund Management Arrangement",
+  "kind": "list",
+  "operator": "",
+  "min": "Choicelist",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No",
+   "Not Applicable"
+  ],
+  "rows": 1
+ },
+ {
+  "id": "1. Introduction|N|55",
+  "label": "Not Applicable",
+  "kind": "list",
+  "operator": "",
+  "min": "Choicelist",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No",
+   "Not Applicable"
+  ],
+  "rows": 9
+ },
+ {
+  "id": "2. Summary|F|5",
+  "label": "No. of Investee\nCompanies (not including cash equivalents) | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "2. Summary|F|8",
+  "label": "NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "2. Summary|G|5",
+  "label": "Stated Target Corpus (Only for Close-Ended Schemes)\n(USD Million) | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "2. Summary|G|8",
+  "label": "NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "2. Summary|I|5",
+  "label": "No. of\nInvestors who have committed",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "2. Summary|I|5#2",
+  "label": "No. of\nInvestors who have committed",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "2. Summary|I|8",
+  "label": "",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "2. Summary|I|8#2",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "2. Summary|J|5",
+  "label": "Cumulative commitments raised, as at the end of quarter (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "2. Summary|J|8",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "2. Summary|K|5",
+  "label": "Cumulative funds raised, as at the end of quarter (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "2. Summary|K|8",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "2. Summary|L|5",
+  "label": "Funds borrowed, as at the end of quarter (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "2. Summary|L|8",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "2. Summary|M|5",
+  "label": "Cumulative Investments made, as at the end of quarter (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "2. Summary|M|8",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "2. Summary|N|5",
+  "label": "Cash equivalents, as at the end of quarter (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "2. Summary|N|8",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "2. Summary|O|5",
+  "label": "Cumulative fees and expenses (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "2. Summary|O|8",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "2. Summary|P|5",
+  "label": "Cumulative distributions made, as at the end of quarter\n(USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "2. Summary|P|8",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "2. Summary|Q|5",
+  "label": "Cumulative funds raised, as at the end of quarter (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "2. Summary|Q|8",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "2. Summary|R|5",
+  "label": "Funds raised during the quarter (USD million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "2. Summary|R|8",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "2. Summary|S|5",
+  "label": "Cumulative redemptions, as at the end of quarter (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "2. Summary|S|8",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "2. Summary|T|5",
+  "label": "Redemptions during the quarter (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "2. Summary|T|8",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "2. Summary|U|5",
+  "label": "Net Inflow(+ve)/\nOutflow (-ve) during the quarter\n(USD Million)",
+  "kind": "decimal",
+  "operator": "lessThanOrEqual",
+  "min": "9.99999999999999E+26",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "2. Summary|U|8",
+  "label": "",
+  "kind": "decimal",
+  "operator": "lessThanOrEqual",
+  "min": "9.99999999999999E+26",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "2. Summary|V|5",
+  "label": "Net Assets\nUnder\nManagement as at the end of quarter (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "2. Summary|V|8",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "2. Summary|W|5",
+  "label": "Cash equivalents, as at the end of quarter (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "2. Summary|W|8",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "2. Summary|X|5",
+  "label": "Average Net Assets under Management for the quarter (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "2. Summary|X|8",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "3. Portfolio|C|103",
+  "label": "Amount Invested in US as % of Total Portfolio Value of the Scheme (%) | NA",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 2
+ },
+ {
+  "id": "3. Portfolio|C|104",
+  "label": "Amount Invested in US as % of Total Portfolio Value of the Scheme (%)",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 4
+ },
+ {
+  "id": "3. Portfolio|C|106",
+  "label": "",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 15
+ },
+ {
+  "id": "3. Portfolio|C|136",
+  "label": "Investments made (USD Million) | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|C|156",
+  "label": "Exposure as % to Total Portfolio Value under the Scheme (%) | Energy",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|C|157",
+  "label": "Exposure as % to Total Portfolio Value under the Scheme (%) | Materials",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|C|158",
+  "label": "Exposure as % to Total Portfolio Value under the Scheme (%) | Industrials",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|C|159",
+  "label": "Consumer Discretionary",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|C|160",
+  "label": "Consumer Staples",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|C|161",
+  "label": "Health Care",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|C|162",
+  "label": "Financials",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|C|163",
+  "label": "Information Technology",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|C|164",
+  "label": "Communication Services",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|C|165",
+  "label": "Utilities",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|C|166",
+  "label": "Real Estate",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|C|17",
+  "label": "Amount of borrowing as at the beginning of quarter | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|C|3",
+  "label": "Equity shares listed or to be listed on Stock Exchange | NA",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "99999999999999",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|C|41",
+  "label": "Investment Grade | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|C|55",
+  "label": "Investments in startups\n(in USD Million) | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|C|6",
+  "label": "NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 35
+ },
+ {
+  "id": "3. Portfolio|C|75",
+  "label": "Nature of \"X\" | NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$M$3:$M$14",
+  "max": null,
+  "choices": [
+   "Equity shares listed or to be listed on Stock Exchange",
+   "Unlisted equity shares",
+   "Debt securities listed or to be listed on Stock Exchange",
+   "Unlisted debt securities",
+   "Other Schemes in IFSC",
+   "Other Schemes in India",
+   "Other Schemes in Foreign Jurisdictions",
+   "LLP interest",
+   "Physical Assets",
+   "Cash equivalents",
+   "Actual amount paid towards derivative contracts",
+   "Other instruments"
+  ],
+  "rows": 6
+ },
+ {
+  "id": "3. Portfolio|C|78",
+  "label": "NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$M$3:$M$14",
+  "max": null,
+  "choices": [
+   "Equity shares listed or to be listed on Stock Exchange",
+   "Unlisted equity shares",
+   "Debt securities listed or to be listed on Stock Exchange",
+   "Unlisted debt securities",
+   "Other Schemes in IFSC",
+   "Other Schemes in India",
+   "Other Schemes in Foreign Jurisdictions",
+   "LLP interest",
+   "Physical Assets",
+   "Cash equivalents",
+   "Actual amount paid towards derivative contracts",
+   "Other instruments"
+  ],
+  "rows": 14
+ },
+ {
+  "id": "3. Portfolio|D|136",
+  "label": "No. of Investments  | NA",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|D|139",
+  "label": "NA",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "3. Portfolio|D|156",
+  "label": "Exposure as % to Total Portfolio Value under the Scheme (%) | Energy",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|D|157",
+  "label": "Exposure as % to Total Portfolio Value under the Scheme (%) | Materials",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|D|158",
+  "label": "Exposure as % to Total Portfolio Value under the Scheme (%) | Industrials",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|D|159",
+  "label": "Consumer Discretionary",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|D|160",
+  "label": "Consumer Staples",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|D|161",
+  "label": "Health Care",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|D|162",
+  "label": "Financials",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|D|163",
+  "label": "Information Technology",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|D|164",
+  "label": "Communication Services",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|D|165",
+  "label": "Utilities",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|D|166",
+  "label": "Real Estate",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|D|17",
+  "label": "Amount of borrowing during the quarter | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|D|178",
+  "label": "Latest Valuation of investments of\nscheme (in USD Million) | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|D|3",
+  "label": "Unlisted equity shares | NA",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "99999999999999",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|D|41",
+  "label": "Below Investment Grade (but not default grade) | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|D|55",
+  "label": "No. of startups invested in | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|D|6",
+  "label": "NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 49
+ },
+ {
+  "id": "3. Portfolio|D|75",
+  "label": "Amount Invested (USD Million)\n\"AI\" | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 6
+ },
+ {
+  "id": "3. Portfolio|E|103",
+  "label": "Whether \"TI\" is an associate of FME (Y/N) | NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 6
+ },
+ {
+  "id": "3. Portfolio|E|106",
+  "label": "NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 14
+ },
+ {
+  "id": "3. Portfolio|E|136",
+  "label": "Investments made (USD Million) | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|E|156",
+  "label": "Exposure as % to Total Portfolio Value under the Scheme (%) | Energy",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|E|157",
+  "label": "Exposure as % to Total Portfolio Value under the Scheme (%) | Materials",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|E|158",
+  "label": "Exposure as % to Total Portfolio Value under the Scheme (%) | Industrials",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|E|159",
+  "label": "Consumer Discretionary",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|E|160",
+  "label": "Consumer Staples",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|E|161",
+  "label": "Health Care",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|E|162",
+  "label": "Financials",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|E|163",
+  "label": "Information Technology",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|E|164",
+  "label": "Communication Services",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|E|165",
+  "label": "Utilities",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|E|166",
+  "label": "Real Estate",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|E|17",
+  "label": "Amount of repayment during the quarter | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|E|3",
+  "label": "Debt securities listed or to be listed on Stock Exchange | NA",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "99999999999999",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|E|41",
+  "label": "Default Grade | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|E|55",
+  "label": "Investments in infrastructure related projects\n(in USD Million) | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|E|6",
+  "label": "NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 35
+ },
+ {
+  "id": "3. Portfolio|F|136",
+  "label": "No. of Investments  | NA",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|F|139",
+  "label": "NA",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "3. Portfolio|F|156",
+  "label": "Exposure as % to Total Portfolio Value under the Scheme (%) | Energy",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|F|157",
+  "label": "Exposure as % to Total Portfolio Value under the Scheme (%) | Materials",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|F|158",
+  "label": "Exposure as % to Total Portfolio Value under the Scheme (%) | Industrials",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|F|159",
+  "label": "Consumer Discretionary",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|F|160",
+  "label": "Consumer Staples",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|F|161",
+  "label": "Health Care",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|F|162",
+  "label": "Financials",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|F|163",
+  "label": "Information Technology",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|F|164",
+  "label": "Communication Services",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|F|165",
+  "label": "Utilities",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|F|166",
+  "label": "Real Estate",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|F|17",
+  "label": "Amount of borrowing as at the end of quarter | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|F|178",
+  "label": "Date of previous valuation | NA",
+  "kind": "date",
+  "operator": "",
+  "min": "32874",
+  "max": "219512",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|F|181",
+  "label": "NA",
+  "kind": "date",
+  "operator": "",
+  "min": "32874",
+  "max": "219512",
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "3. Portfolio|F|3",
+  "label": "Unlisted debt securities | NA",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "99999999999999",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|F|41",
+  "label": "Non-Rated | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|F|55",
+  "label": "No.of investments in infrastructure related projects | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|F|6",
+  "label": "NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 28
+ },
+ {
+  "id": "3. Portfolio|F|75",
+  "label": "Whether \"X\" is an associate of FME (Y/N) | NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 6
+ },
+ {
+  "id": "3. Portfolio|F|78",
+  "label": "NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 14
+ },
+ {
+  "id": "3. Portfolio|G|103",
+  "label": "Amount Invested in US as % of Total Portfolio Value of the Scheme (%) | NA",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 6
+ },
+ {
+  "id": "3. Portfolio|G|126",
+  "label": "",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|G|136",
+  "label": "Investments made (USD Million) | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|G|156",
+  "label": "Exposure as % to Total Portfolio Value under the Scheme (%) | Energy",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|G|157",
+  "label": "Exposure as % to Total Portfolio Value under the Scheme (%) | Materials",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|G|158",
+  "label": "Exposure as % to Total Portfolio Value under the Scheme (%) | Industrials",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|G|159",
+  "label": "Consumer Discretionary",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|G|160",
+  "label": "Consumer Staples",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|G|161",
+  "label": "Health Care",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|G|162",
+  "label": "Financials",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|G|163",
+  "label": "Information Technology",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|G|164",
+  "label": "Communication Services",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|G|165",
+  "label": "Utilities",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|G|166",
+  "label": "Real Estate",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|G|17",
+  "label": "Highest amount of outstanding borrowing at any point during the quarter | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|G|3",
+  "label": "Other Schemes in IFSC | NA",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "99999999999999",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|G|6",
+  "label": "NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 35
+ },
+ {
+  "id": "3. Portfolio|H|136",
+  "label": "No. of Investments ",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|H|139",
+  "label": "",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "3. Portfolio|H|156",
+  "label": "Exposure as % to Total Portfolio Value under the Scheme (%)",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|H|3",
+  "label": "Other Schemes in India",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "99999999999999",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|H|41",
+  "label": "Investment Grade",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|H|6",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 22
+ },
+ {
+  "id": "3. Portfolio|H|75",
+  "label": "Nature of \"X\" | NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$M$3:$M$14",
+  "max": null,
+  "choices": [
+   "Equity shares listed or to be listed on Stock Exchange",
+   "Unlisted equity shares",
+   "Debt securities listed or to be listed on Stock Exchange",
+   "Unlisted debt securities",
+   "Other Schemes in IFSC",
+   "Other Schemes in India",
+   "Other Schemes in Foreign Jurisdictions",
+   "LLP interest",
+   "Physical Assets",
+   "Cash equivalents",
+   "Actual amount paid towards derivative contracts",
+   "Other instruments"
+  ],
+  "rows": 6
+ },
+ {
+  "id": "3. Portfolio|H|78",
+  "label": "NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$M$3:$M$14",
+  "max": null,
+  "choices": [
+   "Equity shares listed or to be listed on Stock Exchange",
+   "Unlisted equity shares",
+   "Debt securities listed or to be listed on Stock Exchange",
+   "Unlisted debt securities",
+   "Other Schemes in IFSC",
+   "Other Schemes in India",
+   "Other Schemes in Foreign Jurisdictions",
+   "LLP interest",
+   "Physical Assets",
+   "Cash equivalents",
+   "Actual amount paid towards derivative contracts",
+   "Other instruments"
+  ],
+  "rows": 14
+ },
+ {
+  "id": "3. Portfolio|I|103",
+  "label": "Whether \"TI\" is an associate of FME (Y/N) | NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 6
+ },
+ {
+  "id": "3. Portfolio|I|106",
+  "label": "NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 14
+ },
+ {
+  "id": "3. Portfolio|I|136",
+  "label": "Investments made (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|I|156",
+  "label": "Exposure as % to Total Portfolio Value under the Scheme (%)",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|I|3",
+  "label": "Other Schemes in Foreign Jurisdictions",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "99999999999999",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|I|41",
+  "label": "Below Investment Grade (but not default grade)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|I|6",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 29
+ },
+ {
+  "id": "3. Portfolio|I|74",
+  "label": "Nature of \"X\"",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 2
+ },
+ {
+  "id": "3. Portfolio|I|75",
+  "label": "Amount Invested (USD Million)\n\"AI\" | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 6
+ },
+ {
+  "id": "3. Portfolio|I|78",
+  "label": "NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 14
+ },
+ {
+  "id": "3. Portfolio|J|136",
+  "label": "No. of Investments ",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|J|139",
+  "label": "",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "3. Portfolio|J|156",
+  "label": "Exposure as % to Total Portfolio Value under the Scheme (%)",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|J|17",
+  "label": "Gross Notional Exposure through Derivatives",
+  "kind": "decimal",
+  "operator": "lessThanOrEqual",
+  "min": "9.99999999999999E+21",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|J|3",
+  "label": "LLP interest",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "99999999999999",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|J|41",
+  "label": "Default Grade",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|J|6",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 29
+ },
+ {
+  "id": "3. Portfolio|K|103",
+  "label": "Amount Invested in US as % of Total Portfolio Value of the Scheme (%) | NA",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 6
+ },
+ {
+  "id": "3. Portfolio|K|106",
+  "label": "NA",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 14
+ },
+ {
+  "id": "3. Portfolio|K|136",
+  "label": "Investments made (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|K|156",
+  "label": "Exposure as % to Total Portfolio Value under the Scheme (%)",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|K|17",
+  "label": "Highest Notional Exposure  through derivatives at any point during the quarter",
+  "kind": "decimal",
+  "operator": "lessThanOrEqual",
+  "min": "9.99999999999999E+21",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|K|2",
+  "label": "LLP interest",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "3. Portfolio|K|3",
+  "label": "Physical Assets",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "99999999999999",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|K|41",
+  "label": "Non-Rated",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|K|6",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 37
+ },
+ {
+  "id": "3. Portfolio|K|75",
+  "label": "Whether \"X\" is an associate of FME (Y/N) | NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 6
+ },
+ {
+  "id": "3. Portfolio|K|78",
+  "label": "NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 14
+ },
+ {
+  "id": "3. Portfolio|L|136",
+  "label": "No. of Investments ",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|L|139",
+  "label": "",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "3. Portfolio|L|156",
+  "label": "Exposure as % to Total Portfolio Value under the Scheme (%)",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|L|17",
+  "label": "Net Unhedged Notional Exposure through Derivatives",
+  "kind": "decimal",
+  "operator": "lessThanOrEqual",
+  "min": "9.99999999999999E+21",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|L|20",
+  "label": "",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 15
+ },
+ {
+  "id": "3. Portfolio|M|103",
+  "label": "Whether \"TI\" is an associate of FME (Y/N) | NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 6
+ },
+ {
+  "id": "3. Portfolio|M|136",
+  "label": "Investments made (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|M|17",
+  "label": "Net Gains / Losses booked on cumulative basis on Derivative Contracts ",
+  "kind": "decimal",
+  "operator": "lessThanOrEqual",
+  "min": "9.99999999999999E+21",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|M|3",
+  "label": "Actual amount paid towards derivative contracts",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "500000000000",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|M|6",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 21
+ },
+ {
+  "id": "3. Portfolio|M|75",
+  "label": "Nature of \"X\" | NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$M$3:$M$14",
+  "max": null,
+  "choices": [
+   "Equity shares listed or to be listed on Stock Exchange",
+   "Unlisted equity shares",
+   "Debt securities listed or to be listed on Stock Exchange",
+   "Unlisted debt securities",
+   "Other Schemes in IFSC",
+   "Other Schemes in India",
+   "Other Schemes in Foreign Jurisdictions",
+   "LLP interest",
+   "Physical Assets",
+   "Cash equivalents",
+   "Actual amount paid towards derivative contracts",
+   "Other instruments"
+  ],
+  "rows": 6
+ },
+ {
+  "id": "3. Portfolio|M|78",
+  "label": "NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 28
+ },
+ {
+  "id": "3. Portfolio|N|136",
+  "label": "No. of Investments ",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|N|139",
+  "label": "",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "3. Portfolio|N|17",
+  "label": "Net Gains / Losses on outstanding derivative contracts marked to market as at the end of the quarter",
+  "kind": "decimal",
+  "operator": "lessThanOrEqual",
+  "min": "9.99999999999999E+21",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|N|20",
+  "label": "",
+  "kind": "decimal",
+  "operator": "lessThanOrEqual",
+  "min": "9.99999999999999E+21",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "3. Portfolio|N|75",
+  "label": "Amount Invested (USD Million)\n\"AI\" | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 6
+ },
+ {
+  "id": "3. Portfolio|N|78",
+  "label": "NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 14
+ },
+ {
+  "id": "3. Portfolio|O|103",
+  "label": "Amount Invested in US as % of Total Portfolio Value of the Scheme (%) | NA",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 6
+ },
+ {
+  "id": "3. Portfolio|O|106",
+  "label": "NA",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 14
+ },
+ {
+  "id": "3. Portfolio|O|126",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 8
+ },
+ {
+  "id": "3. Portfolio|O|136",
+  "label": "Investments made (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|P|136",
+  "label": "No. of Investments ",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|P|139",
+  "label": "",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "3. Portfolio|P|75",
+  "label": "Whether \"X\" is an associate of FME (Y/N) | NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 6
+ },
+ {
+  "id": "3. Portfolio|P|78",
+  "label": "NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 14
+ },
+ {
+  "id": "3. Portfolio|Q|103",
+  "label": "Whether \"TI\" is an associate of FME (Y/N) | NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 6
+ },
+ {
+  "id": "3. Portfolio|Q|106",
+  "label": "NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 14
+ },
+ {
+  "id": "3. Portfolio|Q|136",
+  "label": "Investments made (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|Q|139",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "3. Portfolio|R|136",
+  "label": "No. of Investments ",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|R|139",
+  "label": "",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "3. Portfolio|R|75",
+  "label": "Nature of \"X\" | NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$M$3:$M$14",
+  "max": null,
+  "choices": [
+   "Equity shares listed or to be listed on Stock Exchange",
+   "Unlisted equity shares",
+   "Debt securities listed or to be listed on Stock Exchange",
+   "Unlisted debt securities",
+   "Other Schemes in IFSC",
+   "Other Schemes in India",
+   "Other Schemes in Foreign Jurisdictions",
+   "LLP interest",
+   "Physical Assets",
+   "Cash equivalents",
+   "Actual amount paid towards derivative contracts",
+   "Other instruments"
+  ],
+  "rows": 6
+ },
+ {
+  "id": "3. Portfolio|R|78",
+  "label": "NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$M$3:$M$14",
+  "max": null,
+  "choices": [
+   "Equity shares listed or to be listed on Stock Exchange",
+   "Unlisted equity shares",
+   "Debt securities listed or to be listed on Stock Exchange",
+   "Unlisted debt securities",
+   "Other Schemes in IFSC",
+   "Other Schemes in India",
+   "Other Schemes in Foreign Jurisdictions",
+   "LLP interest",
+   "Physical Assets",
+   "Cash equivalents",
+   "Actual amount paid towards derivative contracts",
+   "Other instruments"
+  ],
+  "rows": 14
+ },
+ {
+  "id": "3. Portfolio|S|103",
+  "label": "Amount Invested in US as % of Total Portfolio Value of the Scheme (%) | NA",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "100",
+  "choices": null,
+  "rows": 6
+ },
+ {
+  "id": "3. Portfolio|S|126",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 8
+ },
+ {
+  "id": "3. Portfolio|S|136",
+  "label": "Investments made (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|S|75",
+  "label": "Amount Invested (USD Million)\n\"AI\" | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 6
+ },
+ {
+  "id": "3. Portfolio|S|78",
+  "label": "NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 28
+ },
+ {
+  "id": "3. Portfolio|T|136",
+  "label": "No. of Investments ",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|T|139",
+  "label": "",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "3. Portfolio|U|103",
+  "label": "Whether \"TI\" is an associate of FME (Y/N) | NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 6
+ },
+ {
+  "id": "3. Portfolio|U|136",
+  "label": "Investments made (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|U|139",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "3. Portfolio|U|75",
+  "label": "Whether \"X\" is an associate of FME (Y/N) | NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 6
+ },
+ {
+  "id": "3. Portfolio|U|78",
+  "label": "NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 28
+ },
+ {
+  "id": "3. Portfolio|V|136",
+  "label": "No. of Investments ",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "3. Portfolio|V|139",
+  "label": "",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "3. Portfolio|W|75",
+  "label": "Nature of \"X\" | NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$M$3:$M$14",
+  "max": null,
+  "choices": [
+   "Equity shares listed or to be listed on Stock Exchange",
+   "Unlisted equity shares",
+   "Debt securities listed or to be listed on Stock Exchange",
+   "Unlisted debt securities",
+   "Other Schemes in IFSC",
+   "Other Schemes in India",
+   "Other Schemes in Foreign Jurisdictions",
+   "LLP interest",
+   "Physical Assets",
+   "Cash equivalents",
+   "Actual amount paid towards derivative contracts",
+   "Other instruments"
+  ],
+  "rows": 6
+ },
+ {
+  "id": "3. Portfolio|W|78",
+  "label": "NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$M$3:$M$14",
+  "max": null,
+  "choices": [
+   "Equity shares listed or to be listed on Stock Exchange",
+   "Unlisted equity shares",
+   "Debt securities listed or to be listed on Stock Exchange",
+   "Unlisted debt securities",
+   "Other Schemes in IFSC",
+   "Other Schemes in India",
+   "Other Schemes in Foreign Jurisdictions",
+   "LLP interest",
+   "Physical Assets",
+   "Cash equivalents",
+   "Actual amount paid towards derivative contracts",
+   "Other instruments"
+  ],
+  "rows": 14
+ },
+ {
+  "id": "3. Portfolio|X|75",
+  "label": "Amount Invested (USD Million)\n\"AI\" | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 6
+ },
+ {
+  "id": "3. Portfolio|X|78",
+  "label": "NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 14
+ },
+ {
+  "id": "3. Portfolio|Z|75",
+  "label": "Whether \"X\" is an associate of FME (Y/N) | NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 6
+ },
+ {
+  "id": "3. Portfolio|Z|78",
+  "label": "NA",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 14
+ },
+ {
+  "id": "4. Investors|C|14",
+  "label": "FME",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|C|17",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "4. Investors|C|21",
+  "label": "Amount (USD Million) | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 6
+ },
+ {
+  "id": "4. Investors|C|24",
+  "label": "NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 21
+ },
+ {
+  "id": "4. Investors|C|41",
+  "label": "Accredited Investors",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "4. Investors|C|60",
+  "label": "Funds raised (USD Million) | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|C|80",
+  "label": "Total number of Distributors engaged by FME | NA",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|C|83",
+  "label": "NA",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "4. Investors|D|14",
+  "label": "Associates of FME",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|D|17",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "4. Investors|D|21",
+  "label": "No. of Investors | NA",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 6
+ },
+ {
+  "id": "4. Investors|D|24",
+  "label": "NA",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 21
+ },
+ {
+  "id": "4. Investors|D|60",
+  "label": "No. of investors | NA",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|D|80",
+  "label": "Commitments raised through Distributors (USD Million) | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|D|83",
+  "label": "NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "4. Investors|E|14",
+  "label": "Employees / Directors / Designated Partners / Partners of FME",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|E|17",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "4. Investors|E|21",
+  "label": "Amount (USD Million) | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 6
+ },
+ {
+  "id": "4. Investors|E|24",
+  "label": "NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 21
+ },
+ {
+  "id": "4. Investors|E|60",
+  "label": "Funds raised (USD Million) | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|E|80",
+  "label": "No. of Investors onboarded through Distributors | NA",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|E|83",
+  "label": "NA",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "4. Investors|F|14",
+  "label": "Corporations",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|F|17",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "4. Investors|F|21",
+  "label": "No. of Investors | NA",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 6
+ },
+ {
+  "id": "4. Investors|F|24",
+  "label": "NA",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 21
+ },
+ {
+  "id": "4. Investors|F|60",
+  "label": "No. of investors | NA",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|F|80",
+  "label": "Net Assets under Management sourced through Distributors as at end of the quarter  (USD Million) | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|F|83",
+  "label": "NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "4. Investors|G|14",
+  "label": "Individuals",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|G|17",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "4. Investors|G|21",
+  "label": "Amount (USD Million) | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|G|24",
+  "label": "NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 14
+ },
+ {
+  "id": "4. Investors|G|60",
+  "label": "Funds raised (USD Million) | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|G|80",
+  "label": "Net Number of Investors onboarded through Distributors as at end of the quarter | NA",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|G|83",
+  "label": "NA",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "4. Investors|H|14",
+  "label": "Trusts",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|H|17",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 15
+ },
+ {
+  "id": "4. Investors|H|21",
+  "label": "No. of Investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|H|60",
+  "label": "No. of investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|I|14",
+  "label": "Other Investment Funds",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|I|17",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "4. Investors|I|21",
+  "label": "Amount (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|I|24",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 14
+ },
+ {
+  "id": "4. Investors|I|60",
+  "label": "Funds raised (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|J|14",
+  "label": "Developmental\nAgencies / Government\nAgencies",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|J|17",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 15
+ },
+ {
+  "id": "4. Investors|J|21",
+  "label": "No. of Investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|J|60",
+  "label": "No. of investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|K|14",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 6
+ },
+ {
+  "id": "4. Investors|K|21",
+  "label": "Amount (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|K|24",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 14
+ },
+ {
+  "id": "4. Investors|K|60",
+  "label": "Funds raised (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|L|14",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 20
+ },
+ {
+  "id": "4. Investors|L|21",
+  "label": "No. of Investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|L|60",
+  "label": "No. of investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|M|14",
+  "label": "Others",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|M|17",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 5
+ },
+ {
+  "id": "4. Investors|M|21",
+  "label": "Amount (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|M|24",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 14
+ },
+ {
+  "id": "4. Investors|M|60",
+  "label": "Funds raised (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|N|21",
+  "label": "No. of Investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|N|24",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 18
+ },
+ {
+  "id": "4. Investors|N|60",
+  "label": "No. of investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|O|21",
+  "label": "Amount (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|O|24",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 14
+ },
+ {
+  "id": "4. Investors|O|52",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 4
+ },
+ {
+  "id": "4. Investors|O|60",
+  "label": "Funds raised (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|P|21",
+  "label": "No. of Investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|P|24",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 18
+ },
+ {
+  "id": "4. Investors|P|60",
+  "label": "No. of investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|Q|21",
+  "label": "Amount (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|Q|24",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 14
+ },
+ {
+  "id": "4. Investors|Q|52",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 4
+ },
+ {
+  "id": "4. Investors|Q|60",
+  "label": "Funds raised (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|R|21",
+  "label": "No. of Investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|R|24",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 18
+ },
+ {
+  "id": "4. Investors|R|60",
+  "label": "No. of investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|S|20",
+  "label": "Trusts | No. of Investors",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "4. Investors|S|21",
+  "label": "Amount (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|S|24",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 14
+ },
+ {
+  "id": "4. Investors|S|52",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 4
+ },
+ {
+  "id": "4. Investors|S|60",
+  "label": "Funds raised (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|T|21",
+  "label": "No. of Investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|T|24",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 18
+ },
+ {
+  "id": "4. Investors|T|60",
+  "label": "No. of investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|U|21",
+  "label": "Amount (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|U|24",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 14
+ },
+ {
+  "id": "4. Investors|U|52",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 4
+ },
+ {
+  "id": "4. Investors|U|60",
+  "label": "Funds raised (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|V|21",
+  "label": "No. of Investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|V|24",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 18
+ },
+ {
+  "id": "4. Investors|V|60",
+  "label": "No. of investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|W|21",
+  "label": "Amount (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|W|24",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "4. Investors|W|52",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 4
+ },
+ {
+  "id": "4. Investors|X|21",
+  "label": "No. of Investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|X|24",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 11
+ },
+ {
+  "id": "4. Investors|Y|21",
+  "label": "Amount (USD Million)",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|Y|24",
+  "label": "",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "4. Investors|Y|52",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 4
+ },
+ {
+  "id": "4. Investors|Z|21",
+  "label": "No. of Investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "4. Investors|Z|24",
+  "label": "",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "5. PMS|C|10",
+  "label": "Gross Notional Exposure through Derivatives | Discretionary PMS",
+  "kind": "decimal",
+  "operator": "",
+  "min": "-9999999999",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "5. PMS|C|11",
+  "label": "Gross Notional Exposure through Derivatives | Non-Discretionary PMS",
+  "kind": "decimal",
+  "operator": "",
+  "min": "-9999999999",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "5. PMS|C|23",
+  "label": "Amount (USD Million) | Discretionary PMS",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 2
+ },
+ {
+  "id": "5. PMS|C|24",
+  "label": "Amount (USD Million) | Non-Discretionary PMS",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 2
+ },
+ {
+  "id": "5. PMS|C|25",
+  "label": "Amount (USD Million) | Advisory Services",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 2
+ },
+ {
+  "id": "5. PMS|C|36",
+  "label": "Accredited Investors",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "5. PMS|C|4",
+  "label": "Equity shares listed or to be listed on Stock Exchange | Discretionary PMS",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "5. PMS|C|49",
+  "label": "Amount (USD Million) | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 6
+ },
+ {
+  "id": "5. PMS|C|5",
+  "label": "Equity shares listed or to be listed on Stock Exchange | Non-Discretionary PMS",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "5. PMS|C|52",
+  "label": "NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 14
+ },
+ {
+  "id": "5. PMS|D|10",
+  "label": "Net Unhedged Notional Exposure through Derivatives | Discretionary PMS",
+  "kind": "decimal",
+  "operator": "",
+  "min": "-5000000",
+  "max": "5000000",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "5. PMS|D|11",
+  "label": "Net Unhedged Notional Exposure through Derivatives | Non-Discretionary PMS",
+  "kind": "decimal",
+  "operator": "",
+  "min": "-5000000",
+  "max": "5000000",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "5. PMS|D|23",
+  "label": "No. of Investors | Discretionary PMS",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 2
+ },
+ {
+  "id": "5. PMS|D|24",
+  "label": "No. of Investors | Non-Discretionary PMS",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 2
+ },
+ {
+  "id": "5. PMS|D|25",
+  "label": "No. of Investors | Advisory Services",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 2
+ },
+ {
+  "id": "5. PMS|D|4",
+  "label": "Unlisted equity shares | Discretionary PMS",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "5. PMS|D|49",
+  "label": "No. of investors | NA",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "5. PMS|D|5",
+  "label": "Unlisted equity shares | Non-Discretionary PMS",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "5. PMS|D|52",
+  "label": "NA",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 14
+ },
+ {
+  "id": "5. PMS|D|69",
+  "label": "No. of investments | NA",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "5. PMS|E|10",
+  "label": "Net Gains / Losses booked on cumulative basis on Derivative Contracts  | Discretionary PMS",
+  "kind": "decimal",
+  "operator": "",
+  "min": "-5000000",
+  "max": "5000000",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "5. PMS|E|11",
+  "label": "Net Gains / Losses booked on cumulative basis on Derivative Contracts  | Non-Discretionary PMS",
+  "kind": "decimal",
+  "operator": "",
+  "min": "-5000000",
+  "max": "5000000",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "5. PMS|E|23",
+  "label": "Amount (USD Million) | Discretionary PMS",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 2
+ },
+ {
+  "id": "5. PMS|E|24",
+  "label": "Amount (USD Million) | Non-Discretionary PMS",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 2
+ },
+ {
+  "id": "5. PMS|E|25",
+  "label": "Amount (USD Million) | Advisory Services",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 2
+ },
+ {
+  "id": "5. PMS|E|4",
+  "label": "Debt securities listed or to be listed on Stock Exchange | Discretionary PMS",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "5. PMS|E|49",
+  "label": "Amount (USD Million) | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 6
+ },
+ {
+  "id": "5. PMS|E|5",
+  "label": "Debt securities listed or to be listed on Stock Exchange | Non-Discretionary PMS",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "5. PMS|E|52",
+  "label": "NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 14
+ },
+ {
+  "id": "5. PMS|F|23",
+  "label": "No. of Investors | Discretionary PMS",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 2
+ },
+ {
+  "id": "5. PMS|F|24",
+  "label": "No. of Investors | Non-Discretionary PMS",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 2
+ },
+ {
+  "id": "5. PMS|F|25",
+  "label": "No. of Investors | Advisory Services",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 2
+ },
+ {
+  "id": "5. PMS|F|4",
+  "label": "Unlisted debt securities | Discretionary PMS",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "5. PMS|F|49",
+  "label": "No. of investors | NA",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "5. PMS|F|5",
+  "label": "Unlisted debt securities | Non-Discretionary PMS",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "5. PMS|F|52",
+  "label": "NA",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 14
+ },
+ {
+  "id": "5. PMS|F|69",
+  "label": "No. of investments | NA",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "5. PMS|G|23",
+  "label": "Amount (USD Million) | Discretionary PMS",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "5. PMS|G|24",
+  "label": "Amount (USD Million) | Non-Discretionary PMS",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "5. PMS|G|25",
+  "label": "Amount (USD Million) | Advisory Services",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "5. PMS|G|4",
+  "label": "Schemes in IFSC | Discretionary PMS",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "5. PMS|G|49",
+  "label": "Amount (USD Million) | NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "5. PMS|G|5",
+  "label": "Schemes in IFSC | Non-Discretionary PMS",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "5. PMS|G|52",
+  "label": "NA",
+  "kind": "decimal",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "5. PMS|H|23",
+  "label": "No. of Investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "5. PMS|H|4",
+  "label": "Schemes in India",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 2
+ },
+ {
+  "id": "5. PMS|H|49",
+  "label": "No. of investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "5. PMS|H|52",
+  "label": "",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 7
+ },
+ {
+  "id": "5. PMS|I|23",
+  "label": "Amount (USD Million)",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "5. PMS|I|4",
+  "label": "Schemes in Foreign Jurisdictions",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 2
+ },
+ {
+  "id": "5. PMS|J|23",
+  "label": "No. of Investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "5. PMS|J|4",
+  "label": "Cash equivalents",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 2
+ },
+ {
+  "id": "5. PMS|K|23",
+  "label": "Amount (USD Million)",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "5. PMS|K|4",
+  "label": "Actual amount paid towards derivative contracts",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 2
+ },
+ {
+  "id": "5. PMS|L|23",
+  "label": "No. of Investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "5. PMS|L|4",
+  "label": "Other\nfinancial products",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 2
+ },
+ {
+  "id": "5. PMS|M|23",
+  "label": "Amount (USD Million)",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "5. PMS|N|23",
+  "label": "No. of Investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "5. PMS|N|4",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 2
+ },
+ {
+  "id": "5. PMS|O|23",
+  "label": "Amount (USD Million)",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "5. PMS|O|4",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 2
+ },
+ {
+  "id": "5. PMS|P|23",
+  "label": "No. of Investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "5. PMS|P|4",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 2
+ },
+ {
+  "id": "5. PMS|Q|23",
+  "label": "Amount (USD Million)",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "5. PMS|Q|4",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 2
+ },
+ {
+  "id": "5. PMS|R|23",
+  "label": "No. of Investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "5. PMS|R|4",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 2
+ },
+ {
+  "id": "5. PMS|S|23",
+  "label": "Amount (USD Million)",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "5. PMS|S|4",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 2
+ },
+ {
+  "id": "5. PMS|T|23",
+  "label": "No. of Investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "5. PMS|T|4",
+  "label": "",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 2
+ },
+ {
+  "id": "5. PMS|U|23",
+  "label": "Amount (USD Million)",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "5. PMS|V|23",
+  "label": "No. of Investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "5. PMS|W|23",
+  "label": "Amount (USD Million)",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "5. PMS|X|23",
+  "label": "No. of Investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "5. PMS|Y|23",
+  "label": "Amount (USD Million)",
+  "kind": "decimal",
+  "operator": "",
+  "min": "0",
+  "max": "5000000000",
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "5. PMS|Z|23",
+  "label": "No. of Investors",
+  "kind": "whole",
+  "operator": "greaterThanOrEqual",
+  "min": "0",
+  "max": null,
+  "choices": null,
+  "rows": 3
+ },
+ {
+  "id": "6. Complaints|C|6",
+  "label": "Details | Whether the Policy on Complaint Handling and Grievance Redressal is in place",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 1
+ },
+ {
+  "id": "6. Complaints|C|7",
+  "label": "Details | Date of approval of Policy by Governing Board / Board of Directors",
+  "kind": "date",
+  "operator": "",
+  "min": "40179",
+  "max": "55153",
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "7. AML-CFT|C|13",
+  "label": "FINGATE 2.0 registration status",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$N$3:$N$5",
+  "max": null,
+  "choices": [
+   "Completed",
+   "In-progress",
+   "Not initiated"
+  ],
+  "rows": 1
+ },
+ {
+  "id": "7. AML-CFT|C|16",
+  "label": "Whether the ML/TF risk is part of RE's Enterprise Wise Risk Assessment (EWRA)?",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 1
+ },
+ {
+  "id": "7. AML-CFT|C|18",
+  "label": "Whether the RE relies on third party/business facilitator for CDD of clients/ customers?",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 1
+ },
+ {
+  "id": "7. AML-CFT|C|20",
+  "label": "Whether the sanction screening is manual or automated?",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$O$3:$O$4",
+  "max": null,
+  "choices": [
+   "Manual",
+   "Automated"
+  ],
+  "rows": 1
+ },
+ {
+  "id": "7. AML-CFT|C|22",
+  "label": "Is transaction monitoring procedure through system / manual in the RE",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$P$3:$P$4",
+  "max": null,
+  "choices": [
+   "System",
+   "Manual"
+  ],
+  "rows": 1
+ },
+ {
+  "id": "7. AML-CFT|C|32",
+  "label": "Whether the RE has onboarded any retail customers/clients? \nIf yes, please select the range.",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$Q$3:$Q$6",
+  "max": null,
+  "choices": [
+   "No",
+   "0-50",
+   "51-100",
+   "Above 100"
+  ],
+  "rows": 1
+ },
+ {
+  "id": "8. Compliance Status|C|10",
+  "label": "The FME is in compliance with the requirements for disclosures to the investors under IFSCA (Fund Management) ",
+  "kind": "list",
+  "operator": "",
+  "min": "IF(C5=\"No\",Choicelist,YesNolist)",
+  "max": null,
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "8. Compliance Status|C|11",
+  "label": "The FME is in compliance with Investment Valuation Norms as specified in Sixth Schedule of IFSCA (Fund Managem",
+  "kind": "list",
+  "operator": "",
+  "min": "IF(C5=\"No\",Choicelist,YesNolist)",
+  "max": null,
+  "choices": null,
+  "rows": 1
+ },
+ {
+  "id": "8. Compliance Status|C|12",
+  "label": "The distributors appointed by FMEs are in compliance with the code of conduct prescribed under the IFSCA (Capi",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$5",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No",
+   "Not Applicable"
+  ],
+  "rows": 1
+ },
+ {
+  "id": "8. Compliance Status|C|4",
+  "label": "Compliance | The FME and its operations in IFSC are in compliance with the IFSCA (Fund Management) Regulations",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 1
+ },
+ {
+  "id": "8. Compliance Status|C|5",
+  "label": "Compliance | Whether, the FME has commenced fund management activities in GIFT IFSC, i.e., either raised funds",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 1
+ },
+ {
+  "id": "8. Compliance Status|C|6",
+  "label": "Compliance | The Net worth requirement has been complied with at all times during the reporting period.",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 1
+ },
+ {
+  "id": "8. Compliance Status|C|7",
+  "label": "The FME and its principal officer, directors/ partners/ designated partners, key managerial personnel and cont",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 1
+ },
+ {
+  "id": "8. Compliance Status|C|8",
+  "label": "The FME has the necessary infrastructure like adequate office space, equipment, communication facilities and m",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 1
+ },
+ {
+  "id": "8. Compliance Status|C|9",
+  "label": "The FME, its fiduciaries, KMPs (including Principal officer, Fund Managers and Designated Compliance Officer) ",
+  "kind": "list",
+  "operator": "",
+  "min": "Dropdown!$H$3:$H$4",
+  "max": null,
+  "choices": [
+   "Yes",
+   "No"
+  ],
+  "rows": 1
+ },
+ {
+  "id": "Dropdown|M|11",
+  "label": "LLP interest",
+  "kind": "whole",
+  "operator": "",
+  "min": "0",
+  "max": "50000000",
+  "choices": null,
+  "rows": 1
+ }
+]
