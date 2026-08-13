@@ -1,0 +1,135 @@
+{
+  "base_sha256": "7d9a1960085785eefbe166fb5e04e94689780c490235fe55d8f3e8b620ceea39",
+  "by_fault_class": {
+    "F01": {
+      "G": 29,
+      "I": 0,
+      "K": 29,
+      "O": 29,
+      "R": 0,
+      "U": 0
+    },
+    "F02": {
+      "G": 72,
+      "I": 0,
+      "K": 20,
+      "O": 72,
+      "R": 0,
+      "U": 0
+    },
+    "F03": {
+      "G": 58,
+      "I": 0,
+      "K": 14,
+      "O": 58,
+      "R": 0,
+      "U": 0
+    },
+    "F04": {
+      "G": 5,
+      "I": 0,
+      "K": 2,
+      "O": 5,
+      "R": 0,
+      "U": 0
+    },
+    "F05": {
+      "G": 224,
+      "I": 0,
+      "K": 53,
+      "O": 224,
+      "R": 34,
+      "U": 0
+    },
+    "F06": {
+      "G": 24,
+      "I": 0,
+      "K": 2,
+      "O": 24,
+      "R": 0,
+      "U": 0
+    },
+    "F07": {
+      "G": 112,
+      "I": 0,
+      "K": 34,
+      "O": 112,
+      "R": 17,
+      "U": 0
+    },
+    "F08": {
+      "G": 16,
+      "I": 0,
+      "K": 5,
+      "O": 16,
+      "R": 1,
+      "U": 0
+    },
+    "F09": {
+      "G": 36,
+      "I": 0,
+      "K": 12,
+      "O": 36,
+      "R": 0,
+      "U": 0
+    },
+    "F10": {
+      "G": 32,
+      "I": 0,
+      "K": 1,
+      "O": 32,
+      "R": 0,
+      "U": 0
+    },
+    "F11": {
+      "G": 25,
+      "I": 0,
+      "K": 7,
+      "O": 25,
+      "R": 6,
+      "U": 0
+    },
+    "F12": {
+      "G": 100,
+      "I": 0,
+      "K": 68,
+      "O": 88,
+      "R": 20,
+      "U": 12
+    },
+    "F13": {
+      "G": 36,
+      "I": 0,
+      "K": 11,
+      "O": 36,
+      "R": 0,
+      "U": 0
+    },
+    "F14": {
+      "G": 4,
+      "I": 0,
+      "K": 0,
+      "O": 4,
+      "R": 0,
+      "U": 0
+    }
+  },
+  "campaign_id": "fme-v3-seed20260810",
+  "evaluator_version": "cdfc.calc P3 + celpy 0.5.0",
+  "fault_model_digest": "4b14132ef9add6c2ef9158a90082360c9a6d69471efcd1a75d6c7aab684ab372",
+  "fault_model_version": "v3",
+  "harness_version": "p6-b1",
+  "indeterminate_rate": "0/773",
+  "kill_rate": "258/761",
+  "sampling_rule": "stratified by dtype, at most 12 sites per stratum, seed 20260810; 72 of 4252 field-surface cells (COUNT+F:12/378, DATE:12/23, ENUM:12/401, MILLI_USD_MILLION:12/1880, MILLI_USD_MILLION+F:12/127, TEXT:12/1443); plus 40 cell(s) that feed a formula this evaluator cannot compute, so the INDETERMINATE class is measurable at all rather than depending on which cells the RNG chose (30 such formula cells)",
+  "site_set_digest": "4b14132ef9add6c2",
+  "totals": {
+    "G": 773,
+    "I": 0,
+    "K": 258,
+    "O": 761,
+    "R": 78,
+    "U": 12
+  },
+  "unobservable_rate": "12/773"
+}

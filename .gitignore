@@ -1,6 +1,6 @@
 .venv-cdfc/
 .venv/
-reports/
+reports/*
 # ...EXCEPT the two things a BUILD GATE reads. `ci/no-bare-absence.sh` resolves every
 # `ledger:<row_id>` citation against the validation ledger, and the host-function registry
 # refuses to load a function whose mutation score is not a produced file. A gate whose data is
