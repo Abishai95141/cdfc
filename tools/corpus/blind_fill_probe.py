@@ -33,14 +33,35 @@ from collections import Counter
 REPO = pathlib.Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "src"))
 
-S = pathlib.Path("/private/tmp/claude-501/-Users-abishaikc-Gift/"
-                 "894fad3b-2031-4e06-855a-b18de2cd4288/scratchpad")
+# The fills are COMMITTED, not session scratch: they are five instances' work and a scratchpad is
+# session-scoped. `filler_task.json` beside them is exactly what the fillers were given, so what
+# they saw is auditable rather than described.
+S = REPO / "corpus/blind-fill/fills"
 FME = REPO / "fixtures/prescribed/Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx"
 OUT = REPO / "docs/measurements/P8-blind-probe.md"
 
 
 def _row(ref: str) -> int:
     return int(re.search(r"(\d+)$", ref).group(1))
+
+
+def _remainder(ctx, filled: set) -> dict[tuple[str, str], object]:
+    """Every unlocked non-formula cell the filler was NOT offered, at the declared default.
+
+    **The README said the remainder takes the declared default and the code did not do it**, so
+    the filing carried ~900 EMPTY cells instead. That is not a cosmetic gap: a bound over a range
+    where most cells are absent sent the evaluator to 6 GB on ONE predicate and never returned.
+    A document describing a behaviour the code does not have is the defect this project is about,
+    committed in its own harness.
+    """
+    formula_refs = {(s, f.ref) for s, fs in ctx.formulas_by_sheet.items() for f in fs}
+    out: dict[tuple[str, str], object] = {}
+    for sheet, ref in sorted(ctx.wb.unlocked_cells):
+        if (sheet, ref) in formula_refs or (sheet, ref) in filled:
+            continue
+        if (sheet, ref) in ctx.key_of:
+            out[(sheet, ref)] = 1
+    return out
 
 
 def expand(fill: dict, groups: list) -> dict[tuple[str, str], object]:
@@ -79,7 +100,10 @@ def main() -> int:
         print("no fills present; run the blind-fill agents first", file=sys.stderr)
         return 2
 
+    from cdfc.predicates.harvest import _load_context
+
     r = harvest(FME)
+    ctx = _load_context(FME)
     hf = default_registry()
     rt = CelRuntime(profile_version="P8", host_fns=hf)
     predicates = [promote(c) for c in r.candidates]
@@ -102,6 +126,7 @@ def main() -> int:
                     "is indistinguishable from a clean return. Re-emit it under the current ids."
                 )
             inputs = expand(fill, groups)
+            inputs.update(_remainder(ctx, set(inputs)))
             if not inputs:
                 raise SystemExit(f"{f.name}: expanded to no cells at all")
             target = work / f"{f.stem}.xlsx"
