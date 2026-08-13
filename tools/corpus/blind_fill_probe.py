@@ -89,7 +89,21 @@ def main() -> int:
     with tempfile.TemporaryDirectory() as tmp:
         work = pathlib.Path(tmp)
         for f in fills:
-            inputs = expand(json.loads(f.read_text(encoding="utf-8")), groups)
+            fill = json.loads(f.read_text(encoding="utf-8"))
+            # **A FILL THAT COVERS NOTHING MUST NOT LOOK LIKE A CLEAN ONE.** A fill written against
+            # an older key scheme expands to ZERO cells, the filing is then the blank with no
+            # inputs, and the probe reports `0 predicates fired` — which reads as corroboration.
+            # That is the silent pass in its purest form, inside the instrument built to find them.
+            covered = len(set(fill) & {g["uid"] for g in groups})
+            if covered < len(groups):
+                raise SystemExit(
+                    f"{f.name}: covers {covered} of {len(groups)} fill decisions. A partial fill "
+                    "is not a filing, and a fill that expands to nothing reports `0 fired`, which "
+                    "is indistinguishable from a clean return. Re-emit it under the current ids."
+                )
+            inputs = expand(fill, groups)
+            if not inputs:
+                raise SystemExit(f"{f.name}: expanded to no cells at all")
             target = work / f"{f.stem}.xlsx"
             strip_and_write(FME, target, inputs)
             write_values(FME, target, value_table(SOFFICE, target))
