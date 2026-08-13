@@ -35,7 +35,10 @@ def emit(ctx: Any) -> Iterator[tuple[tuple, Draft]]:
         keys = {**tgt_keys, **src_keys}  # type: ignore[dict-item]
         yield order_key(ctx, sheet, ref, NAME), Draft(
             harvest_class=NAME,
-            obligation_id=obligation_id(sheet, ref),
+            obligation_id=obligation_id("F", sheet, ref),
+            construct_kind="formula",
+            construct_parts=(body,),
+            construct_at=(sheet, ref),
             clause_absent_reason="derived_from_template_formula",
             claims_fault_classes=CLAIMS_FAULT_CLASSES,
             schema_keys=tuple(sorted(keys)),

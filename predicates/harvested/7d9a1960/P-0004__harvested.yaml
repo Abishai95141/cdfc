@@ -6,12 +6,12 @@ claims_fault_classes:
   - "F09"
 clause: null
 clause_absent_reason: "derived_from_data_validation"
-expr: "filing.n_1_introduction.dv_d11.cells.all(c, c.v == \"\" || (c.v >= 32874 && c.v <= 73415))"
+expr: "filing.n_1_introduction.dv_d11.cells.all(c, c.v >= 32874 && c.v <= 73415)"
 external_deps: []
 host_fns: []
 id: "P-0004"
 kind: "harvested"
-obligation_id: "OBL-TEMPLATE-1._Introduction-D11"
+obligation_id: "OBL-TEMPLATE-V-1._Introduction-D11"
 obligation_source: "TEMPLATE"
 rationale: "The pinned blank attaches a date validation to 1. Introduction!D11 requiring between 32874 and 73415. The bound is an Excel serial day number in the pinned blank, and it is compared as an integer: CEL binds no clock, so no date arithmetic happens at run time. The dtype is DATE."
 reason_if_inapplicable: "the validated range 1. Introduction!D11 is absent from this filing"
@@ -22,4 +22,4 @@ schema_keys:
 template: "7d9a1960085785eefbe166fb5e04e94689780c490235fe55d8f3e8b620ceea39"
 tolerance: null
 version: 1
-witness: "filing.n_1_introduction.dv_d11.cells.filter(c, c.v != \"\" && (c.v < 32874 || c.v > 73415)).map(c, c.__cell__)"
+witness: "filing.n_1_introduction.dv_d11.cells.filter(c, c.v < 32874 || c.v > 73415).map(c, c.__cell__)"

@@ -17,7 +17,7 @@ external_deps: []
 host_fns: []
 id: "P-0007"
 kind: "harvested"
-obligation_id: "OBL-TEMPLATE-1._Introduction-D17"
+obligation_id: "OBL-TEMPLATE-F-1._Introduction-D17"
 obligation_source: "TEMPLATE"
 rationale: "The pinned blank declares 1. Introduction!D17 as `=SUM(D18:D20)`. The total and its 3 summands are one arithmetic identity, admitted within tau(3) = 15 MILLI_USD_MILLION units \u2014 half an ulp per summand, as an integer count."
 reason_if_inapplicable: "the total cell 1. Introduction!D17 is absent from this filing"

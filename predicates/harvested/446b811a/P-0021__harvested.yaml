@@ -17,7 +17,7 @@ external_deps: []
 host_fns: []
 id: "P-0021"
 kind: "harvested"
-obligation_id: "OBL-TEMPLATE-Montly_Report-G35"
+obligation_id: "OBL-TEMPLATE-F-Montly_Report-G35"
 obligation_source: "TEMPLATE"
 rationale: "The pinned blank declares Montly Report!G35 as `=SUM(G36:G37)`. The total and its 2 summands are one arithmetic identity, admitted within tau(2) = 10 MILLI_USD_MILLION units \u2014 half an ulp per summand, as an integer count."
 reason_if_inapplicable: "the total cell Montly Report!G35 is absent from this filing"

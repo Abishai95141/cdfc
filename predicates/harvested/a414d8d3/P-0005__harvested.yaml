@@ -15,7 +15,7 @@ external_deps: []
 host_fns: []
 id: "P-0005"
 kind: "harvested"
-obligation_id: "OBL-TEMPLATE-Assets-C40"
+obligation_id: "OBL-TEMPLATE-F-Assets-C40"
 obligation_source: "TEMPLATE"
 rationale: "The pinned blank declares Assets!C40 as `=C41`. The two cells are one value under two labels."
 reason_if_inapplicable: "one of Assets!C40 and Assets!C41 is absent"

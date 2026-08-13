@@ -13,7 +13,7 @@ external_deps: []
 host_fns: []
 id: "P-0009"
 kind: "harvested"
-obligation_id: "OBL-TEMPLATE-1._Introduction-D19"
+obligation_id: "OBL-TEMPLATE-F-1._Introduction-D19"
 obligation_source: "TEMPLATE"
 rationale: "The pinned blank declares 1. Introduction!D19 as `=COUNTIF(G54:G63, \"*Restricted*\")`. The tally counts rows matching '*Restricted*'; it is exact, with no tolerance, because a count of things is not a rounded quantity."
 reason_if_inapplicable: "the tally cell 1. Introduction!D19 is absent from this filing"

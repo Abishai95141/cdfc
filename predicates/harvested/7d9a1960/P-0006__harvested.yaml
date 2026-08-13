@@ -8,12 +8,12 @@ claims_fault_classes:
   - "F06"
 clause: null
 clause_absent_reason: "derived_from_data_validation"
-expr: "filing.n_1_introduction.dv_d17.cells.all(c, c.v == \"\" || (c.v >= 0 && c.v <= 300))"
+expr: "filing.n_1_introduction.dv_d17.cells.all(c, c.v >= 0 && c.v <= 300)"
 external_deps: []
 host_fns: []
 id: "P-0006"
 kind: "harvested"
-obligation_id: "OBL-TEMPLATE-1._Introduction-D17"
+obligation_id: "OBL-TEMPLATE-V-1._Introduction-D17"
 obligation_source: "TEMPLATE"
 rationale: "The pinned blank attaches a whole validation to 1. Introduction!D17 requiring between 0 and 300. The value must be a whole number inside that range; counts get zero tolerance. The dtype is COUNT."
 reason_if_inapplicable: "the validated range 1. Introduction!D17 is absent from this filing"
@@ -24,4 +24,4 @@ schema_keys:
 template: "7d9a1960085785eefbe166fb5e04e94689780c490235fe55d8f3e8b620ceea39"
 tolerance: null
 version: 1
-witness: "filing.n_1_introduction.dv_d17.cells.filter(c, c.v != \"\" && (c.v < 0 || c.v > 300)).map(c, c.__cell__)"
+witness: "filing.n_1_introduction.dv_d17.cells.filter(c, c.v < 0 || c.v > 300).map(c, c.__cell__)"

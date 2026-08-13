@@ -11,7 +11,7 @@ external_deps: []
 host_fns: []
 id: "P-0009"
 kind: "harvested"
-obligation_id: "OBL-TEMPLATE-Account_opening_details-C29:C31"
+obligation_id: "OBL-TEMPLATE-V-Account_opening_details-C29:C31"
 obligation_source: "TEMPLATE"
 rationale: "The pinned blank attaches a list validation to Account opening details!C29:C31 whose 3 members come from the blank itself (literal). A value outside it is outside the vocabulary the regulator's own artifact declares. It says nothing about whether the value is correct."
 reason_if_inapplicable: "the validated range Account opening details!C29:C31 is absent from this filing"

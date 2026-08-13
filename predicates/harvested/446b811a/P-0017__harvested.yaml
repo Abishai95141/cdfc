@@ -11,7 +11,7 @@ external_deps: []
 host_fns: []
 id: "P-0017"
 kind: "harvested"
-obligation_id: "OBL-TEMPLATE-Montly_Report-B30:B31 C8:E10"
+obligation_id: "OBL-TEMPLATE-V-Montly_Report-B30:B31 C8:E10"
 obligation_source: "TEMPLATE"
 rationale: "The pinned blank attaches a list validation to Montly Report!B30:B31 C8:E10 whose 8 members come from the blank itself (range). A value outside it is outside the vocabulary the regulator's own artifact declares. It says nothing about whether the value is correct."
 reason_if_inapplicable: "the validated range Montly Report!B30:B31 C8:E10 is absent from this filing"

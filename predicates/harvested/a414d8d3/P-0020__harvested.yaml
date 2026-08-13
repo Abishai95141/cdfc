@@ -17,7 +17,7 @@ external_deps: []
 host_fns: []
 id: "P-0020"
 kind: "harvested"
-obligation_id: "OBL-TEMPLATE-Other_products-E11"
+obligation_id: "OBL-TEMPLATE-F-Other_products-E11"
 obligation_source: "TEMPLATE"
 rationale: "The pinned blank declares Other products!E11 as `=SUM(E12:E13)`. The total and its 2 summands are one arithmetic identity, admitted within tau(2) = 10 MILLI_USD_MILLION units \u2014 half an ulp per summand, as an integer count."
 reason_if_inapplicable: "the total cell Other products!E11 is absent from this filing"

@@ -91,3 +91,33 @@ read) at pre-flight — **the honest state, and one with a different remedy.**
 - `test_golden__harvest_count__fme` -> **349**
 - `test_golden__cross_workbook_harvest_distribution` -> **572**
 - `test_golden__zero_formula_template__edr1` -> **1**
+
+## 13 Aug 2026 — P7-B1: `obligation_id` gains a construct-kind discriminator
+
+**Nothing about the harvest's OUTPUT moved. Every id did.** `obligation_id` is now
+`OBL-TEMPLATE-<F|V>-<sheet>-<ref>`; it was `OBL-TEMPLATE-<sheet>-<ref>`.
+
+**The defect.** `1. Introduction!D17` on the FME blank carries **both** a formula (`=SUM(D18:D20)`)
+and a `whole >= 0` data validation. Those are two different obligations — *the total equals its
+parts* and *this cell is a non-negative whole number* — and under the old scheme they shared one
+id. The obligation's verbatim quote would then have been whichever harvest class ran last, and one
+of the two predicates would have been checked at G0 against a construct **it was not derived
+from**. `cells_would_have_covered` and the rejection reason would both have named the wrong
+relation.
+
+One instance across all nine workbooks, and it was found by an equality assertion in `harvest()`
+rather than by inspection: a second class recording a DIFFERENT construct for one obligation now
+raises instead of overwriting.
+
+**The counts, all unchanged:**
+
+`total candidates` -> **572** · `FME candidates` -> **349** · `total obligations` -> **572**
+(one per candidate, injective for the first time) · `settled cells` unchanged.
+
+**What moved:** every harvested envelope's `code_sha256`, because `obligation_id` is inside
+`envelope_projection()`. That is correct rather than unfortunate — a candidate whose obligation is
+a different obligation IS a different predicate. Nothing was admitted under the old digests: the
+registry has refused unconditionally since P0 and P7-B4 is the build that changes it.
+
+The two committed fixtures moved with it, and `docs/measurements/P4-envelope-digests.md` carries
+both new values with this reason.

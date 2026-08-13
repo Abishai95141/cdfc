@@ -11,7 +11,7 @@ external_deps: []
 host_fns: []
 id: "P-0008"
 kind: "harvested"
-obligation_id: "OBL-TEMPLATE-Asset_Details-J10:J159"
+obligation_id: "OBL-TEMPLATE-V-Asset_Details-J10:J159"
 obligation_source: "TEMPLATE"
 rationale: "The pinned blank attaches a custom validation to Asset Details!J10:J159: `$F10<>\"Purchased\"`. This predicate does NOT translate that condition \u2014 it checks the weaker thing the class can express honestly, that the conditionally-required range is not wholly blank. The untranslated condition is why this class claims only F05."
 reason_if_inapplicable: "the validated range Asset Details!J10:J159 is absent from this filing"

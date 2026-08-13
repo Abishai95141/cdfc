@@ -7,12 +7,12 @@ claims_fault_classes:
   - "F03"
 clause: null
 clause_absent_reason: "derived_from_data_validation"
-expr: "filing.liabilities.dv_b7.cells.all(c, c.v == \"\" || (c.v >= -100000000000000000 && c.v <= 100000000000000000))"
+expr: "filing.liabilities.dv_b7.cells.all(c, c.v >= -100000000000000000 && c.v <= 100000000000000000)"
 external_deps: []
 host_fns: []
 id: "P-0014"
 kind: "harvested"
-obligation_id: "OBL-TEMPLATE-Liabilities-B7:J65"
+obligation_id: "OBL-TEMPLATE-V-Liabilities-B7:J65"
 obligation_source: "TEMPLATE"
 rationale: "The pinned blank attaches a decimal validation to Liabilities!B7:J65 requiring between -100000000000000000 and 100000000000000000. A value outside it is outside the range the regulator's own artifact admits. The dtype is MILLI_USD_MILLION."
 reason_if_inapplicable: "the validated range Liabilities!B7:J65 is absent from this filing"
@@ -23,4 +23,4 @@ schema_keys:
 template: "a414d8d3300d884e06c89eff92cf9f9857bad5690fd38266375979b784c8b998"
 tolerance: null
 version: 1
-witness: "filing.liabilities.dv_b7.cells.filter(c, c.v != \"\" && (c.v < -100000000000000000 || c.v > 100000000000000000)).map(c, c.__cell__)"
+witness: "filing.liabilities.dv_b7.cells.filter(c, c.v < -100000000000000000 || c.v > 100000000000000000).map(c, c.__cell__)"

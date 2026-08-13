@@ -39,7 +39,10 @@ def emit(ctx: Any) -> Iterator[tuple[tuple, Draft]]:
             first = dv.sqref.split()[0].split(":")[0].replace("$", "")
             yield order_key(ctx, sheet, first, NAME), Draft(
                 harvest_class=NAME,
-                obligation_id=obligation_id(sheet, dv.sqref),
+                obligation_id=obligation_id("V", sheet, dv.sqref),
+                construct_kind="validation",
+                construct_parts=(dv.type, dv.operator, dv.formula1 or ""),
+                construct_at=(sheet, dv.sqref),
                 clause_absent_reason="derived_from_data_validation",
                 claims_fault_classes=CLAIMS_FAULT_CLASSES,
                 schema_keys=tuple(sorted(keys)),

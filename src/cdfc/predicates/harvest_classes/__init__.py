@@ -28,6 +28,19 @@ class Draft:
 
     harvest_class: str
     obligation_id: str
+    # THE CONSTRUCT THE HARVESTER READ, kept in the pieces the artifact carries rather than as
+    # rendered text. P7-B1 turns it into the TEMPLATE obligation's verbatim quote, and its offset
+    # into `template_instrument.emit()` is that obligation's span (F9). Recording it here rather
+    # than re-deriving it later is the point: a quote re-read from the workbook by a second code
+    # path is a second extraction, and two extractions that disagree is exactly what G0 exists to
+    # find — it must not be something the obligation generator can quietly launder.
+    #
+    # It is NOT on `Candidate` and therefore NOT inside `code_sha256`: adding a field to the
+    # envelope would re-key all 572 admitted digests, and the construct is a property of the
+    # OBLIGATION, not of the predicate that implements it.
+    construct_kind: str  # "formula" | "validation"
+    construct_parts: tuple[str, ...]  # (body,) | (type, operator, formula1)
+    construct_at: tuple[str, str]  # (sheet, ref-or-sqref), verbatim as the artifact writes it
     clause_absent_reason: ClauseAbsentReason
     claims_fault_classes: tuple[str, ...]
     schema_keys: tuple[str, ...]
@@ -63,9 +76,24 @@ class Draft:
         )
 
 
-def obligation_id(sheet: str, ref: str) -> str:
-    """`OBL-TEMPLATE-<sheet>-<ref>` (C2). Every harvested candidate carries one."""
-    return f"OBL-TEMPLATE-{sheet.strip().replace(' ', '_')}-{ref.replace('$', '')}"
+def obligation_id(kind: str, sheet: str, ref: str) -> str:
+    """`OBL-TEMPLATE-<F|V>-<sheet>-<ref>` (C2). Every harvested candidate carries one.
+
+    **THE KIND DISCRIMINATOR WAS ADDED AT P7-B1 AND IT IS NOT COSMETIC.** Without it the id was
+    `(sheet, ref)` only, and `1. Introduction!D17` on the FME blank carries BOTH a formula
+    (`=SUM(D18:D20)`) and a `whole >= 0` data validation. Those are two different obligations —
+    *the total equals its parts* and *this cell is a non-negative whole number* — and they shared
+    one id, so the obligation's verbatim quote would have been **whichever harvest class ran
+    last** and one of the two predicates would have been checked at G0 against a construct it was
+    not derived from.
+
+    One instance across all nine workbooks, found by an equality assertion in `harvest()` rather
+    than by inspection. An id that is not injective over the thing it names is a foreign key that
+    silently points at the wrong row.
+    """
+    if kind not in ("F", "V"):
+        raise ValueError(f"construct kind must be 'F' or 'V', got {kind!r}")
+    return f"OBL-TEMPLATE-{kind}-{sheet.strip().replace(' ', '_')}-{ref.replace('$', '')}"
 
 
 from cdfc.predicates.harvest_classes import (  # noqa: E402

@@ -1,0 +1,48 @@
+# obligations.yaml — the HAND-MAINTAINED obligations table (`ingest_source: hand`).
+#
+# TEMPLATE obligations are NOT here. They are generated from the harvest and the pinned blank by
+# `cdfc.predicates.obligations.generate_template_obligations`, one per harvested obligation id,
+# 572 of them today — a hand-maintained copy of a generated table is a second source of truth and
+# would drift on the first template amendment.
+#
+# This file is for STATUTE obligations: a `shall` in an instrument the Authority issued, cited by
+# eId, quoted verbatim, at an exact character span into that instrument's normalised text.
+#
+# ---------------------------------------------------------------------------------------------
+# IT IS EMPTY, AND THE REASON IS D-P7-01, NOT AN OVERSIGHT.
+#
+# `plan/04-phases-qualification.md` E7.6 asserts as an entry criterion that the regulation PDF and
+# the 399-circular corpus are on disk and content-addressed. **Neither is in this repository.**
+# `corpus/instruments/MANIFEST.json` carries `statute_instruments: []` with that reason, and
+# `load()` refuses any row naming an instrument the store does not hold — so a STATUTE obligation
+# cannot enter the funnel by resolving against nothing.
+#
+# The consequence is published rather than absorbed: P7's obligation-coverage pair reads
+#
+#     predicates_with_a_STATUTE_obligation  = 0 / 572
+#     predicates_with_a_TEMPLATE_obligation = 572 / 572
+#     No harvested predicate yet implements a statutory clause.
+#
+# for a HARDER reason than the plan anticipated — not "no harvested predicate cites a statute yet"
+# but "no statute is pinned in this repository at all".
+#
+# Adding the first row needs three things and nothing else: a pinned PDF under
+# `corpus/instruments/` with its sha256 in MANIFEST.json, TWO independent extractors for it (a
+# single extractor run twice is NC-Q50's mechanism with extra steps), and a `kind: STATUTE` row
+# from `tools/build_instruments.py`. `g0_scope.py` needs no change: it already resolves every
+# obligation against its OWN `instrument_id`.
+# ---------------------------------------------------------------------------------------------
+#
+# Row shape, for whoever writes the first one:
+#
+#   obligations:
+#     - obligation_id: OBL-014
+#       source: STATUTE                 # required, closed to STATUTE | TEMPLATE (C2)
+#       instrument_id: fm-regulations-2025
+#       frbr_uri: null                  # until L1b ships at P13-B2
+#       eId: reg_51__subreg_1
+#       quote: "…verbatim, exactly as the normalised instrument text carries it…"
+#       span: [12345, 12400]            # instrument_text[span[0]:span[1]] == quote, checked at load
+#       ingest_source: hand             # HOW THE ROW GOT HERE — a different question from `source`
+
+obligations: []

@@ -15,7 +15,7 @@ schema_keys:
   - filing.intro.tbl11.__cell__
 host_fns: []
 
-obligation_id: OBL-TEMPLATE-Intro-D17
+obligation_id: OBL-TEMPLATE-V-Intro-D17
 obligation_source: TEMPLATE
 clause: null
 clause_absent_reason: derived_from_template_constant

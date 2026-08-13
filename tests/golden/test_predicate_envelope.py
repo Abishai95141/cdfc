@@ -25,8 +25,8 @@ FME = "7d9a1960085785eefbe166fb5e04e94689780c490235fe55d8f3e8b620ceea39"
 # MEASURED at P4-B1 and reproduced in docs/measurements/P4-envelope-digests.md. These are
 # properties of OUR code (`01` §1.3): they may move, with a recorded reason, and moving one
 # without recording it is what this test is here to prevent.
-P0041_DIGEST = "94354bbfc01383eb0707d8835faa713f114546e3f8d923737d8ac7b4f3403744"
-P0007_DIGEST = "912cbe76ae8886b1694e67c04d845c16f16670e8059c3c3ac2022a9e626eaddf"
+P0041_DIGEST = "cfa3792f3157be6b93d0355778c3ab4be48fc8b7b5d48fb16668fbbab1c6a42f"
+P0007_DIGEST = "5848bc8a15234c2c73a620603d97d2a9f243fee9f324176571b6a04405decce3"
 
 
 def test_golden__envelope__P0041_digest() -> None:

@@ -15,7 +15,7 @@ external_deps: []
 host_fns: []
 id: "P-0027"
 kind: "harvested"
-obligation_id: "OBL-TEMPLATE-1._Introduction-C77"
+obligation_id: "OBL-TEMPLATE-F-1._Introduction-C77"
 obligation_source: "TEMPLATE"
 rationale: "The pinned blank declares 1. Introduction!C77 as `=C56`. The two cells are one value under two labels."
 reason_if_inapplicable: "one of 1. Introduction!C77 and 1. Introduction!C56 is absent"

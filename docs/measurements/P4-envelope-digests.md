@@ -6,14 +6,23 @@ UTF-16 code-unit key ordering, floats refused. The projection is generated from
 `tests/property/test_prop_envelope.py::test_prop__every_envelope_field_is_covered_by_the_digest`
 perturbs each field in turn and asserts the digest moves.
 
+**BOTH DIGESTS MOVED AT P7-B1, dated 13 Aug 2026, and the reason is a defect.** `obligation_id`
+gained a construct-kind discriminator — `OBL-TEMPLATE-<F|V>-<sheet>-<ref>` — because without it a
+cell carrying BOTH a formula and a data validation minted ONE id for TWO different obligations.
+FME's `1. Introduction!D17` is exactly that cell: `=SUM(D18:D20)` and a `whole >= 0` validation.
+The obligation's verbatim quote would have been whichever harvest class ran last, and one of the
+two predicates would have been checked at G0 against a construct it was not derived from. One
+instance across all nine workbooks, found by an equality assertion in `harvest()`. `obligation_id`
+is inside `envelope_projection()`, so every affected candidate is correctly a DIFFERENT predicate.
+
 **Warrant: MEASURED.** Produced by `src/cdfc/predicates/canonical.py` from the committed fixtures.
 These are properties of *our code* — they may move, with a recorded reason. Moving one without
 recording it fails `tests/golden/test_predicate_envelope.py`.
 
 | fixture | type | `code_sha256` |
 |---|---|---|
-| `fixtures/predicates/good/P-0041__scheme-type-membership.yaml` | `Candidate` | `94354bbfc01383eb0707d8835faa713f114546e3f8d923737d8ac7b4f3403744` |
-| `fixtures/predicates/good/P-0007__intro-D17-integer-bound.yaml` | `Predicate` | `912cbe76ae8886b1694e67c04d845c16f16670e8059c3c3ac2022a9e626eaddf` |
+| `fixtures/predicates/good/P-0041__scheme-type-membership.yaml` | `Candidate` | `cfa3792f3157be6b93d0355778c3ab4be48fc8b7b5d48fb16668fbbab1c6a42f` |
+| `fixtures/predicates/good/P-0007__intro-D17-integer-bound.yaml` | `Predicate` | `5848bc8a15234c2c73a620603d97d2a9f243fee9f324176571b6a04405decce3` |
 
 Both are bound to template `7d9a1960085785eefbe166fb5e04e94689780c490235fe55d8f3e8b620ceea39`
 (Reporting Format for Fund Management Entities).

@@ -11,7 +11,7 @@ external_deps: []
 host_fns: []
 id: "P-0006"
 kind: "harvested"
-obligation_id: "OBL-TEMPLATE-Montly_Report-F12"
+obligation_id: "OBL-TEMPLATE-V-Montly_Report-F12"
 obligation_source: "TEMPLATE"
 rationale: "The pinned blank attaches a custom validation to Montly Report!F12: `AND(G12>=DATE(2020,10,1), G12<=TODAY())`. This predicate does NOT translate that condition \u2014 it checks the weaker thing the class can express honestly, that the conditionally-required range is not wholly blank. The untranslated condition is why this class claims only F05."
 reason_if_inapplicable: "the validated range Montly Report!F12 is absent from this filing"

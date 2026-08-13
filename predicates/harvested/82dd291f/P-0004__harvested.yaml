@@ -11,7 +11,7 @@ external_deps: []
 host_fns: []
 id: "P-0004"
 kind: "harvested"
-obligation_id: "OBL-TEMPLATE-General_Information-C10:C21"
+obligation_id: "OBL-TEMPLATE-V-General_Information-C10:C21"
 obligation_source: "TEMPLATE"
 rationale: "The pinned blank attaches a list validation to General Information!C10:C21 whose 13 members come from the blank itself (literal). A value outside it is outside the vocabulary the regulator's own artifact declares. It says nothing about whether the value is correct."
 reason_if_inapplicable: "the validated range General Information!C10:C21 is absent from this filing"

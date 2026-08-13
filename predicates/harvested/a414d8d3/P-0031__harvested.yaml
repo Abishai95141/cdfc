@@ -8,12 +8,12 @@ claims_fault_classes:
   - "F06"
 clause: null
 clause_absent_reason: "derived_from_data_validation"
-expr: "filing.reconciliation.dv_b9.cells.all(c, c.v == \"\" || (c.v >= 0 && c.v <= 100000000000000000))"
+expr: "filing.reconciliation.dv_b9.cells.all(c, c.v >= 0 && c.v <= 100000000000000000)"
 external_deps: []
 host_fns: []
 id: "P-0031"
 kind: "harvested"
-obligation_id: "OBL-TEMPLATE-Reconciliation-B9:B13 B23:B27 D16:D20 E9:E12 C16:C19 D9:D13 C9:C12 B16:B20 E16:E19 D23:D27 E23:E26 C23:C26"
+obligation_id: "OBL-TEMPLATE-V-Reconciliation-B9:B13 B23:B27 D16:D20 E9:E12 C16:C19 D9:D13 C9:C12 B16:B20 E16:E19 D23:D27 E23:E26 C23:C26"
 obligation_source: "TEMPLATE"
 rationale: "The pinned blank attaches a whole validation to Reconciliation!B9:B13 B23:B27 D16:D20 E9:E12 C16:C19 D9:D13 C9:C12 B16:B20 E16:E19 D23:D27 E23:E26 C23:C26 requiring between 0 and 100000000000000000. The value must be a whole number inside that range; counts get zero tolerance. The dtype is COUNT."
 reason_if_inapplicable: "the validated range Reconciliation!B9:B13 B23:B27 D16:D20 E9:E12 C16:C19 D9:D13 C9:C12 B16:B20 E16:E19 D23:D27 E23:E26 C23:C26 is absent from this filing"
@@ -24,4 +24,4 @@ schema_keys:
 template: "a414d8d3300d884e06c89eff92cf9f9857bad5690fd38266375979b784c8b998"
 tolerance: null
 version: 1
-witness: "filing.reconciliation.dv_b9.cells.filter(c, c.v != \"\" && (c.v < 0 || c.v > 100000000000000000)).map(c, c.__cell__)"
+witness: "filing.reconciliation.dv_b9.cells.filter(c, c.v < 0 || c.v > 100000000000000000).map(c, c.__cell__)"

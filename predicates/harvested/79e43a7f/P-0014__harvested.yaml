@@ -17,7 +17,7 @@ external_deps: []
 host_fns: []
 id: "P-0014"
 kind: "harvested"
-obligation_id: "OBL-TEMPLATE-Asset_Details-U160"
+obligation_id: "OBL-TEMPLATE-F-Asset_Details-U160"
 obligation_source: "TEMPLATE"
 rationale: "The pinned blank declares Asset Details!U160 as `=SUM(U10:U159)`. The total and its 150 summands are one arithmetic identity, admitted within tau(150) = 750 MILLI_USD_MILLION units \u2014 half an ulp per summand, as an integer count."
 reason_if_inapplicable: "the total cell Asset Details!U160 is absent from this filing"

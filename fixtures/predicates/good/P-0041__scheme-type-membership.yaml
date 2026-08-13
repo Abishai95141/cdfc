@@ -22,8 +22,11 @@ host_fns: []
 
 # C2: every candidate carries an obligation. A harvested one implements a relation the
 # REGULATOR'S TEMPLATE encodes, not a clause the statute states, so its obligation is minted
-# OBL-TEMPLATE-<sheet>-<ref> with source TEMPLATE — and G0 runs against it for real.
-obligation_id: OBL-TEMPLATE-Intro-C25
+# OBL-TEMPLATE-<F|V>-<sheet>-<ref> with source TEMPLATE — and G0 runs against it for real. The
+# <F|V> discriminator was added at P7-B1: without it a cell carrying BOTH a formula and a data
+# validation minted one id for two different obligations, and FME's `1. Introduction!D17` is
+# exactly that cell.
+obligation_id: OBL-TEMPLATE-V-Intro-C25
 obligation_source: TEMPLATE
 clause: null
 clause_absent_reason: derived_from_data_validation

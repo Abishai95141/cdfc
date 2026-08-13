@@ -81,6 +81,12 @@ class HarvestResult:
     skipped: tuple[SkipRecord, ...]
     cells_reachable: frozenset[str]
     schema: TemplateSchema = field(repr=False, default=None)  # type: ignore[assignment]
+    # `obligation_id -> (construct_kind, construct_parts, sheet, ref)`. P7-B1 renders these into
+    # TEMPLATE obligations and locates each in `template_instrument.emit()`. It is a property of
+    # the OBLIGATION and deliberately not of the `Candidate`, so no envelope digest moves.
+    constructs: Mapping[str, tuple[str, tuple[str, ...], str, str]] = field(
+        repr=False, default_factory=dict
+    )
 
     @property
     def skips_by_kind(self) -> dict[str, int]:
@@ -339,9 +345,24 @@ def harvest(blob: Path) -> HarvestResult:
     by_class: dict[str, int] = {}
     reachable: set[str] = set()
     key_to_cells: dict[str, set[str]] = {}
+    constructs: dict[str, tuple[str, tuple[str, ...], str, str]] = {}
     for seq, (_order, draft) in enumerate(emitted, start=1):
         c = draft.build(f"P-{seq:04d}", ctx.template_sha256)
         candidates.append(c)
+        # TWO CLASSES MAY DERIVE FROM ONE CONSTRUCT — a `custom` validation feeds both
+        # `conditional_required` and a bound — so the obligation is shared and the construct
+        # recorded for it must be the same text. A collision that DISAGREES is a defect in the
+        # harvest, not a fact about the template, and it raises rather than being overwritten by
+        # whichever class ran last.
+        entry = (draft.construct_kind, draft.construct_parts, *draft.construct_at)
+        prior = constructs.get(draft.obligation_id)
+        if prior is not None and prior != entry:
+            raise ValueError(
+                f"{draft.obligation_id}: two harvest classes recorded different constructs for "
+                f"one obligation: {prior!r} then {entry!r}. One of them is reading the wrong "
+                "artifact, and the obligation's quote would be whichever ran last."
+            )
+        constructs[draft.obligation_id] = entry
         by_class[draft.harvest_class] = by_class.get(draft.harvest_class, 0) + 1
         for key, cells in draft.key_cells.items():
             key_to_cells.setdefault(key, set()).update(cells)
@@ -359,6 +380,7 @@ def harvest(blob: Path) -> HarvestResult:
         skipped=tuple(ctx.skips),
         cells_reachable=frozenset(reachable),
         schema=schema,
+        constructs=dict(sorted(constructs.items())),
     )
 
 
