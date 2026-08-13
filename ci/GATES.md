@@ -72,6 +72,15 @@ a row between sets fails the build.
 | 45 | pytest | `test_nc__Q06a_site_set_is_the_field_surface` — the universe cannot see the predicates | P6 | P6 | `injectors/sites_from_read_set.py` | LIVE |
 | 46 | pytest | `test_nc__E08_counts_get_zero_tolerance` — a person is not a rounded quantity | P6 | P6 | `injectors/tolerance_on_counts.py` | LIVE |
 | 47 | contract | `test_contract__fault_model_doc_is_generated` — the taxonomy document is generated from the code | P6 | P6 | hand-edit `docs/FAULT-MODEL-v3.md` | LIVE |
+| 48 | shell | `ci/no-wallclock-z3.sh` — Z3 is bounded by `rlimit`, never a wall clock | P7 | P7 | plant `set("timeout", …)`, or a `z3.Solver()` with no rlimit | LIVE |
+| 49 | pytest | `test_nc__Q50_disputed_regions_are_excluded` — a span into text one extractor never saw is not a span | P7 | P7 | `injectors/TextsourceSingleExtraction` | LIVE |
+| 50 | pytest | `test_nc__Q51_disposition_of_a_clauseless_candidate_is_specified_and_counted` — G0 computes a disposition, never a skip | P7 | P7 | `injectors/G0SkipsClauseless` | LIVE |
+| 51 | pytest | `test_p7__both_obligation_counts_render_or_neither_does` — C2's two numbers, never one | P7 | P7 | render one obligation-coverage count alone | LIVE |
+| 52 | pytest | `test_nc__Q34_order_is_enforced_by_shape` — the free gate runs before the expensive one | P7 | P7 | `injectors/GateOrderShuffled` | LIVE |
+| 53 | pytest | `test_nc__Q38_domain_separation_is_load_bearing` — the registry root identifies what ran | P7 | P7 | `injectors/MerkleNoDomainSep` | LIVE |
+| 54 | pytest | `test_nc__Q55_admission_requires_a_human` — R7, and `UNSIGNED` is published beside the count | P7 | P7 | `injectors/AdmitAutosign` | LIVE |
+| 55 | pytest | `test_nc__Q07_unknown_is_unproven` — UNPROVEN is never PROVED | P7 | P7 | `injectors/Z3UnknownIsOk` | LIVE |
+| 56 | pytest | `test_nc__Q36_removal_is_recorded` — a predicate never vanishes from the registry silently | P7 | P7 | `injectors/IlpSilentRemoval` | LIVE |
 
 **Rows 17 and 18 exist as gates from the first commit, dated 11 Aug 2026, and their reason is recorded
 rather than assumed.** Row 17: a `CanaryRow.elapsed_us` inside a canonicalised payload was found in the
@@ -79,7 +88,7 @@ plan and would have made byte-identical re-derivation impossible; the gate exist
 Row 18: a displayed critical-path total that did not equal the sum of its own rows was found in the plan,
 which is the shared-denominator error in a schedule; the gate exists before any other total does.
 
-**LIVE = {1,…,14,16,…,47} (46 rows). PENDING = {15} (1 row). Total 47.**
+**LIVE = {1,…,14,16,…,56} (55 rows). PENDING = {15} (1 row). Total 56.**
 
 **Row 20 was added at P3, dated 11 Aug 2026.** R4 requires the evaluator to be `Decimal` from its first line rather than converted later; the gate exists so that cannot drift in unnoticed.
 
@@ -151,3 +160,24 @@ not be able to sit in a set nobody has to keep green. **A gate whose subject has
 is still PENDING is a gate nobody has to keep green.**
 
 Row 15 (the attestation schema) stays `PENDING` honestly: its subject is P11's and does not exist.
+
+**Rows 48–56 were added at P7, dated 13 Aug 2026, and each names an injector observed making it
+red in the same session.**
+
+Row 48's reason is determinism: `set("timeout", ms)` makes a proof verdict a function of what else
+the machine was doing, so the same candidate is `unknown` on a loaded runner and `trivially_true`
+on an idle one and a predicate's ADMISSION becomes a property of the CI queue. On its first run the
+gate matched the sentence in `g3_degeneracy.py` that EXPLAINS why a timeout is banned — a gate that
+fires on its own rationale gets "fixed" by deleting the rationale, so it now strips comments and
+scans code.
+
+Row 51 is arbitration C2 and it fires in BOTH directions: `0/572` alone is wrong by 572 under F9's
+ruling, and `572/572` alone conceals that nothing here is grounded in a statute.
+
+Row 55's reason is the one worth reading. `unknown` from the proof arm means *nobody could decide
+this*, and reading it as `non_degenerate` would admit 47 of 349 FME candidates on a proof nobody
+has. It is also NOT a rejection: rejecting it would refuse those 47 for a limitation of our own
+translator. Three outcomes, and collapsing any pair of them is a defect.
+
+`ADDED_LIVE_AT_P7` is a fifth frozen literal, so no row that was ever LIVE can leave the set by
+being edited out of a growing list.

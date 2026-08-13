@@ -94,3 +94,31 @@ targets are in `.PHONY`, and `make contract` runs 68 contract tests again.
 
 *A duplicate target is a silent pass with a warning attached, and this is the sixth instance in
 this repository of a name agreeing with itself while the contents did something else.*
+
+---
+
+## 13 Aug 2026 — P7 adds rows 48–56, all LIVE, all observed red in the same session
+
+Row 48 (`ci/no-wallclock-z3.sh`) is the determinism one: `set("timeout", ms)` makes a proof verdict
+a function of what else the machine was doing, so the same candidate is `unknown` on a loaded
+runner and `trivially_true` on an idle one — and a predicate's ADMISSION becomes a property of the
+CI queue. On its first run the gate matched the sentence in `g3_degeneracy.py` that EXPLAINS why a
+timeout is banned. **A gate that fires on its own rationale gets "fixed" by deleting the
+rationale**, which is the worst available outcome for a rule whose whole value is that the next
+reader knows why it exists, so it now strips comments and scans code.
+
+Row 51 is arbitration C2 and it fires in BOTH directions: `0/572` alone is wrong by 572 under F9's
+ruling, and `572/572` alone conceals that nothing here is grounded in a statute.
+
+Row 55's reason is the one worth reading. `unknown` from the proof arm means *nobody could decide
+this*. Reading it as `non_degenerate` admits 47 of 349 FME candidates on a proof nobody has;
+reading it as a REJECTION refuses those same 47 for a limitation of our own translator. Three
+outcomes, and collapsing any pair of them is a defect.
+
+`ADDED_LIVE_AT_P7` is a fifth frozen literal.
+
+**A defect this phase found in an EXISTING gate, recorded because it is the third occurrence of
+one shape.** `ci/no-regex-over-xml.sh` caught P7-B3's own baselines matching `<v>([^<]*)</v>` over
+a mutant's recorded cell edit — the same pattern-over-OOXML technique that returned a correct count
+with wrong contents at P1, dropped 424 of 505 formulas at P5, and has now been attempted a third
+time by the author of the gate that bans it. Both baselines now parse the fragment.

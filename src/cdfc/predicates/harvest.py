@@ -87,6 +87,10 @@ class HarvestResult:
     constructs: Mapping[str, tuple[str, tuple[str, ...], str, str]] = field(
         repr=False, default_factory=dict
     )
+    # `predicate_id -> harvest class`. B0 is defined as the template's own formula-derived
+    # identities, so the baseline needs to know which predicates those are without re-running the
+    # emission and risking a different order.
+    class_of: Mapping[str, str] = field(repr=False, default_factory=dict)
 
     @property
     def skips_by_kind(self) -> dict[str, int]:
@@ -346,6 +350,7 @@ def harvest(blob: Path) -> HarvestResult:
     reachable: set[str] = set()
     key_to_cells: dict[str, set[str]] = {}
     constructs: dict[str, tuple[str, tuple[str, ...], str, str]] = {}
+    class_of: dict[str, str] = {}
     for seq, (_order, draft) in enumerate(emitted, start=1):
         c = draft.build(f"P-{seq:04d}", ctx.template_sha256)
         candidates.append(c)
@@ -363,6 +368,7 @@ def harvest(blob: Path) -> HarvestResult:
                 "artifact, and the obligation's quote would be whichever ran last."
             )
         constructs[draft.obligation_id] = entry
+        class_of[c.id] = draft.harvest_class
         by_class[draft.harvest_class] = by_class.get(draft.harvest_class, 0) + 1
         for key, cells in draft.key_cells.items():
             key_to_cells.setdefault(key, set()).update(cells)
@@ -381,6 +387,7 @@ def harvest(blob: Path) -> HarvestResult:
         cells_reachable=frozenset(reachable),
         schema=schema,
         constructs=dict(sorted(constructs.items())),
+        class_of=dict(sorted(class_of.items())),
     )
 
 

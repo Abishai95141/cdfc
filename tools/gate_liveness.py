@@ -81,6 +81,16 @@ EVIDENCE: dict[int, str] = {
     45: "NC-Q63",   # the universe cannot see the predicates
     46: "NC-Q62",   # counts get zero tolerance
     47: "NC-Q33",   # the taxonomy document is generated
+    # P7
+    48: "NC-Q07",   # no-wallclock-z3 — its subject is the proof arm the injector defeats
+    49: "NC-Q50",   # the disputed-region exclusion
+    50: "NC-Q51",   # G0 computes a disposition, never a skip
+    51: "NC-Q51",   # C2's two numbers — the same funnel-integrity entry
+    52: "NC-Q34",   # the free gate runs before the expensive one
+    53: "NC-Q38",   # Merkle domain separation
+    54: "NC-Q55",   # admission requires a human
+    55: "NC-Q07",   # UNPROVEN is never PROVED
+    56: "NC-Q36",   # a removal is never silent
     14: "NC-E33",   # no model client in the verdict path (promoted at P6)
     16: "NC-E30",   # the seven-term closure invariant (promoted at P6)
 }

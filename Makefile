@@ -28,6 +28,7 @@ greps:
 	bash ci/no-regex-over-xml.sh
 	bash ci/no-bare-rate.sh
 	bash ci/no-openpyxl-writer.sh
+	bash ci/no-wallclock-z3.sh
 
 contract:
 	$(PY) -m pytest tests/contract -q
@@ -146,3 +147,6 @@ instruments:
 
 proviso-markers:
 	$(PY) tools/gen_proviso_markers_doc.py
+
+attrition:
+	$(PY) tools/measure/p7_attrition.py

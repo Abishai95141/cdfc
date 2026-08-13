@@ -25,10 +25,12 @@ LIVE_AT_P0 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 17, 18, 19, 20}
 ADDED_LIVE_AT_P4 = {21, 22, 23, 24, 25, 26, 27}   # docs/GATE-CHANGES.md, 12 Aug 2026
 ADDED_LIVE_AT_P5 = {28, 29, 30, 31, 32, 33, 34, 35, 36}   # docs/GATE-CHANGES.md, 12 Aug 2026
 ADDED_LIVE_AT_P6 = set(range(37, 48))   # docs/GATE-CHANGES.md, 13 Aug 2026
+ADDED_LIVE_AT_P7 = set(range(48, 57))   # docs/GATE-CHANGES.md, 13 Aug 2026
 # Rows 14 and 16 moved PENDING -> LIVE at P6: their subjects shipped at P5 and the audit
 # found them still deferred. See docs/GATE-CHANGES.md, 13 Aug 2026.
 PROMOTED_AT_P6 = {14, 16}
 LIVE_EXPECTED = (LIVE_AT_P0 | ADDED_LIVE_AT_P4 | ADDED_LIVE_AT_P5 | ADDED_LIVE_AT_P6
+                 | ADDED_LIVE_AT_P7
                  | PROMOTED_AT_P6)
 PENDING_AT_P0 = {14, 15, 16}
 # The PENDING set SHRINKS as subjects ship, and a row may only leave it into LIVE — never the

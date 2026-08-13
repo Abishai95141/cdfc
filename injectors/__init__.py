@@ -1356,6 +1356,7 @@ BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
 # --------------------------------------------------------------------------------
 
 QUALIFY = REPO_ROOT / "src" / "cdfc" / "qualify"
+PREDICATES = REPO_ROOT / "src" / "cdfc" / "predicates"
 
 
 class FaultDigestConstant(Injector):
@@ -1737,5 +1738,108 @@ class G0SkipsClauseless(Injector):
 
 ALL_INJECTORS = ALL_INJECTORS + (
     ProvisoMarkersEmpty, G1IgnoresUnresolved, G1IgnoresZeroBind, G0SkipsProvisos, G0SkipsClauseless,
+)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+class GateOrderShuffled(Injector):
+    """`GATE_ORDER` is reversed, so the expensive gate runs before the free one.
+
+    NC-Q34. The OUTCOME is usually the same; the COST is not. A candidate that fails G0's free
+    structural check would consume a whole mutation campaign, and worse, a candidate Z3 would have
+    proved degenerate is admitted on an expensive number instead of refused on a free one.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="gate_order_shuffled", touches=[QUALIFY / "result.py"])
+
+    def apply(self) -> None:
+        p = QUALIFY / "result.py"
+        p.write_text(p.read_text().replace(
+            "GATE_ORDER: Final[tuple[GateId, ...]] = (\n"
+            "    GateId.G0,\n    GateId.G1,\n    GateId.G3P,\n    GateId.G2,\n"
+            "    GateId.G3E,\n    GateId.G4,\n)",
+            "GATE_ORDER: Final[tuple[GateId, ...]] = (\n"
+            "    GateId.G4,\n    GateId.G3E,\n    GateId.G2,\n    GateId.G3P,\n"
+            "    GateId.G1,\n    GateId.G0,\n)", 1))
+
+
+class MerkleNoDomainSep(Injector):
+    """The Merkle leaf and internal prefixes are dropped.
+
+    NC-Q38. Two different admitted sets can then be made to share a root, and the attestation's
+    `registryRoot` stops identifying what ran.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="merkle_no_domain_sep", touches=[PREDICATES / "registry.py"])
+
+    def apply(self) -> None:
+        p = PREDICATES / "registry.py"
+        s = p.read_text()
+        s = s.replace('LEAF_PREFIX: Final[bytes] = b"\\x00"', 'LEAF_PREFIX: Final[bytes] = b""')
+        s = s.replace('INTERNAL_PREFIX: Final[bytes] = b"\\x01"', 'INTERNAL_PREFIX: Final[bytes] = b""')
+        p.write_text(s)
+
+
+class AdmitAutosign(Injector):
+    """`admit()` fills in a signer instead of refusing.
+
+    NC-Q55. R7 exists because the gate is mechanical and shipping a check that will be applied to a
+    regulated filing is not.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="admit_autosign", touches=[PREDICATES / "registry.py"])
+
+    def apply(self) -> None:
+        p = PREDICATES / "registry.py"
+        p.write_text(p.read_text().replace(
+            "        if signer != UNSIGNED and not signature:",
+            "        signature = signature or b'auto'  # INJECTED\n"
+            "        if signer != UNSIGNED and not signature:", 1))
+
+
+class IlpSilentRemoval(Injector):
+    """The ILP drops a subsumed predicate without recording the removal.
+
+    NC-Q36. The predicate vanishes from the registry and the settled fraction moves with no cause
+    on the chart.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="ilp_silent_removal", touches=[QUALIFY / "ilp.py"])
+
+    def apply(self) -> None:
+        p = QUALIFY / "ilp.py"
+        p.write_text(p.read_text().replace(
+            "        removals=tuple(\n"
+            "            Removal(removed=k, subsumed_by=v, cells_would_have_covered=cells_of.get(k, 0))\n"
+            "            for k, v in sorted(removed.items())\n"
+            "        ),",
+            "        removals=(),  # INJECTED", 1))
+
+
+class Z3UnknownIsOk(Injector):
+    """`unknown` from the proof arm is read as `non_degenerate`.
+
+    NC-Q07. A degenerate or always-flagging predicate then passes the proof arm because nobody
+    could decide it — UNPROVEN read as PROVED, which is this project's subject matter inside its
+    own degeneracy gate.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="z3_unknown_is_ok", touches=[QUALIFY / "g3_degeneracy.py"])
+
+    def apply(self) -> None:
+        p = QUALIFY / "g3_degeneracy.py"
+        p.write_text(p.read_text().replace(
+            '             "proved": verdict is DegeneracyVerdict.NON_DEGENERATE, **over}',
+            '             "proved": verdict in (DegeneracyVerdict.NON_DEGENERATE,\n'
+            '                                   DegeneracyVerdict.UNKNOWN), **over}', 1))
+
+
+ALL_INJECTORS = ALL_INJECTORS + (
+    GateOrderShuffled, MerkleNoDomainSep, AdmitAutosign, IlpSilentRemoval, Z3UnknownIsOk,
 )
 BY_NAME = {c.__name__: c for c in ALL_INJECTORS}

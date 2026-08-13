@@ -1125,3 +1125,98 @@ entries:
     note: >
       Renumbered from the plan's NC-Q48, which P4 already uses. Second id collision in this
       repository; the first was NC-Q50 (the plan's NC-Q47), earlier in this phase.
+
+  - id: NC-Q34
+    component: qualify
+    break: the gate pipeline runs out of order, so the expensive gate is spent before the free one
+    measured_instance: "a candidate that fails G0's free structural check would consume a whole mutation campaign"
+    injector: GateOrderShuffled
+    guard_tests:
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q34_order_is_enforced_by_shape"
+        flips: true
+      - path: "tests/contract/test_contract_qualification.py::test_contract__gate_order_is_the_decided_order"
+        flips: true
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q34b_the_order_is_read_from_the_tuple"
+        flips: false
+    positive_control: "the pipeline still reads GATE_ORDER rather than a hard-coded sequence; only the tuple moved"
+    status: active
+    note: >
+      The guard asserts on a SPY over which gates ran, not on the outcome. The outcome is the same
+      either way; the cost is the thing being gated.
+
+  - id: NC-Q36
+    component: qualify
+    break: the ILP drops a subsumed predicate without recording the removal
+    measured_instance: "the settled fraction then moves with no cause on the chart"
+    injector: IlpSilentRemoval
+    guard_tests:
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q36_removal_is_recorded"
+        flips: true
+      - path: "tests/unit/test_g2_g3_registry.py::test_ilp__every_removal_is_recorded"
+        flips: true
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q36b_a_non_subsumed_predicate_is_retained"
+        flips: false
+    positive_control: "a non-subsumed predicate is retained and no rejection row is written"
+    status: active
+
+  - id: NC-Q38
+    component: predicates
+    break: the registry root is computed without domain separation
+    measured_instance: "two different admitted sets can then share a root and registryRoot stops identifying what ran"
+    injector: MerkleNoDomainSep
+    guard_tests:
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q38_domain_separation_is_load_bearing"
+        flips: true
+      - path: "tests/unit/test_g2_g3_registry.py::test_registry__merkle_domain_separation"
+        flips: true
+      - path: "tests/unit/test_g2_g3_registry.py::test_registry__root_is_order_invariant"
+        flips: false
+    positive_control: "the root stays order-invariant; only the prefixes moved"
+    status: active
+
+  - id: NC-Q55
+    component: predicates
+    break: an admission batch is written without a human signature
+    measured_instance: "R7 exists because the gate is mechanical and shipping a check applied to a regulated filing is not"
+    injector: AdmitAutosign
+    guard_tests:
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q55_admission_requires_a_human"
+        flips: true
+      - path: "tests/unit/test_g2_g3_registry.py::test_admission_requires_a_signature_or_the_literal_unsigned"
+        flips: true
+    positive_control: "a correctly signed batch admits, and the literal UNSIGNED signer is published beside the count"
+    status: active
+
+  - id: NC-Q07
+    component: qualify
+    break: "`unknown` from the proof arm is read as `non_degenerate`"
+    measured_instance: "47 of 349 FME candidates are unproven; reading them as proved would admit every one on a proof nobody has"
+    injector: Z3UnknownIsOk
+    guard_tests:
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q07_unknown_is_unproven"
+        flips: true
+      - path: "tests/unit/test_g2_g3_registry.py::test_g3__unknown_is_unproven_and_does_not_earn_non_degenerate"
+        flips: true
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q07b_a_proved_predicate_is_recorded_as_proved"
+        flips: false
+    positive_control: "a genuinely proved predicate is still recorded as proved; `proved` is not simply always False"
+    status: active
+
+  - id: NC-N51
+    component: qualify
+    break: THAT domain-policy-v1.json's magnitude bound is right
+    measured_instance: "no negative control is possible"
+    injector: NONE
+    why_impossible: >
+      The bound is a claim about lawful values in a population of filings that is not public. There
+      is no artifact against which `the largest value a MILLI_USD_MILLION cell can lawfully carry`
+      could be checked, so nothing can be planted that a guard would catch.
+    what_it_costs: >
+      While the policy reads PLACEHOLDER, every pure-bound predicate reaches G3's proof arm as
+      UNKNOWN and is decided empirically - slower, needs a corpus, and it is the reason the ALR
+      rejection is demonstrated at G2 and G3-empirical rather than by proof.
+    guard_tests:
+      - path: "tests/unit/test_g2_g3_registry.py::test_g3__a_pure_bound_is_unproven_while_the_policy_is_placeholder"
+        flips: false
+    positive_control: "the PLACEHOLDER is asserted to be a PLACEHOLDER, so nobody can quietly fill it in without moving this control"
+    status: active

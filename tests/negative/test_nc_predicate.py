@@ -571,3 +571,173 @@ def test_nc__Q51b_a_template_candidate_passes_with_zero_provisos() -> None:
     assert out.passed
     assert out.measured["provisos_total"] == 0
     assert out.measured["obligation_source"] == "TEMPLATE"
+
+
+# --------------------------------------------------------------------------------
+# P7-B3/B4 — NC-Q02, NC-Q07, NC-Q34, NC-Q36, NC-Q38, NC-Q55
+# --------------------------------------------------------------------------------
+
+
+def test_nc__Q34_order_is_enforced_by_shape() -> None:
+    """NC-Q34. **Assert on the SPY, not on the outcome**: the outcome is the same either way, and
+    the COST is the thing being gated. A candidate that fails G0's free check must generate zero
+    mutants."""
+    from cdfc.qualify.pipeline import QualificationContext, qualify
+    from cdfc.qualify.result import GATE_ORDER, GateId
+
+    seen: list[str] = []
+    r, it, store, tbl, facts, hf, rt = _fme_world()
+    import dataclasses
+
+    from cdfc.evaluate.celrt import CelRuntime  # noqa: F401
+    from cdfc.predicates.obligations import ObligationTable
+
+    victim = r.candidates[0]
+    broken = ObligationTable({**tbl.rows, victim.obligation_id: dataclasses.replace(
+        tbl[victim.obligation_id], quote="A CONSTRUCT THE PINNED BLANK DOES NOT CARRY")})
+    ctx = QualificationContext(obligations=broken, store=store, schema=r.schema, facts=facts,
+                               runtime=rt, hostfns=hf, qualified_at="2026-08-13")
+    res = qualify(victim, ctx, through=GateId.G3E, spy=lambda g: seen.append(g.value))
+    assert seen == ["G0"], (
+        f"a candidate failing the FREE gate reached {seen[1:]}; the stop is the cost control"
+    )
+    assert res.row.rejecting_gate is GateId.G0
+    assert GATE_ORDER[0] is GateId.G0
+
+
+def test_nc__Q34b_the_order_is_read_from_the_tuple() -> None:
+    """The admission-side twin: the pipeline reads GATE_ORDER rather than hard-coding a sequence,
+    which is what makes the injector able to reverse it at all."""
+    import ast
+
+    src = (Path(__file__).resolve().parents[2] / "src/cdfc/qualify/pipeline.py").read_text()
+    assert "GATE_ORDER[" in src and "GATE_ORDER.index" in src
+    tree = ast.parse(src)
+    names = {n.id for n in ast.walk(tree) if isinstance(n, ast.Name)}
+    assert "GATE_ORDER" in names
+
+
+def test_nc__Q02_unqualified_predicate_does_not_load() -> None:
+    """NC-Q02, and it **stops being provisional at P7**: both branches are now reachable.
+
+    For four phases this entry was green while proving nothing — the registry refused everything,
+    so its admission-side twin was impossible and the sweep reported it in its own column.
+    """
+    import dataclasses
+
+    from cdfc.predicates.registry import UNSIGNED, Registry, UnqualifiedPredicate, registry_root
+
+    r, _it, _store, _tbl, _facts, _hf, _rt = _fme_world()
+    c = r.candidates[0]
+    reg = Registry()
+    with pytest.raises(UnqualifiedPredicate):
+        reg.load(c.id, 1)
+    assert reg.root() == registry_root([]), "an unadmitted predicate is absent from the root"
+    before = reg.root()
+
+    with pytest.raises(UnqualifiedPredicate):
+        reg.admit(c, None, signer=UNSIGNED, signature=b"", batch_manifest_sha256="m",
+                  admitted_at="2026-08-13")
+    assert reg.root() == before, "a refused admission leaves the root unchanged"
+
+    # THE ADMISSION-SIDE TWIN, impossible before P7.
+    row = reg.admit(dataclasses.replace(c), {"g0": {}}, signer=UNSIGNED, signature=b"",
+                    batch_manifest_sha256="m", admitted_at="2026-08-13")
+    assert reg.load(c.id, 1).code_sha256 == row.code_sha256
+    assert reg.root() != before
+
+
+def test_nc__Q38_domain_separation_is_load_bearing() -> None:
+    """NC-Q38. The classic two-leaf / one-internal collision."""
+    import hashlib
+
+    from cdfc.predicates.registry import INTERNAL_PREFIX, LEAF_PREFIX, registry_root
+
+    a, b = "11" * 32, "22" * 32
+    root = registry_root([a, b])
+    naive = hashlib.sha256(bytes.fromhex(a) + bytes.fromhex(b)).hexdigest()
+    assert root != naive
+    assert LEAF_PREFIX == b"\x00" and INTERNAL_PREFIX == b"\x01"
+
+
+def test_nc__Q55_admission_requires_a_human() -> None:
+    """NC-Q55. And the signer is not a constant or an environment default: the ONLY constant
+    permitted is the literal `UNSIGNED`, which every surface renders beside the count."""
+    import os
+
+    from cdfc.predicates.registry import UNSIGNED, UNSIGNED_BADGE, Registry
+    from cdfc.qualify.errors import UnsignedAdmissionError
+
+    r, _it, _store, _tbl, _facts, _hf, _rt = _fme_world()
+    reg = Registry()
+    with pytest.raises(UnsignedAdmissionError):
+        reg.admit(r.candidates[0], {}, signer="A. Human", signature=b"",
+                  batch_manifest_sha256="m", admitted_at="2026-08-13")
+    row = reg.admit(r.candidates[0], {}, signer=UNSIGNED, signature=b"",
+                    batch_manifest_sha256="m", admitted_at="2026-08-13")
+    assert row.signer == UNSIGNED and row.badge() == UNSIGNED_BADGE
+    assert UNSIGNED not in os.environ, "the unsigned signer is a literal, not an environment value"
+    doc = (Path(__file__).resolve().parents[2] / "docs/measurements/P7-attrition.md").read_text()
+    assert "UNSIGNED" in doc, "the weakening is published where the admitted count is read"
+
+
+def test_nc__Q36_removal_is_recorded() -> None:
+    """NC-Q36. A subsumed predicate that vanishes without a row moves the settled fraction with no
+    cause on the chart."""
+    from cdfc.qualify import ilp
+
+    class C:
+        def __init__(self, i):
+            self.id = i
+
+    sel = ilp.select([C("a"), C("b")], subsumes=lambda x, y: x.id == "a" and y.id == "b",
+                     cells_of={"b": 9})
+    assert sel.kept == ("a",)
+    assert len(sel.removals) == 1
+    assert sel.removals[0].subsumed_by == "a"
+    assert sel.removals[0].cells_would_have_covered == 9
+
+
+def test_nc__Q36b_a_non_subsumed_predicate_is_retained() -> None:
+    from cdfc.qualify import ilp
+
+    class C:
+        def __init__(self, i):
+            self.id = i
+
+    sel = ilp.select([C("a"), C("b")], subsumes=lambda x, y: False, cells_of={})
+    assert sel.kept == ("a", "b") and not sel.removals
+
+
+def test_nc__Q07_unknown_is_unproven() -> None:
+    """NC-Q07. `unknown` must never be recorded as PROVED. It does not reject either — the
+    empirical arm decides — but it never earns `non_degenerate`."""
+    from cdfc.qualify import g3_degeneracy
+    from cdfc.qualify.domain import load as load_domain
+
+    root = Path(__file__).resolve().parents[2]
+    r, _it, _store, _tbl, _facts, _hf, _rt = _fme_world()
+    dom = load_domain(root / "domain-policy-v1.json")
+    unproven = [c for c in r.candidates
+                if g3_degeneracy.proof_arm(c, dom, harvest_class=r.class_of[c.id])
+                .measured["verdict"] == "unknown"]
+    assert unproven, "no candidate is unproven; this guard has nothing to point at"
+    for c in unproven[:10]:
+        o = g3_degeneracy.proof_arm(c, dom, harvest_class=r.class_of[c.id])
+        assert o.measured["proved"] is False
+        assert o.measured["verdict"] != "non_degenerate"
+
+
+def test_nc__Q07b_a_proved_predicate_is_recorded_as_proved() -> None:
+    """The admission-side twin: `proved` is not simply always False."""
+    import dataclasses
+
+    from cdfc.qualify import g3_degeneracy
+    from cdfc.qualify.domain import load as load_domain
+
+    root = Path(__file__).resolve().parents[2]
+    r, _it, _store, _tbl, _facts, _hf, _rt = _fme_world()
+    dom = load_domain(root / "domain-policy-v1.json")
+    o = g3_degeneracy.proof_arm(dataclasses.replace(r.candidates[0], expr="filing.a.v >= 0"),
+                                dom, harvest_class="sum_identity")
+    assert o.measured["proved"] is True and o.passed
