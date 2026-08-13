@@ -1220,3 +1220,122 @@ entries:
         flips: false
     positive_control: "the PLACEHOLDER is asserted to be a PLACEHOLDER, so nobody can quietly fill it in without moving this control"
     status: active
+
+  - id: NC-Q58
+    component: qualify
+    break: TEMPLATE-COMPUTED licenses an arithmetic FFR again — the intersection check is removed
+    measured_instance: "F2: the identity predicates draw a zero false-failure rate from cells src/cdfc/calc/ wrote, and n=189 buys BLOCKING in an afternoon"
+    injector: TcLicensesArithmetic
+    guard_tests:
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q58_template_computed_cannot_license_an_arithmetic_ffr"
+        flips: true
+      - path: "tests/unit/test_p8_corpus_and_ffr.py::test_clean_corpus_is_not_produced_by_the_code_under_test"
+        flips: true
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q58b_template_computed_licenses_a_membership_ffr"
+        flips: false
+      - path: "tests/unit/test_p8_corpus_and_ffr.py::test_template_computed_licenses_a_membership_ffr"
+        flips: false
+    positive_control: "a membership predicate reading only INPUT cells is still admitted on a CALC corpus; the repair is not reject-everything"
+    status: active
+
+  - id: NC-Q59
+    component: qualify
+    break: independence is hand-set instead of recomputed at load
+    measured_instance: "F5: before P8 the field was a string in a YAML that no build computed, no test asserted, no negative control broke and no gate read"
+    injector: IndependenceHardcoded
+    guard_tests:
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q59_independence_is_computed_not_declared"
+        flips: true
+      - path: "tests/unit/test_p8_corpus_and_ffr.py::test_contract__independence_is_a_property_not_a_field"
+        flips: true
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q58b_template_computed_licenses_a_membership_ffr"
+        flips: false
+    positive_control: "a corpus that IS independent still licenses a rate; only the loader's recomputation moved"
+    status: active
+
+  - id: NC-Q56
+    component: qualify
+    break: the Wilson bound is computed in float via math.sqrt
+    measured_instance: "two machines then produce two 6-dp strings and the attestation stops re-deriving (G-REPRO)"
+    injector: WilsonFloat
+    guard_tests:
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q56_wilson_is_decimal"
+        flips: true
+      - path: "tests/unit/test_p8_corpus_and_ffr.py::test_wilson__math_is_not_in_this_module"
+        flips: true
+      - path: "tests/unit/test_p8_corpus_and_ffr.py::test_wilson__the_spec_values"
+        flips: false
+    positive_control: "the three spec values still reproduce; the injected build is wrong in a way the numbers alone may not show, which is why the guard reads the AST"
+    status: active
+
+  - id: NC-Q10
+    component: qualify
+    break: the set-level FFR is a MEAN instead of `at least one member fires`
+    measured_instance: "in two of SPADE's nine pipelines, sets whose every member individually met the constraint reached composite FFRs of 88/100 and 53/100"
+    injector: SetFfrIsMean
+    guard_tests:
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q10_set_ffr_is_at_least_one_not_a_mean"
+        flips: true
+      - path: "tests/unit/test_p8_corpus_and_ffr.py::test_set_ffr__subadditivity_holds_and_the_mean_violates_it"
+        flips: true
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q10b_marginal_ffr_is_recorded_with_what_it_was_marginal_to"
+        flips: false
+    positive_control: "marginal_ffr and conditioned_on[] are still recorded; only the union arithmetic moved"
+    status: active
+
+  - id: NC-Q09
+    component: qualify
+    break: severity is keyed on the point estimate instead of the Wilson upper bound
+    measured_instance: "0 fires / 4 filings has a point estimate of 0.000 and an interval of [0.000, 0.489891]"
+    injector: SeverityPointEstimate
+    guard_tests:
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q09_severity_uses_wilson_upper"
+        flips: true
+      - path: "tests/unit/test_p8_corpus_and_ffr.py::test_severity__uses_wilson_upper"
+        flips: true
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q09b_day_one_has_almost_nothing_blocking"
+        flips: false
+    positive_control: "the day-one BLOCKING count stays 0 and the report still prints the reason beside the zero"
+    status: active
+
+  - id: NC-Q60b
+    component: qualify
+    break: the n_non_synthetic floor is removed, so a corpus the product generated buys BLOCKING
+    measured_instance: "F2's second half: synthesise(..., n=189) is one command and one afternoon"
+    injector: SyntheticBuysBlocking
+    guard_tests:
+      - path: "tests/unit/test_p8_corpus_and_ffr.py::test_severity__synthetic_corpus_cannot_buy_blocking"
+        flips: true
+      - path: "tests/unit/test_p8_corpus_and_ffr.py::test_severity__uses_wilson_upper"
+        flips: false
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q09b_day_one_has_almost_nothing_blocking"
+        flips: false
+    positive_control: "the tier table is otherwise unchanged; a genuinely non-synthetic corpus still reaches BLOCKING"
+    note: >
+      Q09b reads the PUBLISHED docs/measurements/P8-ffr.md rather than recomputing, so it cannot
+      flip under a source injection - the report records what the code did when it ran. That is
+      declared here rather than left to be discovered: a guard that cannot flip and is listed as
+      flips:true inflates the flipped set and reports an exact-set match that never happened.
+    status: active
+
+  - id: NC-N03
+    component: corpus
+    break: THAT the blind-fill corpus is genuinely blind
+    measured_instance: "no negative control is possible"
+    injector: NONE
+    why_impossible: >
+      Blindness is a property of a person's HISTORY, not of an artifact. Nothing can be planted in
+      a file that a guard would catch, because the thing being claimed is what somebody has never
+      seen.
+    what_it_costs: >
+      Every BLIND-FILLED false-failure rate rests on a procedure rather than on a test. It is the
+      single largest unverifiable input to the product's headline claim - and it is why
+      SELF-AUTHORED renders the word `uninformative` rather than a number: we would rather print
+      nothing than print a number whose shape is evidence and whose content is zero. Today it costs
+      nothing further, because D-P8-01 records that no blind fill exists at all and
+      n_non_synthetic is 0.
+    guard_tests:
+      - path: "tests/test_corpus_firewall.py::test_corpus__the_blind_fill_corpus_is_declared_absent_not_forgotten"
+        flips: false
+    positive_control: "the absence is a declared state with a consequence (BLOCKING == 0), not a gap"
+    status: active

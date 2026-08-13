@@ -150,3 +150,10 @@ proviso-markers:
 
 attrition:
 	$(PY) tools/measure/p7_attrition.py
+
+# --- P8 ------------------------------------------------------------------------------
+ffr:
+	$(PY) tools/measure/p8_ffr.py
+
+mask-check:
+	$(PY) tools/corpus/mask_vs_filler.py

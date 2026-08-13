@@ -91,6 +91,13 @@ EVIDENCE: dict[int, str] = {
     54: "NC-Q55",   # admission requires a human
     55: "NC-Q07",   # UNPROVEN is never PROVED
     56: "NC-Q36",   # a removal is never silent
+    # P8
+    57: "NC-Q58",   # F2 — a corpus we generated cannot license an arithmetic FFR
+    58: "NC-Q59",   # F5 — independence is a RESULT, not a string
+    59: "NC-Q56",   # the interval re-derives on another machine
+    60: "NC-Q10",   # set-FFR is `at least one`, never the mean
+    61: "NC-Q09",   # the tier is keyed on the upper bound
+    62: "NC-Q60b",  # F2's second half — the non-synthetic floor
     14: "NC-E33",   # no model client in the verdict path (promoted at P6)
     16: "NC-E30",   # the seven-term closure invariant (promoted at P6)
 }

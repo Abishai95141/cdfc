@@ -1843,3 +1843,124 @@ ALL_INJECTORS = ALL_INJECTORS + (
     GateOrderShuffled, MerkleNoDomainSep, AdmitAutosign, IlpSilentRemoval, Z3UnknownIsOk,
 )
 BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+CORPUS = REPO_ROOT / "src" / "cdfc" / "qualify" / "corpus"
+
+
+class TcLicensesArithmetic(Injector):
+    """`independent()` ignores conjunct (1), so `TEMPLATE-COMPUTED` licenses an arithmetic FFR.
+
+    NC-Q58 / **F2**. The identity predicates then draw a zero false-failure rate from cells
+    `src/cdfc/calc/` wrote, and `n = 189` buys `BLOCKING` in an afternoon.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="tc_licenses_arithmetic", touches=[QUALIFY / "g4_ffr.py"])
+
+    def apply(self) -> None:
+        p = QUALIFY / "g4_ffr.py"
+        p.write_text(p.read_text().replace(
+            "    overlap = sorted(read_cells(cand, schema) & corpus.computed_cells)",
+            "    overlap = []  # INJECTED", 1))
+
+
+class IndependenceHardcoded(Injector):
+    """Independence is hand-set back to `true` instead of recomputed at load.
+
+    NC-Q59 / **F5**. The field returns to being a string in a file that nothing computes — which is
+    what it was before this build, when no build computed it, no test asserted it, no negative
+    control broke and no gate read it.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="independence_hardcoded", touches=[QUALIFY / "g4_ffr.py"])
+
+    def apply(self) -> None:
+        p = QUALIFY / "g4_ffr.py"
+        p.write_text(p.read_text().replace(
+            "    recomputed = independent(corpus, cand, schema).independent",
+            "    recomputed = record['clean_corpus_independent_of_predicate']  # INJECTED", 1))
+
+
+class WilsonFloat(Injector):
+    """The Wilson bound is computed in `float` via `math.sqrt`.
+
+    NC-Q56. Two machines then produce two 6-dp strings and the attestation stops re-deriving.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="wilson_float", touches=[QUALIFY / "wilson.py"])
+
+    def apply(self) -> None:
+        p = QUALIFY / "wilson.py"
+        s = p.read_text()
+        s = s.replace("from decimal import Context, Decimal, ROUND_HALF_EVEN, localcontext",
+                      "import math\nfrom decimal import Context, Decimal, ROUND_HALF_EVEN, localcontext")
+        s = s.replace("half = (z * radicand.sqrt()) / denom",
+                      "half = (z * Decimal(repr(math.sqrt(float(radicand))))) / denom")
+        p.write_text(s)
+
+
+class SetFfrIsMean(Injector):
+    """The set-level FFR is implemented as a MEAN instead of `at least one member fires`.
+
+    NC-Q10. The registry then drifts to flag-everything one admission at a time: in two of SPADE's
+    nine pipelines, sets whose every member individually met the constraint reached composite FFRs
+    a mean could never have shown.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="set_ffr_is_mean", touches=[QUALIFY / "set_ffr.py"])
+
+    def apply(self) -> None:
+        p = QUALIFY / "set_ffr.py"
+        p.write_text(p.read_text().replace(
+            "    union: set[str] = set()\n"
+            "    for m in members:\n"
+            "        union |= fires.of(m)\n"
+            "    return Fraction(len(union), fires.n)",
+            "    if not members:  # INJECTED — the mean\n"
+            "        return Fraction(0, 1)\n"
+            "    return sum((Fraction(len(fires.of(m)), fires.n) for m in members),\n"
+            "               Fraction(0, 1)) / len(members)", 1))
+
+
+class SeverityPointEstimate(Injector):
+    """Severity keyed on the POINT ESTIMATE instead of the Wilson upper bound.
+
+    NC-Q09. `0 fires / 4 filings` then has a point estimate of `0.000` and buys `BLOCKING`.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="severity_point_estimate", touches=[QUALIFY / "severity.py"])
+
+    def apply(self) -> None:
+        p = QUALIFY / "severity.py"
+        p.write_text(p.read_text().replace(
+            '    hi = Decimal(str(g4["wilson"][1]))',
+            '    hi = Decimal(str(g4["wilson"][0]))  # INJECTED — the LOWER bound stands in for the\n'
+            '                                        # point estimate; both are 0.000 at zero fires', 1))
+
+
+class SyntheticBuysBlocking(Injector):
+    """The `n_non_synthetic` floor is removed, so a corpus the product generated buys `BLOCKING`.
+
+    NC-Q60b / **F2's second half**. `synthesise(..., n=189)` is one command and one afternoon.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="synthetic_buys_blocking", touches=[QUALIFY / "severity.py"])
+
+    def apply(self) -> None:
+        p = QUALIFY / "severity.py"
+        p.write_text(p.read_text().replace(
+            "    if hi <= BLOCKING_MAX and n_ns < BLOCKING_MIN_NON_SYNTHETIC:",
+            "    if False:  # INJECTED", 1))
+
+
+ALL_INJECTORS = ALL_INJECTORS + (
+    TcLicensesArithmetic, IndependenceHardcoded, WilsonFloat, SetFfrIsMean,
+    SeverityPointEstimate, SyntheticBuysBlocking,
+)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}

@@ -741,3 +741,178 @@ def test_nc__Q07b_a_proved_predicate_is_recorded_as_proved() -> None:
     o = g3_degeneracy.proof_arm(dataclasses.replace(r.candidates[0], expr="filing.a.v >= 0"),
                                 dom, harvest_class="sum_identity")
     assert o.measured["proved"] is True and o.passed
+
+
+# --------------------------------------------------------------------------------
+# P8 — NC-Q08, NC-Q09, NC-Q10, NC-Q56, NC-Q58, NC-Q59
+# --------------------------------------------------------------------------------
+
+
+def _p8_world():
+    from cdfc.predicates.harvest import harvest
+    from cdfc.qualify.corpus.provenance import CorpusProvenance
+    from cdfc.qualify.corpus.template_computed import CleanFiling, DerivedBy, generator_closure
+
+    root = Path(__file__).resolve().parents[2]
+    fme = root / "fixtures/prescribed/Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx"
+    r = harvest(fme)
+
+    def filing(mode, cells):
+        return CleanFiling(
+            path=Path("x.xlsx"), sha256="a" * 64, provenance=CorpusProvenance.TEMPLATE_COMPUTED,
+            derived_by=mode,
+            derived_engine_digest="e" * 64 if mode is DerivedBy.FOREIGN_ENGINE else None,
+            computed_cells=frozenset(cells),
+            generator_import_closure=generator_closure(mode), seed=1)
+
+    return r, filing
+
+
+def test_nc__Q58_template_computed_cannot_license_an_arithmetic_ffr() -> None:
+    """NC-Q58 / **F2**. The intersecting cells are NAMED, because a rejection whose reason is not
+    reconstructible is not a rejection."""
+    from cdfc.qualify import g4_ffr
+    from cdfc.qualify.corpus.provenance import UninformativeCorpusError
+    from cdfc.qualify.corpus.template_computed import DerivedBy
+    from cdfc.qualify.set_ffr import FireMatrix
+
+    r, filing = _p8_world()
+    arith = next(c for c in r.candidates if r.class_of[c.id] == "sum_identity")
+    read = g4_ffr.read_cells(arith, r.schema)
+    corpus = g4_ffr.CleanCorpus("calc", tuple(filing(DerivedBy.CALC, read) for _ in range(40)))
+    matrix = FireMatrix(filings=tuple(f"f{i}" for i in range(40)), fires={})
+    with pytest.raises(UninformativeCorpusError) as e:
+        g4_ffr.check(arith, corpus, matrix, [], r.schema)
+    assert "not independent" in str(e.value)
+    assert any(c in str(e.value) for c in sorted(read)[:3]), "the intersecting cells are named"
+
+
+def test_nc__Q58b_template_computed_licenses_a_membership_ffr() -> None:
+    """The admission-side twin. Without it the repair has replaced a false number with no number."""
+    from cdfc.qualify import g4_ffr
+    from cdfc.qualify.corpus.template_computed import DerivedBy
+    from cdfc.qualify.set_ffr import FireMatrix
+
+    r, filing = _p8_world()
+    m = next(c for c in r.candidates if r.class_of[c.id] == "membership")
+    disjoint = {"3. Portfolio!ZZ1"}
+    assert not (g4_ffr.read_cells(m, r.schema) & disjoint)
+    corpus = g4_ffr.CleanCorpus("calc", tuple(filing(DerivedBy.CALC, disjoint) for _ in range(40)))
+    out = g4_ffr.check(m, corpus, FireMatrix(filings=tuple(f"f{i}" for i in range(40)), fires={}),
+                       [], r.schema)
+    assert out.passed and out.measured["clean_corpus_independent_of_predicate"] is True
+
+
+def test_nc__Q59_independence_is_computed_not_declared() -> None:
+    """NC-Q59 / **F5**. Setting the field by hand raises at load; the RECOMPUTED value governs."""
+    from cdfc.qualify import g4_ffr
+    from cdfc.qualify.corpus.template_computed import DerivedBy
+    from cdfc.qualify.set_ffr import FireMatrix
+
+    r, filing = _p8_world()
+    cand = r.candidates[0]
+    corpus = g4_ffr.CleanCorpus(
+        "f", tuple(filing(DerivedBy.FOREIGN_ENGINE, {"S!ZZ1"}) for _ in range(40)))
+    rec = g4_ffr.check(cand, corpus,
+                       FireMatrix(filings=tuple(f"f{i}" for i in range(40)), fires={}), [],
+                       r.schema).measured
+    g4_ffr.load_g4(rec, corpus, cand, r.schema)
+    with pytest.raises(g4_ffr.IncompleteG4Record, match="no setter"):
+        g4_ffr.load_g4({**rec, "clean_corpus_independent_of_predicate": False}, corpus, cand,
+                       r.schema)
+
+
+def test_nc__Q56_wilson_is_decimal() -> None:
+    """NC-Q56. Asserted on the AST — `math` absent, no `float()` — not on the numbers agreeing."""
+    import ast
+
+    root = Path(__file__).resolve().parents[2]
+    tree = ast.parse((root / "src/cdfc/qualify/wilson.py").read_text(encoding="utf-8"))
+    imported = {a.name for n in ast.walk(tree) if isinstance(n, ast.Import) for a in n.names}
+    imported |= {n.module for n in ast.walk(tree) if isinstance(n, ast.ImportFrom) and n.module}
+    assert "math" not in imported
+    calls = {n.func.id for n in ast.walk(tree)
+             if isinstance(n, ast.Call) and isinstance(n.func, ast.Name)}
+    assert "float" not in calls
+
+
+def test_nc__Q10_set_ffr_is_at_least_one_not_a_mean() -> None:
+    """NC-Q10. A mean violates the subadditivity LOWER bound the moment two predicates fire on
+    disjoint filings, and the registry then drifts to flag-everything one admission at a time."""
+    from cdfc.qualify.set_ffr import FireMatrix, set_ffr
+
+    m = FireMatrix(filings=tuple("abcdefgh"),
+                   fires={"P1": frozenset({"a", "b"}), "P2": frozenset({"c"})})
+    union = set_ffr(["P1", "P2"], m)
+    lower = max(set_ffr(["P1"], m), set_ffr(["P2"], m))
+    assert lower <= union <= set_ffr(["P1"], m) + set_ffr(["P2"], m)
+    assert union.numerator == 3 and union.denominator == 8, "the union, not the mean"
+
+
+def test_nc__Q10b_marginal_ffr_is_recorded_with_what_it_was_marginal_to() -> None:
+    """A marginal number with no record of what it was marginal to is not a number."""
+    from cdfc.qualify import g4_ffr
+    from cdfc.qualify.corpus.template_computed import DerivedBy
+    from cdfc.qualify.set_ffr import FireMatrix
+
+    r, filing = _p8_world()
+    corpus = g4_ffr.CleanCorpus(
+        "f", tuple(filing(DerivedBy.FOREIGN_ENGINE, {"S!ZZ1"}) for _ in range(40)))
+    out = g4_ffr.check(r.candidates[0], corpus,
+                       FireMatrix(filings=tuple(f"f{i}" for i in range(40)), fires={}),
+                       ["P-0002", "P-0003"], r.schema)
+    assert out.measured["conditioned_on"] == ["P-0002", "P-0003"]
+    assert "/" in out.measured["marginal_ffr"], "two integers, never a rounded float"
+
+
+def test_nc__Q09_severity_uses_wilson_upper() -> None:
+    """NC-Q09. `0 fires / 4 filings` has a point estimate of 0.000 and an interval of [0, 0.490]."""
+    from cdfc.qualify import severity, wilson
+
+    _p, lo, hi = wilson.wilson(0, 4)
+    assert lo == 0 and hi > severity.ADVISORY_MAX
+    rec = {"wilson": [str(lo), str(hi)], "n": 4, "n_non_synthetic": 4,
+           "corpus_provenance": "BLIND-FILLED", "clean_corpus_independent_of_predicate": True}
+    assert severity.tier(rec).tier is severity.Severity.NOT_ADMITTED
+
+
+def test_nc__Q09b_day_one_has_almost_nothing_blocking() -> None:
+    """Over the current corpus the `BLOCKING` count is **0**, and the report says so."""
+    root = Path(__file__).resolve().parents[2]
+    doc = (root / "docs/measurements/P8-ffr.md").read_text(encoding="utf-8")
+    assert "| `BLOCKING` | 0 |" in doc
+    assert "requires" in doc and "non-synthetic" in doc, "the reason is beside the zero"
+
+
+def test_nc__Q08c_no_ffr_without_provenance_and_n() -> None:
+    """NC-Q08. Every FFR renders with its provenance, its n and its interval, or the build fails."""
+    from cdfc.qualify import g4_ffr
+
+    for field in ("corpus_provenance", "n", "wilson", "corpus_derived_by", "n_non_synthetic"):
+        assert field in g4_ffr.REQUIRED_G4_FIELDS
+
+
+def test_nc__Q08d_n_is_filings_not_cells() -> None:
+    """The exchangeable unit is the FILING. Cells within one filing are not independent draws."""
+    import json
+
+    root = Path(__file__).resolve().parents[2]
+    doc = json.loads((root / "fixtures/corpus_manifest.json").read_text(encoding="utf-8"))
+    assert doc["n"] == len(doc["filings_sha256"]) < 3_747
+
+
+def test_nc__Q08a_self_authored_renders_uninformative_not_a_number() -> None:
+    """**D-FFR-PROVENANCE.** `SELF-AUTHORED` renders the word, and the schema forbids a number."""
+    from cdfc.qualify.corpus.provenance import (
+        UNINFORMATIVE_RENDER,
+        UNINFORMATIVE_WORD,
+        CorpusProvenance,
+        UninformativeCorpusError,
+    )
+
+    assert UNINFORMATIVE_WORD in UNINFORMATIVE_RENDER
+    assert not any(ch.isdigit() for ch in UNINFORMATIVE_RENDER), (
+        "a rendering that carries a digit has the shape of evidence"
+    )
+    assert issubclass(UninformativeCorpusError, RuntimeError)
+    assert CorpusProvenance.SELF_AUTHORED.value == "SELF-AUTHORED"

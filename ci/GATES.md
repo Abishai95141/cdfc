@@ -81,6 +81,12 @@ a row between sets fails the build.
 | 54 | pytest | `test_nc__Q55_admission_requires_a_human` — R7, and `UNSIGNED` is published beside the count | P7 | P7 | `injectors/AdmitAutosign` | LIVE |
 | 55 | pytest | `test_nc__Q07_unknown_is_unproven` — UNPROVEN is never PROVED | P7 | P7 | `injectors/Z3UnknownIsOk` | LIVE |
 | 56 | pytest | `test_nc__Q36_removal_is_recorded` — a predicate never vanishes from the registry silently | P7 | P7 | `injectors/IlpSilentRemoval` | LIVE |
+| 57 | pytest | `test_nc__Q58_template_computed_cannot_license_an_arithmetic_ffr` — F2: a corpus we generated cannot license an arithmetic FFR | P8 | P8 | `injectors/TcLicensesArithmetic` | LIVE |
+| 58 | pytest | `test_nc__Q59_independence_is_computed_not_declared` — F5: the field is a RESULT, not a string | P8 | P8 | `injectors/IndependenceHardcoded` | LIVE |
+| 59 | pytest | `test_nc__Q56_wilson_is_decimal` — the interval re-derives on another machine | P8 | P8 | `injectors/WilsonFloat` | LIVE |
+| 60 | pytest | `test_nc__Q10_set_ffr_is_at_least_one_not_a_mean` — the registry cannot drift to flag-everything | P8 | P8 | `injectors/SetFfrIsMean` | LIVE |
+| 61 | pytest | `test_nc__Q09_severity_uses_wilson_upper` — a sample of four cannot buy BLOCKING | P8 | P8 | `injectors/SeverityPointEstimate` | LIVE |
+| 62 | pytest | `test_severity__synthetic_corpus_cannot_buy_blocking` — F2's second half: the non-synthetic floor | P8 | P8 | `injectors/SyntheticBuysBlocking` | LIVE |
 
 **Rows 17 and 18 exist as gates from the first commit, dated 11 Aug 2026, and their reason is recorded
 rather than assumed.** Row 17: a `CanaryRow.elapsed_us` inside a canonicalised payload was found in the
@@ -88,7 +94,7 @@ plan and would have made byte-identical re-derivation impossible; the gate exist
 Row 18: a displayed critical-path total that did not equal the sum of its own rows was found in the plan,
 which is the shared-denominator error in a schedule; the gate exists before any other total does.
 
-**LIVE = {1,…,14,16,…,56} (55 rows). PENDING = {15} (1 row). Total 56.**
+**LIVE = {1,…,14,16,…,62} (61 rows). PENDING = {15} (1 row). Total 62.**
 
 **Row 20 was added at P3, dated 11 Aug 2026.** R4 requires the evaluator to be `Decimal` from its first line rather than converted later; the gate exists so that cannot drift in unnoticed.
 
@@ -181,3 +187,18 @@ translator. Three outcomes, and collapsing any pair of them is a defect.
 
 `ADDED_LIVE_AT_P7` is a fifth frozen literal, so no row that was ever LIVE can leave the set by
 being edited out of a growing list.
+
+**Rows 57–62 were added at P8, dated 13 Aug 2026, all LIVE, all observed red in the same session.**
+
+Rows 57 and 58 are **F2 and F5**, and they are the two the plan calls the adversary's. Before this
+phase `clean_corpus_independent_of_predicate` was a field in a YAML file that **no build computed,
+no test asserted, no negative control broke and no gate read** — and the corpus generator let
+`src/cdfc/calc/` compute the very cells the arithmetic predicates re-check. An arithmetic
+predicate's expected false-failure rate was therefore zero *regardless of its quality*, and
+`n = 189` bought a `BLOCKING` tier in an afternoon.
+
+Row 62 is F2's second half and it is the one that survives a foreign oracle: the interval is a
+statement about a SAMPLE, and a sample the product generates is unbounded in `n` at a cost of one
+command. `BLOCKING` needs thirty filings a person or the world produced, whatever the interval says.
+
+`ADDED_LIVE_AT_P8` is a sixth frozen literal.

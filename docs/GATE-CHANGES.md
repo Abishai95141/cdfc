@@ -122,3 +122,33 @@ one shape.** `ci/no-regex-over-xml.sh` caught P7-B3's own baselines matching `<v
 a mutant's recorded cell edit — the same pattern-over-OOXML technique that returned a correct count
 with wrong contents at P1, dropped 424 of 505 formulas at P5, and has now been attempted a third
 time by the author of the gate that bans it. Both baselines now parse the fragment.
+
+---
+
+## 13 Aug 2026 — P8 adds rows 57–62, and widens row 38 by one named file
+
+Rows 57 and 58 are **F2 and F5**, the two the plan calls the adversary's. Before this phase
+`clean_corpus_independent_of_predicate` was a field in a YAML file that **no build computed, no
+test asserted, no negative control broke and no gate read**, and the corpus generator let
+`src/cdfc/calc/` compute the very cells the arithmetic predicates re-check. An arithmetic
+predicate's expected false-failure rate was therefore zero *regardless of its quality*, and
+`n = 189` — one command, one afternoon — bought a `BLOCKING` tier from a corpus the product
+generated about itself.
+
+Row 62 is F2's second half, and it is the one that survives even a foreign oracle: the interval is
+a statement about a SAMPLE, and a sample the product generates is unbounded in `n`. `BLOCKING`
+needs thirty filings a person or the world produced, whatever the interval says.
+
+**Row 38 (`ci/no-openpyxl-writer.sh`) is widened by exactly one file.** `corpus/_writer.py` joins
+`surgery.py` as a declared raw-zip writer: it writes the clean corpus by the same technique and for
+the same measured reason — an openpyxl round-trip drops 24 parts and all 19 `x14` validations — and
+it imports no openpyxl at all, which the gate's `hits` scan still enforces over every file
+including that one. Observed red in this session against a planted `openpyxl.load_workbook` inside
+the newly exempt file.
+
+**A defect this phase found in the ROLE of an existing gate, worth recording.** `ci/no-bare-rate.sh`
+fired on the string `Wilson 95%` in a column header. It was right: a confidence LEVEL rendered as a
+percentage on a surface is indistinguishable from a measured rate to a reader. The level now
+renders once, in prose, above the table.
+
+`ADDED_LIVE_AT_P8` is a sixth frozen literal.
