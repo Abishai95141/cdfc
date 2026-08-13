@@ -9,6 +9,15 @@ reports/
 !reports/validation-ledger.jsonl
 !reports/host_fns/
 !reports/host_fns/*.json
+# A campaign's reports ARE the evidence. `unobservable.jsonl` is what makes `U/G` auditable and
+# what P10's residue feeds on, and `manifest.json` is what the published numbers are read from —
+# so `docs/measurements/P6-fault-model-v3.md` can never quote a number no campaign produced.
+# `_work/` is scratch and stays ignored: the mutants are re-derivable from the records and seeds.
+!reports/campaigns/
+!reports/campaigns/*/
+!reports/campaigns/*/*.json
+!reports/campaigns/*/*.jsonl
+reports/campaigns/_work/
 blobs/
 *.db
 __pycache__/
