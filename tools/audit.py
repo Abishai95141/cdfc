@@ -83,9 +83,21 @@ def bare_rates() -> None:
 
     r = subprocess.run(["bash", str(REPO / "ci" / "no-bare-rate.sh")], cwd=REPO,
                        capture_output=True, text=True)
-    print("  " + (r.stdout or r.stderr).strip().splitlines()[0])
-    if r.returncode != 0:
-        FINDINGS.append("ci/no-bare-rate.sh is red")
+    detail = (r.stdout + r.stderr).strip()
+    print("  " + (detail.splitlines() or ["(no output)"])[0])
+    if r.returncode == 0:
+        return
+    # A red that does not say WHAT broke is the shape of defect this whole audit is about. In a
+    # fresh clone with no `.venv`, the gate cannot find its interpreter — an ENVIRONMENT problem,
+    # not a bare rate — and reporting it as a finding would send a reader looking for a percentage
+    # that is not there.
+    if "No such file" in detail or "command not found" in detail or "not found" in detail:
+        NOTES.append(
+            "ci/no-bare-rate.sh could not run: no interpreter. Set CDFC_PY, or run from a tree "
+            f"with .venv. ({detail.splitlines()[0][:80]})"
+        )
+        return
+    FINDINGS.append(f"ci/no-bare-rate.sh is red: {detail.splitlines()[0][:120]}")
 
 
 def catalogue_health() -> None:
