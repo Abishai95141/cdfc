@@ -40,7 +40,7 @@ def test_g1__the_reason_set_is_closed_and_each_reason_has_its_own_remedy():
     assert len(set(REMEDY.values())) == 6
 
 
-def test_g1__all_349_bind_nonzero(world):
+def test_g1__all_348_bind_nonzero(world):
     """ADMISSION SIDE, over the whole FME harvest."""
     r, facts, hf, rt = world
     bound = {}
@@ -49,12 +49,12 @@ def test_g1__all_349_bind_nonzero(world):
         assert out.passed, f"{c.id}: {out.reason} {dict(out.measured)}"
         assert out.measured["cells_bound"] > 0
         bound[c.id] = out.measured["cells_bound"]
-    assert len(bound) == 349
+    assert len(bound) == 348
     # R-GOLD-2: a value assertion, not merely `> 0`. A count that agrees with a pinned count is
     # evidence about the count; this pins WHICH cells a named predicate reaches.
     assert bound["P-0041"] == 2, "P-0041's bind count moved"
     assert bound["P-0001"] == 1, "P-0001's bind count moved"
-    assert sum(bound.values()) == 3541
+    assert sum(bound.values()) == 3530
 
 
 def test_g1__zero_bind_rejected(world):

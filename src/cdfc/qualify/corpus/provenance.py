@@ -2,7 +2,7 @@
 
 **Six values, and one of them is not a number.** `SELF-AUTHORED` renders as `—` and the word
 *uninformative*, and the schema FORBIDS a number: an FFR measured on a corpus its authors also
-wrote has expected value zero regardless of predicate quality. Printing *"0.0% false failures
+wrote has expected value zero regardless of predicate quality. Printing *"0.0% false failures  <!-- rate-ok: the forbidden rendering, quoted as the defect it is -->
 across 340 clean filings"* is worse than printing nothing, **because it has the shape of
 evidence**.
 

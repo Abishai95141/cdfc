@@ -188,7 +188,8 @@ def check(
         raise UninformativeCorpusError(
             f"{cand.id}: corpus {corpus.corpus_id!r} is SELF-AUTHORED. An FFR measured on a corpus "
             "its authors also wrote has expected value zero regardless of predicate quality. "
-            "Printing '0.0% false failures' would be worse than printing nothing, because it has "
+            "Printing '0.0% false failures' (rate-ok: the forbidden rendering, named) would be "
+            "worse than printing nothing, because it has "
             "the shape of evidence."
         )
 

@@ -127,3 +127,35 @@ registry has refused unconditionally since P0 and P7-B4 is the build that change
 
 The two committed fixtures moved with it, and `docs/measurements/P4-envelope-digests.md` carries
 both new values with this reason.
+
+
+## 13 Aug 2026 — P8: a wildcard COUNTIF leaves the harvest, found by the first measured FFR
+
+**`P-0009` fired on 18 of 40 clean filings and was refused at G4.** The FME blank declares
+`1. Introduction!D19` as `=COUNTIF(G54:G63, "*Restricted*")`. In Excel and in LibreOffice the `*`
+is a **wildcard**: the criterion counts every cell CONTAINING `Restricted`. The harvest emitted
+`c.v == "*Restricted*"`, a string equality, which counts cells whose text is literally
+`*Restricted*` — a different relation, and always zero on a real filing.
+
+**It survived P4, G0, G1, G2 and G3**, and it survived P5's clean filing because that filing put
+ONE value in every cell and the value happened not to contain `Restricted`. It took a corpus with
+VARIED inputs and an INDEPENDENT oracle to fire it: *a predicate that would have told a correct
+filer their return was wrong*, which is exactly and only what a false-failure rate is for.
+
+**The repair is a TYPED SKIP, not wildcard semantics.** This step cannot fail, only under-produce,
+and an undeclared suppression is a coverage lie. Implementing Excel's wildcard matching has its own
+escaping rules (`~*` is a literal asterisk) and belongs to whoever needs the class.
+
+**A consequence worth publishing rather than absorbing: `tally_identity` now emits NOTHING across
+all nine workbooks.** The corpus contains exactly one `COUNTIF` and it is the wildcard one. A
+harvest class with zero instances is a class nothing is testing, so
+`test_tally_identity__has_no_instance_on_this_corpus_and_that_is_the_finding` asserts the absence
+and the declared skip rather than quietly finding no subject.
+
+**The counts:**
+
+- `test_golden__harvest_count__fme` -> **348**
+- `test_golden__cross_workbook_harvest_distribution` -> **571**
+- `test_golden__zero_formula_template__edr1` -> **1**
+
+and `total obligations` -> **571**.

@@ -8,7 +8,7 @@ rate monotone non-decreasing under union and what satisfies
 
 A mean violates the lower bound the moment two predicates fire on disjoint filings: each has
 `FFR = 1/n`, the mean is `1/n`, and the truth is `2/n`. **In two of SPADE's nine pipelines, sets
-whose every member individually met the constraint reached composite FFR of 88% and 53%**
+whose every member individually met the constraint reached composite FFR of 88% and 53%**  <!-- rate-ok: published figures, quoted -->
 (rate-ok: published figures, quoted) — the registry drifting to flag-everything one admission at a
 time, which is what this module exists to make visible.
 

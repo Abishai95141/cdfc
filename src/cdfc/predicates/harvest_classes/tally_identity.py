@@ -38,6 +38,29 @@ def emit(ctx: Any) -> Iterator[tuple[tuple, Draft]]:
             ctx.skip("function_outside_vocabulary", sheet, ref,
                      f"COUNTIF criterion {criterion[:40]!r} is not a literal, or its sheet is absent")
             continue
+
+        # **A WILDCARD CRITERION IS NOT A STRING EQUALITY, AND P8's FALSE-FAILURE RATE IS WHAT
+        # FOUND THAT.** In Excel and in LibreOffice, `*` and `?` in a COUNTIF criterion are
+        # wildcards: `"*Restricted*"` counts every cell CONTAINING "Restricted". This class emits
+        # `c.v == "*Restricted*"`, which counts cells whose text is literally `*Restricted*` — a
+        # different relation, and always zero on a real filing.
+        #
+        # It survived P4, G0, G1, G2 and G3, and it survived P5's clean filing because that filing
+        # put ONE value in every cell and the value happened not to contain "Restricted". A corpus
+        # with varied inputs and an INDEPENDENT oracle fired it on 18 of 40 clean filings — a
+        # predicate that would have told a correct filer their return was wrong. That is what an
+        # FFR is for, and it is the first one this project has measured.
+        #
+        # The fix is a TYPED SKIP rather than wildcard semantics: this step cannot fail, only
+        # under-produce, and an undeclared suppression is a coverage lie. Implementing Excel's
+        # wildcard matching is real work with its own escaping rules (`~*` is a literal asterisk)
+        # and it belongs to whoever needs the class, not to a repair.
+        if "*" in crit or "?" in crit:
+            ctx.skip("function_outside_vocabulary", sheet, ref,
+                     f"COUNTIF criterion {criterion.strip()[:48]!r} contains an Excel WILDCARD; "
+                     "translating it as a string equality states a relation the template does not "
+                     "encode (found by P8's false-failure rate at 18 fires on 40 clean filings)")
+            continue
         cells = [c for c in expand(rng)]
         total = cell_node(ctx, sheet, ref)
         parts = [cell_node(ctx, src_sheet, c) for c in cells]

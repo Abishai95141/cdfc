@@ -75,15 +75,32 @@ def test_sum_identity__emits_a_tolerance_bearing_equality(fme) -> None:
     assert "<=" in s.expr, "the tolerance is in the expression as an integer band, not implied"
     assert "sum(" not in s.expr, "the band is written out; a host call would hide the summands"
 
-    t = next(x for x in fme.candidates if _cls(x) == "tally_identity")
-    assert t.tolerance is None, "a person is not a rounded quantity — NC-E08"
 
+def test_tally_identity__has_no_instance_on_this_corpus_and_that_is_the_finding(fme) -> None:
+    """**The class emits NOTHING across all nine workbooks, and the reason is a repair.**
 
-def test_tally_identity__claims_only_the_row_classes(fme) -> None:
-    t = next(x for x in fme.candidates if _cls(x) == "tally_identity")
-    assert set(t.claims_fault_classes) == {"F05", "F07", "F08"}
-    assert not {"F01", "F02"} & set(t.claims_fault_classes), (
+    The corpus contains exactly one `COUNTIF`, and its criterion is `"*Restricted*"` — an Excel
+    WILDCARD, which counts every cell CONTAINING `Restricted`. The harvest translated it as a
+    string equality, P8's false-failure rate fired it on 18 of 40 clean filings, and the repair is
+    a typed skip rather than wildcard semantics.
+
+    So the assertion is on the CLASS's declared claim rather than on an instance: a test that
+    silently found no subject would be a green test with no information in it, which is the thing
+    this project counts as evidence of nothing.
+    """
+    from cdfc.predicates.harvest_classes import tally_identity
+
+    assert not [x for x in fme.candidates if _cls(x) == "tally_identity"], (
+        "a tally_identity candidate reappeared; if a non-wildcard COUNTIF has been added to the "
+        "corpus this test should assert on it instead of on the class constant"
+    )
+    assert set(tally_identity.CLAIMS_FAULT_CLASSES) == {"F05", "F07", "F08"}
+    assert not {"F01", "F02"} & set(tally_identity.CLAIMS_FAULT_CLASSES), (
         "a tally sees rows appearing and disappearing and nothing about value magnitude"
+    )
+    assert any("WILDCARD" in s for s in
+               (x.detail for x in fme.skipped if x.kind == "function_outside_vocabulary")), (
+        "the wildcard COUNTIF must be a DECLARED skip; an undeclared suppression is a coverage lie"
     )
 
 

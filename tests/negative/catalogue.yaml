@@ -1190,7 +1190,7 @@ entries:
   - id: NC-Q07
     component: qualify
     break: "`unknown` from the proof arm is read as `non_degenerate`"
-    measured_instance: "47 of 349 FME candidates are unproven; reading them as proved would admit every one on a proof nobody has"
+    measured_instance: "47 of 348 FME candidates are unproven; reading them as proved would admit every one on a proof nobody has"
     injector: Z3UnknownIsOk
     guard_tests:
       - path: "tests/negative/test_nc_predicate.py::test_nc__Q07_unknown_is_unproven"

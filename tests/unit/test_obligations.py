@@ -137,15 +137,15 @@ def test_obligations__a_span_that_disagrees_with_its_quote_fails_at_load(tmp_pat
 def test_p7__both_obligation_counts_render_or_neither_does(fme):
     _r, _it, tbl = fme
     rendered = tbl.render_coverage_pair(_r.candidates)
-    assert "predicates_with_a_STATUTE_obligation  = 0 / 349" in rendered
-    assert "predicates_with_a_TEMPLATE_obligation = 349 / 349" in rendered
+    assert "predicates_with_a_STATUTE_obligation  = 0 / 348" in rendered
+    assert "predicates_with_a_TEMPLATE_obligation = 348 / 348" in rendered
     assert NO_STATUTORY_PREDICATE.capitalize() in rendered
     assert_pair_rendered(rendered)
 
     with pytest.raises(UnpairedObligationCount, match="TEMPLATE"):
-        assert_pair_rendered("predicates_with_a_STATUTE_obligation = 0 / 349")
+        assert_pair_rendered("predicates_with_a_STATUTE_obligation = 0 / 348")
     with pytest.raises(UnpairedObligationCount, match="STATUTE"):
-        assert_pair_rendered("predicates_with_a_TEMPLATE_obligation = 349 / 349")
+        assert_pair_rendered("predicates_with_a_TEMPLATE_obligation = 348 / 348")
     assert_pair_rendered("a surface that mentions neither is not making the claim")
 
 
@@ -168,7 +168,7 @@ def test_p7__the_pair_is_computed_over_the_whole_corpus():
         s, t, _n = tbl.coverage_pair(r.candidates)
         total_s += s
         total_t += t
-    assert (total_s, total_t) == (0, 572), (
+    assert (total_s, total_t) == (0, 571), (
         "0 STATUTE is not 'nobody has written one yet' — no statute is pinned in this repository "
         "at all (D-P7-01)"
     )

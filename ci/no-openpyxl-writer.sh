@@ -32,8 +32,14 @@ hits=$(grep -rnE '\.save\s*\(|load_workbook|Workbook\s*\(' --include='*.py' "$SC
 # The exempt file may READ. It may not write, by any of the three routes.
 exempt_writes=$(grep -rnE '\.save\s*\(|Workbook\s*\(\s*\)|ZipFile\s*\([^)]*["'"'"']w["'"'"']' \
                 --include='*.py' "$SCAN" 2>/dev/null | grep -E "$READER_EXEMPT" || true)
+# WIDENED AT P8, dated 13 Aug 2026: `corpus/_writer.py` joins `surgery.py` as a declared raw-zip
+# writer. It writes the CLEAN CORPUS by the same technique and for the same measured reason — an
+# openpyxl round-trip drops 24 parts and all 19 x14 validations — and it imports no openpyxl at
+# all, which the `hits` scan above still enforces over every file including this one. The list is
+# EXPLICIT so that widening it stays a visible diff rather than a quiet edit.
 writers=$(grep -rnE 'ZipFile\s*\([^)]*["'"'"']w["'"'"']' --include='*.py' "$SCAN" 2>/dev/null \
-          | grep -v '^src/cdfc/qualify/surgery.py:' || true)
+          | grep -v '^src/cdfc/qualify/surgery.py:' \
+          | grep -v '^src/cdfc/qualify/corpus/_writer.py:' || true)
 
 if [ -n "$hits$writers$exempt_writes" ]; then
   echo "GATE FAIL: a workbook writer outside surgery.py:" >&2

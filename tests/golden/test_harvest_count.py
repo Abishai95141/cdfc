@@ -56,7 +56,10 @@ def test_golden__harvest_count__fme() -> None:
         "numeric_bound": 10,
         "same_sheet_equality": 42,
         "sum_identity": 79,
-        "tally_identity": 1,
+        # `tally_identity` IS ABSENT, and its absence is the value assertion. The corpus contains
+        # exactly one COUNTIF and its criterion is an Excel wildcard, which the class refuses as a
+        # typed skip since P8 — see docs/HARVEST-DELTA.md, 13 Aug 2026. A key that reappeared here
+        # would mean a non-wildcard COUNTIF entered the corpus, or that the refusal regressed.
     }
     # The pinned `22 list-type / 20 resolving` split, reconciled: 20 membership predicates and
     # exactly 2 `list_unresolved` skips. It will silently fall to 15 if the x14 validations did

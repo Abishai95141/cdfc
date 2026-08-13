@@ -195,7 +195,7 @@ def test_smt__the_admitted_subset_is_measured_not_assumed(world):
     r, _stored = world
     translated = sum(1 for c in r.candidates if translate(c.expr) is not None)
     assert translated == 328, "the CEL->SMT coverage moved"
-    assert len(r.candidates) - translated == 21
+    assert len(r.candidates) - translated == 20
 
 
 def test_smt__a_string_expression_is_untranslatable():

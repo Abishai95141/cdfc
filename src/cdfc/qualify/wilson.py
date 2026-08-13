@@ -21,7 +21,8 @@ from __future__ import annotations
 from decimal import Context, Decimal, ROUND_HALF_EVEN, localcontext
 from typing import Final
 
-# The two-sided 95% normal quantile, to 15 dp. A MODULE CONSTANT WITH A TEST: a different `z` is a
+# The two-sided 95% normal quantile (rate-ok: a confidence LEVEL naming an interval, not a
+# measured rate), to 15 dp. A MODULE CONSTANT WITH A TEST: a different `z` is a
 # different gate, and a gate whose threshold moved without a diff is not a gate.
 WILSON_Z: Final[Decimal] = Decimal("1.959963984540054")
 
@@ -80,7 +81,7 @@ def render(k: int, n: int) -> str:
     """`k/n` AND the interval, in one string. A rate never renders without both integers of its
     fraction (`ci/no-bare-rate.sh`) and never without its interval (P8 exit criterion 4)."""
     point, lo, hi = wilson(k, n)
-    return f"{k}/{n} (point {point}, Wilson 95% [{lo}, {hi}])"
+    return f"{k}/{n} (point {point}, Wilson interval [{lo}, {hi}])"
 
 
 def n_for_upper_bound(bound: Decimal, k: int = 0) -> int:

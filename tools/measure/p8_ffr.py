@@ -52,7 +52,17 @@ FFR_DOC = REPO / "docs/measurements/P8-ffr.md"
 SEV_DOC = REPO / "docs/measurements/P8-severity.md"
 CORPUS_ID = "template-computed-foreign-v1"
 SEED = 20260813
-N = 30
+# **40, AND THE REASON IS ARITHMETIC RATHER THAN PREFERENCE.** `plan/04` F37 states that
+# *"30 blind-filled workbooks satisfy G-CORPUS and license ADVISORY (hi(0,30) = 0.1139)"*. The
+# parenthetical is right and the conclusion is not: `ADVISORY_MAX` is `0.10`, so `hi(0,30) =
+# 0.113513` does NOT clear it and thirty filings at zero fires license NOTHING. The threshold is
+# `n = 35` (`wilson.n_for_upper_bound(0.10)`), published in `docs/measurements/P8-severity.md`.
+#
+# Choosing `n` after reading the rule is legitimate here and the reason is recorded: the RULE was
+# pre-registered in `experiments/P8/PREREGISTRATION.md` and that document explicitly excludes the
+# corpus size, more filings is strictly more evidence, and the arithmetic that picked 40 is
+# published rather than the number alone.
+N = 40
 
 
 def main() -> int:
@@ -185,7 +195,12 @@ def _render_ffr(r, corpus, matrix, outcomes, refusals, admitted, tiers) -> str:
         "  LEAST ONE predicate fires, never the mean; a mean violates the subadditivity lower bound",
         "  the moment two predicates fire on disjoint filings*",
         "",
-        "| predicate | class | fired | n | Wilson 95% | marginal | tier |",
+        "Every interval below is a two-sided Wilson score interval at the confidence level",
+        "pinned in `wilson.WILSON_Z`. It renders here once, in prose, rather than as a",
+        "percentage in a column header — a surface that carries a bare percentage is a surface",
+        "somebody will read as a measurement.",
+        "",
+        "| predicate | class | fired | n | Wilson interval | marginal | tier |",
         "|---|---|---:|---:|---|---|---|",
     ]
     fired_rows = [(pid, o) for pid, o in outcomes.items() if o.measured["fired"]]
@@ -206,6 +221,32 @@ def _render_ffr(r, corpus, matrix, outcomes, refusals, admitted, tiers) -> str:
             f"[{wilson(0, corpus.n)[1]}, {wilson(0, corpus.n)[2]}] | 0/1 | ADVISORY |"
         )
     L += [
+        "",
+        "## THE DEFECT THIS RATE FOUND, on its first run",
+        "",
+        "**`P-0009` fired on 18 of 40 clean filings, and it was right to be refused.** The FME",
+        "blank declares `1. Introduction!D19` as `=COUNTIF(G54:G63, \"*Restricted*\")`. In Excel and",
+        "in LibreOffice the `*` is a **wildcard**: the criterion counts every cell CONTAINING",
+        "`Restricted`. The harvest emitted `c.v == \"*Restricted*\"` — a string equality, which",
+        "counts cells whose text is literally `*Restricted*`, and that is a different relation.",
+        "",
+        "**It survived P4, G0, G1, G2 and G3.** It survived P5's clean filing too, because that",
+        "filing put ONE value in every cell and the value happened not to contain `Restricted`. It",
+        "took a corpus with VARIED inputs and an INDEPENDENT oracle to fire it — a predicate that",
+        "would have told a correct filer their return was wrong, which is exactly and only what a",
+        "false-failure rate is for.",
+        "",
+        "| | fired | n | Wilson interval | tier |",
+        "|---|---:|---:|---|---|",
+        "| `P-0009` **before the repair** | 18 | 40 | `[0.294232, 0.604234]` | **NOT ADMITTED** |",
+        "| after the repair | — | — | *withdrawn from the harvest as a typed skip* | — |",
+        "",
+        "The repair is a **typed skip**, not wildcard semantics: this step cannot fail, only",
+        "under-produce, and an undeclared suppression is a coverage lie. The harvest moved",
+        "`349 -> 348` on FME and `572 -> 571` across the corpus, recorded in",
+        "`docs/HARVEST-DELTA.md`. `tests/unit/test_g4_ffr.py::test_g4__the_wildcard_predicate_is_refused`",
+        "reconstructs the predicate and asserts G4 still refuses it, so the demonstration survives",
+        "the fix that removed its subject.",
         "",
         "## Severity tiers",
         "",

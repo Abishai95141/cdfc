@@ -36,14 +36,14 @@ def test_ti__every_harvested_candidate_locates(fme):
     present in the pinned blank at the recorded span."""
     r, it = fme
     tbl = generate_template_obligations(r, it)
-    assert len(r.candidates) == 349
+    assert len(r.candidates) == 348
     located = 0
     for c in r.candidates:
         o = tbl[c.obligation_id]
         assert it.text[o.span[0] : o.span[1]] == o.quote
         assert o.quote in it.text
         located += 1
-    assert located == 349
+    assert located == 348
 
 
 def test_ti__a_stale_construct_is_not_located(fme):
@@ -101,7 +101,7 @@ def test_ti__obligation_ids_are_injective_over_the_corpus():
         r = harvest(p)
         total_c += len(r.candidates)
         total_o += len(r.constructs)
-    assert (total_c, total_o) == (572, 572)
+    assert (total_c, total_o) == (571, 571)
 
 
 def test_ti__instrument_id_is_the_template_digest():

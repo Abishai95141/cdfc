@@ -557,7 +557,7 @@ def test_nc__Q51_disposition_of_a_clauseless_candidate_is_specified_and_counted(
             assert out.reason in CLOSED_REASONS
         assert out.measured, "a G0 outcome with an empty record computed nothing"
         assert "instrument_id" in out.measured and "occurrences" in out.measured
-    assert entered == 349 == skipped + rejected + survived
+    assert entered == 348 == skipped + rejected + survived
     assert skipped == 0
 
 

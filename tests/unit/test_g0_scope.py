@@ -100,7 +100,7 @@ def test_g0__every_candidate_has_exactly_one_disposition(world):
         for field in ("instrument_id", "obligation_source", "occurrences", "span",
                       "corroboration", "provisos_total", "markers_version"):
             assert field in out.measured, f"{c.id}: G0 did not record {field}"
-    assert entered == 349
+    assert entered == 348
     assert entered == skipped + rejected + survived
     assert skipped == 0, "a skip at G0 is the vacuous pass in its purest form"
 
