@@ -1014,3 +1014,24 @@ entries:
         flips: false
     positive_control: "the campaign's own arithmetic is untouched; only the rendering changed"
     status: active
+
+  - id: NC-Q50
+    component: qualify
+    break: the disputed-region exclusion is dropped and the first extraction is used alone
+    measured_instance: "211 of FME's 505 formula cells are shared dependents whose expression exists nowhere in the file; their text is computed by calc/shift.materialise and was checked against no second implementation before P7"
+    injector: TextsourceSingleExtraction
+    guard_tests:
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q50_disputed_regions_are_excluded"
+        flips: true
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q50b_injected_a_span_resolves_against_one_reading"
+        flips: false
+      - path: "tests/negative/test_nc_predicate.py::test_nc__Q50c_an_agreed_region_locates_and_passes"
+        flips: false
+      - path: "tests/unit/test_textsource.py::test_textsource__one_extraction_is_refused"
+        flips: true
+    positive_control: "a quote in an agreed region still locates and still slices"
+    status: active
+    note: >
+      Renumbered from the plan's NC-Q47, which has been taken since P4. Reusing the id would have
+      replaced that entry and its guards silently — the same defect the P5 renumber
+      (E20..E23 -> E30..E37) was recorded for, now on its second occurrence.

@@ -17,14 +17,30 @@ assert_roots_exist cdfc_roots || { echo "GATE FAIL: refusing to report success o
 SCAN="src/cdfc/qualify"
 [ -d "$SCAN" ] || { echo "GATE FAIL: $SCAN does not exist; a grep over it would report success" >&2; exit 1; }
 
-hits=$(grep -rnE '\.save\s*\(|load_workbook|Workbook\s*\(' --include='*.py' "$SCAN" 2>/dev/null || true)
+# NARROWED AT P7, dated 13 Aug 2026, and the narrowing is recorded in docs/GATE-CHANGES.md.
+#
+# `template_instrument.py` needs a READ-ONLY openpyxl handle: it is the external party of the
+# dual-extraction harness, and the whole value of that party is that nobody here wrote it. So
+# `load_workbook` is admitted in that ONE file, by name, and every WRITE construct stays banned
+# there and everywhere — including in the exempt file, which is checked separately below rather
+# than exempted wholesale. A blanket exemption would have re-opened the round-trip this gate
+# exists to prevent, in the file the exemption was granted to.
+READER_EXEMPT='^src/cdfc/qualify/template_instrument\.py:'
+
+hits=$(grep -rnE '\.save\s*\(|load_workbook|Workbook\s*\(' --include='*.py' "$SCAN" 2>/dev/null \
+       | grep -vE "${READER_EXEMPT}[0-9]+: *(#.*)?(with warnings|wb = openpyxl\.load_workbook)" || true)
+# The exempt file may READ. It may not write, by any of the three routes.
+exempt_writes=$(grep -rnE '\.save\s*\(|Workbook\s*\(\s*\)|ZipFile\s*\([^)]*["'"'"']w["'"'"']' \
+                --include='*.py' "$SCAN" 2>/dev/null | grep -E "$READER_EXEMPT" || true)
 writers=$(grep -rnE 'ZipFile\s*\([^)]*["'"'"']w["'"'"']' --include='*.py' "$SCAN" 2>/dev/null \
           | grep -v '^src/cdfc/qualify/surgery.py:' || true)
 
-if [ -n "$hits$writers" ]; then
+if [ -n "$hits$writers$exempt_writes" ]; then
   echo "GATE FAIL: a workbook writer outside surgery.py:" >&2
   echo "$hits" >&2
   echo "$writers" >&2
+  [ -n "$exempt_writes" ] && echo "  (in the READ-ONLY exempt file, which may not write)" >&2
+  echo "$exempt_writes" >&2
   echo "  Mutants are written by raw-zip surgery ONLY. An openpyxl round-trip loses 19 x14" >&2
   echo "  validations and 24 parts, and the observability diff then measures the writer." >&2
   exit 1

@@ -67,3 +67,30 @@ Both are quotations, not measurements.
 
 `ADDED_LIVE_AT_P6` is a fourth frozen literal, so no row that was ever LIVE can leave the set by
 being edited out of a growing list.
+
+---
+
+## 13 Aug 2026 — P7-B0 narrows row 38 (`ci/no-openpyxl-writer.sh`), and finds a silent Makefile pass
+
+**Row 38's scope is narrowed, not weakened.** The gate banned every openpyxl construct under
+`src/cdfc/qualify/`, `load_workbook` included. P7-B0 needs a READ-ONLY openpyxl handle in exactly
+one file: `template_instrument.py`, where openpyxl is the EXTERNAL party of the dual-extraction
+harness and the whole value of the party is that nobody here wrote it.
+
+So `load_workbook` is admitted **in that one file, by name**, and the three write routes —
+`.save(`, `Workbook()`, `ZipFile(..., "w")` — stay banned there and everywhere. The exempt file is
+checked SEPARATELY rather than exempted wholesale, because a blanket exemption would have re-opened
+the round-trip this gate exists to prevent, in the file the exemption was granted to. Both halves
+were observed red in this session against planted controls: a `wb.save(...)` inside the exempt
+file, and a `load_workbook` in `sites.py`.
+
+**And a defect the gates could not see, found while running them.** `Makefile` defined the target
+`contract:` **twice** — P0's `pytest tests/contract` at line 32 and P5's `python tools/gen_contract.py`
+at line 117. `make` keeps the last definition and prints a warning nobody reads, so **since P5
+`make contract` regenerated `EVALUATION-CONTRACT.md` and `make all` never ran the contract suite at
+all**, while printing a target name that said it had. `make verify` was unaffected — it runs
+`pytest tests` — which is exactly why nothing went red. The generator is now `gen-contract`, both
+targets are in `.PHONY`, and `make contract` runs 68 contract tests again.
+
+*A duplicate target is a silent pass with a warning attached, and this is the sixth instance in
+this repository of a name agreeing with itself while the contents did something else.*

@@ -1607,3 +1607,34 @@ class RenderBareRate(Injector):
 
 ALL_INJECTORS = ALL_INJECTORS + (RenderBareRate,)
 BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+# --------------------------------------------------------------------------------
+# The P7 injectors
+# --------------------------------------------------------------------------------
+
+
+class TextsourceSingleExtraction(Injector):
+    """The disputed-region exclusion is dropped and the FIRST extraction is used alone.
+
+    NC-Q47. A span then resolves against text the second extractor never saw, and every unit
+    reports itself uncorroborated-but-addressable — which is what an instrument built from one
+    reading always looks like from the inside. The build's own refusal of a single extraction is
+    the thing being defeated, so the injector defeats it directly rather than passing one party.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="textsource_single_extraction", touches=[QUALIFY / "textsource.py"])
+
+    def apply(self) -> None:
+        p = QUALIFY / "textsource.py"
+        p.write_text(p.read_text().replace(
+            "    if len(extractions) < 2:\n"
+            "        raise TextSourceError(",
+            "    extractions = list(extractions)[:1]\n"
+            "    if len(extractions) < 1:\n"
+            "        raise TextSourceError(", 1))
+
+
+ALL_INJECTORS = ALL_INJECTORS + (TextsourceSingleExtraction,)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}

@@ -3,7 +3,8 @@ export PYTHONPATH := $(CURDIR)/src
 
 .PHONY: all lint licence greps contract unit property golden differential nc-sweep \
         determinism perf mutation-pr e2e nightly demo corpus-verify measure-foundation gates \
-        harvest cel-conformance host-fn-mutation predicate-schema verify
+        harvest cel-conformance host-fn-mutation predicate-schema verify \
+        gen-contract instruments
 
 all: lint licence greps corpus-verify contract unit golden determinism negative gates
 
@@ -114,7 +115,13 @@ verify: lint licence greps corpus-verify
 	@echo "verify: every gate green, every negative control caught"
 
 # --- P5 ------------------------------------------------------------------------------
-contract:
+# RENAMED AT P7, dated 13 Aug 2026. It was `contract:`, which is also the name of the P0 target
+# that RUNS the contract tests — and make silently keeps the LAST definition. So since P5
+# `make contract` regenerated EVALUATION-CONTRACT.md and `make all` never ran tests/contract at
+# all, while printing a target name that said it had. `make verify` was unaffected (it runs
+# `pytest tests`), which is why nothing went red. A duplicate target is a silent pass with a
+# warning nobody reads.
+gen-contract:
 	$(PY) tools/gen_contract.py
 
 filings:
@@ -132,3 +139,7 @@ campaign:
 
 audit:
 	$(PY) tools/audit.py
+
+# --- P7 ------------------------------------------------------------------------------
+instruments:
+	$(PY) tools/build_instruments.py

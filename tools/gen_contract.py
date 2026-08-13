@@ -4,7 +4,7 @@
 The code is the source of truth and the markdown is generated. A hand edit to the markdown fails
 `test_nc__E03b_contract_is_generated_not_edited`, which regenerates and asserts byte-identity.
 
-    make contract        # or: python tools/gen_contract.py
+    make gen-contract    # or: python tools/gen_contract.py
 """
 
 from __future__ import annotations
@@ -25,7 +25,7 @@ def render() -> str:
         "# EVALUATION-CONTRACT.md",
         "",
         "**GENERATED from `src/cdfc/evaluate/contract.py::TRANSITIONS`. Never hand-edited.**",
-        "Run `make contract` to regenerate. A hand edit fails the build:",
+        "Run `make gen-contract` to regenerate. A hand edit fails the build:",
         "`test_nc__E03b_contract_is_generated_not_edited` regenerates and asserts byte-identity,",
         "and `test_contract__evaluation_contract_matches_evaluator` compares the same table",
         "set-equal to the pinned extraction of the specification's own five rules.",

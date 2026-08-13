@@ -262,3 +262,115 @@ def test_nc__Q49d_nav_interval_still_answers_where_the_regulation_determines_it(
     from cdfc.predicates.host_fns.nav_interval import nav_interval
 
     assert str(nav_interval("Retail", "Open-ended", "NA")) == "P1M"
+
+
+# --------------------------------------------------------------------------------
+# P7-B0 — NC-Q50
+#
+# **Renumbered from the plan's NC-Q47, and the collision is recorded rather than absorbed.**
+# `plan/04-phases-qualification.md` P7-B0 names this control NC-Q47, and NC-Q47 has been taken
+# since P4 — `a template obligation must declare why it cites no statute`. Reusing the id would
+# have silently REPLACED that entry and its two guards in the catalogue, which is the exact defect
+# the P5 renumber (E20..E23 -> E30..E37) was recorded for. Second occurrence; `ci/catalogue-ids.sh`
+# catches the duplicate in the catalogue, and nothing catches it in a test file, which is why the
+# collision is checked by hand before an id is written.
+# --------------------------------------------------------------------------------
+
+
+def _two_parties_that_disagree():
+    """A minimal instrument whose two parties read one unit differently.
+
+    Constructed rather than harvested, and the reason is a measurement: across all nine pinned
+    blanks the two extractions disagree on **0 of 1,729 units**. A guard pointed at a region the
+    corpus does not contain would be green and would prove nothing, so the disagreement is built.
+    The mechanism under test is the exclusion RULE, and the rule does not know where its input
+    came from. That the rule can also see a real disagreement is asserted separately, by
+    `tests/differential/test_diff__two_extractions_agree.py`, which perturbs the shared-formula
+    shift on the real workbook.
+    """
+    from cdfc.qualify.textsource import Extraction, Unit
+
+    def party(name, k2_text, external):
+        return Extraction(
+            extractor=name, version="nc", external=external,
+            units=(Unit(key="k1", text="an agreed sentence", page=1),
+                   Unit(key="k2", text=k2_text, page=4)),
+            blind_to={},
+        )
+
+    return [party("alpha", "the fund shall report within 30 days", False),
+            party("beta", "the fund shall report within 90 days", True)]
+
+
+def test_nc__Q50_disputed_regions_are_excluded() -> None:
+    """Un-injected: a quote inside a disputed region is refused, and the refusal names the region.
+
+    The two extractions read the same unit as `30 days` and `90 days`. Neither is authoritative,
+    so the text is not addressable there — and the answer is a named refusal rather than one
+    party's reading silently winning.
+    """
+    from cdfc.qualify import textsource as ts
+
+    it = ts.build("nc-q50", _two_parties_that_disagree())
+    d = it.disputed[0]
+    assert d.key == "k2" and d.page == 4
+    assert set(d.readings.values()) == {
+        "the fund shall report within 30 days", "the fund shall report within 90 days"
+    }
+    with pytest.raises(ts.DisputedRegionError):
+        it.slice(d.span)
+    assert it.addressable_fraction() == (1, 2)
+    assert it.counts()["DISPUTED"] == 1
+
+
+Q50_INJECTED_PROBE = """
+import sys
+sys.path.insert(0, "src")
+from cdfc.qualify.textsource import Extraction, Unit, build
+def party(name, k2, ext):
+    return Extraction(extractor=name, version="nc", external=ext,
+                      units=(Unit(key="k1", text="an agreed sentence", page=1),
+                             Unit(key="k2", text=k2, page=4)), blind_to={})
+it = build("nc-q50", [party("alpha", "the fund shall report within 30 days", False),
+                      party("beta", "the fund shall report within 90 days", True)])
+print(it.counts()["DISPUTED"], it.addressable_fraction()[0], "30 days" in it.text,
+      "90 days" in it.text)
+"""
+
+
+def test_nc__Q50b_injected_a_span_resolves_against_one_reading() -> None:
+    """Injected: the exclusion is dropped, the first extraction is used alone, and the span
+    resolves — to text the other extractor never saw.
+
+    The probe runs in a SUBPROCESS. Reloading the module in-process would depend on whether some
+    earlier test had already imported it, which is the sort of order-dependence that makes a
+    negative control report a colour it did not earn.
+    """
+    import subprocess
+    import sys
+
+    from injectors import REPO_ROOT, TextsourceSingleExtraction, inject
+
+    with inject(TextsourceSingleExtraction()):
+        out = subprocess.run([sys.executable, "-c", Q50_INJECTED_PROBE], cwd=REPO_ROOT,
+                             capture_output=True, text=True)
+    assert out.returncode == 0, out.stderr
+    disputed, addressable, has30, has90 = out.stdout.split()
+    assert disputed == "0", "the injector did not take effect"
+    assert addressable == "2", "every unit is addressable once nothing is compared"
+    assert (has30, has90) == ("True", "False"), (
+        "with one party the losing reading vanishes without a trace, and a span resolves against "
+        "text the second extractor never saw"
+    )
+
+
+def test_nc__Q50c_an_agreed_region_locates_and_passes() -> None:
+    """THE ADMISSION-SIDE TWIN. Without it the exclusion rule is indistinguishable from a rule
+    that refuses every span."""
+    from cdfc.qualify import textsource as ts
+
+    it = ts.build("nc-q50", _two_parties_that_disagree())
+    spans = it.find_all("an agreed sentence")
+    assert len(spans) == 1
+    assert it.slice(spans[0]) == "an agreed sentence"
+    assert not it.is_disputed(spans[0])

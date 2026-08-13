@@ -1,7 +1,7 @@
 # EVALUATION-CONTRACT.md
 
 **GENERATED from `src/cdfc/evaluate/contract.py::TRANSITIONS`. Never hand-edited.**
-Run `make contract` to regenerate. A hand edit fails the build:
+Run `make gen-contract` to regenerate. A hand edit fails the build:
 `test_nc__E03b_contract_is_generated_not_edited` regenerates and asserts byte-identity,
 and `test_contract__evaluation_contract_matches_evaluator` compares the same table
 set-equal to the pinned extraction of the specification's own five rules.
