@@ -142,19 +142,45 @@ def main() -> int:
 
     L += [
         "",
-        "**`bound` is zero for every converted relation, and that is a measurement, not a bug.**",
-        "`bound_cells` maps a predicate's DECLARED KEYS through `TemplateSchema.cells_for`, and "
-        "that schema is built by the harvest from the keys the harvest itself emitted. A relation "
-        "addresses cells by `cel_path(sheet, ref)` directly — the same addressing the fact tree "
-        "uses — and those paths are not in the harvest's key→cell map unless some harvested "
-        "predicate happened to name the same cell. So the schema, as built, cannot answer *which "
-        "cells does this relation bind* for a relation the harvest did not write.",
+        "**Every converted relation binds cells, and every delta is zero.** The cells they bind "
+        "are already bound by the harvest — which is the overlap `P9-delta.md` exists to make "
+        "visible, not a defect.",
         "",
-        "That is a real seam and it is P9's, not a pre-existing one: **G1 would refuse every "
-        "relation with `error.cells_bound_zero`.** The repair is one line in the harvest — emit a "
-        "key→cell entry for every field-surface cell, not only for the cells a predicate named — "
-        "and it moves `TemplateSchema`, therefore the registry root, therefore P7's funnel. It is "
-        "recorded here, dated, rather than done as a side effect of a probe build.",
+        "## Where they actually stop, MEASURED — and it is BEFORE G0",
+        "",
+        "> `qualify()` does not reject a relation. **It raises.**",
+        "",
+        "```",
+        "ObligationError: 'OBL-TEMPLATE-R-R-02' is not in the obligations table. A candidate whose",
+        "obligation is missing does not take a skip at G0 — a gate stage that cannot fail is this",
+        "product's own failure mode wearing a gate's clothes.",
+        "```",
+        "",
+        "That refusal is P7's own, and it is right. What it exposes is a structural question P9 "
+        "cannot answer on its own authority:",
+        "",
+        "> **The obligations table is generated from the template's own QUOTABLE CONSTRUCTS. A "
+        "> relation's licence is a REVIEWED ARGUMENT, and often an argument about what the "
+        "> template does NOT say.** R-02's evidence is *\"no formula in the workbook reads AA21, "
+        "> G42 or any country cell\"* — and **an absence has no span to point at.** G0 asks *is "
+        "> your obligation located, verbatim, in the pinned instrument at the recorded span?*, "
+        "> which is exactly the right question to ask a harvested predicate and the wrong shape "
+        "> for a relation.",
+        "",
+        "**Two routes exist and both are arbitration-level, so neither is taken here.**",
+        "",
+        "1. **Mint `OBL-TEMPLATE-R-*` rows** whose quote is the construct the relation is *about* "
+        "— for R-02, the `SUM` at `'4. Investors'!AA21`, which is real, quotable and locatable. "
+        "Additive to the table, but it moves `coverage_pair()`'s TEMPLATE count off the published "
+        "**571**, and it makes a relation's obligation point at one of the several constructs it "
+        "compares.",
+        "2. **Give `ObligationSource` a third member.** It is `STATUTE | TEMPLATE` today, and the "
+        "arbitration that fixed it at two (C2 — two counts published together or neither) would "
+        "have to be re-opened.",
+        "",
+        "Choosing either inside a probe build would be deciding what an obligation *is* in the "
+        "tail of a phase about relations. It is recorded, dated 14 Aug 2026, with both routes and "
+        "both costs named.",
         "",
         "## The ceiling this is published under",
         "",

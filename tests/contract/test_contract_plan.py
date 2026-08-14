@@ -48,3 +48,76 @@ def test_plan__the_total_check_can_fail() -> None:
     assert rows, "the parser did not see the row; the gate would be vacuous"
     parts, total = rows[0]
     assert abs(sum(parts) - total) > 1e-9, "the control is not actually broken"
+
+
+# --- P9's exit gate, and the two criteria it met IN PART -------------------------------------
+
+
+def test_contract__p9_exit_gate_states_its_partial_criteria() -> None:
+    """**The exit gate is a claim, so it gets a guard.**
+
+    Two of P9's nine criteria are met in part, and both partial answers are published with the
+    reason and the repair. If either is later completed, this test fails — which is the point: a
+    phase document that silently becomes true is a phase document nobody re-read. The repair is
+    to move the criterion to MET in the same commit that makes it so.
+    """
+    import json
+    import sys
+    from pathlib import Path
+
+    repo = Path(__file__).resolve().parents[2]
+    sys.path.insert(0, str(repo / "src"))
+    text = (repo / "docs" / "measurements" / "P9-exit-gate.md").read_text(encoding="utf-8")
+    assert text.count("**MET IN PART**") == 2
+    assert text.count("**MET**") == 7
+
+    # Criterion 3 is partial because the flagship cannot become a CEL envelope.
+    from cdfc.probes.qualify import RelationEnvelopeError, to_envelope
+    from cdfc.probes.relations.registry import load
+
+    by_id = {s.id: s for s in load()}
+    try:
+        to_envelope(by_id["R-01"], "0" * 64)
+    except RelationEnvelopeError:
+        pass
+    else:  # pragma: no cover - the branch this test exists to catch
+        raise AssertionError(
+            "R-01 now converts to an envelope. Criterion 3 is no longer MET IN PART and "
+            "P9-exit-gate.md must be moved in this commit."
+        )
+
+    # Criterion 4 is partial because a relation has no obligation, so G0 RAISES before any gate
+    # arithmetic. Asserted against the real pipeline rather than against a stored number: the
+    # first version of this guard checked `bound == 0`, which was a mechanism asserted from
+    # plausibility, and the relations bind 10, 11 and 10 cells.
+    from cdfc.predicates.obligations import ObligationError
+    from cdfc.probes.qualify import to_envelope as _to_envelope
+
+    d = json.loads(
+        (repo / "docs" / "measurements" / "p9-relation-attrition.json").read_text(encoding="utf-8")
+    )
+    assert all(row["bound"] > 0 for row in d["rows"]), "the converted relations do bind cells"
+    assert all(row["delta"] == 0 for row in d["rows"]), (
+        "a relation now reaches a cell the harvest does not; the delta column has moved"
+    )
+
+    from cdfc.predicates.harvest import harvest
+    from cdfc.predicates.obligations import generate_template_obligations
+    from cdfc.qualify.template_instrument import emit
+
+    fme = (
+        repo / "fixtures" / "prescribed"
+        / "Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx"
+    )
+    res = harvest(fme)
+    obligations = generate_template_obligations(res, emit(fme))
+    cand = _to_envelope(by_id["R-02"], res.template_sha256)
+    try:
+        obligations[cand.obligation_id]
+    except ObligationError:
+        pass
+    else:  # pragma: no cover - the branch this test exists to catch
+        raise AssertionError(
+            "a relation now has an obligation, so it can enter the pipeline. Criterion 4 is no "
+            "longer MET IN PART and P9-exit-gate.md must be moved in this commit."
+        )
