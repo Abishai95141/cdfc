@@ -43,28 +43,61 @@ def test_contract__corpus_manifest_shape():
 
 def test_corpus_is_not_importable():
     """**RULE 1.** Nothing under `src/` or `tests/` reads the corpus except through
-    `fixtures/corpus_manifest.json`. Asserted by AST over every module, not by convention."""
+    `fixtures/corpus_manifest.json`. Asserted by AST over every module, not by convention.
+
+    **THE RULE EXEMPTED THE CORPUS IT EXISTS FOR.** The predicate carried an undocumented
+    `"corpus/blind-fill" not in v` clause — and `corpus/` has exactly two subdirectories, both
+    exempted — so the offenders list was empty BY EXEMPTION rather than by the rule holding.
+    Demonstrated: appending `CONTAMINATION = "corpus/blind-fill/fills/fill_001.json"` to
+    `src/cdfc/qualify/wilson.py`, which is precisely what RULE 1 forbids, left the test PASSING.
+    Neither exemption carried a comment, and none of `docs/GATE-CHANGES.md`, `D-P8-01` or the
+    module docstring recorded them.
+
+    What is exempt now, and why, is per-FILE and named — never a path substring:
+
+      - `tools/corpus/*` BUILDS the corpus. A builder that may not name its own output directory
+        cannot exist, and this is the boundary the rule is about: `src/` EVALUATES and must not
+        see it; `tools/corpus/` PRODUCES it.
+      - `mask_vs_filler.py` reads the manifest by design (F36).
+      - this file names the paths it forbids, and a firewall that trips on its own rule statement
+        gets "fixed" by deleting the rule statement.
+
+    `corpus/instruments` is P7's instrument store — a different corpus, with its own rules — and
+    it stays out of scope by NAME rather than by a substring that also swallowed blind-fill.
+    """
     offenders: list[str] = []
     for root in ("src", "tests", "tools"):
         for f in sorted((REPO / root).rglob("*.py")):
-            # The F36 tool reads the corpus manifest by design, and THIS FILE names the paths it
-            # is forbidding — a firewall test that trips on its own rule statement gets "fixed" by
-            # deleting the rule statement.
+            rel = f.relative_to(REPO).as_posix()
             if f.name in ("mask_vs_filler.py", "test_corpus_firewall.py"):
                 continue
-            src = f.read_text(encoding="utf-8")
-            tree = ast.parse(src)
+            if rel.startswith("tools/corpus/"):
+                continue
+            tree = ast.parse(f.read_text(encoding="utf-8"))
             for node in ast.walk(tree):
                 if not isinstance(node, ast.Constant) or not isinstance(node.value, str):
                     continue
                 v = node.value
-                if v.startswith("corpus/") and "corpus/instruments" not in v and \
-                        "corpus/blind-fill" not in v:
-                    offenders.append(f"{f.relative_to(REPO)}: {v!r}")
+                if v.startswith("corpus/") and not v.startswith("corpus/instruments"):
+                    offenders.append(f"{rel}: {v!r}")
     assert not offenders, (
         "a module reaches the blind-fill corpus directly rather than through "
         f"fixtures/corpus_manifest.json: {offenders}"
     )
+
+
+def test_corpus__rule_one_can_actually_fail():
+    """**THE CONTROL THAT DID NOT EXIST.** There was no injector and no negative control for RULE
+    1 at all, so the exemption that disabled it was invisible for a whole phase. This plants the
+    contamination the rule forbids and asserts the predicate reports it."""
+    forbidden = "corpus/blind-fill/fills/fill_001.json"
+    allowed = "corpus/instruments/x.json"
+
+    def flags(value: str) -> bool:
+        return value.startswith("corpus/") and not value.startswith("corpus/instruments")
+
+    assert flags(forbidden), "a src module naming the blind-fill corpus must be an offender"
+    assert not flags(allowed), "the instrument store is a different corpus and stays out of scope"
 
 
 def test_corpus__brief_and_slices_are_hashed_and_published():

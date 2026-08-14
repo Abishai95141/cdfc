@@ -68,7 +68,19 @@ def main() -> int:
     # predicate firing on a site outside its own read set — an apparatus failure, not a finding.
     killed_rows = [json.loads(x) for x in
                    (REPO / f"reports/campaigns/{CAMPAIGN}/killed.jsonl").read_text().splitlines() if x.strip()]
-    spurious = sum(1 for row in killed_rows if row.get("reachable") is False)
+    # **COUNTED FROM `unreachable.jsonl`, NOT FROM `killed.jsonl`.** Reading it from the killed
+    # rows made the number a constant: an unreachable mutant was never evaluated, so it could not
+    # appear there, and the published "spurious fires: 0 — the threshold is exactly zero" would
+    # have read 0 for a predicate that fired on every mutant in the campaign. The runner now
+    # evaluates unreachable mutants and records the fires in `spurious_fires`, kept out of
+    # `killed_by` so an apparatus failure can never inflate `K`.
+    unreachable_rows = [
+        json.loads(x) for x in
+        (REPO / f"reports/campaigns/{CAMPAIGN}/unreachable.jsonl").read_text().splitlines()
+        if x.strip()
+    ]
+    spurious = sum(len(row.get("spurious_fires") or ()) for row in unreachable_rows)
+    spurious += sum(1 for row in killed_rows if row.get("reachable") is False)
 
     ctx = QualificationContext(
         obligations=obligations, store=store, schema=r.schema, facts=facts,

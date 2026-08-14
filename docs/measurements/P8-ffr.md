@@ -107,6 +107,5 @@ asserted in `tests/unit/test_g4_ffr.py`.
   repository chose from a declared distribution. It answers *does our arithmetic agree with
   an independent engine's*; it does not answer *does a real filer's return trip these
   checks*.
-* **`REGISTER-DERIVED` is not built.** It needs the IFSCA register, whose terms of use have
-  not been read, so the 87-of-228 regex exhibit is unmeasured here (D-P8-02).
+* **`REGISTER-DERIVED` is built** (D-P8-02, superseded 13 Aug 2026). The pinned snapshot carries **229** records and the format-regex exhibit fires on **87 of 229**, measured first-hand. It is genuinely independent of this evaluator and is sufficient for the membership, bounds and date classes; it says nothing about the arithmetic ones.
 

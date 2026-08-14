@@ -48,6 +48,11 @@ REPORT = REPO / "reports" / "negative-control-sweep.json"
 
 # `/abs/path/file.py:57: AssertionError: text`
 TB_LINE = re.compile(r"^(?P<path>[^\s:]+\.py):(?P<line>\d+):\s*(?P<text>.*)$")
+
+# The sentinel for "this guard went red and pytest gave us no line to quote". It is deliberately
+# NOT a phrase that could pass for a captured assertion — `"reported failed"` did, and 13 rows of
+# the committed report carried it while the test asserting reviewability saw a non-empty string.
+NO_ASSERTION_CAPTURED = "(NO ASSERTION TEXT CAPTURED — the guard went red without a quotable line)"
 HEXADDR = re.compile(r"0x[0-9a-fA-F]+")
 
 
@@ -126,8 +131,21 @@ def _run_guards(node_ids: list[str]) -> dict[str, tuple[bool, str]]:
         red = nid in failed_nodes
         text = failed_nodes.get(nid, "")
         if red and not text:
+            # **THE LOOKUP ONLY MATCHED A TRACEBACK KEYED ON THE GUARD'S OWN FILE**, so a guard
+            # whose assertion is raised deeper — `RegistryError` out of `src/cdfc/gates.py`, say —
+            # missed and fell back to the literal `"reported failed"`. 13 of 160 red guards carried
+            # that placeholder instead of a captured assertion, and the test that exists to make
+            # the artifact reviewable asserted only that the field was non-empty, so it could not
+            # tell the difference.
+            #
+            # The run is per-guard, so ANY captured traceback line belongs to this guard's failure.
+            # Preferring the guard's own file keeps the most specific line when there is one.
             f = nid.split("::")[0]
-            text = next((v for k, v in tb.items() if k.endswith(f) or f.endswith(k)), "reported failed")
+            text = next((v for k, v in tb.items() if k.endswith(f) or f.endswith(k)), "")
+            if not text and tb:
+                text = next(iter(tb.values()))
+            # A visibly-named absence, never a phrase that reads like a captured assertion.
+            text = text or NO_ASSERTION_CAPTURED
         result[nid] = (not red, text)
     return result
 

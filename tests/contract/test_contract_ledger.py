@@ -108,3 +108,33 @@ def test_ledger__absence_rows_still_parse_beside_the_measurement_rows() -> None:
     assert absence, "the absence rows have gone; ledger:<row_id> citations would stop resolving"
     for r in absence:
         assert "positive_control_count" in r
+
+
+def test_contract__every_measurement_path_resolves() -> None:
+    """**`paths.py` contained the defect it exists to prevent.**
+
+    Its docstring says other modules import these constants *"instead of re-typing a filename"*
+    because *"a measurement written to a path one module spells differently from another is a
+    measurement nobody reads"*. `P1_READER_AGREEMENT` spelled the P1 file `p1-reader-agreement.json`
+    while the file the build produces is `p1-agreement.json`; three more named files no phase ever
+    wrote; and seven of the nine were imported by nothing, so nothing noticed.
+
+    A constant that names a file which does not exist is worse than a re-typed filename — it reads
+    as the canonical answer. This asserts every one resolves.
+    """
+    import sys
+    from pathlib import Path as _P
+
+    sys.path.insert(0, str(_P(__file__).resolve().parents[2] / "src"))
+    from cdfc.measure import paths
+
+    missing = []
+    for name in sorted(dir(paths)):
+        if not name.isupper():
+            continue
+        v = getattr(paths, name)
+        if isinstance(v, _P) and not v.exists():
+            missing.append(f"{name} -> {v}")
+    assert not missing, (
+        f"{len(missing)} measurement-path constants name something that does not exist: {missing}"
+    )

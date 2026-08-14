@@ -104,7 +104,24 @@ class RelationSpec:
         are recovered from that expression's AST.
         """
         body = self.expr.strip()
-        return "PYTHON" if (":" in body and " " not in body and "." in body) else "CEL"
+        # **DERIVED FROM THE SHAPE OF A DOTTED CALLABLE, not from "has a colon and no space".**
+        #
+        # The old rule classified any space-free CEL containing `:` as PYTHON — a ternary
+        # (`filing.a.v>0?1:0`) or a map literal (`{"k":filing.a.v}`) — so `to_envelope` would have
+        # refused it with *"its expression is PYTHON, not CEL"*, a reason that is untrue, and the
+        # refusal would have been published in the attrition table under it. It also ran the other
+        # way: `cdfc.mod:fn # note` came out CEL and would reach the subset check. R-03's builder
+        # emits ternaries today and was saved only by putting spaces around them.
+        head, sep, tail = body.partition(":")
+        if not sep or not tail:
+            return "CEL"
+        module, fn = head.strip(), tail.strip()
+        looks_like_callable = (
+            module.startswith("cdfc.")
+            and all(part.isidentifier() for part in module.split("."))
+            and fn.isidentifier()
+        )
+        return "PYTHON" if looks_like_callable else "CEL"
 
     @property
     def single_signer(self) -> bool:

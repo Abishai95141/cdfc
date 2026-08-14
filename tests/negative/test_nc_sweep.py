@@ -44,13 +44,36 @@ def test_nc_meta__every_expected_guard_flipped() -> None:
 def test_sweep__records_the_failing_assertion_text() -> None:
     """DoD line C4 must resolve to an artifact, not a paste. Every flipped guard carries
     the captured assertion and its node id, so a reviewer opens a file rather than
-    trusting a plausible-looking quotation in a PR description."""
+    trusting a plausible-looking quotation in a PR description.
+
+    **THIS ASSERTED ONLY THAT THE FIELD WAS NON-EMPTY**, and the sweep supplied the literal
+    `"reported failed"` whenever no line was captured — so the test could never fail, and 13 of
+    160 red guards carried the placeholder rather than an assertion. The lookup matched only a
+    traceback keyed on the guard's OWN file, so any guard whose assertion is raised deeper (a
+    `RegistryError` out of `src/cdfc/gates.py`) fell through.
+
+    The capture now falls back to any line from the guard's own run, and a genuine absence is a
+    NAMED sentinel that cannot read as a quotation. This test counts them.
+    """
+    sys.path.insert(0, str(REPO / "tools"))
+    from nc_sweep import NO_ASSERTION_CAPTURED  # noqa: PLC0415
+
     rep = _report()
+    red = uncaptured = 0
     for row in rep["rows"]:
         for g in row["guards"]:
-            if g["observed_red"]:
-                assert g["assertion_text"], f"{row['id']} {g['path']}: no assertion captured"
-                assert g["node_id"], f"{row['id']} {g['path']}: no node id captured"
+            if not g["observed_red"]:
+                continue
+            red += 1
+            assert g["assertion_text"], f"{row['id']} {g['path']}: no assertion captured"
+            assert g["node_id"], f"{row['id']} {g['path']}: no node id captured"
+            if g["assertion_text"] == NO_ASSERTION_CAPTURED:
+                uncaptured += 1
+    assert red, "no guard went red; this test would pass over an empty sweep"
+    assert uncaptured == 0, (
+        f"{uncaptured} of {red} red guards carry no quotable assertion. A reviewer cannot open "
+        "what the sweep did not capture."
+    )
 
 
 def test_sweep__provisional_entries_are_excluded_from_caught() -> None:

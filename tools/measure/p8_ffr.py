@@ -282,11 +282,41 @@ def _render_ffr(r, corpus, matrix, outcomes, refusals, admitted, tiers) -> str:
         "  repository chose from a declared distribution. It answers *does our arithmetic agree with",
         "  an independent engine's*; it does not answer *does a real filer's return trip these",
         "  checks*.",
-        "* **`REGISTER-DERIVED` is not built.** It needs the IFSCA register, whose terms of use have",
-        "  not been read, so the 87-of-228 regex exhibit is unmeasured here (D-P8-02).",
+        # THIS BULLET WAS FALSE IN FOUR WAYS AND `make ffr` REPRODUCED IT EVERY RUN. It said
+        # REGISTER-DERIVED was not built, that the register's terms were unread, that the exhibit
+        # was unmeasured, and it quoted the spec's denominator of 228. D-P8-02 is titled
+        # "SUPERSEDED — REGISTER-DERIVED is built", the snapshot is committed, `register_derived.py`
+        # is live code, and the exhibit measures first-hand — over 229, because the lane the spec's
+        # 228 came from had lost a record. The commit that built it is titled with the corrected
+        # figure; the generator string was never updated with it.
+        #
+        # It is COMPUTED now, from the snapshot, so it cannot go stale a second time.
+        *_register_bullet(),
         "",
     ]
     return "\n".join(L) + "\n"
+
+
+def _register_bullet() -> list[str]:
+    """The REGISTER-DERIVED line, measured from the committed snapshot rather than remembered."""
+    try:
+        from cdfc.qualify.corpus import register_derived as rd
+
+        snap = rd.load()
+        fires = len(rd.format_regex_fires(snap))
+        return [
+            f"* **`REGISTER-DERIVED` is built** (D-P8-02, superseded 13 Aug 2026). The pinned "
+            f"snapshot carries **{snap.n}** records and the format-regex exhibit fires on "
+            f"**{fires} of {snap.n}**, measured first-hand. It is genuinely independent of this "
+            "evaluator and is sufficient for the membership, bounds and date classes; it says "
+            "nothing about the arithmetic ones.",
+        ]
+    except Exception as e:  # noqa: BLE001 — an absent snapshot is a state, reported not guessed
+        return [
+            f"* **`REGISTER-DERIVED` could not be read** ({type(e).__name__}). The exhibit is "
+            "unmeasured on this run, and that is a fact about this run rather than a standing "
+            "claim about the register.",
+        ]
 
 
 def _gcorpus(corpus) -> tuple[str, str]:

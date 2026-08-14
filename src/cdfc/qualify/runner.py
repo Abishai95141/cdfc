@@ -47,6 +47,9 @@ class MutantOutcome:
     # where the mutant and the base DIFFER, a blocked cell is one where we cannot say. Recording
     # the second as the first is what made `I` unreachable.
     blocked: tuple[str, ...] = ()
+    # Predicates that FIRED on this mutant while it was outside their read set. The control arm:
+    # a fire here is an apparatus failure, not a kill, so it never enters `killed_by` or `K`.
+    spurious_fires: tuple[str, ...] = ()
 
     @property
     def killed(self) -> bool:
@@ -61,6 +64,8 @@ class MutantOutcome:
             "killed_by": list(self.killed_by),
             "blocked": list(self.blocked[:32]),
             "n_blocked": len(self.blocked),
+            "spurious_fires": list(self.spurious_fires),
+            "n_spurious_fires": len(self.spurious_fires),
         }
 
 
@@ -162,11 +167,29 @@ class CampaignRunner:
         blocked_cells = tuple(sorted(f"{s}!{r}" for s, r in blocked))
 
         reachable = bool(set(distinguishing) & self.read_cells) if self.read_cells else True
+        # --- THE CONTROL ARM, AND WHY IT IS EVALUATED AT ALL --------------------------------
+        #
+        # This read `if obs is OBSERVABLE and reachable:` — so a mutant OUTSIDE every predicate's
+        # read set was never evaluated, `killed_by` was empty for all of them by construction, and
+        # the funnel's published *"control-arm spurious fires: 0 — the threshold is exactly zero"*
+        # was a constant. It would read 0 for a predicate that fired on EVERY mutant, which is
+        # precisely the flag-everything baseline the control arm exists to reject.
+        #
+        # Unreachable mutants are now evaluated, and their fires are recorded SEPARATELY. They do
+        # NOT enter `killed_by`, because a fire on a cell the predicate does not read is an
+        # apparatus failure rather than a kill, and letting it into `K` would inflate the rate with
+        # exactly the behaviour being policed. 56 of 773 mutants are unreachable, so the arm costs
+        # a fourteenth of the campaign.
         killed: tuple[str, ...] = ()
-        if obs is Observability.OBSERVABLE and reachable:
-            killed = tuple(self.evaluate(target, mutant_grid, edited))
+        spurious: tuple[str, ...] = ()
+        if obs is Observability.OBSERVABLE:
+            fired = tuple(self.evaluate(target, mutant_grid, edited))
+            if reachable:
+                killed = fired
+            else:
+                spurious = fired
         target.unlink(missing_ok=True)     # the bytes are re-derivable from the record and the seed
-        return MutantOutcome(record, obs, distinguishing, reachable, killed, blocked_cells)
+        return MutantOutcome(record, obs, distinguishing, reachable, killed, blocked_cells, spurious)
 
     def literal(self, sheet: str, ref: str) -> Any:
         from cdfc.qualify.observability import extract

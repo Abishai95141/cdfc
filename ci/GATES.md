@@ -107,7 +107,15 @@ plan and would have made byte-identical re-derivation impossible; the gate exist
 Row 18: a displayed critical-path total that did not equal the sum of its own rows was found in the plan,
 which is the shared-denominator error in a schedule; the gate exists before any other total does.
 
-**LIVE = {1,…,14,16,…,63} (62 rows). PENDING = {15} (1 row). Total 63.**
+**The LIVE/PENDING split is NOT restated here as a literal.** This line used to read
+*"LIVE = {1,…,14,16,…,63} (62 rows). PENDING = {15} (1 row). Total 63."* while the file carried 75
+rows with 74 LIVE — it had drifted twelve rows and nothing noticed, because no test read it. That
+is the shared-denominator shape row 18 exists to catch, occurring in the registry itself.
+
+The authoritative split is the frozen literal set in
+`tests/contract/test_contract_gates.py` (`LIVE_AT_P0` plus one `ADDED_LIVE_AT_Pn` per phase, never
+an edit to an earlier one), and the current counts are PRINTED by `tools/gate_liveness.py` on every
+run. A count in prose beside a table is a second answer to a question the table already answers.
 
 **Row 20 was added at P3, dated 11 Aug 2026.** R4 requires the evaluator to be `Decimal` from its first line rather than converted later; the gate exists so that cannot drift in unnoticed.
 
