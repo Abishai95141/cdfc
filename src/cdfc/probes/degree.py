@@ -214,7 +214,46 @@ def _table_title_row(rows: Mapping[int, list[tuple[int, str, str]]], row: int) -
     return max(candidates) if candidates else 1
 
 
-def assign(sheet: str, ref: str, sheet_text: Mapping[str, str]) -> Assignment:
+def column_spans(merged_ranges: tuple[str, ...]) -> dict[str, tuple[int, int]]:
+    """`anchor ref -> (first column index, last column index)` for every merged range.
+
+    **This is what stops a unit declaration leaking sideways.** The regulator writes a table-wide
+    unit as a MERGED cell across the data block — `'4. Investors'!C3` is `C3:N3`, so `(Nos.)`
+    genuinely applies to columns C through N — and a per-column unit as an ordinary cell:
+    `'2. Summary'!G4`, *"Stated Target Corpus … (USD Million)"*, is not merged and applies to
+    column G alone.
+
+    Reading every parenthesised unit as table-wide put **130 of 223** published `MONEY_MARKER`
+    cells on text columns — `Type of Scheme`, `Name of Scheme`, `IFSCA Authorisation Number` —
+    each licensed by `G4`, seven columns away. The published count of money cells was not a count
+    of money cells, and the guard was a pinned integer plus a check that the evidence field was
+    non-empty — never that the string named THAT cell's unit.
+    """
+    out: dict[str, tuple[int, int]] = {}
+    for rng in merged_ranges:
+        if ":" not in rng:
+            continue
+        a, b = rng.split(":", 1)
+        try:
+            ca, _ra = split_ref(a)
+            cb, _rb = split_ref(b)
+        except ValueError:
+            continue
+        lo, hi = col_to_index(ca), col_to_index(cb)
+        prev = out.get(a)
+        # A ref can anchor more than one range (FME has `A1:O1` and `A1:C1`). The WIDEST span is
+        # the one the regulator drew across the table; a narrower duplicate is a leftover.
+        if prev is None or (hi - lo) > (prev[1] - prev[0]):
+            out[a] = (lo, hi)
+    return out
+
+
+def assign(
+    sheet: str,
+    ref: str,
+    sheet_text: Mapping[str, str],
+    spans: Mapping[str, tuple[int, int]] | None = None,
+) -> Assignment:
     """One cell's degree, with the string that licensed it. NEAREST marker wins.
 
     Three levels, and they do not read the same way:
@@ -253,12 +292,23 @@ def assign(sheet: str, ref: str, sheet_text: Mapping[str, str]) -> Assignment:
                 return answer(basis, f"{col}{rr}", txt)
             break
 
-    # 3 — the table's parenthesised unit declaration
+    # 3 — the table's parenthesised unit declaration, SCOPED TO THE COLUMNS IT SPANS
+    spans = spans or {}
+    ci = col_to_index(col)
     floor = _table_title_row(rows, row)
     for rr in range(row, floor - 1, -1):
-        for _ci, r, txt in rows.get(rr, []):
+        for _ci2, r, txt in rows.get(rr, []):
             inside = _parenthesised(txt)
             if not inside:
+                continue
+            # A TABLE TITLE is table-wide by nature: it names the table, so its unit applies
+            # across it whether or not the regulator merged the cell. FME merges them (`A1:O1`);
+            # a template that did not would otherwise lose the declaration entirely.
+            title = txt.strip().lower().startswith("table ")
+            lo, hi = spans.get(r, (_ci2, _ci2))
+            if not title and not (lo <= ci <= hi):
+                # A unit that does not span this column is another column's unit. `'2. Summary'!G4`
+                # licensed `Type of Scheme` and `Name of Scheme` as money before this line existed.
                 continue
             basis = _classify(inside)
             if basis is not None:
@@ -276,12 +326,47 @@ def degree_map(blob: Path, cells: object = None) -> dict[CellKey, Assignment]:
     from cdfc.ingest.reader_lxml import read
     from cdfc.probes.workbook import cell_text
 
+    from decimal import Decimal
+
+    from cdfc.probes.workbook import filed_values
+
+    wb = read(blob)
     text = cell_text(blob)
+    spans = column_spans(wb.merged_ranges)
+    cached = filed_values(blob)
     if cells is None:
-        targets = sorted((f.sheet, f.ref) for f in read(blob).formulas)
+        targets = sorted((f.sheet, f.ref) for f in wb.formulas)
     else:
         targets = sorted(tuple(c.split("!", 1)) for c in cells)  # type: ignore[arg-type]
-    return {
-        f"{sheet}!{ref}": assign(sheet, ref, text.get(sheet, {}))
-        for sheet, ref in targets
-    }
+
+    out: dict[CellKey, Assignment] = {}
+    for sheet, ref in targets:
+        a = assign(sheet, ref, text.get(sheet, {}), spans)
+        # --- THE CACHED-VALUE VETO, and it can only move a cell OUT of money ------------------
+        #
+        # A formula cell whose value IN THE PINNED BLANK is a non-numeric string is not an amount,
+        # whatever any header says. `'3. Portfolio'!B7` caches `'NA'` and carries a scheme NAME;
+        # `O7` caches `0` and carries a total. The regulator's own artifact separates them, and no
+        # reading of the header text can.
+        #
+        # This exists because a table title legitimately spans its whole table — `A1:O1` on
+        # Portfolio — so `(USD Million)` reaches the `Name of Scheme` column, and the blank's `NA`
+        # placeholder rows sit between the cell and its real header, masking it. 30 cells survived
+        # the column-span rule that way.
+        #
+        # It is a VETO and never a licence: it can take degree 1 to 0 and never the reverse, which
+        # is the direction this module's default already argues for — a tolerance wrongly withheld
+        # is a visible false alarm, one wrongly applied hides a fault.
+        if a.degree == 1:
+            v = cached.get((sheet, ref))
+            if isinstance(v, str) and v.strip():
+                try:
+                    Decimal(v.strip())
+                except Exception:  # noqa: BLE001 — a non-numeric cached value is the whole signal
+                    a = Assignment(
+                        cell=a.cell, degree=0, basis="NO_MARKER",
+                        evidence_cell=a.evidence_cell,
+                        evidence_text=f"the blank caches {v.strip()[:24]!r} here, so it is not an amount",
+                    )
+        out[f"{sheet}!{ref}"] = a
+    return out

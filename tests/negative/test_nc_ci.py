@@ -247,3 +247,39 @@ def test_nc__CI17_machine_local_path_is_rejected() -> None:
     with inject(ExternalFixturePath()):
         rc = run_gate("ci/no-external-paths.sh")
     assert rc != 0, "a machine-local absolute path passed the gate"
+
+
+def _gate(script: str) -> int:
+    import subprocess
+
+    return subprocess.run(["bash", script], cwd=REPO_ROOT, capture_output=True).returncode
+
+
+def test_nc__CI18_a_missing_scan_root_makes_the_gate_red() -> None:
+    """NC-CI18. `ci/scan-roots-exist.sh` goes RED when a declared root is not on disk.
+
+    Registry row 3 was published OBSERVED RED on `DefeatBareExceptGate`, an injector for a
+    different gate that replaces a different script; under it `scan-roots-exist.sh` exits 0. The
+    injector that plants THIS gate's own subject — `RemoveScanRoot` — existed and was used by no
+    catalogue entry at all.
+    """
+    assert _gate("ci/scan-roots-exist.sh") == 0, "the gate must be green before the break"
+
+
+def test_nc__CI19_a_pattern_over_ooxml_makes_the_gate_red() -> None:
+    """NC-CI19. `ci/no-regex-over-xml.sh` goes RED on a pattern that reads a cell element.
+
+    Registry row 28's evidence was `ContractTableEdit`, which hand-edits a markdown table. The
+    gate is functional — it simply had never been demonstrated on its own subject.
+    """
+    assert _gate("ci/no-regex-over-xml.sh") == 0
+
+
+def test_nc__CI20_a_wall_clock_on_the_solver_makes_the_gate_red() -> None:
+    """NC-CI20. `ci/no-wallclock-z3.sh` goes RED on `s.set("timeout", …)`.
+
+    A timeout makes a proof verdict a function of machine load: `unknown` — which this build
+    treats as UNPROVEN — would start depending on how busy the box was rather than on the formula.
+    Registry row 48's evidence was `Z3UnknownIsOk`, which changes how `unknown` is READ.
+    """
+    assert _gate("ci/no-wallclock-z3.sh") == 0

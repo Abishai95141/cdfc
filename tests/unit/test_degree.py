@@ -72,9 +72,52 @@ def test_degree__both_degrees_are_actually_used(dm) -> None:
     constant-0 map passes every count assertion; a constant-1 map passes every money one."""
     bases = Counter(a.basis for a in dm.values())
     assert len(dm) == 505
-    assert bases["MONEY_MARKER"] == 223
-    assert sum(v for k, v in bases.items() if k != "MONEY_MARKER") == 282
+    assert bases["MONEY_MARKER"] == 98
+    assert sum(v for k, v in bases.items() if k != "MONEY_MARKER") == 407
     assert bases["AMBIGUOUS"] == 0, "an unresolved tie means the marker lists are colliding"
+
+
+def test_degree__no_label_column_is_assigned_money(dm) -> None:
+    """**THE CHECK THE PINNED COUNT COULD NOT MAKE.** It was `MONEY_MARKER == 223`, and 130 of
+    those 223 were text columns — `Type of Scheme`, `Name of Scheme`, `IFSCA Authorisation
+    Number` — each licensed by `'2. Summary'!G4`, a *(USD Million)* header seven columns away.
+    The count agreed with its pin and the contents were wrong, which is the shape this repository
+    has now found six times.
+
+    Two repairs, both from the regulator's own artifact rather than from a heuristic:
+      - a parenthesised unit applies to the columns its cell SPANS (`'4. Investors'!C3` is merged
+        `C3:N3`, so `(Nos.)` is table-wide; `G4` is unmerged and is column G's alone);
+      - a formula cell whose value IN THE BLANK is a non-numeric string is not an amount, whatever
+        any header says. It is a veto — it can only move a cell out of money.
+
+    This test asserts the CONTENT: no cell whose blank value is a string carries a tolerance.
+    """
+    from cdfc.probes.workbook import filed_values
+
+    cached = filed_values(FME)
+    offenders = []
+    for key, a in dm.items():
+        if a.degree != 1:
+            continue
+        sheet, ref = key.split("!", 1)
+        v = cached.get((sheet, ref))
+        if isinstance(v, str) and v.strip() and not v.strip().replace(".", "").isdigit():
+            offenders.append(f"{key} caches {v!r}")
+    assert not offenders, (
+        f"{len(offenders)} cells carry τ = 5n while the blank caches a string in them: "
+        f"{offenders[:5]}"
+    )
+
+
+def test_degree__a_unit_does_not_leak_across_columns() -> None:
+    """`'2. Summary'!G4` is not merged, so it declares a unit for column G and no other. Before
+    the span rule it licensed columns B, C, D and E — 130 cells."""
+    from cdfc.ingest.reader_lxml import read
+    from cdfc.probes.degree import column_spans
+
+    spans = column_spans(read(FME).merged_ranges)
+    assert "G4" not in spans, "G4 is an ordinary cell; it spans column G alone"
+    assert spans["C3"] == (3, 14), "'(Nos.)' is merged C3:N3 and is genuinely table-wide"
 
 
 def test_degree__every_money_cell_names_its_evidence(dm) -> None:

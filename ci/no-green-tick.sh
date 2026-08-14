@@ -5,7 +5,9 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 source ci/_roots.sh
 assert_roots_exist cdfc_surface_roots || { echo "GATE FAIL: refusing to report success over a missing surface root" >&2; exit 1; }
-PY="${CDFC_PY:-/Users/abishaikc/Gift/.venv/bin/python}"
+# `$PY` comes from ci/_roots.sh, which DISCOVERS an interpreter and refuses when none can import
+# cdfc. This line used to re-default it to a machine-local absolute path, which made the gate a
+# no-op on every machine but one.
 "$PY" - <<'PYEOF'
 import sys, pathlib
 sys.path.insert(0, "src")

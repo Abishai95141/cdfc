@@ -42,6 +42,11 @@ class MutantOutcome:
     distinguishing: tuple[str, ...]
     reachable: bool
     killed_by: tuple[str, ...]
+    # The cells the evaluator COULD NOT COMPUTE while classifying this mutant. Kept apart from
+    # `distinguishing` because they are the opposite kind of fact: a distinguishing cell is one
+    # where the mutant and the base DIFFER, a blocked cell is one where we cannot say. Recording
+    # the second as the first is what made `I` unreachable.
+    blocked: tuple[str, ...] = ()
 
     @property
     def killed(self) -> bool:
@@ -54,6 +59,8 @@ class MutantOutcome:
             "n_distinguishing": len(self.distinguishing),
             "reachable": self.reachable,
             "killed_by": list(self.killed_by),
+            "blocked": list(self.blocked[:32]),
+            "n_blocked": len(self.blocked),
         }
 
 
@@ -127,17 +134,39 @@ class CampaignRunner:
         from cdfc.qualify.observability import literal_differences
 
         moved = literal_differences(self.clean, target)
-        cells = frozenset(cells) | moved
-        if cells and obs is not Observability.OBSERVABLE:
+
+        # --- THE PROMOTION, AND WHY IT IS DRIVEN BY `moved` ALONE ---------------------------
+        #
+        # This block read `cells = frozenset(cells) | moved` and then promoted on `if cells`.
+        # That is correct for an UNOBSERVABLE verdict, whose second return value is EMPTY — so
+        # `cells == moved` and the promotion fires exactly when a literal moved.
+        #
+        # It is wrong for INDETERMINATE, whose second return value is the **blocked** set: the
+        # cells the evaluator COULD NOT COMPUTE, non-empty by construction. So every
+        # INDETERMINATE verdict was promoted to OBSERVABLE and the blocked cells were recorded
+        # as its `distinguishing` set. Measured on the committed campaign: `classify` says
+        # OBSERVABLE 739 / UNOBSERVABLE 12 / INDETERMINATE 22, and all 22 were banked into `O`.
+        # Published `I` was 0 for every fault class — a construction, not a measurement, and the
+        # measurement file's stated reason for it ("this model has none") was false.
+        #
+        # `I` is excluded from `O` deliberately: it is the population where we cannot tell
+        # whether the fault is invisible or whether WE are, and folding it into either direction
+        # moves `K/O`. Promoting it into `O` moves it in the direction that flatters us.
+        blocked = frozenset() if obs is Observability.OBSERVABLE else frozenset(cells)
+        seen = (frozenset(cells) if obs is Observability.OBSERVABLE else frozenset()) | moved
+        if moved and obs is not Observability.OBSERVABLE:
             obs = Observability.OBSERVABLE
+            blocked = frozenset()
+        cells = seen
         distinguishing = tuple(sorted(f"{s}!{r}" for s, r in cells))
+        blocked_cells = tuple(sorted(f"{s}!{r}" for s, r in blocked))
 
         reachable = bool(set(distinguishing) & self.read_cells) if self.read_cells else True
         killed: tuple[str, ...] = ()
         if obs is Observability.OBSERVABLE and reachable:
             killed = tuple(self.evaluate(target, mutant_grid, edited))
         target.unlink(missing_ok=True)     # the bytes are re-derivable from the record and the seed
-        return MutantOutcome(record, obs, distinguishing, reachable, killed)
+        return MutantOutcome(record, obs, distinguishing, reachable, killed, blocked_cells)
 
     def literal(self, sheet: str, ref: str) -> Any:
         from cdfc.qualify.observability import extract
@@ -155,6 +184,7 @@ def summarise(
     evaluator_version: str,
     base_sha256: str,
     sampling_rule: str,
+    predicate_set_digest: str = "",
 ) -> Campaign:
     counts: dict[str, dict[str, int]] = {}
     indeterminate_cells: dict[str, list[str]] = {}
@@ -183,6 +213,7 @@ def summarise(
         evaluator_version=evaluator_version,
         base_sha256=base_sha256,
         sampling_rule=sampling_rule,
+        predicate_set_digest=predicate_set_digest,
         indeterminate_cells={k: tuple(sorted(set(v))) for k, v in indeterminate_cells.items()},
     )
 

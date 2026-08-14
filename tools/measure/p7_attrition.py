@@ -26,6 +26,7 @@ from cdfc.predicates.obligations import generate_template_obligations  # noqa: E
 from cdfc.predicates.registry import Registry, UNSIGNED, batch_manifest_sha256  # noqa: E402
 from cdfc.qualify import g0_scope, g1_binds, g2_kill, g3_degeneracy, ilp  # noqa: E402
 from cdfc.qualify.baselines.build import build as build_baselines  # noqa: E402
+from cdfc.qualify.campaign_store import assert_predicate_set  # noqa: E402
 from cdfc.qualify.campaign_store import load as load_campaign  # noqa: E402
 from cdfc.qualify.domain import load as load_domain  # noqa: E402
 from cdfc.qualify.instruments import InstrumentStore  # noqa: E402
@@ -48,6 +49,10 @@ def main() -> int:
     store.in_memory(instrument)
     obligations = generate_template_obligations(r, instrument)
     stored = load_campaign(CAMPAIGN, REPO / "reports/campaigns")
+    # THE JOIN IS CHECKED, NOT ASSUMED. `killed.jsonl` credits kills to predicate IDS, and ids
+    # are re-assigned whenever the harvest changes — after P7-B1 and P8-B1, 125 of the 126 ids
+    # this campaign credited carried a different `expr`, and G2 scored all 348 candidates on it.
+    assert_predicate_set(stored, r.candidates)
     facts = fact_set_for(CLEAN, FME)
     hf = default_registry()
 

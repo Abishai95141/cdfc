@@ -1508,3 +1508,36 @@ entries:
       is a phase of its own. What this guard prevents is a PARTIAL repair landing quietly: scaling
       the fact tree without moving the literals, or the reverse, is the same defect with the sign
       flipped and would be much harder to see.
+
+  - id: NC-CI18
+    component: ci
+    break: a scan root named in labels.SCAN_ROOTS is not on disk, and the grep over it reports success
+    measured_instance: "registry row 3 (`ci/scan-roots-exist.sh`) was published OBSERVED RED on `DefeatBareExceptGate`, which replaces a DIFFERENT script; under it scan-roots-exist.sh exits 0. `RemoveScanRoot` — the injector that plants this gate's own subject — existed and was used by no catalogue entry at all (14 Aug 2026)"
+    injector: RemoveScanRoot
+    guard_tests:
+      - path: "tests/negative/test_nc_ci.py::test_nc__CI18_a_missing_scan_root_makes_the_gate_red"
+        flips: true
+    positive_control: "the gate is green on a clean tree, so it is not a script that always fails"
+    status: active
+
+  - id: NC-CI19
+    component: ci
+    break: a pattern reads an OOXML cell element instead of the one hardened parser factory
+    measured_instance: "this shape has appeared three times in this repository, most recently in P7-B3's own baselines — written by the author of the gate that bans it. Registry row 28's evidence was `ContractTableEdit`, which hand-edits a markdown table and leaves the gate green (14 Aug 2026)"
+    injector: RegexOverOoxml
+    guard_tests:
+      - path: "tests/negative/test_nc_ci.py::test_nc__CI19_a_pattern_over_ooxml_makes_the_gate_red"
+        flips: true
+    positive_control: "the gate is green on a clean tree"
+    status: active
+
+  - id: NC-CI20
+    component: ci
+    break: the SMT proof arm is driven by a wall clock instead of rlimit
+    measured_instance: "a timeout makes a proof verdict a function of machine load, so `unknown` — which this build treats as UNPROVEN, never as a pass — would depend on how busy the box was rather than on the formula. Registry row 48's evidence was `Z3UnknownIsOk`, which changes how `unknown` is READ and leaves the wall-clock gate green (14 Aug 2026)"
+    injector: WallclockZ3
+    guard_tests:
+      - path: "tests/negative/test_nc_ci.py::test_nc__CI20_a_wall_clock_on_the_solver_makes_the_gate_red"
+        flips: true
+    positive_control: "the gate is green on a clean tree"
+    status: active

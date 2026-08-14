@@ -88,6 +88,19 @@ class Campaign:
     base_sha256: str = ""
     sampling_rule: str = ""
     indeterminate_cells: Mapping[str, tuple[str, ...]] = field(default_factory=dict)
+    # THE PREDICATE SET THE CAMPAIGN CREDITED, AS A DIGEST.
+    #
+    # `killed.jsonl` records `killed_by: [<predicate id>]`, and G2 joins those ids to the CURRENT
+    # candidate set to score every per-predicate kill vector. The harvest re-assigned ids twice
+    # after this campaign was recorded (P7-B1's `<F|V>` discriminator, P8-B1's wildcard repair), so
+    # 125 of the 126 credited ids carried a DIFFERENT `expr` at HEAD — `P-0009` went from a COUNTIF
+    # tally to a vocabulary membership check on another range — and the only guard on the join was
+    # a fault-model version string. G2 rejected 302 and admitted 46 on that evidence.
+    #
+    # An id is not an identity. This digest is over `(id, code_sha256)` for every candidate, so a
+    # campaign whose predicates have moved refuses to be joined instead of answering about
+    # somebody else.
+    predicate_set_digest: str = ""
 
     @property
     def totals(self) -> ClassTally:
@@ -176,6 +189,7 @@ class Campaign:
             "evaluator_version": self.evaluator_version,
             "base_sha256": self.base_sha256,
             "sampling_rule": self.sampling_rule,
+            "predicate_set_digest": self.predicate_set_digest,
             "totals": t.as_row(),
             "by_fault_class": {k: v.as_row() for k, v in sorted(self.by_fault_class.items())},
             "unobservable_rate": f"{t.U}/{t.G}",

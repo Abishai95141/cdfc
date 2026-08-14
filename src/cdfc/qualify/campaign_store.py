@@ -26,7 +26,9 @@ import json
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
+from cdfc.predicates.canonical import code_sha256
 from cdfc.qualify.campaign import Campaign, CampaignArithmeticError, ClassTally
 from cdfc.qualify.fault_model import FAULT_MODEL_VERSION
 
@@ -35,6 +37,54 @@ CAMPAIGNS: Path = Path("reports/campaigns")
 
 class CampaignNotFound(LookupError):
     """The campaign a qualification cites is not on disk. Never substituted."""
+
+
+class StalePredicateSet(CampaignArithmeticError):
+    """The campaign credited predicate ids that no longer denote those predicates."""
+
+
+def predicate_set_digest(candidates: Sequence[Any]) -> str:
+    """A digest over `(id, code_sha256)` for every candidate. **An id is not an identity.**
+
+    `killed.jsonl` credits kills to predicate IDS, and G2 joins them to the current candidate set.
+    Ids are re-assigned whenever the harvest changes — P7-B1 added the `<F|V>` construct
+    discriminator, P8-B1 removed the wildcard COUNTIF — and after both, 125 of the 126 ids the
+    committed campaign credited carried a different `expr`. `P-0009` had been a COUNTIF tally over
+    `G54:G63`; it became a vocabulary membership check on a different range, and G2 went on scoring
+    it with the tally's evidence.
+
+    Nothing detected it: the only guard on the join was the fault-model version string, and the
+    fault model had not moved.
+    """
+    import hashlib
+
+    h = hashlib.sha256()
+    for c in sorted(candidates, key=lambda x: x.id):
+        h.update(f"{c.id}\x00{code_sha256(c)}\x00".encode())
+    return h.hexdigest()
+
+
+def assert_predicate_set(stored: "StoredCampaign", candidates: Sequence[Any]) -> None:
+    """Refuse a join whose predicates have moved since the campaign was recorded.
+
+    A campaign with no digest is a campaign recorded before this check existed; it raises with
+    the command that re-records it rather than being waved through, because "older than the guard"
+    is exactly the state the guard exists to catch.
+    """
+    want = predicate_set_digest(candidates)
+    have = stored.campaign.predicate_set_digest
+    if not have:
+        raise StalePredicateSet(
+            f"{stored.campaign.campaign_id} carries no `predicate_set_digest`, so the ids it "
+            "credits cannot be shown to denote the predicates being scored. Re-run the campaign "
+            "(`make campaign`) — an id is not an identity."
+        )
+    if have != want:
+        raise StalePredicateSet(
+            f"{stored.campaign.campaign_id} was recorded against predicate set {have[:12]} and "
+            f"this build is {want[:12]}. Every per-predicate kill vector G2 would score is "
+            "evidence about a different predicate. Re-run the campaign."
+        )
 
 
 @dataclass(frozen=True, slots=True)
@@ -46,8 +96,18 @@ class StoredCampaign:
     #  difference of two counts: `|kills(p)| - |kills(B0)|` can be negative while `p` still
     #  catches mutants `B0` misses, and it is the mutants `B0` misses that make `p` worth having.
     mutants_by_predicate: Mapping[str, frozenset[str]]
-    #  mutant digest -> its fault class, so a baseline's kill set can be tallied per class
-    class_of_mutant: Mapping[str, str]
+    #  mutant digest -> the fault CLASSES it belongs to, so a baseline's kill set can be tallied
+    #  per class.
+    #
+    #  **A SET, and it was a single string.** One seeded workbook can be reached by operators from
+    #  two different classes — a blank-out (F05) and a row omission (F07) can produce the same
+    #  bytes — so a digest legitimately carries more than one class. Storing one and overwriting
+    #  made `mutants_in` return ∅ for any predicate whose only claimed-class kills landed on an
+    #  overwritten digest, and it rejected it with `g2.no_margin_over_baselines` — a reason naming
+    #  a baseline that was never consulted. Measured on the committed campaign: 48 of 210
+    #  observable digests carry two classes, and all 71 of that funnel's no-margin rejections were
+    #  this and not a baseline.
+    class_of_mutant: Mapping[str, frozenset[str]]
     commit: str  # the commit the campaign id resolves to, for the ancestry check (F1)
     n_killed_rows: int
 
@@ -57,9 +117,16 @@ class StoredCampaign:
     def mutants(self, predicate_id: str) -> frozenset[str]:
         return self.mutants_by_predicate.get(predicate_id, frozenset())
 
+    def classes_of(self, digest: str) -> frozenset[str]:
+        """Every class this digest belongs to. Tolerates the old single-string shape on disk."""
+        v = self.class_of_mutant.get(digest)
+        if v is None:
+            return frozenset()
+        return frozenset({v}) if isinstance(v, str) else frozenset(v)
+
     def mutants_in(self, digests: frozenset[str], classes: Sequence[str]) -> frozenset[str]:
         keep = set(classes)
-        return frozenset(d for d in digests if self.class_of_mutant.get(d) in keep)
+        return frozenset(d for d in digests if self.classes_of(d) & keep)
 
     def observable(self, fault_class: str) -> int:
         t = self.campaign.by_fault_class.get(fault_class)
@@ -96,11 +163,12 @@ def load(campaign_id: str, root: Path = CAMPAIGNS) -> StoredCampaign:
         evaluator_version=m.get("evaluator_version", ""),
         base_sha256=m.get("base_sha256", ""),
         sampling_rule=m.get("sampling_rule", ""),
+        predicate_set_digest=m.get("predicate_set_digest", ""),
     )
 
     kills: dict[str, dict[str, int]] = {}
     mutants: dict[str, set[str]] = {}
-    class_of: dict[str, str] = {}
+    class_of: dict[str, set[str]] = {}
     n = 0
     for line in (killed.read_text(encoding="utf-8").splitlines() if killed.is_file() else ()):
         if not line.strip():
@@ -112,7 +180,7 @@ def load(campaign_id: str, root: Path = CAMPAIGNS) -> StoredCampaign:
             # removes it from the denominator; letting it into a numerator would be the same
             # error with the sign flipped.
             continue
-        class_of[row["mutant_sha256"]] = row["fault_class"]
+        class_of.setdefault(row["mutant_sha256"], set()).add(row["fault_class"])
         for pid in row.get("killed_by") or ():
             kills.setdefault(pid, {}).setdefault(row["fault_class"], 0)
             kills[pid][row["fault_class"]] += 1
@@ -132,7 +200,7 @@ def load(campaign_id: str, root: Path = CAMPAIGNS) -> StoredCampaign:
         campaign=campaign,
         kills_by_predicate={k: dict(sorted(v.items())) for k, v in sorted(kills.items())},
         mutants_by_predicate={k: frozenset(v) for k, v in sorted(mutants.items())},
-        class_of_mutant=dict(sorted(class_of.items())),
+        class_of_mutant={k: frozenset(v) for k, v in sorted(class_of.items())},
         commit=_commit_of(d),
         n_killed_rows=n,
     )

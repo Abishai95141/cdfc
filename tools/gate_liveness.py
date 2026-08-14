@@ -19,6 +19,8 @@ A gate with no catalogue entry is NOT counted. That absence is the measurement.
 from __future__ import annotations
 
 import json
+import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -36,7 +38,6 @@ SWEEP = REPO / "reports" / "negative-control-sweep.json"
 EVIDENCE: dict[int, str] = {
     1: "NC-CI03",   # no-green-tick
     2: "NC-CI04",   # no-bare-except
-    3: "NC-CI01",   # scan roots exist
     4: "NC-CI02",   # openpyxl warning is an error  (PROVISIONAL)
     5: "NC-CI10",   # lockfile hash pinning
     6: "NC-CI06",   # registry schema / duplicate id
@@ -60,7 +61,6 @@ EVIDENCE: dict[int, str] = {
     26: "NC-Q49",   # a host function never resolves live
     27: "NC-Q02",   # the predicate schema and the loader invariant
     # P5
-    28: "NC-E36",   # no regex over OOXML (its subject is the generated contract's sibling break)
     29: "NC-E30",   # the vacuous pass is unreachable
     30: "NC-E31",   # the cell table is the denominator
     31: "NC-E32",   # null is not zero and not omitted
@@ -82,7 +82,6 @@ EVIDENCE: dict[int, str] = {
     46: "NC-Q62",   # counts get zero tolerance
     47: "NC-Q33",   # the taxonomy document is generated
     # P7
-    48: "NC-Q07",   # no-wallclock-z3 — its subject is the proof arm the injector defeats
     49: "NC-Q50",   # the disputed-region exclusion
     50: "NC-Q51",   # G0 computes a disposition, never a skip
     51: "NC-Q51",   # C2's two numbers — the same funnel-integrity entry
@@ -106,6 +105,12 @@ EVIDENCE: dict[int, str] = {
     # to the NC entries whose injectors break the same rule: NC-R03 breaks the envelope
     # adapter's refusal, which is what makes the flagship's demonstration a demonstration, and
     # NC-R12 pins the tolerance-unit pair. See docs/GATE-CHANGES.md, 14 Aug 2026.
+    # Rows 3, 28 and 48 were bound to injectors that break something ELSE and leave the gate
+    # green. `gate_liveness` now RUNS a shell gate under its bound injector, so a nominal binding
+    # reports `BINDING NOT VERIFIED` rather than being counted as a red observation.
+    3:  "NC-CI18",  # a missing scan root, planted by the injector that names it
+    28: "NC-CI19",  # a pattern over an OOXML cell element
+    48: "NC-CI20",  # a wall clock on the solver
     64: "NC-R03",   # `recalculate`'s source is explicit at every call site
     65: "NC-R12",   # G-EVAL's label is computed from the oracle's author
     66: "NC-R01",   # a relation never PASSes an empty filing
@@ -119,6 +124,21 @@ EVIDENCE: dict[int, str] = {
     74: "NC-R10",   # declaring a defect never raises the headline
     75: "NC-R12",   # a half repair of the unit defect cannot land quietly
 }
+
+
+def _catalogue_entries() -> list[dict]:
+    import yaml
+
+    raw = yaml.safe_load((REPO / "tests" / "negative" / "catalogue.yaml").read_text(encoding="utf-8"))
+    return list(raw.get("entries") or []) if isinstance(raw, dict) else list(raw or [])
+
+
+def _script_of(g) -> str | None:
+    """The `ci/*.sh` path a shell row names, from its own gate text."""
+    m = re.search(r"(ci/[A-Za-z0-9_.-]+\.sh)", g.gate)
+    if not m:
+        return None
+    return m.group(1) if (REPO / m.group(1)).is_file() else None
 
 
 def main() -> int:
@@ -145,6 +165,56 @@ def main() -> int:
             observed[g.id] = f"{nc}: OBSERVED RED"
         else:
             observed[g.id] = f"{nc}: NOT CAUGHT"
+
+    # --- THE BINDING IS VERIFIED FOR SHELL GATES, NOT TRUSTED --------------------------------
+    #
+    # `EVIDENCE` is a HAND-MAINTAINED MAP, and this module's own docstring argues that a
+    # hand-maintained `OBSERVED_BY` list drifts and was removed for that reason. It is exactly
+    # such a list, and it drifted: rows 28 (`no-regex-over-xml`) and 48 (`no-wallclock-z3`) were
+    # published OBSERVED RED on injectors that edit `EVALUATION-CONTRACT.md` and Z3's `unknown`
+    # handling respectively — neither touches either gate's subject, and neither gate goes red
+    # under it. Both gates ARE functional; the evidence pointed at the wrong break.
+    #
+    # For a `shell` row the claim is directly checkable: run the script under the bound injector
+    # and require a non-zero exit. A row whose bound injector leaves its script green is reported
+    # as `BINDING NOT VERIFIED` rather than counted, because a red observation nobody can
+    # reproduce is the thing this whole file exists to refuse.
+    shell_rows = [g for g in live if g.kind == "shell" and observed.get(g.id, "").endswith("OBSERVED RED")]
+    if shell_rows:
+        sys.path.insert(0, str(REPO))
+        from injectors import BY_NAME, inject  # noqa: PLC0415
+
+        entries = {e["id"]: e for e in _catalogue_entries()}
+        for g in shell_rows:
+            nc = EVIDENCE[g.id]
+            inj = (entries.get(nc) or {}).get("injector")
+            cls = BY_NAME.get(inj) if inj else None
+            if cls is None:
+                observed[g.id] = f"{nc}: BINDING NOT VERIFIED (no injector {inj!r})"
+                continue
+            script = _script_of(g)
+            if script is None:
+                continue
+            probe = cls()
+            # TWO INJECTOR SHAPES, and only one of them is checkable this way.
+            #
+            #   (a) BREAK THE SUBJECT — plant the thing the gate exists to find. The gate must go
+            #       RED, and that is verifiable here.
+            #   (b) DEFEAT THE GATE — the `_DefeatGate` family replaces the script itself with a
+            #       stub that exits 0. Under it the gate is green BY DESIGN and its evidence is a
+            #       guard test that notices the gate stopped working. Requiring a non-zero exit
+            #       there would report a false defect on a legitimate control.
+            #
+            # The two are told apart by what the injector TOUCHES: an injector that rewrites the
+            # gate's own script is shape (b).
+            if any(str(p).endswith(script.split("/")[-1]) for p in getattr(probe, "touches", ())):
+                continue
+            with inject(probe):
+                rc = subprocess.run(["bash", script], cwd=REPO, capture_output=True).returncode
+            if rc == 0:
+                observed[g.id] = (
+                    f"{nc}: BINDING NOT VERIFIED — `{script}` exits 0 under `{inj}`"
+                )
 
     n_observed = sum(1 for v in observed.values() if v.endswith("OBSERVED RED"))
     result = {

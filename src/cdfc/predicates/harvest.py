@@ -375,6 +375,8 @@ def harvest(blob: Path) -> HarvestResult:
             if key.startswith("filing."):
                 reachable.update(cells)
 
+    _sweep_unaccounted_formulas(ctx, constructs)
+
     schema = TemplateSchema(
         {k: frozenset(v) for k, v in key_to_cells.items()}, ctx.template_sha256
     )
@@ -389,6 +391,75 @@ def harvest(blob: Path) -> HarvestResult:
         constructs=dict(sorted(constructs.items())),
         class_of=dict(sorted(class_of.items())),
     )
+
+
+def _skip_kind_for(body: str) -> SkipKind:
+    """The typed reason a formula body produced no obligation, from the body itself.
+
+    `iferror_wrapper` and `if_conditional_carry` were declared in `SkipKind` from the day it was
+    written and appeared NOWHERE else in the repository. They name exactly FME's silent pile —
+    130 `IFERROR` and 14 `IF` — which is how a reader can tell the vocabulary was written for this
+    sweep and the sweep was never connected.
+    """
+    b = body.strip().upper()
+    if b.startswith("IFERROR("):
+        return "iferror_wrapper"
+    if b.startswith("IF("):
+        return "if_conditional_carry"
+    called = {tok for kind, tok in _tokenise_names(body) if kind == "func"}
+    if called - {"SUM", "COUNTIF", "COUNTIFS"}:
+        return "function_outside_vocabulary"
+    return "other_formula"
+
+
+def _tokenise_names(body: str) -> list[tuple[str, str]]:
+    """`(kind, token)` for the function names in a body, via the EVALUATOR's own tokeniser.
+
+    Not a pattern over the formula text: a census by regex reports whatever its author already
+    believed the vocabulary was, and this is the module that exists to stop that.
+    """
+    from cdfc.calc.evaluate import tokenize
+
+    try:
+        return [(k, t.upper().removeprefix("_XLFN.")) for k, t in tokenize(body) if k == "func"]
+    except Exception:  # noqa: BLE001 — an unparseable body is not a vocabulary claim
+        return []
+
+
+def _sweep_unaccounted_formulas(
+    ctx: HarvestContext, constructs: Mapping[str, tuple[str, tuple[str, ...], str, str]]
+) -> None:
+    """**THE COMPLETENESS SWEEP: every formula is an obligation or a typed skip. Never neither.**
+
+    This module's own contract, rule 2, says *"every formula the class set cannot express becomes a
+    typed `SkipRecord`… never a silent omission: an undeclared suppression is a coverage lie."*
+    It was false for **1,060 of the corpus's 1,495 formula cells**, because every class begins with
+    a bare `continue` on a body it cannot match and nothing recorded the fall-through. FME
+    published 59 skips against 144 silent drops; ALR published **2** against 620.
+
+    That is the product's own failure mode in the module that defines it. The skip table is the
+    ONLY place a reader could learn those cells exist — they are formula cells, so they are
+    excluded from the field surface by construction, appear in no `noPredicate` count, and reach no
+    run-time coverage declaration.
+
+    The sweep is HERE, once, rather than in each of the nine classes, because completeness is a
+    property of the class set as a whole: a class cannot know whether another class expressed the
+    body it just declined, and nine chances to remember is nine chances to forget.
+    """
+    from cdfc.predicates.harvest_classes._shared import iter_formulas
+
+    accounted = {(sheet, ref) for _k, _p, sheet, ref in constructs.values()}
+    accounted |= {(s.sheet, s.ref) for s in ctx.skips}
+    for sheet, ref, body in iter_formulas(ctx):
+        if (sheet, ref) in accounted:
+            continue
+        accounted.add((sheet, ref))
+        ctx.skip(
+            _skip_kind_for(body),
+            sheet,
+            ref,
+            f"no harvest class expressed this body: {body[:80]}",
+        )
 
 
 def emit_envelopes(res: HarvestResult, out_dir: Path) -> list[Path]:

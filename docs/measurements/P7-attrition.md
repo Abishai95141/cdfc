@@ -15,9 +15,9 @@ its value. `entered == skipped + rejected + survived` at every stage.
 | `G0` | 348 | 0 | 0 | 348 |
 | `G1` | 348 | 0 | 0 | 348 |
 | `G3p` | 348 | 0 | 0 | 348 |
-| `G2` | 348 | 0 | 302 | 46 |
-| `G3e` | 46 | 0 | 0 | 46 |
-| `G4` | 46 | NOT RUN | NOT RUN | NOT RUN |
+| `G2` | 348 | 0 | 348 | 0 |
+| `G3e` | 0 | NOT RUN | NOT RUN | NOT RUN |
+| `G4` | 0 | NOT RUN | NOT RUN | NOT RUN |
 
 `G4` is **NOT RUN at P7** and the row says so rather than reporting a stage that passed
 everything: the false-failure rate needs the BLIND-FILLED corpus, which arrives at P8. No
@@ -28,11 +28,11 @@ EXPERIMENT admission and none of them is registry-grade.
 
 | gate | reason | n | remedy |
 |---|---|---:|---|
-| `G2` | `g2.no_kill` | 231 | the predicate fired on no observable mutant of any class it claims; either the claim is wrong or the check is |
-| `G2` | `g2.no_margin_over_baselines` | 71 | a free baseline catches everything this catches; the predicate is not doing the work |
+| `G2` | `g2.no_kill` | 223 | the predicate fired on no observable mutant of any class it claims; either the claim is wrong or the check is |
+| `G2` | `g2.no_margin_over_baselines` | 125 | a free baseline catches everything this catches; the predicate is not doing the work |
 
 Every rejection carries a `rejection` row with `cells_would_have_covered`; the
-302 rejections cover **3085** cells in total.
+348 rejections cover **3530** cells in total.
 
 ## THE OBLIGATION COVERAGE PAIR (F9, arbitration C2) — two numbers, always both
 
@@ -60,38 +60,38 @@ corpus is empty rather than merely unused.
 Campaign `fme-v3-seed20260810` · fault model `v3`
 · claim-ancestry: **VERIFIED**
 
-**Carried from P6 (F18):** `I = 0`, `I/G = 0/773`, `U/G = 12/773`,
-`O = G − U − I = 761`. A funnel computed over a denominator our own evaluator could
+**Carried from P6 (F18):** `I = 22`, `I/G = 22/773`, `U/G = 12/773`,
+`O = G − U − I = 739`. A funnel computed over a denominator our own evaluator could
 not fully adjudicate says so where the funnel is read.
 
 | predicate | class | `kr_claimed` | `kr_all_classes` | claimed set | marginal over B0 / B1 / B2 |
 |---|---|---|---|---|---|
-| `P-0001` | membership | 3/88 | 3/761 | F12 | 3 / 3 / 3 |
-| `P-0004` | date_bound | 1/36 | 2/761 | F09 | 1 / 1 / 1 |
-| `P-0014` | same_sheet_equality | 1/388 | 2/761 | F01,F02,F03,F04,F05 | 1 / 1 / 1 |
-| `P-0018` | membership | 20/88 | 21/761 | F12 | 20 / 20 / 20 |
-| `P-0021` | same_sheet_equality | 5/388 | 8/761 | F01,F02,F03,F04,F05 | 2 / 2 / 2 |
-| `P-0022` | same_sheet_equality | 1/388 | 2/761 | F01,F02,F03,F04,F05 | 0 / 0 / 0 |
-| `P-0024` | same_sheet_equality | 1/388 | 2/761 | F01,F02,F03,F04,F05 | 0 / 0 / 0 |
-| `P-0025` | same_sheet_equality | 1/388 | 2/761 | F01,F02,F03,F04,F05 | 0 / 0 / 0 |
-| `P-0027` | same_sheet_equality | 1/388 | 2/761 | F01,F02,F03,F04,F05 | 0 / 0 / 0 |
-| `P-0028` | same_sheet_equality | 5/388 | 8/761 | F01,F02,F03,F04,F05 | 2 / 2 / 2 |
-| `P-0030` | same_sheet_equality | 1/388 | 2/761 | F01,F02,F03,F04,F05 | 0 / 0 / 0 |
-| `P-0031` | same_sheet_equality | 1/388 | 2/761 | F01,F02,F03,F04,F05 | 0 / 0 / 0 |
-| `P-0032` | same_sheet_equality | 1/388 | 2/761 | F01,F02,F03,F04,F05 | 0 / 0 / 0 |
-| `P-0033` | same_sheet_equality | 1/388 | 2/761 | F01,F02,F03,F04,F05 | 0 / 0 / 0 |
-| `P-0034` | same_sheet_equality | 1/388 | 2/761 | F01,F02,F03,F04,F05 | 0 / 0 / 0 |
-| `P-0036` | same_sheet_equality | 1/388 | 2/761 | F01,F02,F03,F04,F05 | 0 / 0 / 0 |
-| `P-0037` | same_sheet_equality | 1/388 | 2/761 | F01,F02,F03,F04,F05 | 0 / 0 / 0 |
-| `P-0039` | same_sheet_equality | 1/388 | 2/761 | F01,F02,F03,F04,F05 | 0 / 0 / 0 |
-| `P-0040` | same_sheet_equality | 1/388 | 2/761 | F01,F02,F03,F04,F05 | 0 / 0 / 0 |
-| `P-0042` | same_sheet_equality | 1/388 | 2/761 | F01,F02,F03,F04,F05 | 0 / 0 / 0 |
-| `P-0043` | same_sheet_equality | 1/388 | 2/761 | F01,F02,F03,F04,F05 | 0 / 0 / 0 |
-| `P-0045` | same_sheet_equality | 1/388 | 2/761 | F01,F02,F03,F04,F05 | 0 / 0 / 0 |
-| `P-0046` | same_sheet_equality | 1/388 | 2/761 | F01,F02,F03,F04,F05 | 0 / 0 / 0 |
-| `P-0048` | same_sheet_equality | 1/388 | 2/761 | F01,F02,F03,F04,F05 | 0 / 0 / 0 |
-| `P-0049` | same_sheet_equality | 1/388 | 2/761 | F01,F02,F03,F04,F05 | 0 / 0 / 0 |
-| … | | | | | *117 of 348 candidates that reached G2 fired at all* |
+| `P-0001` | membership | 3/68 | 3/739 | F12 | 3 / 3 / 0 |
+| `P-0004` | date_bound | 1/36 | 2/739 | F09 | 1 / 0 / 1 |
+| `P-0012` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 1 / 1 / 0 |
+| `P-0013` | date_bound | 1/36 | 2/739 | F09 | 1 / 0 / 1 |
+| `P-0014` | same_sheet_equality | 4/387 | 6/739 | F01,F02,F03,F04,F05 | 3 / 0 / 3 |
+| `P-0015` | date_bound | 6/36 | 12/739 | F09 | 6 / 0 / 6 |
+| `P-0017` | membership | 20/68 | 21/739 | F12 | 20 / 20 / 0 |
+| `P-0019` | membership | 20/68 | 21/739 | F12 | 20 / 20 / 0 |
+| `P-0020` | same_sheet_equality | 5/387 | 8/739 | F01,F02,F03,F04,F05 | 3 / 1 / 3 |
+| `P-0021` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
+| `P-0023` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
+| `P-0024` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
+| `P-0026` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
+| `P-0027` | same_sheet_equality | 5/387 | 8/739 | F01,F02,F03,F04,F05 | 3 / 1 / 3 |
+| `P-0029` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
+| `P-0030` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
+| `P-0031` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 1 / 1 / 0 |
+| `P-0032` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
+| `P-0033` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
+| `P-0035` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
+| `P-0036` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
+| `P-0038` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
+| `P-0039` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
+| `P-0041` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
+| `P-0042` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
+| … | | | | | *125 of 348 candidates that reached G2 fired at all* |
 
 **A document quoting `kr_claimed` without `kr_all_classes` beside it has quoted half of a
 measurement.** The gap between the columns is the number a reviewer wants.
@@ -100,10 +100,10 @@ measurement.** The gap between the columns is the number a reviewer wants.
 
 | baseline | kills | caveat |
 |---|---:|---|
-| `B0` | 143 | B0 is drawn from this repository's own formula-derived harvest classes, and the candidate under test is excluded from it so the comparison is never with itself. |
+| `B0` | 88 | B0 is drawn from this repository's own formula-derived harvest classes, and the candidate under test is excluded from it so the comparison is never with itself. |
 | `B1` | 102 | B1 is a local invariant miner, NOT Daikon: four single-variable templates at confidence 1.0, no inter-variable relations. Marginal kill over it OVERSTATES marginal kill over Daikon. |
-| `B2` | 108 | B2 is evaluated against each mutant's RECORDED EDIT rather than against a recalculated filing, so it sees a blank or an error the edit wrote directly and not one produced downstream by recalculation. That UNDER-counts B2, which flatters the candidate. |
-| union | 210 | reported BESIDE the per-baseline figures, never instead |
+| `B2` | 107 | B2 is evaluated against each mutant's RECORDED EDIT rather than against a recalculated filing, so it sees a blank or an error the edit wrote directly and not one produced downstream by recalculation. That UNDER-counts B2, which flatters the candidate. |
+| union | 209 | reported BESIDE the per-baseline figures, never instead |
 
 B1's mined degeneracy list carries **11959** invariants over ONE clean filing.
 
@@ -131,16 +131,16 @@ and pure-bound predicates routed to the empirical arm because `domain-policy-v1.
 
 ## The ILP — subsumption only at P7
 
-* kept **46**, removed **0**
+* kept **0**, removed **0**
 * the set-FFR constraint is ABSENT and that is a declared state, not a gap: it needs a
   false-failure rate, and none has been measured for any predicate in this system.
 * every removal carries a `rejection` row naming the subsuming predicate (NC-Q36).
 
 ## Admission
 
-* admitted: **46 of 348**
-* registry root: `2d0cb9b05b0acf9dd99dfe8675be56e98c8bf008172c42a059edfba04ccb879f`
-* **46 of 46 admitted under the literal signer
+* admitted: **0 of 348**
+* registry root: `6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d`
+* **0 of 0 admitted under the literal signer
   `UNSIGNED`** — no signer exists in this repository, so the batch is admitted visibly
   weaker rather than silently: every surface renders `UNSIGNED BATCH` beside the count.
 

@@ -81,21 +81,51 @@ class BaselineResult:
 
     per_baseline: Mapping[str, frozenset[str]]  # baseline name -> mutant digests it kills
     caveats: Mapping[str, str] = None  # type: ignore[assignment]
+    # baseline name -> {member predicate id -> the mutants that member kills}. Only B0 has
+    # members: it is drawn from THIS repository's harvest classes, so the candidate under test can
+    # be one of them. B1 and B2 are RULES applied to the campaign record — the candidate is not a
+    # member of either, and excluding it from them is not a correction, it is a hole.
+    members: Mapping[str, Mapping[str, frozenset[str]]] = None  # type: ignore[assignment]
 
     def __post_init__(self) -> None:
         if self.caveats is None:
             object.__setattr__(self, "caveats", {})
+        if self.members is None:
+            object.__setattr__(self, "members", {})
 
     def names(self) -> tuple[str, ...]:
         return tuple(sorted(self.per_baseline))
 
-    def kills(self, baseline: str) -> frozenset[str]:
-        return self.per_baseline.get(baseline, frozenset())
+    def kills(self, baseline: str, *, exclude_member: str | None = None) -> frozenset[str]:
+        """The mutants `baseline` kills, optionally WITHOUT one of its members.
 
-    def union(self) -> frozenset[str]:
+        **This replaces `baselines.kills(b) - stored.mutants(cand.id)`, and the difference is the
+        whole of the gate.** Subtracting the candidate's kills from the baseline's kills makes
+        `mine ∩ others[b] = ∅` by construction, so `|mine \\ others[b]| == |mine|` identically —
+        three copies of the candidate's own kill count, and no baseline can affect any decision.
+        Measured before the repair: replacing all three baselines with the empty set, or with the
+        set of every mutant in the campaign, left the funnel byte-identical at
+        `{PASS 46, no_kill 231, no_margin 71}`.
+
+        Excluding the candidate as a MEMBER is the comparison the caveat always described: what
+        does this predicate catch that the OTHER members of the baseline do not. For a baseline
+        with no members the argument is a no-op, which is correct — the candidate was never in it.
+        """
+        if exclude_member is None:
+            return self.per_baseline.get(baseline, frozenset())
+        by_member = self.members.get(baseline)
+        if not by_member or exclude_member not in by_member:
+            return self.per_baseline.get(baseline, frozenset())
         out: set[str] = set()
-        for v in self.per_baseline.values():
-            out |= v
+        for pid, ks in by_member.items():
+            if pid != exclude_member:
+                out |= ks
+        return frozenset(out)
+
+    def union(self, *, exclude_member: str | None = None) -> frozenset[str]:
+        out: set[str] = set()
+        for name in self.per_baseline:
+            out |= self.kills(name, exclude_member=exclude_member)
         return frozenset(out)
 
 
@@ -144,12 +174,21 @@ def check(
     # baseline does not. A set difference, reported per baseline SEPARATELY — a union figure
     # hides which baseline did the work — with the union beside it, never instead of it.
     mine = stored.mutants_in(stored.mutants(cand.id), claimed)
-    # **THE CANDIDATE IS REMOVED FROM EVERY BASELINE BEFORE THE DIFFERENCE IS TAKEN.** B0 is drawn
-    # from this repository's own formula-derived harvest classes, so a `sum_identity` candidate is
-    # IN B0; comparing it against a set containing itself scores a marginal kill of zero for every
-    # such predicate and rejects 105 of them for being indistinguishable from themselves. Found by
-    # running the funnel, not by reading the code.
-    others = {b: baselines.kills(b) - stored.mutants(cand.id) for b in baselines.names()}
+    # **THE CANDIDATE IS REMOVED FROM B0 AS A MEMBER — NOT SUBTRACTED FROM B0'S KILLS.**
+    #
+    # B0 is drawn from this repository's own formula-derived harvest classes, so a `sum_identity`
+    # candidate is IN B0; comparing it against a set containing itself scores a marginal kill of
+    # zero for every such predicate and rejects 105 of them for being indistinguishable from
+    # themselves. That diagnosis was right and the repair was not: subtracting the candidate's
+    # ENTIRE kill set from every baseline makes `mine ∩ others[b] = ∅` by construction, so every
+    # marginal equals `|mine|` and NO BASELINE CAN AFFECT ANY DECISION. Replacing all three with
+    # the empty set — or with the set of every mutant in the campaign — left the funnel
+    # byte-identical. It is visible in the published table: every row renders one integer three
+    # times.
+    #
+    # `exclude_member` is what the caveat always claimed, and the parameter for it existed unused
+    # in `b0_template.kill_set` from the day it was written.
+    others = {b: baselines.kills(b, exclude_member=cand.id) for b in baselines.names()}
     marginal = {b: len(mine - others[b]) for b in baselines.names()}
     measured: dict[str, object] = {
         "bar": bar.value,
@@ -161,7 +200,7 @@ def check(
         "per_class": per_class,
         # per-baseline, SEPARATELY — a union figure hides which baseline did the work
         "marginal_kill": dict(sorted(marginal.items())),
-        "marginal_kill_over_union": len(mine - (baselines.union() - stored.mutants(cand.id))),
+        "marginal_kill_over_union": len(mine - baselines.union(exclude_member=cand.id)),
         "baseline_caveats": dict(sorted(baselines.caveats.items())),
     }
 

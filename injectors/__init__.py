@@ -2184,3 +2184,69 @@ ALL_INJECTORS = ALL_INJECTORS + (
     ToleranceUnitsSilentlyReconciled,
 )
 BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+# ---------------------------------------------------------------------------------------
+# THE THREE GATES WHOSE PUBLISHED RED OBSERVATION WAS BOUND TO AN UNRELATED BREAK.
+#
+# `tools/gate_liveness.py` now RUNS a shell gate under its bound injector and requires a non-zero
+# exit, so a binding that never demonstrated anything reports `BINDING NOT VERIFIED` instead of
+# being counted. These three injectors plant each gate's OWN subject.
+# ---------------------------------------------------------------------------------------
+
+
+class RegexOverOoxml(Injector):
+    """A pattern is used to read an OOXML cell element instead of the one parser factory.
+
+    `ci/no-regex-over-xml.sh` exists because this shape has appeared three times in this
+    repository — most recently in P7-B3's own baselines, written by the author of the gate that
+    bans it. Its registry row was published OBSERVED RED on `ContractTableEdit`, which hand-edits
+    a markdown table and leaves the gate green.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="regex_over_ooxml",
+                         touches=[REPO_ROOT / "src/cdfc/schema/styles_mask.py"])
+
+    def apply(self) -> None:
+        p = REPO_ROOT / "src/cdfc/schema/styles_mask.py"
+        p.write_text(p.read_text() + (
+            "\n\ndef _cells_by_pattern(xml: str):  # INJECTED\n"
+            '    import re\n'
+            '    return re.findall(r\'<c r="([A-Z]+[0-9]+)"\', xml)\n'
+        ))
+
+
+class WallclockZ3(Injector):
+    """The proof arm is driven by a wall clock instead of `rlimit`.
+
+    A timeout makes a proof verdict a function of how busy the machine was, so `unknown` — which
+    this build treats as UNPROVEN — starts depending on load rather than on the formula. Registry
+    row 48 was published OBSERVED RED on `Z3UnknownIsOk`, which changes how `unknown` is READ and
+    leaves the wall-clock gate green.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="wallclock_z3",
+                         touches=[REPO_ROOT / "src/cdfc/qualify/g3_degeneracy.py"])
+
+    def apply(self) -> None:
+        p = REPO_ROOT / "src/cdfc/qualify/g3_degeneracy.py"
+        t = p.read_text()
+        marker = "\n\ndef "
+        i = t.index(marker)
+        p.write_text(t[:i] + (
+            "\n\ndef _deadline(s):  # INJECTED\n"
+            '    s.set("timeout", 5000)\n'
+        ) + t[i:])
+
+
+# NC-CI01's break — *"a grep over a missing directory exits 0 and reports success"* — is planted
+# by `RemoveScanRoot`, which existed UNUSED by any catalogue entry while NC-CI01 was bound to
+# `DefeatBareExceptGate`, an injector for a different gate. It is not re-implemented here: it
+# already handles the directory restore that a naive subclass gets wrong (it removes every file
+# under the root and re-creates the directory before restoring, because a `touches` list of files
+# cannot restore a directory that no longer exists).
+
+ALL_INJECTORS = ALL_INJECTORS + (RegexOverOoxml, WallclockZ3)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}

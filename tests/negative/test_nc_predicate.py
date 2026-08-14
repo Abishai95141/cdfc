@@ -916,3 +916,58 @@ def test_nc__Q08a_self_authored_renders_uninformative_not_a_number() -> None:
     )
     assert issubclass(UninformativeCorpusError, RuntimeError)
     assert CorpusProvenance.SELF_AUTHORED.value == "SELF-AUTHORED"
+
+
+def test_nc__Q46c_every_formula_is_an_obligation_or_a_typed_skip() -> None:
+    """**THE HARVEST'S OWN CONTRACT, AS A TEST OVER THE WHOLE CORPUS.**
+
+    `harvest.py`'s rule 2: *"every formula the class set cannot express becomes a typed
+    `SkipRecord` … never a silent omission: an undeclared suppression is a coverage lie."*
+
+    It was false for **1,060 of the corpus's 1,495 formula cells**. Every class begins with a bare
+    `continue` on a body it cannot match, and nothing recorded the fall-through — FME published 59
+    skips against 144 silent drops, ALR published **2** against 620. For a checker whose
+    differentiator is reporting what it did not check, the published weak pile was understating
+    itself 3.5-fold.
+
+    NC-Q46's existing guard cannot see this: it asserts the skip list is non-empty and names one
+    construct, which any non-empty list satisfies. This one quantifies over every formula cell of
+    every workbook, so a class that starts dropping bodies again is red on the first run.
+    """
+    from cdfc.predicates.harvest import _load_context, harvest
+    from cdfc.predicates.harvest_classes._shared import iter_formulas
+
+    silent: list[str] = []
+    total = 0
+    for blob in sorted((REPO / "fixtures" / "prescribed").glob("*.xlsx")):
+        ctx = _load_context(blob)
+        res = harvest(blob)
+        cells = {(s, r) for s, r, _b in iter_formulas(ctx)}
+        accounted = {(v[2], v[3]) for v in res.constructs.values()}
+        accounted |= {(k.sheet, k.ref) for k in res.skipped}
+        total += len(cells)
+        silent += [f"{blob.name}:{s}!{r}" for s, r in sorted(cells - accounted)]
+
+    assert total > 0, "no formula cells were examined; this test would pass over an absence"
+    assert not silent, (
+        f"{len(silent)} of {total} formula cells are neither an obligation nor a typed skip. "
+        f"An undeclared suppression is a coverage lie. First: {silent[:5]}"
+    )
+
+
+def test_nc__Q46d_the_two_declared_skip_kinds_are_actually_used() -> None:
+    """`iferror_wrapper` and `if_conditional_carry` were declared in `SkipKind` and appeared
+    NOWHERE else in the repository — the vocabulary for the dominant silent case was written and
+    never connected. This asserts the sweep uses them, so deleting the sweep is red rather than
+    quiet."""
+    from collections import Counter
+
+    from cdfc.predicates.harvest import harvest
+
+    kinds: Counter[str] = Counter()
+    for blob in sorted((REPO / "fixtures" / "prescribed").glob("*.xlsx")):
+        for s in harvest(blob).skipped:
+            kinds[s.kind] += 1
+    assert kinds["iferror_wrapper"] > 0, "IFERROR bodies are the largest silent pile on FME"
+    assert kinds["if_conditional_carry"] > 0
+    assert kinds["function_outside_vocabulary"] > 0

@@ -131,14 +131,52 @@ def test_g2__two_bars_are_two_numbers(world):
 def test_g2__a_baseline_never_competes_with_the_candidate(world):
     """The defect the funnel found on its first run: B0 is drawn from this repository's own
     formula-derived classes, so a `sum_identity` candidate is IN B0 and scored a marginal kill of
-    zero against itself."""
+    zero against itself.
+
+    **The candidate is removed from B0 AS A MEMBER — its kills are not subtracted from B0's.**
+    The first repair did the latter, which made `mine ∩ others[b] = ∅` by construction and every
+    marginal equal to `|mine|`. This test constructs the baseline the way `build()` does, with
+    membership, so it exercises the mechanism rather than the shortcut.
+    """
     r, stored = world
     killer = next(c for c in r.candidates
                   if stored.mutants(c.id) and r.class_of[c.id] == "sum_identity")
-    self_including = g2_kill.BaselineResult(per_baseline={"B0": stored.mutants(killer.id)})
+    self_including = g2_kill.BaselineResult(
+        per_baseline={"B0": stored.mutants(killer.id)},
+        members={"B0": {killer.id: stored.mutants(killer.id)}},
+    )
     out = g2_kill.check(killer, stored, self_including, bar=g2_kill.KillBar.EXPERIMENT, repo=REPO)
     assert out.measured["marginal_kill"]["B0"] > 0, (
-        "the candidate must be removed from the baseline before the difference is taken"
+        "the candidate must be removed from the baseline AS A MEMBER before the difference"
+    )
+
+
+def test_g2__the_baselines_are_load_bearing(world):
+    """**THE CONTROL THAT DID NOT EXIST, and its absence hid a fatal defect for two phases.**
+
+    Nothing anywhere asserted that a baseline can change a G2 verdict. Because `g2_kill`
+    subtracted the candidate's whole kill set from every baseline, `|mine \\ others[b]| == |mine|`
+    identically — so replacing all three baselines with the empty set, or with the set of every
+    mutant in the campaign, left the funnel byte-identical. Three copies of the candidate's own
+    kill count were published per row, and it is visible in the table: `3 / 3 / 3`, `2 / 2 / 2`.
+
+    A gate whose input cannot change its output is not a gate.
+    """
+    r, stored = world
+    killer = next(c for c in r.candidates
+                  if stored.mutants(c.id) and r.class_of[c.id] == "sum_identity")
+    every = frozenset().union(*(stored.mutants(c.id) for c in r.candidates if stored.mutants(c.id)))
+
+    blind = g2_kill.BaselineResult(per_baseline={"B0": frozenset(), "B1": frozenset(), "B2": frozenset()})
+    omniscient = g2_kill.BaselineResult(per_baseline={"B0": every, "B1": every, "B2": every})
+
+    a = g2_kill.check(killer, stored, blind, bar=g2_kill.KillBar.EXPERIMENT, repo=REPO)
+    b = g2_kill.check(killer, stored, omniscient, bar=g2_kill.KillBar.EXPERIMENT, repo=REPO)
+    assert a.passed, "a baseline that catches nothing must let a real killer through"
+    assert not b.passed, "a baseline that catches everything must reject every candidate"
+    assert a.measured["marginal_kill"] != b.measured["marginal_kill"], (
+        "the marginal is identical against a blind and an omniscient baseline, so the baseline "
+        "is not an input to it"
     )
 
 

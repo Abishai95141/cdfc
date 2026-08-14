@@ -51,10 +51,10 @@ The remedy is named and is **not** taken here: making the fingerprint's mask sty
 
 | basis | cells | degree |
 |---|---:|---:|
-| `MONEY_MARKER` | 223 | 1 |
-| `RATIO_MARKER` | 115 | 0 |
+| `NO_MARKER` | 202 | 0 |
+| `RATIO_MARKER` | 110 | 0 |
+| `MONEY_MARKER` | 98 | 1 |
 | `COUNT_MARKER` | 93 | 0 |
-| `NO_MARKER` | 72 | 0 |
 | `DATE_MARKER` | 2 | 0 |
 
 Every assignment names the regulator's own words and the cell they are in — `'1. Introduction'!D17` is degree 0 on the authority of `'1. Introduction'!C17`, *"Total No. of Schemes of the FME authorised by IFSCA"*. **A person, and a scheme, is not a rounded quantity**: under a blanket `τ(n) = 5n` that cell could be wrong by fifteen schemes and pass.

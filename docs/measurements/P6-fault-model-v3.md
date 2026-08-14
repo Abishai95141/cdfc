@@ -24,19 +24,19 @@ Reducing the sample and saying so is arithmetic.
 | F02 | 72 | 0 | 0 | 72 | 0 | 20 | `20/72` |
 | F03 | 58 | 0 | 0 | 58 | 0 | 14 | `14/58` |
 | F04 | 5 | 0 | 0 | 5 | 0 | 2 | `2/5` |
-| F05 | 224 | 0 | 0 | 224 | 34 | 53 | `53/224` |
+| F05 | 224 | 0 | 1 | 223 | 33 | 53 | `53/223` |
 | F06 | 24 | 0 | 0 | 24 | 0 | 2 | `2/24` |
-| F07 | 112 | 0 | 0 | 112 | 17 | 34 | `34/112` |
+| F07 | 112 | 0 | 1 | 111 | 16 | 34 | `34/111` |
 | F08 | 16 | 0 | 0 | 16 | 1 | 5 | `5/16` |
 | F09 | 36 | 0 | 0 | 36 | 0 | 12 | `12/36` |
-| F10 | 32 | 0 | 0 | 32 | 0 | 1 | `1/32` |
+| F10 | 32 | 0 | 0 | 32 | 0 | 0 | `0/32` |
 | F11 | 25 | 0 | 0 | 25 | 6 | 7 | `7/25` |
-| F12 | 100 | 12 | 0 | 88 | 20 | 68 | `68/88` |
+| F12 | 100 | 12 | 20 | 68 | 0 | 68 | `68/68` |
 | F13 | 36 | 0 | 0 | 36 | 0 | 11 | `11/36` |
 | F14 | 4 | 0 | 0 | 4 | 0 | 0 | `0/4` |
-| **TOTAL** | **773** | **12** | **0** | **761** | **78** | **258** | **258/761** |
+| **TOTAL** | **773** | **12** | **22** | **739** | **56** | **257** | **257/739** |
 
-    U/G = 12/773      I/G = 0/773      K/O = 258/761
+    U/G = 12/773      I/G = 22/773      K/O = 257/739
 
 **`I` is our EVALUATOR, not the fault model, and it never renders without `U/G` beside it.** A cell
 in `not_run` is identical in both grids *by construction*, so a two-way classification banks its
@@ -59,7 +59,9 @@ one would count it, and `U/G` would still not absorb it.
 
 ### The cells behind every `I`
 
-- none on this campaign
+- **F05** — 
+- **F07** — 
+- **F12** — 
 
 ### What the `U = 12` actually are, because a rate is only as honest as its composition
 
@@ -79,8 +81,8 @@ v0 published MS = 3574/19760 = 3574 killed over 19782 generated less 22 asserted
 
 ## What this licenses, and what it does not
 
-> The predicate set rejects **258 of 761** observable defects seeded under fault model `v3`, of
-> which **12 of 773** were discarded as unobservable and **0 of 773** could not be
+> The predicate set rejects **257 of 739** observable defects seeded under fault model `v3`, of
+> which **12 of 773** were discarded as unobservable and **22 of 773** could not be
 > adjudicated by our own evaluator.
 
 It does **not** license *"detects X% of real filing errors"*. The bridge from seeded faults to real

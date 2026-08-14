@@ -1,4 +1,13 @@
-PY ?= /Users/abishaikc/Gift/.venv/bin/python
+# THE INTERPRETER IS DISCOVERED, NOT DEFAULTED TO ONE LAPTOP.
+#
+# This was a `?=` default naming one developer's home directory. Together with the same literal
+# inside `ci/_roots.sh` it is why a fresh clone had to be handed BOTH `PY` and `CDFC_PY` before
+# `make verify` would work — and the clone-verify step at P7, P8 and P9 all did exactly that,
+# which is the build telling us about the defect three times while we wrote the workaround down
+# as a procedure. `ci/no-external-paths.sh` could not see it: its pattern required a quote
+# immediately before the path, and its `--include` filters excluded the Makefile even when named.
+PY := $(firstword $(wildcard $(CDFC_PY)) $(wildcard $(CURDIR)/.venv/bin/python) $(shell command -v python3))
+export CDFC_PY := $(PY)
 export PYTHONPATH := $(CURDIR)/src
 
 .PHONY: all lint licence greps contract unit property golden differential nc-sweep \

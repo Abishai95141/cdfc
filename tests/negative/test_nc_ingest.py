@@ -165,20 +165,77 @@ def test_nc__P04_golden_the_round_trip_really_is_destructive(tmp_path: Path) -> 
 
 # --------------------------------------------------------------------------- NC-P08
 def test_nc__P08_only_one_parser_factory() -> None:
-    """`etree.XMLParser(` and `etree.fromstring(` appear ONLY in xmlsafe.py.
+    """lxml is reached through ONE door: `xmlsafe.fromstring`.
 
-    NC-P05a spies on `xmlsafe.fromstring` to prove the guard ran before any parse, and a
-    spy can only watch one door.
+    NC-P05a spies on `xmlsafe.fromstring` to prove the guard ran before any parse, and a spy can
+    only watch one door.
+
+    **THIS WAS A TWO-STRING SUBSTRING CHECK AND IT IS NOW AN AST WALK, which is what the module
+    docstring always said it was.** The check looked for the literals `etree.XMLParser(` and
+    `etree.fromstring(`, so a second door opened under any other name went straight past it:
+
+        from lxml import etree as ET
+        ET.fromstring(b, parser=ET.XMLParser(resolve_entities=True, recover=True))
+
+    — including `recover=True`, which `xmlsafe`'s own docstring calls the setting that matters
+    most. The committed injector plants the exact literal spelling the substring matched, so the
+    control was observed red only on the shape of its own check.
+
+    The walk resolves lxml under ANY alias: it tracks what `lxml`, `lxml.etree` and their members
+    were bound to in each module, then flags a call whose receiver resolves to lxml's `etree`.
     """
-    offenders = []
-    for path in (REPO / "src" / "cdfc").rglob("*.py"):
+    import ast
+
+    # THE PARSING SURFACE, and only it. `tostring`, `SubElement` and `Element` BUILD XML; they
+    # cannot expand an entity or recover from malformed input, which is what the hardened factory
+    # exists to control. `surgery.py` and `corpus/_writer.py` legitimately serialise, and they are
+    # governed by `ci/no-openpyxl-writer.sh` and `ci/no-regex-over-xml.sh` instead. A control that
+    # flagged them would be red for a reason unrelated to its own subject.
+    PARSERS = frozenset({"fromstring", "fromstringlist", "XML", "parse", "XMLParser", "iterparse"})
+
+    offenders: list[str] = []
+    for path in sorted((REPO / "src" / "cdfc").rglob("*.py")):
         if path.name == "xmlsafe.py":
             continue
-        src = path.read_text()
-        for needle in ("etree.XMLParser(", "etree.fromstring("):
-            if needle in src:
-                offenders.append(f"{path.relative_to(REPO)}: {needle}")
-    assert not offenders, f"lxml constructed outside the single factory: {offenders}"
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+
+        # A local name bound to lxml's `etree` module, under any alias.
+        module_alias: set[str] = set()
+        # A local name bound to a MEMBER of it, mapped to the member's ORIGINAL name — so
+        # `from lxml.etree import fromstring as _fs` is `_fs -> fromstring`.
+        member_alias: dict[str, str] = {}
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                for a in node.names:
+                    if a.name in ("lxml.etree", "lxml"):
+                        module_alias.add(a.asname or a.name.split(".")[0])
+            elif isinstance(node, ast.ImportFrom) and (node.module or "").startswith("lxml"):
+                for a in node.names:
+                    if a.name == "etree":
+                        module_alias.add(a.asname or a.name)
+                    else:
+                        member_alias[a.asname or a.name] = a.name
+
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Call):
+                continue
+            fn = node.func
+            if isinstance(fn, ast.Attribute) and fn.attr in PARSERS:
+                # `X.fromstring(...)` / `X.etree.fromstring(...)` where X resolves to lxml
+                root = fn.value
+                while isinstance(root, ast.Attribute):
+                    root = root.value
+                if isinstance(root, ast.Name) and root.id in module_alias:
+                    offenders.append(f"{path.relative_to(REPO)}:{node.lineno}: {fn.attr}(...)")
+            elif isinstance(fn, ast.Name) and member_alias.get(fn.id) in PARSERS:
+                # `from lxml.etree import fromstring [as _fs]` then a bare call
+                offenders.append(f"{path.relative_to(REPO)}:{node.lineno}: {fn.id}(...)")
+
+    assert not offenders, (
+        f"lxml is reached outside the single hardened factory: {offenders}. "
+        "Every parse goes through `xmlsafe.fromstring` or the spy in NC-P05a watches a door "
+        "nobody uses."
+    )
 
 
 # --------------------------------------------------------------------------- NC-P05

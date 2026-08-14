@@ -4,9 +4,9 @@
  "degree_bases": {
   "COUNT_MARKER": 93,
   "DATE_MARKER": 2,
-  "MONEY_MARKER": 223,
-  "NO_MARKER": 72,
-  "RATIO_MARKER": 115
+  "MONEY_MARKER": 98,
+  "NO_MARKER": 202,
+  "RATIO_MARKER": 110
  },
  "field_surface": 3747,
  "formula_cells": 505,

@@ -35,10 +35,10 @@
     },
     "F05": {
       "G": 224,
-      "I": 0,
+      "I": 1,
       "K": 53,
-      "O": 224,
-      "R": 34,
+      "O": 223,
+      "R": 33,
       "U": 0
     },
     "F06": {
@@ -51,10 +51,10 @@
     },
     "F07": {
       "G": 112,
-      "I": 0,
+      "I": 1,
       "K": 34,
-      "O": 112,
-      "R": 17,
+      "O": 111,
+      "R": 16,
       "U": 0
     },
     "F08": {
@@ -76,7 +76,7 @@
     "F10": {
       "G": 32,
       "I": 0,
-      "K": 1,
+      "K": 0,
       "O": 32,
       "R": 0,
       "U": 0
@@ -91,10 +91,10 @@
     },
     "F12": {
       "G": 100,
-      "I": 0,
+      "I": 20,
       "K": 68,
-      "O": 88,
-      "R": 20,
+      "O": 68,
+      "R": 0,
       "U": 12
     },
     "F13": {
@@ -119,16 +119,17 @@
   "fault_model_digest": "4b14132ef9add6c2ef9158a90082360c9a6d69471efcd1a75d6c7aab684ab372",
   "fault_model_version": "v3",
   "harness_version": "p6-b1",
-  "indeterminate_rate": "0/773",
-  "kill_rate": "258/761",
+  "indeterminate_rate": "22/773",
+  "kill_rate": "257/739",
+  "predicate_set_digest": "2b9a5654a58ba8cfae1659961a06fe068bf54f4ddaa430af1a382187183633dc",
   "sampling_rule": "stratified by dtype, at most 12 sites per stratum, seed 20260810; 72 of 4252 field-surface cells (COUNT+F:12/378, DATE:12/23, ENUM:12/401, MILLI_USD_MILLION:12/1880, MILLI_USD_MILLION+F:12/127, TEXT:12/1443); plus 40 cell(s) that feed a formula this evaluator cannot compute, so the INDETERMINATE class is measurable at all rather than depending on which cells the RNG chose (30 such formula cells)",
   "site_set_digest": "4b14132ef9add6c2",
   "totals": {
     "G": 773,
-    "I": 0,
-    "K": 258,
-    "O": 761,
-    "R": 78,
+    "I": 22,
+    "K": 257,
+    "O": 739,
+    "R": 56,
     "U": 12
   },
   "unobservable_rate": "12/773"

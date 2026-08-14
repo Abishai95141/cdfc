@@ -20,6 +20,7 @@ from cdfc.predicates.ast_walker import bound_cells  # noqa: E402
 from cdfc.qualify.campaign import restate_v0  # noqa: E402
 from cdfc.qualify.fault_model import Dtype, Site, model_digest  # noqa: E402
 from cdfc.qualify.observability import downstream_index, extract  # noqa: E402
+from cdfc.qualify.campaign_store import predicate_set_digest  # noqa: E402
 from cdfc.qualify.runner import CampaignRunner, plan_mutants, summarise, write_reports  # noqa: E402
 from cdfc.qualify.sites import site_universe, stratified  # noqa: E402
 
@@ -187,6 +188,10 @@ def main() -> int:
         evaluator_version="cdfc.calc P3 + celpy 0.5.0",
         base_sha256=h.template_sha256,
         sampling_rule=rule,
+        # WHICH PREDICATES THIS CAMPAIGN CREDITED, as a digest over `(id, code_sha256)`. Without
+        # it a later harvest can re-assign ids and G2 goes on scoring each candidate with another
+        # predicate's evidence — which is exactly what happened between P6 and P9.
+        predicate_set_digest=predicate_set_digest(h.candidates),
     )
     target = write_reports(campaign, outcomes, OUT)
     print()
