@@ -1,0 +1,33 @@
+{
+ "formula_cells": 505,
+ "functions": {
+  "COUNTIF": 3,
+  "IF": 14,
+  "IFERROR": 130,
+  "INDEX": 30,
+  "ROW": 30,
+  "ROWS": 30,
+  "SUM": 135,
+  "_xlfn.AGGREGATE": 30,
+  "_xlfn.SINGLE": 1
+ },
+ "geval": {
+  "arm2_independence": "INDEPENDENT",
+  "label": "",
+  "status": "PASSED"
+ },
+ "implemented": {
+  "COUNTIF": true,
+  "IF": true,
+  "IFERROR": true,
+  "INDEX": true,
+  "ROW": true,
+  "ROWS": true,
+  "SUM": true,
+  "_xlfn.AGGREGATE": true,
+  "_xlfn.SINGLE": true
+ },
+ "outside_vocabulary": [],
+ "warrant": "MEASURED",
+ "workbook": "Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx"
+}

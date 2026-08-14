@@ -17,6 +17,21 @@ formulas and the filer would pass their own rewritten check.
 
 Output is a coverage declaration, not a verdict: what was checked, what was found, and —
 in equal weight — what was NOT checked and why.
+
+**TWO CORRECTIONS AT P9, both measured, and both to claims this file used to make.**
+
+1. *"the fingerprint excludes formula content"* is true of formula **text** and false of
+   formula **presence**. The field surface is `unlocked ∧ non-formula`, so deleting a
+   formula from one of the eight cells that are unlocked AND formula-bearing moves that
+   cell INTO the field surface, moves the mask, and the filing no longer binds. Section A
+   works because `'3. Portfolio'!O7` is LOCKED. See
+   `docs/measurements/P9-template-diff-ceiling.md`.
+2. This demo detects an override **structurally** — the cell no longer carries an `<f>`
+   element. That is a subset of what `TEMPLATE_DIFF` means. `src/cdfc/probes/template_diff.py`
+   compares the recomputed VALUE, which also catches a stale carry and a rewritten formula.
+   Section B's control was `values-written__50-cells.xlsx`, which this demo called untouched
+   and which the value comparison shows has **twenty stale derived cells**. The control is
+   now a filing that is clean under both readings.
 """
 
 from __future__ import annotations
@@ -50,8 +65,8 @@ def run(filing: Path, template: Path = TEMPLATE) -> int:
         print(f"  BINDING  INVALID(invalid.template_unbound) — {fp_f[:12]} != {fp_t[:12]}")
         print("           No checks run. This is an apparatus outcome, not a finding.")
         return 1
-    print(f"  BINDING  bound to template {fp_t[:12]}  (fingerprint excludes formula content,")
-    print("           which is why an overwritten filing still binds and can be CHECKED)\n")
+    print(f"  BINDING  bound to template {fp_t[:12]}  (the fingerprint excludes formula TEXT,")
+    print("           which is why an overwritten LOCKED formula cell still binds)\n")
 
     # --- 2. WHAT THE TEMPLATE SAYS EACH DERIVED CELL SHOULD BE -------------------
     t_formulas, _t_lit, _t_cached, t_def = load(template)
@@ -114,9 +129,12 @@ def main() -> int:
     rc = run(SYN / "formula-overwritten__portfolio-O7.xlsx")
     print()
     print("=" * 78)
-    print("  B. THE ADMISSION-SIDE CONTROL — an untouched filing must produce NO findings")
+    print("  B. THE ADMISSION-SIDE CONTROL — a clean filing must produce NO findings")
     print("=" * 78)
-    rc |= run(SYN / "values-written__50-cells.xlsx")
+    # The derived cells of this one were computed by LIBREOFFICE, so a zero-finding result here
+    # is not `x == x`. Its predecessor as this control — `values-written__50-cells.xlsx` — has
+    # twenty stale derived cells, which the structural detector below cannot see.
+    rc |= run(SYN / "clean__independently-computed__fme-q1.xlsx")
     return rc
 
 

@@ -1,0 +1,37 @@
+# template_defects.yaml — cells where the REGULATOR'S OWN FORMULA is wrong.
+#
+# `TEMPLATE_DIFF`'s oracle is the regulator's published blank, and the blank is authoritative
+# rather than correct. A relation that recomputes a defective formula reproduces the defect, so a
+# filer who filled the return CORRECTLY would be flagged and a filer who reproduced the defect
+# would pass. That is the check inverted, on the cells where being right is hardest.
+#
+# EVERY ROW REQUIRES ALL SIX FIELDS. `evidence_command` must be a script that RE-DERIVES the claim
+# and EXITS NON-ZERO when it stops reproducing —
+# `test_probes__every_declared_defect_has_a_reproducing_command` runs it. A defect table without
+# re-runnable evidence is a list of opinions, and the list would grow to cover every relation
+# somebody found inconvenient.
+#
+# A row is scoped to ONE `template_sha256`. A defect declared against a different digest is an
+# opinion about a different artifact and `TemplateDefectTable.for_template` drops it.
+#
+# THE ROW COUNT IS NOT A TARGET. Two rows would be worse than one if the second were convenient
+# rather than true. The guard against convenient-but-true rows is arithmetic, not intent:
+# `test_defect_table_cannot_raise_the_settled_fraction` recomputes the reference run for every
+# row, and where declaring a defect WOULD raise the headline the disposition falls back to
+# `NO_PREDICATE(no_predicate.rule_ambiguous)`, which stays in the denominator.
+
+defects:
+  - id: TD-01
+    cell: "1. Introduction!D17"
+    template_sha256: "7d9a1960085785eefbe166fb5e04e94689780c490235fe55d8f3e8b620ceea39"
+    description: >
+      "Total No. of Schemes of the FME authorised by IFSCA" is SUM(D18:D20) over three COUNTIF
+      rows whose five wildcard patterns — *Angel*, *Venture*, *Restricted*, *Retail* and
+      *Exchange Traded Fund* — match only SEVEN of the NINE scheme types the workbook's own data
+      validation offers at Dropdown!F3:F11. "Special Situation Fund" and "Family Investment Fund"
+      match none of them, so a filer who declares either at '1. Introduction'!G54:G63 is counted
+      by no row and the regulator's own total under-reports by exactly that number. The filer who
+      fills the form correctly is the one this cell disagrees with.
+    evidence_command: ".venv/bin/python tools/probes/p9_scheme_vocabulary.py"
+    declared_by: "the build, from the workbook's own validation list and COUNTIF text"
+    declared_at: 2026-08-14

@@ -31,6 +31,58 @@ FormulaSource = Literal["TEMPLATE", "FILING"]
 
 Value = Decimal | str | bool | ExcelError | None
 
+
+@dataclass(frozen=True, slots=True)
+class SourceRule:
+    """One row of the `formula_source` contract. It is DATA so that the published rule and the
+    argument the code actually passes cannot drift apart: `gen_contract.py` renders this table
+    into `EVALUATION-CONTRACT.md`, and `test_contract__formula_source_is_explicit` reads the
+    same table when it checks the call sites by AST."""
+
+    caller: str          # a dotted module path under `src/cdfc/`
+    source: str          # "TEMPLATE" or "FILING"
+    because: str
+
+
+# --------------------------------------------------------------------------------
+# THE `formula_source` CONTRACT (P9-B1, entry criterion 2b; adversary F19)
+#
+# Two phases meant different things by "recalculate" and both passed in isolation.
+#
+#   The observability filter classifies a mutant by comparing two RECALCULATED grids.
+#   An F11 mutant is *a cell the pinned blank declares a formula, carrying a literal* — so
+#   recalculating it through the TEMPLATE's formula graph overwrites the literal with the
+#   formula's value, the two grids come out identical, and the design's flagship fault class
+#   is classified UNOBSERVABLE **by construction**. `O` for F11 is then 0, `Campaign.kill_rate()`
+#   raises on `O == 0`, and TEMPLATE_DIFF — predicate #1 — dies at the third gate with an
+#   exception, twelve weeks after the disagreement was introduced.
+#
+# The repair is not a default. It is the ABSENCE of one: `recalculate` has no default
+# `formula_source`, so a call site that omits it is a TypeError, and the two meanings can
+# never again be reconciled by whichever phase was written second.
+# --------------------------------------------------------------------------------
+FORMULA_SOURCE_CONTRACT: tuple[SourceRule, ...] = (
+    SourceRule(
+        caller="cdfc.qualify.observability",
+        source="FILING",
+        because=(
+            "observability is a question about THE ARTIFACT UNDER TEST. Recalculating a filing "
+            "through the blank's formulas asks whether the fault survives a repair we performed "
+            "on it, which is not the question. A cell the filing carries as a literal STAYS a "
+            "literal."
+        ),
+    ),
+    SourceRule(
+        caller="cdfc.probes.template_diff",
+        source="TEMPLATE",
+        because=(
+            "the relation IS the comparison of the two sources: the pinned blank's formula graph "
+            "over the filed inputs, against what the filing actually holds. This is the only "
+            "caller for which TEMPLATE is correct."
+        ),
+    ),
+)
+
 TOKEN = re.compile(
     r"""
     (?P<ws>\s+)

@@ -4,7 +4,7 @@ export PYTHONPATH := $(CURDIR)/src
 .PHONY: all lint licence greps contract unit property golden differential nc-sweep \
         determinism perf mutation-pr e2e nightly demo corpus-verify measure-foundation gates \
         harvest cel-conformance host-fn-mutation predicate-schema verify \
-        gen-contract instruments
+        gen-contract instruments evaluator-arm1 p3-reproduction ceiling
 
 all: lint licence greps corpus-verify contract unit golden determinism negative gates
 
@@ -157,3 +157,17 @@ ffr:
 
 mask-check:
 	$(PY) tools/corpus/mask_vs_filler.py
+
+# --- P9 ------------------------------------------------------------------------------
+# `evaluator-arm1` had NO make target until P9, and its script had been raising
+# `KeyError: 'cells'` since a rename — so `docs/measurements/P3-evaluator.md` was an artifact
+# of a version that no longer ran, and it published FME as 495/10 when the truth after P6's
+# AGGREGATE repair was 475/30. A measurement with no way to re-run it is a memory.
+evaluator-arm1:
+	$(PY) tools/measure/evaluator_arm1.py
+
+p3-reproduction:
+	$(PY) tools/measure/p3_reproduction.py
+
+ceiling:
+	$(PY) tools/measure/p9_ceiling.py

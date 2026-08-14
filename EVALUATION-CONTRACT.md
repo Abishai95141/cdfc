@@ -47,3 +47,29 @@ never fresher than its stalest input and never stronger than its weakest.**
   the two cannot both hold, and `min` is the one that makes the sentence true. Under
   `max` a verdict composed from a January snapshot and a filing read today would report
   today, and a reader would take the whole verdict to be that fresh.
+
+## `formula_source` — which formulas 'recalculate' means
+
+**GENERATED from `src/cdfc/calc/evaluate.py::FORMULA_SOURCE_CONTRACT`.** C8b puts the
+rule here and nowhere else — there is no separate `docs/RECALCULATION-SOURCE.md`, because
+a rule published in two files is a rule that will be true in one of them.
+
+`recalculate` has **no default** `formula_source`. A call site that omits it is a
+`TypeError`, not a quietly-chosen meaning. `test_contract__formula_source_is_explicit`
+scans `src/cdfc/` by AST and fails the build on a missing, computed or non-literal
+argument; the caller column below is checked against the same scan, so a caller that
+moves without updating this table is red.
+
+| caller | `formula_source` | because |
+|---|---|---|
+| `cdfc.qualify.observability` | **`FILING`** | observability is a question about THE ARTIFACT UNDER TEST. Recalculating a filing through the blank's formulas asks whether the fault survives a repair we performed on it, which is not the question. A cell the filing carries as a literal STAYS a literal. |
+| `cdfc.probes.template_diff` | **`TEMPLATE`** | the relation IS the comparison of the two sources: the pinned blank's formula graph over the filed inputs, against what the filing actually holds. This is the only caller for which TEMPLATE is correct. |
+
+**The defect this prevents (F19), stated once.** The observability filter classifies a
+mutant by comparing two *recalculated* grids. An **F11** mutant is a cell the pinned
+blank declares a formula, carrying a literal — so recalculating it through the
+**template's** formula graph overwrites the literal with the formula's own value, the two
+grids come out identical, and the flagship fault class is classified `UNOBSERVABLE` **by
+construction**. `O` for F11 is then 0, `Campaign.kill_rate()` raises on `O == 0`, and
+`TEMPLATE_DIFF` dies at the third gate with an arithmetic exception rather than with a
+measured refusal. Each phase passes its own tests throughout.

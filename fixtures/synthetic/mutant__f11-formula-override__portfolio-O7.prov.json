@@ -1,0 +1,8 @@
+{
+  "CDFC_PROVENANCE": "SYNTHETIC",
+  "CDFC_SYNTHETIC": true,
+  "base": "Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx",
+  "generated_by": "tools/fixtures/make_synthetic.py",
+  "sha256": "eadcc60c5292ab795f97d177fb9a46157ebcf980d09086b40ce967cfd5abbf56",
+  "what_it_is": "The P6 fault-model instance of F11, seeded by raw-zip surgery for the campaign."
+}

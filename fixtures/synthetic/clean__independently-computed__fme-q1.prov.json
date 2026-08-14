@@ -1,0 +1,8 @@
+{
+  "CDFC_PROVENANCE": "SYNTHETIC",
+  "CDFC_SYNTHETIC": true,
+  "base": "Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx",
+  "generated_by": "tools/fixtures/make_synthetic.py",
+  "sha256": "e2bbd2533d04b2f54a7c46238b23ee356c01f4384491028925f6d9f95dc7e2e2",
+  "what_it_is": "Derived cells computed by LibreOffice \u2014 an implementation this project did not write. The corpus TEMPLATE_DIFF's zero-fire claim may be founded on."
+}

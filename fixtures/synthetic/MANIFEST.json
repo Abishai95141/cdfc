@@ -3,6 +3,8 @@
  "files": {
   "clean__independently-computed__fme-q1.xlsx": "e2bbd2533d04b2f54a7c46238b23ee356c01f4384491028925f6d9f95dc7e2e2",
   "clean__template-computed__fme-q1.xlsx": "aeedbfe18c803061a117d6940d85047d3fc6d7d0e9a02b842d2131c56c621269",
+  "formula-overwritten__investors-N5.xlsx": "228bda75b19c97e0b728384ed2b31e91e62fab7ee413323dca45f193343f7fcb",
+  "formula-overwritten__pair-portfolio-O7-C182.xlsx": "5f4b8bcd31fd1d2ff764181110fce78161597cf6537614b0fd34582b4944d31b",
   "formula-overwritten__portfolio-O7.xlsx": "7d7019bf770998e990606ff5d6e66603378be2da24092316a58d74c7fe620fe2",
   "mutant__f11-formula-override__portfolio-O7.xlsx": "eadcc60c5292ab795f97d177fb9a46157ebcf980d09086b40ce967cfd5abbf56",
   "row-inserted__portfolio-r7.xlsx": "30c9abc0b6f93bc4d741bb9125075d10d0d6e0d1f35433f676c5711d0dbf4edd",

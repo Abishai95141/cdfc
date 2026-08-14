@@ -1,0 +1,8 @@
+{
+  "CDFC_PROVENANCE": "SYNTHETIC",
+  "CDFC_SYNTHETIC": true,
+  "base": "Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx",
+  "generated_by": "tools/fixtures/make_synthetic.py",
+  "sha256": "aeedbfe18c803061a117d6940d85047d3fc6d7d0e9a02b842d2131c56c621269",
+  "what_it_is": "TEMPLATE-COMPUTED by this project's own evaluator. Uninformative for any arithmetic predicate: the oracle and the system under test are the same function."
+}

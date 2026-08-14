@@ -37,14 +37,78 @@ def _rewrite(src: Path, dst: Path, edits: dict[str, bytes]) -> None:
             zout.writestr(ni, data)
 
 
-def _portfolio_part(z: zipfile.ZipFile) -> str:
-    """The worksheet part backing '3. Portfolio'."""
+def _sheet_part(z: zipfile.ZipFile, prefix: str) -> str:
+    """The worksheet part backing the sheet whose name starts with `prefix`."""
     from cdfc.ingest.reader_lxml import _sheet_parts  # noqa: PLC0415
 
     for name, _state, part in _sheet_parts(z):
-        if name.strip().lower().startswith("3."):
+        if name.strip().lower().startswith(prefix):
             return part
-    raise LookupError("no '3. Portfolio' sheet")
+    raise LookupError(f"no sheet named {prefix!r}*")
+
+
+def _portfolio_part(z: zipfile.ZipFile) -> str:
+    """The worksheet part backing '3. Portfolio'."""
+    return _sheet_part(z, "3.")
+
+
+# Every synthetic fixture carries a `.prov.json` sidecar (methodology §6.4, in the form P8-B2
+# settled on). A SIDECAR and not `docProps/custom.xml`: stamping provenance inside the archive
+# would move the workbook's bytes, and three of these fixtures exist precisely to prove that the
+# STRUCTURAL FINGERPRINT does not move. A provenance stamp that changes what it attests to is
+# not a stamp.
+PROVENANCE: dict[str, str] = {
+    "row-inserted__portfolio-r7.xlsx":
+        "A row inserted above row 7. The fingerprint MOVES; a coordinate-shaped key rebinds "
+        "silently and a stable key must resolve or refuse.",
+    "formula-overwritten__portfolio-O7.xlsx":
+        "F11. '3. Portfolio'!O7 = SUM(C7:N7) replaced by the literal 999999. O7 is LOCKED in the "
+        "blank, so this models a filer who stripped protection.",
+    "formula-overwritten__investors-N5.xlsx":
+        "F11. '4. Investors'!N5 = SUM(C5:M5) replaced by the literal 777. N5 is one of the eight "
+        "cells that are unlocked AND formula-bearing, so this needs no stripped protection and "
+        "no adversarial intent: Excel alone will do it.",
+    "formula-overwritten__pair-portfolio-O7-C182.xlsx":
+        "The F11 PAIR. '3. Portfolio'!O7 and its own carry '3. Portfolio'!C182 = O7 both replaced "
+        "by 999999, so every carry identity in the workbook remains satisfied and only a "
+        "comparison against the pinned blank detects it.",
+    "values-written__50-cells.xlsx":
+        "Fifty empty field-surface cells given the value 1, with the derived cells left at the "
+        "blank's cached zeros. NOT A CLEAN FILING: its carries are stale by construction, which "
+        "is what TEMPLATE_DIFF reports and what a structural overwrite-detector cannot see.",
+    "clean__template-computed__fme-q1.xlsx":
+        "TEMPLATE-COMPUTED by this project's own evaluator. Uninformative for any arithmetic "
+        "predicate: the oracle and the system under test are the same function.",
+    "clean__independently-computed__fme-q1.xlsx":
+        "Derived cells computed by LibreOffice — an implementation this project did not write. "
+        "The corpus TEMPLATE_DIFF's zero-fire claim may be founded on.",
+    "mutant__f11-formula-override__portfolio-O7.xlsx":
+        "The P6 fault-model instance of F11, seeded by raw-zip surgery for the campaign.",
+}
+
+
+def _write_provenance() -> None:
+    import json as _json
+
+    for f in sorted(OUT.glob("*.xlsx")):
+        note = PROVENANCE.get(f.name)
+        if note is None:
+            raise LookupError(
+                f"{f.name} has no provenance sentence. A synthetic fixture whose licence a "
+                "reader cannot get off its own record is one somebody will reuse in the wrong "
+                "gate; add a row to PROVENANCE rather than letting it ship unlabelled."
+            )
+        (f.with_suffix(".prov.json")).write_text(
+            _json.dumps({
+                "CDFC_SYNTHETIC": True,
+                "CDFC_PROVENANCE": "SYNTHETIC",
+                "base": FME.name,
+                "generated_by": "tools/fixtures/make_synthetic.py",
+                "sha256": hashlib.sha256(f.read_bytes()).hexdigest(),
+                "what_it_is": note,
+            }, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
 
 
 def build() -> dict[str, str]:
@@ -84,6 +148,40 @@ def build() -> dict[str, str]:
 
     # 3. fifty values written into field-surface cells — the fingerprint must NOT move.
     _rewrite(FME, OUT / "values-written__50-cells.xlsx", {part: _write_fifty_values(xml)})
+
+    # --- P9-B1 -----------------------------------------------------------------------
+    #
+    # 4. `'4. Investors'!N5` — THE STRICTLY STRONGER DEMONSTRATION, and the one to show a
+    #    reviewer. N5 is one of the **eight** cells in this workbook that are unlocked AND
+    #    formula-bearing (`'4. Investors'!N5:N8, N14:N17`, MEASURED). The other 497 formula
+    #    cells are locked, so overwriting one models a filer who stripped protection. This one
+    #    needs no zip edit, no stripped protection and no adversarial intent: **Excel alone will
+    #    do it**, to a filer who types a number over a total.
+    with zipfile.ZipFile(FME) as z:
+        inv_part = _sheet_part(z, "4.")
+        inv_xml = z.read(inv_part).decode("utf-8")
+    _rewrite(
+        FME, OUT / "formula-overwritten__investors-N5.xlsx",
+        {inv_part: _overwrite_formula_cell(inv_xml, "N5", "777")},
+    )
+
+    # 5. THE F11 PAIR — a coordinated override that leaves every carry identity satisfied.
+    #
+    #    **The plan named this fixture `…-pair-portfolio-O7-summary.xlsx`, assuming the carry of
+    #    `O7` lived on `'2. Summary'`. It does not.** `'2. Summary'`'s 50 formulas read from
+    #    `'1. Introduction'` and `'4. Investors'` only — it carries nothing at all from
+    #    `'3. Portfolio'` (MEASURED). The workbook's own carry of `O7` is
+    #    `'3. Portfolio'!C182 = O7`, so the fixture is named for the cell it actually pairs.
+    #
+    #    Overwriting BOTH with the same literal is the case the spec's E3 threshold is about: the
+    #    carry identity `C182 == O7` still holds, every harvested predicate that reads either cell
+    #    still passes, and only a comparison against the pinned blank's formula sees it.
+    paired = _overwrite_formula_cell(
+        _overwrite_formula_cell(xml, "O7", "999999").decode("utf-8"), "C182", "999999"
+    )
+    _rewrite(FME, OUT / "formula-overwritten__pair-portfolio-O7-C182.xlsx", {part: paired})
+
+    _write_provenance()
 
     made = {}
     for f in sorted(OUT.glob("*.xlsx")):

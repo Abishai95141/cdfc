@@ -1,0 +1,50 @@
+{
+ "ceiling_all_formula_cells": 957,
+ "ceiling_binding_formula_cells": 869,
+ "degree_bases": {
+  "COUNT_MARKER": 93,
+  "DATE_MARKER": 2,
+  "MONEY_MARKER": 223,
+  "NO_MARKER": 72,
+  "RATIO_MARKER": 115
+ },
+ "field_surface": 3747,
+ "formula_cells": 505,
+ "geval": {
+  "label": "",
+  "status": "PASSED"
+ },
+ "harvested_tolerance_on_degree_zero": 29,
+ "harvested_with_tolerance": 79,
+ "per_sheet": {
+  "1. Introduction": 64,
+  "2. Summary": 20,
+  "3. Portfolio": 400,
+  "4. Investors": 368,
+  "5. PMS": 104,
+  "8. Compliance Status": 1
+ },
+ "reachable_only_via_unbinding_cells": 88,
+ "readings": {
+  "lexical": 957,
+  "transitive": 957,
+  "value": 957
+ },
+ "template_sha256": "7d9a1960085785eefbe166fb5e04e94689780c490235fe55d8f3e8b620ceea39",
+ "unlocked_formula_cells": [
+  "4. Investors!N14",
+  "4. Investors!N15",
+  "4. Investors!N16",
+  "4. Investors!N17",
+  "4. Investors!N5",
+  "4. Investors!N6",
+  "4. Investors!N7",
+  "4. Investors!N8"
+ ],
+ "unreachable_by_reading": {
+  "lexical": 115,
+  "transitive": 0,
+  "value": 115
+ },
+ "warrant": "MEASURED"
+}

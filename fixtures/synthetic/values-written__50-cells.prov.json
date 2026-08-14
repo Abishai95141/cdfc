@@ -1,0 +1,8 @@
+{
+  "CDFC_PROVENANCE": "SYNTHETIC",
+  "CDFC_SYNTHETIC": true,
+  "base": "Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx",
+  "generated_by": "tools/fixtures/make_synthetic.py",
+  "sha256": "f2627b89f5c358653a037788f1a200445e21df3a7610b24ca1418eacb89bb81b",
+  "what_it_is": "Fifty empty field-surface cells given the value 1, with the derived cells left at the blank's cached zeros. NOT A CLEAN FILING: its carries are stale by construction, which is what TEMPLATE_DIFF reports and what a structural overwrite-detector cannot see."
+}

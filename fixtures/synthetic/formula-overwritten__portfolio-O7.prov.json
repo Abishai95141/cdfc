@@ -1,0 +1,8 @@
+{
+  "CDFC_PROVENANCE": "SYNTHETIC",
+  "CDFC_SYNTHETIC": true,
+  "base": "Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx",
+  "generated_by": "tools/fixtures/make_synthetic.py",
+  "sha256": "7d7019bf770998e990606ff5d6e66603378be2da24092316a58d74c7fe620fe2",
+  "what_it_is": "F11. '3. Portfolio'!O7 = SUM(C7:N7) replaced by the literal 999999. O7 is LOCKED in the blank, so this models a filer who stripped protection."
+}

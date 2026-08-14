@@ -1,0 +1,8 @@
+{
+  "CDFC_PROVENANCE": "SYNTHETIC",
+  "CDFC_SYNTHETIC": true,
+  "base": "Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx",
+  "generated_by": "tools/fixtures/make_synthetic.py",
+  "sha256": "30c9abc0b6f93bc4d741bb9125075d10d0d6e0d1f35433f676c5711d0dbf4edd",
+  "what_it_is": "A row inserted above row 7. The fingerprint MOVES; a coordinate-shaped key rebinds silently and a stable key must resolve or refuse."
+}

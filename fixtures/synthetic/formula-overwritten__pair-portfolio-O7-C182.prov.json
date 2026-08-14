@@ -1,0 +1,8 @@
+{
+  "CDFC_PROVENANCE": "SYNTHETIC",
+  "CDFC_SYNTHETIC": true,
+  "base": "Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx",
+  "generated_by": "tools/fixtures/make_synthetic.py",
+  "sha256": "5f4b8bcd31fd1d2ff764181110fce78161597cf6537614b0fd34582b4944d31b",
+  "what_it_is": "The F11 PAIR. '3. Portfolio'!O7 and its own carry '3. Portfolio'!C182 = O7 both replaced by 999999, so every carry identity in the workbook remains satisfied and only a comparison against the pinned blank detects it."
+}

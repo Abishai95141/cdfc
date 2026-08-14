@@ -1,0 +1,8 @@
+{
+  "CDFC_PROVENANCE": "SYNTHETIC",
+  "CDFC_SYNTHETIC": true,
+  "base": "Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx",
+  "generated_by": "tools/fixtures/make_synthetic.py",
+  "sha256": "228bda75b19c97e0b728384ed2b31e91e62fab7ee413323dca45f193343f7fcb",
+  "what_it_is": "F11. '4. Investors'!N5 = SUM(C5:M5) replaced by the literal 777. N5 is one of the eight cells that are unlocked AND formula-bearing, so this needs no stripped protection and no adversarial intent: Excel alone will do it."
+}
