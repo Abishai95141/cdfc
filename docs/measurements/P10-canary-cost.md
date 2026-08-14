@@ -8,11 +8,18 @@
 |---|---:|
 | budget | `PERF-CANARY2` |
 | executions | 66 (canaries + anti-canaries, over in-memory fact tables) |
-| **measured** | **4082 ms** |
-| baseline (DERIVED, superseded) | 4200 ms |
+| **measured** | **4036 ms** |
+| baseline (MEASURED, revised 14 Aug 2026) | 4200 ms |
 | warn above / fail above | 6000 ms / 9000 ms |
 | verdict | **OK** |
 | written to | `reports/perf/aeedbfe18c803061.jsonl` |
+
+**This is the one number on this page that does not re-derive**, and that is what it means for a
+figure to be a wall clock rather than a function of the inputs. Everything else here — the four
+filings' counts, the calibration curve, the whole-harvest disposition — is byte-identical on a
+fresh clone; re-running this tool moves the milliseconds and nothing else. That is precisely why
+the timing lives in `reports/perf/`, outside `run.jsonl`, outside the attestation and outside
+everything `verify` compares (adversary F23).
 
 It supersedes `PERF-CANARY` (~35 ms): PERF-CANARY (~35 ms) — the anti-canary was added in §0.4 and doubles the loop; and the ≈70 ms DERIVED figure, which was derived from mutation throughput and not from evaluation cost (perf/BUDGET-CHANGES.md, 14 August 2026)
 

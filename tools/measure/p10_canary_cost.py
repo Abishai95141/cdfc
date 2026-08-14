@@ -143,10 +143,17 @@ def render(timing, perf_path, curve, runs, whole, whole_proof) -> str:
 | budget | `{timing.budget_id}` |
 | executions | {timing.n} (canaries + anti-canaries, over in-memory fact tables) |
 | **measured** | **{timing.elapsed_ms} ms** |
-| baseline (DERIVED, superseded) | {T.BASELINE_MS} ms |
+| baseline (MEASURED, revised 14 Aug 2026) | {T.BASELINE_MS} ms |
 | warn above / fail above | {T.WARN_ABOVE_MS} ms / {T.FAIL_ABOVE_MS} ms |
 | verdict | **{T.verdict_for(timing.elapsed_ms)}** |
 | written to | `{perf_path.relative_to(REPO)}` |
+
+**This is the one number on this page that does not re-derive**, and that is what it means for a
+figure to be a wall clock rather than a function of the inputs. Everything else here — the four
+filings' counts, the calibration curve, the whole-harvest disposition — is byte-identical on a
+fresh clone; re-running this tool moves the milliseconds and nothing else. That is precisely why
+the timing lives in `reports/perf/`, outside `run.jsonl`, outside the attestation and outside
+everything `verify` compares (adversary F23).
 
 It supersedes `PERF-CANARY` (~35 ms): {T.SUPERSEDES}
 
