@@ -160,8 +160,9 @@ def _run(args: argparse.Namespace) -> int:
     prints what was checked and what was not, in the same units and with equal weight, and the
     settled fraction never renders without `cellsTotal` and `inScope` beside it.
     """
-    from cdfc.measure.p5_run import FME, run_filing
     from cdfc.evaluate.run import write
+    from cdfc.measure.p10_run import run_filing
+    from cdfc.measure.p5_run import FME
 
     if not args.filing.is_file():
         print(f"cdfc run: {args.filing} is not a file", file=sys.stderr)
@@ -176,6 +177,13 @@ def _run(args: argparse.Namespace) -> int:
     print(f"  template  {template.name}")
     print(f"  run       {result.run_id}")
     print(f"  state     {result.run_state}")
+
+    # --- L6.5, and it prints BEFORE the coverage numbers -----------------------------------
+    #
+    # The order is the claim. The liveness proof is the licence for everything below it: a
+    # settled fraction from an instrument that was not demonstrated on this document is a number
+    # with no warrant, and printing the warrant afterwards invites reading the number first.
+    _print_liveness(result)
     if result.run_state != "VALID" or p is None:
         causes = ", ".join(str(c) for c in result.invalid_causes) or "none recorded"
         print(f"\n  NO COVERAGE IS DECLARED: {causes}")
@@ -200,6 +208,42 @@ def _run(args: argparse.Namespace) -> int:
     print("  filing is correct.")
     print(f"\n  wrote {target}")
     return 0
+
+
+def _print_liveness(result: object) -> None:
+    """The liveness proof, or the sentence that says there is not one.
+
+    **A null proof renders in WORDS, never as zeros.** `canariesRun: 0` says the loop ran and found
+    nothing to do; `livenessProof: null` says nobody asked. Printing the first for the second is
+    the silent-success mechanism this product exists to refuse, in the layer whose whole subject is
+    silent success.
+    """
+    from cdfc.measure.p10_run import NO_LIVENESS
+
+    report = getattr(result, "liveness", None)
+    disp = getattr(result, "liveness_disposition", None)
+    if report is None:
+        print(f"\n  {NO_LIVENESS}")
+        return
+    proof = report.as_liveness_proof()
+    print(
+        f"\n  liveness   canaries {proof['canariesPassed']}/{proof['canariesRun']} · "
+        f"anti-canaries {proof['antiCanariesPassed']}/{proof['antiCanariesRun']} · "
+        f"self-test silent {str(proof['selfTestSilent']).lower()}"
+    )
+    print(
+        f"             inapplicable {proof['canariesInapplicable']} · "
+        f"indeterminate {proof['canariesIndeterminate']} · "
+        f"unresolved {proof['canariesUnresolved']}   (maxWitnesses {proof['maxWitnesses']})"
+    )
+    if disp is not None and not disp.valid:
+        print(f"\n  LIVENESS FAILED — {disp.failure_kind}")
+        print(f"  {disp.detail}")
+    elif disp is not None and disp.deactivated:
+        print(
+            f"             {len(disp.deactivated)} predicate(s) NOT_RUN(not_run.deactivated): "
+            "their liveness could not be demonstrated here, so they settle nothing here"
+        )
 
 
 def _closure(args: argparse.Namespace) -> int:

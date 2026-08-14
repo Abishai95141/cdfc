@@ -2282,3 +2282,365 @@ class BareAbsenceOnASurface(Injector):
 
 ALL_INJECTORS = ALL_INJECTORS + (WallClockInCore, BareAbsenceOnASurface)
 BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+# --------------------------------------------------------------------------------
+# P10 — L6.5: THE SIX DEATHS OF THE CANARY LAYER, AND ITS COMPANIONS.
+#
+# §P10·L is the most important validation in the plan, because the canary layer's entire
+# claim is that it catches a dead predicate — and a test that has never been observed to
+# fail is not evidence. Each injector below is a DIFFERENT MECHANISM: the point is not six
+# ways to make the same assertion red, it is six independent ways for the layer to be
+# broken, each of which the layer must catch and NAME.
+# --------------------------------------------------------------------------------
+
+
+def _sub(path: Path, needle: str, replacement: str, *, count: int = 1) -> None:
+    """Replace `needle`, or RAISE. A `.replace()` whose needle has drifted changes nothing, the
+    guard stays green, and the sweep reports a control that was never exercised — which is the
+    silent-pass mechanism this project exists to refuse, occurring inside its own controls.
+    `test_nc_meta__every_injector_actually_changes_something` catches the total no-op; this
+    catches it at the line and says which one."""
+    src = path.read_text()
+    if needle not in src:
+        raise AssertionError(f"{path.name}: the injector's needle has drifted: {needle[:70]!r}")
+    path.write_text(src.replace(needle, replacement, count))
+
+SELFCHECK = REPO_ROOT / "src" / "cdfc" / "selfcheck"
+EVALUATE = REPO_ROOT / "src" / "cdfc" / "evaluate"
+FACTS = REPO_ROOT / "src" / "cdfc" / "facts"
+
+
+class CanariesNoop(Injector):
+    """**D4 — the loop is a stub.** Every canary is reported as having fired, unconditionally.
+
+    This is the canary FOR the canary loop: the self-test's `expr` is the literal `true`, so a
+    loop that reports it as having fired is a loop that is not running. Without D4 the other five
+    deaths are all satisfied by a layer that never executes anything.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="canaries_noop", touches=[SELFCHECK / "canary.py"])
+
+    def apply(self) -> None:
+        p = SELFCHECK / "canary.py"
+        p.write_text(p.read_text().replace(
+            "            fired = evaluate(p, apply(w, image))",
+            "            fired = True  # INJECTED: the loop reports success without executing",
+        ).replace(
+            "    st_fired = evaluate_selftest(selftest, image.facts)",
+            "    st_fired = True  # INJECTED",
+        ))
+
+
+class CanaryCountAsserted(Injector):
+    """**D5 — the counts are asserted, not counted.** `canariesRun` becomes a variable.
+
+    A loop that runs and reports a number it did not compute is a lie with a true premise. The
+    published integer stops being `len(rows)` and becomes the size of the population it was handed,
+    so every attempt that could not be made vanishes from the denominator and the inapplicability
+    rate falls below the ceiling.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="canary_count_asserted", touches=[SELFCHECK / "canary.py"])
+
+    def apply(self) -> None:
+        p = SELFCHECK / "canary.py"
+        # `canariesRun := len(predicates)` — one anti-canary row exists per predicate, so
+        # `len(self.anti_rows)` IS the population size. On a filing where every witness is
+        # applicable the two agree and NOTHING is detectable, which is correct and is why the
+        # guard runs on a filing where the loop makes more attempts than there are predicates.
+        src = p.read_text()
+        needle = "        return len(self.predicate_rows)"
+        assert needle in src, "the injector's needle no longer matches CanaryReport.canaries_run"
+        p.write_text(src.replace(needle, "        return len(self.anti_rows)", 1))
+
+
+class CanaryReopensFile(Injector):
+    """**D6 — the canary touches the file.** `apply()` re-reads the artifact instead of the image.
+
+    Liveness must be proved on the IN-MEMORY fact table: the attested hash has to keep hashing the
+    filing that was received, and a loop that re-serialises the artifact is a loop that can change
+    what it attests to. Ties to NC-P04.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="canary_reopens_file", touches=[SELFCHECK / "witness.py"])
+
+    def apply(self) -> None:
+        p = SELFCHECK / "witness.py"
+        src = p.read_text()
+        src = src.replace(
+            "def apply(w: FaultWitness, image: FilingImage) -> Any:",
+            "def apply(w: FaultWitness, image: FilingImage) -> Any:\n"
+            "    import zipfile as _zf  # INJECTED\n"
+            "    with _zf.ZipFile(_INJECTED_FILING) as _z:  # INJECTED\n"
+            "        _z.namelist()\n",
+            1,
+        )
+        src = src.replace(
+            "StableKey = str",
+            "StableKey = str\n_INJECTED_FILING = Path(__file__).resolve().parents[3] / 'fixtures' "
+            "/ 'synthetic' / 'clean__independently-computed__fme-q1.xlsx'",
+            1,
+        )
+        p.write_text(src)
+
+
+class KeysResolverOffbyone(Injector):
+    """**D3 — the apparatus is broken and the binding is intact.** The key resolver is off by one.
+
+    The template still binds, the readers still agree, closure still holds, `cells_bound` is still
+    non-zero — and every predicate now reads the cell below the one it declared. This is the death
+    that proves the CANARY LAYER, and only the canary layer, made the catch: no other `invalid`
+    cause fires.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="keys_resolver_offbyone", touches=[SELFCHECK / "witness.py"])
+
+    def apply(self) -> None:
+        p = SELFCHECK / "witness.py"
+        p.write_text(p.read_text().replace(
+            "        cell = self.cell_of.get(target)\n        if cell is None:",
+            "        cell = self.cell_of.get(target)\n"
+            "        if cell is not None:  # INJECTED: off by one row\n"
+            "            import re as _re\n"
+            "            _m = _re.match(r'^([A-Z]{1,3})([0-9]+)$', cell[1])\n"
+            "            if _m:\n"
+            "                cell = (cell[0], f'{_m.group(1)}{int(_m.group(2)) + 1}')\n"
+            "        if cell is None:",
+        ))
+
+
+class FactsTrailingSpace(Injector):
+    """Every patched text value acquires a trailing space.
+
+    **Reclassified after measurement, and the measurement is the reason.** This was written as a
+    fourth D3 injector — *the apparatus is broken and the binding is intact* — on the argument that
+    the membership predicates would stop matching their own vocabulary and their canaries would go
+    silent. Run against the sweep, **no canary went silent**: this population's witnesses are
+    numeric and formula-valued, and a trailing space on a value that is already illegal leaves it
+    illegal, so the predicate still FAILs and still catches its fault.
+
+    What it does break is the SHARED PATCHER's coercion, which
+    `test_patch__none_is_absent_never_the_string` catches directly. That is a smaller claim than
+    the one it was written for, and it is the true one. The entry is filed under the patcher rather
+    than under D3, and D3's fourth mechanism is `apply_skips_the_target`.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="facts_trailing_space", touches=[FACTS / "patch.py"])
+
+    def apply(self) -> None:
+        p = FACTS / "patch.py"
+        p.write_text(p.read_text().replace(
+            "    return _coerce(raw)",
+            "    _v = _coerce(raw)\n"
+            "    return _v + ' ' if isinstance(_v, str) else _v  # INJECTED",
+        ))
+
+
+class CelrtShortCircuits(Injector):
+    """**D3** — the CEL runtime returns `True` for every `expr`.
+
+    The most direct apparatus break there is, and the one every layer above it is blind to: the
+    predicate ran, bound its cells, pre-flighted its keys and returned `PASS`.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="celrt_short_circuits", touches=[EVALUATE / "runner.py"])
+
+    def apply(self) -> None:
+        p = EVALUATE / "runner.py"
+        p.write_text(p.read_text().replace(
+            "    result = _run(rt, p.expr, \"expr\", filing, template)",
+            "    result = _run(rt, p.expr, \"expr\", filing, template)\n"
+            "    result = CelResult(outcome=Outcome.OK, value=True, error=None, steps=0)  # INJECTED",
+        ))
+
+
+class ApplyReturnsCleanFacts(Injector):
+    """**D3** — the fault is never applied: `apply()` hands back the filing's own facts.
+
+    **This replaces the plan's fourth D3 injector, `tolerance_widened`, and the substitution is
+    recorded rather than quiet.** There is no numeric tolerance anywhere on the predicate path in
+    this build: the CEL comparison is exact `==`, and `τ` lives in P9's `template_diff.agree()`,
+    which is a relation, not a predicate. An injector widening a tolerance that does not exist
+    would have been a fourth NAME for one of the other three, and the sweep would have counted it.
+
+    (The first attempt at this slot, `apply_skips_the_target`, patched the cone and skipped the
+    edited cell. Measured: **nothing flipped** — the loop moves on to the next stored witness when
+    a predicate cannot run, so a single mis-applied fault is absorbed. That robustness is correct
+    behaviour and it makes the injector useless as a control, so it was withdrawn rather than kept
+    as a green row.)
+
+    What this breaks is unambiguous and distinct from the other two: binding is intact,
+    observability is intact — the grids are computed separately and still differ — and every
+    predicate is asked about a filing to which no fault was applied. Every canary goes silent, and
+    only the canary layer knows.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="apply_returns_clean_facts", touches=[SELFCHECK / "witness.py"])
+
+    def apply(self) -> None:
+        _sub(
+            SELFCHECK / "witness.py",
+            "    cell, clean, mutant = _grids(w, image)\n    patches",
+            "    cell, clean, mutant = _grids(w, image)\n"
+            "    return image.facts  # INJECTED: the fault is never applied\n    patches",
+        )
+
+
+class InapplicableCountsAsPass(Injector):
+    """**NC-C06** — an inapplicable witness is scored as a passed canary.
+
+    The layer then reports full liveness on a filing where nothing was demonstrated, and the
+    settled fraction stops falling when it should.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="inapplicable_counts_as_pass", touches=[SELFCHECK / "canary.py"])
+
+    def apply(self) -> None:
+        _sub(
+            SELFCHECK / "canary.py",
+            '            found.add("WHOLESALE_INAPPLICABILITY")',
+            '            pass  # INJECTED: inapplicability no longer withholds the run',
+        )
+        _sub(
+            SELFCHECK / "canary.py",
+            "            if r.observability == str(Observability.OBSERVABLE) and r.fired",
+            "            if r.fired or r.observability != str(Observability.OBSERVABLE)  # INJECTED",
+        )
+
+
+class AnticanarySkipped(Injector):
+    """**NC-C08** — the anti-canary is not run, so always-flag drift is invisible.
+
+    SPADE's measured shape: selecting ALL generated candidates yields 100% coverage and 100% false
+    failure rate. Every kill-case canary of a flag-everything predicate fires.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="anticanary_skipped", touches=[SELFCHECK / "canary.py"])
+
+    def apply(self) -> None:
+        _sub(
+            SELFCHECK / "canary.py",
+            "        clean_state = evaluate(p, passcase_facts)",
+            '        clean_state = "PASS"  # INJECTED: the pass case is never evaluated',
+        )
+
+
+class SelftestBehindAFlag(Injector):
+    """**NC-C09** — the self-test runs only under an environment variable.
+
+    `plan/01` §2.5 NC-C01b specifies `CDFC_CANARY_SELFTEST=1`. A self-test that is off in
+    production is the failure this layer exists to catch, one level up.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="selftest_behind_a_flag", touches=[SELFCHECK / "canary.py"])
+
+    def apply(self) -> None:
+        # The faithful break is that the self-test is NOT SEEDED unless the flag is set — which is
+        # what "off in production" means. Making `EXPECTED_SILENT` conditional instead raises at
+        # import and takes the whole module down: a red, but a blunt one that demonstrates nothing
+        # about the loop.
+        _sub(
+            SELFCHECK / "canary.py",
+            "    st_fired = evaluate_selftest(selftest, image.facts)",
+            "    import os  # INJECTED\n"
+            "    if not os.environ.get('CDFC_CANARY_SELFTEST'):\n"
+            "        return CanaryReport(\n"
+            "            rows=tuple(rows), anti_rows=tuple(anti),\n"
+            "            inapplicable=tuple(sorted(inapplicable)),\n"
+            "            indeterminate=tuple(sorted(indeterminate)),\n"
+            "            unresolved=tuple(sorted(unresolved)), silent=tuple(sorted(silent)),\n"
+            "            missed_read_set=tuple(sorted(missed)),\n"
+            "            anti_fired=tuple(sorted(anti_fired)),\n"
+            "            anti_not_pass=tuple(sorted(anti_not_pass)), selftest_silent=False,\n"
+            "        )\n"
+            "    st_fired = evaluate_selftest(selftest, image.facts)",
+        )
+
+
+class ElapsedUsInCanaryRow(Injector):
+    """**NC-C10, adversary F23** — a wall-clock duration inside the canonicalised payload.
+
+    Byte-identity becomes unreachable, `E2E-VERIFY` fails permanently — and the quiet repair,
+    deleting the field, destroys the evidence that the loop executed at all.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="elapsed_us_in_canary_row", touches=[SELFCHECK / "canary.py"])
+
+    def apply(self) -> None:
+        p = SELFCHECK / "canary.py"
+        p.write_text(p.read_text().replace(
+            "    intersects_read_set: bool\n    fired: bool",
+            "    intersects_read_set: bool\n    fired: bool\n    elapsed_us: int = 0  # INJECTED",
+        ))
+
+
+class WitnessFromArtifact(Injector):
+    """**NC-C05** — the witness resolves at its recorded COORDINATE rather than through the key.
+
+    Spec §II.4.1 stores a path; §II.6.2 applies the kill case to THIS filing's facts. The two
+    cannot both be right, and resolving by coordinate is how a stored kill case silently becomes an
+    edit to a different cell on a filing whose rows have moved.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="witness_from_artifact", touches=[SELFCHECK / "witness.py"])
+
+    def apply(self) -> None:
+        p = SELFCHECK / "witness.py"
+        p.write_text(p.read_text().replace(
+            "        if _BARE_COORDINATE.match(self.target):",
+            "        if False:  # INJECTED: a coordinate target is accepted",
+        ).replace(
+            "        cell = self.cell_of.get(target)",
+            "        cell = self.cell_of.get(target)\n"
+            "        if cell is None and '!' in target:  # INJECTED\n"
+            "            _s, _r = target.split('!', 1)\n"
+            "            cell = (_s, _r)",
+        ))
+
+
+class CoerceNoneToString(Injector):
+    """**NC-C12, D-P10-01** — `None` becomes the four-character string `"None"` again.
+
+    Measured on the committed campaign: 68 of 257 recorded kills were `'' == 'None'` returning
+    false. The predicate compared two coercion artifacts and the campaign banked the result as
+    evidence that the check works.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="coerce_none_to_string", touches=[FACTS / "patch.py",
+                                                                FACTS / "build.py"])
+
+    def apply(self) -> None:
+        b = FACTS / "build.py"
+        b.write_text(b.read_text().replace(
+            "    if raw is None:\n        raise FactError(",
+            "    if False:\n        raise FactError(",
+        ))
+        p = FACTS / "patch.py"
+        p.write_text(p.read_text().replace(
+            "    if raw is None or raw is ABSENT or raw == \"\":\n        return ABSENT",
+            "    if raw is ABSENT:\n        return ABSENT\n"
+            "    if raw is None:\n        return 'None'  # INJECTED",
+        ))
+
+
+ALL_INJECTORS = ALL_INJECTORS + (
+    CanariesNoop, CanaryCountAsserted, CanaryReopensFile,
+    KeysResolverOffbyone, FactsTrailingSpace, CelrtShortCircuits, ApplyReturnsCleanFacts,
+    InapplicableCountsAsPass, AnticanarySkipped, SelftestBehindAFlag,
+    ElapsedUsInCanaryRow, WitnessFromArtifact, CoerceNoneToString,
+)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}

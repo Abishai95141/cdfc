@@ -28,8 +28,8 @@ EXPERIMENT admission and none of them is registry-grade.
 
 | gate | reason | n | remedy |
 |---|---|---:|---|
-| `G2` | `g2.no_kill` | 223 | the predicate fired on no observable mutant of any class it claims; either the claim is wrong or the check is |
-| `G2` | `g2.no_margin_over_baselines` | 125 | a free baseline catches everything this catches; the predicate is not doing the work |
+| `G2` | `g2.no_kill` | 315 | the predicate fired on no observable mutant of any class it claims; either the claim is wrong or the check is |
+| `G2` | `g2.no_margin_over_baselines` | 33 | a free baseline catches everything this catches; the predicate is not doing the work |
 
 Every rejection carries a `rejection` row with `cells_would_have_covered`; the
 348 rejections cover **3530** cells in total.
@@ -68,30 +68,30 @@ not fully adjudicate says so where the funnel is read.
 |---|---|---|---|---|---|
 | `P-0001` | membership | 3/68 | 3/739 | F12 | 3 / 3 / 0 |
 | `P-0004` | date_bound | 1/36 | 2/739 | F09 | 1 / 0 / 1 |
-| `P-0012` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 1 / 1 / 0 |
 | `P-0013` | date_bound | 1/36 | 2/739 | F09 | 1 / 0 / 1 |
 | `P-0014` | same_sheet_equality | 4/387 | 6/739 | F01,F02,F03,F04,F05 | 3 / 0 / 3 |
 | `P-0015` | date_bound | 6/36 | 12/739 | F09 | 6 / 0 / 6 |
 | `P-0017` | membership | 20/68 | 21/739 | F12 | 20 / 20 / 0 |
 | `P-0019` | membership | 20/68 | 21/739 | F12 | 20 / 20 / 0 |
-| `P-0020` | same_sheet_equality | 5/387 | 8/739 | F01,F02,F03,F04,F05 | 3 / 1 / 3 |
-| `P-0021` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
-| `P-0023` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
-| `P-0024` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
-| `P-0026` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
-| `P-0027` | same_sheet_equality | 5/387 | 8/739 | F01,F02,F03,F04,F05 | 3 / 1 / 3 |
-| `P-0029` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
-| `P-0030` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
-| `P-0031` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 1 / 1 / 0 |
-| `P-0032` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
-| `P-0033` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
-| `P-0035` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
-| `P-0036` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
-| `P-0038` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
-| `P-0039` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
-| `P-0041` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
-| `P-0042` | same_sheet_equality | 1/387 | 2/739 | F01,F02,F03,F04,F05 | 0 / 1 / 0 |
-| … | | | | | *125 of 348 candidates that reached G2 fired at all* |
+| `P-0020` | same_sheet_equality | 4/387 | 6/739 | F01,F02,F03,F04,F05 | 3 / 0 / 3 |
+| `P-0027` | same_sheet_equality | 4/387 | 6/739 | F01,F02,F03,F04,F05 | 3 / 0 / 3 |
+| `P-0054` | numeric_bound | 2/87 | 2/739 | F01,F03 | 2 / 0 / 2 |
+| `P-0104` | numeric_bound | 2/87 | 2/739 | F01,F03 | 2 / 0 / 2 |
+| `P-0105` | numeric_bound | 2/87 | 2/739 | F01,F03 | 2 / 0 / 2 |
+| `P-0110` | sum_identity | 2/514 | 2/739 | F01,F02,F03,F04,F05,F07,F08 | 2 / 0 / 2 |
+| `P-0116` | sum_identity | 2/514 | 2/739 | F01,F02,F03,F04,F05,F07,F08 | 2 / 0 / 2 |
+| `P-0180` | cross_sheet_equality | 6/423 | 7/739 | F01,F02,F03,F04,F05,F13 | 5 / 0 / 5 |
+| `P-0185` | membership | 9/68 | 10/739 | F12 | 9 / 9 / 0 |
+| `P-0186` | numeric_bound | 4/87 | 10/739 | F01,F03 | 4 / 0 / 4 |
+| `P-0197` | membership | 12/68 | 14/739 | F12 | 12 / 12 / 0 |
+| `P-0204` | cross_sheet_equality | 6/423 | 7/739 | F01,F02,F03,F04,F05,F13 | 5 / 0 / 5 |
+| `P-0208` | numeric_bound | 6/87 | 6/739 | F01,F03 | 4 / 0 / 6 |
+| `P-0222` | sum_identity | 2/514 | 2/739 | F01,F02,F03,F04,F05,F07,F08 | 2 / 0 / 2 |
+| `P-0227` | sum_identity | 2/514 | 2/739 | F01,F02,F03,F04,F05,F07,F08 | 2 / 0 / 2 |
+| `P-0232` | date_bound | 3/36 | 6/739 | F09 | 3 / 0 / 3 |
+| `P-0238` | same_sheet_equality | 8/387 | 12/739 | F01,F02,F03,F04,F05 | 8 / 0 / 8 |
+| `P-0246` | same_sheet_equality | 8/387 | 12/739 | F01,F02,F03,F04,F05 | 8 / 0 / 8 |
+| … | | | | | *33 of 348 candidates that reached G2 fired at all* |
 
 **A document quoting `kr_claimed` without `kr_all_classes` beside it has quoted half of a
 measurement.** The gap between the columns is the number a reviewer wants.
@@ -100,10 +100,10 @@ measurement.** The gap between the columns is the number a reviewer wants.
 
 | baseline | kills | caveat |
 |---|---:|---|
-| `B0` | 88 | B0 is drawn from this repository's own formula-derived harvest classes, and the candidate under test is excluded from it so the comparison is never with itself. |
+| `B0` | 54 | B0 is drawn from this repository's own formula-derived harvest classes, and the candidate under test is excluded from it so the comparison is never with itself. |
 | `B1` | 102 | B1 is a local invariant miner, NOT Daikon: four single-variable templates at confidence 1.0, no inter-variable relations. Marginal kill over it OVERSTATES marginal kill over Daikon. |
-| `B2` | 107 | B2 is evaluated against each mutant's RECORDED EDIT rather than against a recalculated filing, so it sees a blank or an error the edit wrote directly and not one produced downstream by recalculation. That UNDER-counts B2, which flatters the candidate. |
-| union | 209 | reported BESIDE the per-baseline figures, never instead |
+| `B2` | 73 | B2 is evaluated against each mutant's RECORDED EDIT rather than against a recalculated filing, so it sees a blank or an error the edit wrote directly and not one produced downstream by recalculation. That UNDER-counts B2, which flatters the candidate. |
+| union | 175 | reported BESIDE the per-baseline figures, never instead |
 
 B1's mined degeneracy list carries **11959** invariants over ONE clean filing.
 

@@ -4,18 +4,25 @@ The fact tree is built ONCE from the clean filing and PATCHED per mutant: the ed
 the mutant's literal and every cell in the edit's transitive downstream cone takes the mutant's
 recalculated value. A cell outside the cone cannot change, so the patch is exact rather than an
 approximation — and re-parsing the workbook per mutant would cost hours.
+
+**The patch is `facts/patch.py`'s, and it is shared with P10's canary loop deliberately.** The
+canary replays a stored kill to prove the predicate still catches it; if the two patchers differed,
+the canary would be testing whether two implementations of one idea agree rather than whether the
+check works. Routing both through one module is also what surfaced the `"None"` coercion defect
+that module documents — the campaign's own kills were being read back and 81 of 125 predicates did
+not reproduce them.
 """
 
 from __future__ import annotations
 
-import copy
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
 from cdfc.evaluate.celrt import CelRuntime
 from cdfc.evaluate.runner import evaluate_one
-from cdfc.facts.build import _coerce, filing_tree, template_tree
+from cdfc.facts.build import filing_tree, template_tree
+from cdfc.facts.patch import ABSENT, CellIndex, patch, value_for
 from cdfc.facts.view import FactSet
 from cdfc.measure.p5_run import FME, INDEPENDENT
 from cdfc.predicates.host_fns import default_registry
@@ -39,46 +46,7 @@ def killer(predicates: Sequence[Any], schema: Any, *, restrict: bool = True) -> 
     base_tree = filing_tree(INDEPENDENT, ctx=ctx)
     template = template_tree(FME, ctx=ctx)
     rt = CelRuntime(profile_version="P6", host_fns=default_registry())
-    from cdfc.predicates.harvest import cel_path, range_path
-
-    # A cell -> range-node index, built ONCE. The first version scanned every data validation
-    # and expanded every sqref for EVERY patched cell — and a mutant patches its whole downstream
-    # cone, so the cost was quadratic and the campaign made no visible progress in two minutes.
-    from cdfc.predicates.harvest import expand
-
-    range_of: dict[tuple[str, str], list[str]] = {}
-    for _sheet, _dvs in ctx.validations_by_sheet.items():
-        for _dv in _dvs:
-            if not _dv.sqref.split():
-                continue
-            _path = range_path(_sheet, _dv.sqref)
-            for _part in _dv.sqref.split():
-                for _ref in expand(_part.replace("$", "")):
-                    range_of.setdefault((_sheet, _ref), []).append(_path)
-
-    def _node(tree: dict, dotted: str) -> Any:
-        node: Any = tree
-        for seg in dotted.split("."):
-            if not isinstance(node, dict):
-                return None
-            node = node.setdefault(seg, {})
-        return node
-
-    def _patch(tree: dict, sheet: str, ref: str, raw: Any) -> None:
-        # THE SAME COERCION the clean tree was built with. A patched value that took a different
-        # path into the fact model would make the mutant differ from the clean filing in the
-        # coercion as well as in the fault, and the campaign would be measuring both.
-        value = _coerce(raw)
-        leaf = _node(tree, cel_path(sheet, ref))
-        if isinstance(leaf, dict):
-            leaf["v"] = value
-        for dotted in range_of.get((sheet, ref), ()):
-            n = _node(tree, dotted)
-            if not isinstance(n, dict):
-                continue
-            for cell in n.get("cells", ()):
-                if cell.get("__cell__") == f"{sheet}!{ref}":
-                    cell["v"] = value
+    cell_index = CellIndex.of(ctx)
 
     from cdfc.predicates.ast_walker import bound_cells
 
@@ -87,13 +55,17 @@ def killer(predicates: Sequence[Any], schema: Any, *, restrict: bool = True) -> 
     def run(mutant: Path, mutant_grid: Any, edited: Sequence[tuple[str, str]]) -> tuple[str, ...]:
         from cdfc.qualify.observability import extract
 
-        tree = copy.deepcopy(base_tree)
         literals = extract(mutant).literals
+        # THE SAME COERCION the clean tree was built with, and the same ABSENCE rule. A patched
+        # value that took a different path into the fact model would make the mutant differ from
+        # the clean filing in the coercion as well as in the fault, and the campaign would be
+        # measuring both — which is exactly what `"None"` was.
+        patches = {
+            f"{s}!{r}": value_for(v) for (s, r), v in mutant_grid.values.items()
+        }
         for sheet, ref in edited:
-            _patch(tree, sheet, ref, literals.get((sheet, ref), ""))
-        for (sheet, ref), value in mutant_grid.values.items():
-            _patch(tree, sheet, ref, value)
-        facts = FactSet(tree, template)
+            patches[f"{sheet}!{ref}"] = value_for(literals.get((sheet, ref), ABSENT))
+        facts = FactSet(patch(base_tree, patches, index=cell_index), template)
         changed = {f"{s}!{r}" for s, r in edited} | {
             f"{s}!{r}" for (s, r) in mutant_grid.values
         }

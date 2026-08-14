@@ -21,6 +21,7 @@ from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any
 
+from cdfc.facts.fact_table import FactError
 from cdfc.ingest.reader_lxml import _sheet_parts
 from cdfc.ingest.xmlsafe import fromstring
 from cdfc.predicates.harvest import M, cel_path, cel_segment, range_path, resolve_vocabulary
@@ -49,7 +50,28 @@ def _coerce(raw: Any) -> Any:
     scaling here would be a units decision taken by whoever wrote the coercion. Left as text, the
     value is type-mismatched at pre-flight and the item is `NOT_RUN(source_unreadable)`, which
     says what happened.
+
+    **`None` RAISES, and the canary loop is what found out why.** This function begins
+    `text = str(raw)`, so `_coerce(None)` returned the four-character string `"None"` — and
+    `p6_kill._patch` fed it exactly that, because `recalculate` returns `None` for a formula cell
+    whose input has been blanked. Every such cell entered the mutant's fact tree as `"None"`, and
+    an equality predicate over it returned `false`, and the campaign recorded a KILL. Measured on
+    mutant `edfc99e6`: `P-0012`'s kill is `'' == 'None'`. The predicate compared two coercion
+    artifacts.
+
+    This module's own rule already said what the answer is — *"A blank NUMERIC cell is ABSENT, not
+    zero … there is no integer that means empty"* — and there is no string that means it either.
+    So the defect is made unrepresentable rather than discouraged: callers with a possibly-empty
+    value route through `facts/patch.py::value_for`, which returns `ABSENT`, and `filing_tree`
+    never inserts the key at all.
     """
+    if raw is None:
+        raise FactError(
+            "_coerce(None) would return the string 'None', which compares unequal to every "
+            "number and every other string — so an equality predicate over it returns false and "
+            "the run records a FAIL that is an artifact of this coercion. A cell with no value is "
+            "ABSENT: use facts/patch.py::value_for, which says so."
+        )
     text = str(raw)
     try:
         d = Decimal(text)

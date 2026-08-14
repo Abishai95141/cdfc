@@ -36,7 +36,7 @@
     "F05": {
       "G": 224,
       "I": 1,
-      "K": 53,
+      "K": 19,
       "O": 223,
       "R": 33,
       "U": 0
@@ -52,7 +52,7 @@
     "F07": {
       "G": 112,
       "I": 1,
-      "K": 34,
+      "K": 0,
       "O": 111,
       "R": 16,
       "U": 0
@@ -120,14 +120,14 @@
   "fault_model_version": "v3",
   "harness_version": "p6-b1",
   "indeterminate_rate": "22/773",
-  "kill_rate": "257/739",
+  "kill_rate": "189/739",
   "predicate_set_digest": "2b9a5654a58ba8cfae1659961a06fe068bf54f4ddaa430af1a382187183633dc",
   "sampling_rule": "stratified by dtype, at most 12 sites per stratum, seed 20260810; 72 of 4252 field-surface cells (COUNT+F:12/378, DATE:12/23, ENUM:12/401, MILLI_USD_MILLION:12/1880, MILLI_USD_MILLION+F:12/127, TEXT:12/1443); plus 40 cell(s) that feed a formula this evaluator cannot compute, so the INDETERMINATE class is measurable at all rather than depending on which cells the RNG chose (30 such formula cells)",
   "site_set_digest": "4b14132ef9add6c2",
   "totals": {
     "G": 773,
     "I": 22,
-    "K": 257,
+    "K": 189,
     "O": 739,
     "R": 56,
     "U": 12

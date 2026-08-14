@@ -49,6 +49,10 @@ class RunResult:
     keys_type_checked: int = 0
     closure_error: str = ""
     selection: Selection | None = field(default=None, repr=False)
+    # P10. `None` means the loop did not run on this filing — which is NOT the same as running
+    # and finding nothing, so it renders as an explicit absence rather than as zeros.
+    liveness: Any = None
+    liveness_disposition: Any = None
 
     def as_manifest(self) -> dict[str, Any]:
         return {
@@ -62,6 +66,11 @@ class RunResult:
             "keys_preflighted": self.keys_checked,
             "keys_type_checked": self.keys_type_checked,
             "closure": None if self.partition is None else self.partition.as_row(),
+            "livenessProof": None if self.liveness is None else self.liveness.as_liveness_proof(),
+            "livenessFailureKind": (
+                None if self.liveness_disposition is None
+                else self.liveness_disposition.failure_kind
+            ),
             **serialise(self.fraction),
         }
 
@@ -95,6 +104,7 @@ def execute(
     facts: Any,
     surface_cells: Sequence[str],
     rt: CelRuntime | None = None,
+    liveness: Any = None,
 ) -> RunResult:
     import hashlib
 
@@ -123,11 +133,29 @@ def execute(
     sel = select(registry_root, binding.template_sha256, profile, predicates=predicates)
     outcome = evaluate_all(sel, facts=facts, schema=schema, rt=rt)
 
+    # --- L6.5: THE LIVENESS PROOF, AND IT IS TAKEN BEFORE THE FRACTION IS COMPUTED ----------
+    #
+    # The order is not incidental. A predicate the loop could not demonstrate on THIS filing is
+    # `NOT_RUN(not_run.deactivated)` and its cells stop being settled — so the deactivation has to
+    # reach `roll_up_run`, not be noted beside the number afterwards. And when the loop fails, the
+    # fraction is `null` rather than being computed and then suppressed: a suppressed number is a
+    # number somebody can un-suppress.
+    report, disp = (None, None)
+    checks = outcome.checks
+    causes = list(outcome.invalid_causes)
+    if liveness is not None:
+        from cdfc.evaluate.liveness import run as run_liveness
+
+        report, disp = run_liveness(liveness)
+        if disp.deactivated:
+            checks = _deactivate(checks, frozenset(disp.deactivated))
+        if not disp.valid:
+            causes.append(disp.cause)
+
     table = materialise(surface_cells)
-    cells = roll_up_run(table, outcome.checks)
+    cells = roll_up_run(table, checks)
 
     part: ClosurePartition | None = None
-    causes = list(outcome.invalid_causes)
     closure_error = ""
     try:
         part = partition(cells, field_surface if field_surface is not None else len(cells))
@@ -145,10 +173,41 @@ def execute(
     return RunResult(
         run_id=rid, filing_sha256=filing_sha, template_sha256=binding.template_sha256,
         run_state=run_state, invalid_causes=tuple(sorted(set(causes), key=str)),
-        checks=outcome.checks, cells=cells, partition=part, fraction=fraction,
+        checks=checks, cells=cells, partition=part, fraction=fraction,
         keys_checked=outcome.keys_checked, keys_type_checked=outcome.keys_type_checked,
         closure_error=closure_error, selection=sel,
+        liveness=report, liveness_disposition=disp,
     )
+
+
+def _deactivate(
+    checks: Sequence[RunCheck], deactivated: frozenset[str]
+) -> tuple[RunCheck, ...]:
+    """A predicate the canary loop could not demonstrate here settles nothing here.
+
+    `NOT_RUN(not_run.deactivated)`, replacing whatever it returned — including a `PASS`. **The
+    fraction falls, and that is the whole point**: a check whose liveness was not demonstrated on
+    this filing has not covered the cells it binds, and letting its `PASS` stand would put coverage
+    in the numerator that nothing demonstrated.
+    """
+    out = []
+    for c in checks:
+        if c.predicate_id not in deactivated:
+            out.append(c)
+            continue
+        out.append(
+            RunCheck(
+                predicate_id=c.predicate_id, version=c.version,
+                state=ItemState.NOT_RUN, reason=ReasonCode.NR_DEACTIVATED,
+                witness=(), cells_bound=c.cells_bound, order=5, settles=False,
+                keys_checked=c.keys_checked, keys_type_checked=c.keys_type_checked,
+                detail=(
+                    "no stored kill case for this predicate is observable on this filing, so its "
+                    "liveness could not be demonstrated here"
+                ),
+            )
+        )
+    return tuple(out)
 
 
 def run_jsonl(result: RunResult) -> str:
