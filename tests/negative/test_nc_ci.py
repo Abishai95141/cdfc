@@ -283,3 +283,16 @@ def test_nc__CI20_a_wall_clock_on_the_solver_makes_the_gate_red() -> None:
     Registry row 48's evidence was `Z3UnknownIsOk`, which changes how `unknown` is READ.
     """
     assert _gate("ci/no-wallclock-z3.sh") == 0
+
+
+def test_nc__CI21_a_wall_clock_in_the_core_makes_the_gate_red() -> None:
+    """NC-CI21. `ci/no-clock-in-core.sh` ran in `make greps` with NO REGISTRY ROW — so it was
+    never counted in the liveness measurement and had never been observed red. It also missed
+    `time.time()`: its pattern listed only the monotonic clocks."""
+    assert _gate("ci/no-clock-in-core.sh") == 0
+
+
+def test_nc__CI22_a_bare_absence_makes_the_gate_red() -> None:
+    """NC-CI22. `ci/no-bare-absence.sh` also ran unregistered. An absence reported by an
+    instrument nobody proved could see a presence is a broken query with a confident face."""
+    assert _gate("ci/no-bare-absence.sh") == 0

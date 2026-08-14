@@ -211,3 +211,21 @@ non-zero exit, reporting `BINDING NOT VERIFIED` instead of counting a red observ
 reproduce; it distinguishes the two injector shapes, because the `_DefeatGate` family replaces the
 gate script itself and exits 0 BY DESIGN. And NC-CI18 / NC-CI19 / NC-CI20 plant each gate's own
 subject — a missing scan root, a pattern over a cell element, a wall clock on the solver.
+
+## 14 Aug 2026 — rows 76 and 77: two gates that had run since P0 with no row at all
+
+`ci/no-clock-in-core.sh` and `ci/no-bare-absence.sh` are both invoked by `make greps` and neither
+had a row in this registry. They were therefore outside `tools/gate_liveness.py`'s denominator
+entirely — not counted as LIVE, not counted as PENDING, and never observed red. A gate CI executes
+and the registry does not know about is the inverse of the failure row 8 guards: not a gate that
+resists demonstration, but one nobody thought to demand it from.
+
+Registering `no-clock-in-core` found a second defect in it. Its pattern listed
+`perf_counter|monotonic|process_time` — the clocks a person reaches for when TIMING something —
+and missed `time.time()`, `datetime.now()`, `datetime.utcnow()` and `date.today()`, which are what
+a person reaches for when STAMPING something. A timestamp inside a hashed payload is precisely
+what makes byte-identical re-derivation impossible, so the gate was blind to its own headline case:
+a `time.time()` planted in `src/cdfc/verdict/closure.py`, the deterministic core, left it green.
+Nothing in `src/cdfc` uses a wall clock today, so the widening cost nothing.
+
+NC-CI21 and NC-CI22 plant each gate's own subject.

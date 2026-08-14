@@ -123,6 +123,12 @@ EVIDENCE: dict[int, str] = {
     73: "NC-R09",   # filling in less never scores better
     74: "NC-R10",   # declaring a defect never raises the headline
     75: "NC-R12",   # a half repair of the unit defect cannot land quietly
+    # Rows 76 and 77: two gates that had run in `make greps` since P0 with NO registry row, so they
+    # were outside this measurement's denominator entirely — never LIVE, never PENDING, never
+    # observed red. Registering `no-clock-in-core` found a second defect in it: its pattern listed
+    # only the MONOTONIC clocks, so a `time.time()` in the deterministic core left it green.
+    76: "NC-CI21",  # a wall clock in the deterministic core
+    77: "NC-CI22",  # a bare absence on a surface
 }
 
 

@@ -1541,3 +1541,25 @@ entries:
         flips: true
     positive_control: "the gate is green on a clean tree"
     status: active
+
+  - id: NC-CI21
+    component: ci
+    break: a wall clock reaches the deterministic core, so a hashed payload stops being re-derivable
+    measured_instance: "ci/no-clock-in-core.sh ran in `make greps` with NO row in ci/GATES.md, so it was never counted in the liveness measurement — and its pattern listed only perf_counter/monotonic/process_time, so a `time.time()` planted in src/cdfc/verdict/closure.py left it green (14 Aug 2026)"
+    injector: WallClockInCore
+    guard_tests:
+      - path: "tests/negative/test_nc_ci.py::test_nc__CI21_a_wall_clock_in_the_core_makes_the_gate_red"
+        flips: true
+    positive_control: "the gate is green on a clean tree, and nothing in src/cdfc uses a wall clock today"
+    status: active
+
+  - id: NC-CI22
+    component: ci
+    break: an absence claim reaches a surface with no resolvable ledger citation
+    measured_instance: "ci/no-bare-absence.sh ran in `make greps` with NO row in ci/GATES.md (14 Aug 2026). Two research claims collapsed because a search interface was mistaken for the corpus it searched"
+    injector: BareAbsenceOnASurface
+    guard_tests:
+      - path: "tests/negative/test_nc_ci.py::test_nc__CI22_a_bare_absence_makes_the_gate_red"
+        flips: true
+    positive_control: "the gate is green on a clean tree"
+    status: active

@@ -100,6 +100,8 @@ a row between sets fails the build.
 | 73 | pytest | `test_nc__R09a_a_degenerate_precondition_stays_in_the_denominator` — filling in less never scores better | P9 | P9 | `injectors/DegenerateScopeLeavesTheDenominator` | LIVE |
 | 74 | pytest | `test_defect_table_cannot_raise_the_settled_fraction` — declaring a defect never raises the headline | P9 | P9 | `injectors/DefectMovesASoleEvaluationOutOfScope` | LIVE |
 | 75 | pytest | `test_nc__R12a_the_tolerance_unit_mismatch_is_still_open` — a half repair of the unit defect cannot land quietly | P9 | P9 | `injectors/ToleranceUnitsSilentlyReconciled` | LIVE |
+| 76 | shell | `ci/no-clock-in-core.sh` — no clock, wall or monotonic, in the deterministic core | P0 | P9 | `injectors/WallClockInCore` | LIVE |
+| 77 | shell | `ci/no-bare-absence.sh` — every absence claim cites a ledger row whose positive control is positive | P0 | P9 | `injectors/BareAbsenceOnASurface` | LIVE |
 
 **Rows 17 and 18 exist as gates from the first commit, dated 11 Aug 2026, and their reason is recorded
 rather than assumed.** Row 17: a `CanaryRow.elapsed_us` inside a canonicalised payload was found in the

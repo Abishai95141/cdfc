@@ -2250,3 +2250,35 @@ class WallclockZ3(Injector):
 
 ALL_INJECTORS = ALL_INJECTORS + (RegexOverOoxml, WallclockZ3)
 BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+class WallClockInCore(Injector):
+    """A wall clock in the deterministic core. `ci/no-clock-in-core.sh`'s pattern listed only the
+    MONOTONIC clocks, so `time.time()` — the one a person reaches for when STAMPING something,
+    and the one that makes a hashed payload non-reproducible — went straight past it."""
+
+    def __init__(self) -> None:
+        super().__init__(name="wall_clock_in_core",
+                         touches=[REPO_ROOT / "src/cdfc/verdict/closure.py"])
+
+    def apply(self) -> None:
+        p = REPO_ROOT / "src/cdfc/verdict/closure.py"
+        p.write_text(p.read_text() + "\n\nimport time  # INJECTED\n\n\ndef _stamp():\n    return time.time()\n")
+
+
+class BareAbsenceOnASurface(Injector):
+    """An absence claim with no `ledger:<row_id>` citation. The gate exists because an absence
+    reported by an instrument nobody proved could see a presence is a broken query with a
+    confident face."""
+
+    def __init__(self) -> None:
+        super().__init__(name="bare_absence_on_a_surface",
+                         touches=[REPO_ROOT / "docs/HARVEST-DELTA.md"])
+
+    def apply(self) -> None:
+        p = REPO_ROOT / "docs/HARVEST-DELTA.md"
+        p.write_text(p.read_text() + "\n\nThe construct does not occur in the corpus.\n")
+
+
+ALL_INJECTORS = ALL_INJECTORS + (WallClockInCore, BareAbsenceOnASurface)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
