@@ -22,6 +22,7 @@ it is why a declared template defect is `INFORMATIONAL` and never `FAIL`.
 |---|---:|
 | formula cells | 505 |
 | reproduced, equal to the regulator's cached value | 475 |
+| **DISAGREED with the cached value** | 0 |
 | **NOT RUN — declared, not silently answered** | 30 |
 
 The not-run population is the honest half. It was **10** until P6, when `AGGREGATE`

@@ -67,6 +67,21 @@ CASES: list[tuple[str, str]] = [
     ("expr", "filing.intro.tbl11.n_schemes >= 0"),
 ]
 
+# THE SHAPES THAT ESCAPED THIS LIST, and the reason it could not see them: every case above is a
+# path written without parentheses, so `_Walker.resolve` always had a resolvable base. A member
+# access on a parenthesised base recorded only the INNER path, the static set came out strictly
+# SMALLER than the runtime read set, and `check_declared_keys` agreed both ways because the
+# declaration matched the truncation. `(filing.zz.a).b == 1` passed where `filing.zz.a.b == 1`
+# was refused — one pair of parentheses.
+#
+# They are REFUSED at the subset check rather than resolved: `(cond ? p : q).z` is not statically
+# resolvable at all, and the subset exists so the read set is statically decidable.
+REFUSED: list[tuple[str, str]] = [
+    ("expr", "(filing.a).b == 1"),
+    ("expr", "(filing.flag ? filing.p : filing.q).z == 2"),
+    ("applicable", "has((filing.a).b)"),
+]
+
 
 @pytest.fixture(scope="module")
 def rt() -> CelRuntime:
@@ -127,3 +142,27 @@ def test_diff__the_committed_envelopes_read_only_what_they_declare(rt: CelRuntim
     assert observed <= declared, f"{c.id} read {sorted(observed - declared)} undeclared"
     assert observed, f"{c.id} read nothing at all against this fact view; the case is vacuous"
     assert observed <= set(all_read_keys(c))
+
+
+@pytest.mark.parametrize("slot,src", REFUSED, ids=[c[1][:40] for c in REFUSED])
+def test_diff__a_member_access_on_a_non_path_base_is_refused(slot: str, src: str) -> None:
+    """**The static set must never be SMALLER than the runtime read set.**
+
+    It was, for any parenthesised base, and the consequence went all the way through: pre-flight
+    guards `schema_keys`, so a key the runtime reads and the walker never saw is never checked for
+    presence, and the predicate reaches `PASS` over it. That is precisely what `UndeclaredKeyRead`
+    and pre-flight's *"the declared set IS the read set"* exist to make impossible.
+    """
+    from cdfc.predicates.errors import UnresolvableMemberBase
+
+    with pytest.raises(UnresolvableMemberBase):
+        read_keys(src, slot=slot)
+
+
+def test_diff__the_refusal_is_not_a_ban_on_parentheses() -> None:
+    """The admission-side control. A subset check that refused every parenthesis would satisfy
+    the test above and break every real predicate — the harvest emits parenthesised arithmetic in
+    every `sum_identity`."""
+    assert set(read_keys("(filing.a.v + filing.b.v) <= 10", slot="expr")) == {
+        "filing.a.v", "filing.b.v"
+    }

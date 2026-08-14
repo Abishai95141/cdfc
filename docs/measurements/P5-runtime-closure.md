@@ -26,8 +26,8 @@ must be visible on the page, not merely correct in the object.
 | field surface (denominator) | **3747** |
 | denominator validation state | `PROVISIONAL-UNVALIDATED` |
 | admission state | `PRE-GATE` |
-| keys pre-flighted | 1725 |
-| keys **type**-checked | 77 |
+| keys pre-flighted | 1713 |
+| keys **type**-checked | 66 |
 | cells lowered by roll-up | 0 |
 
 **`keys_type_checked` is published beside `keys_preflighted` because a type check that did not
@@ -62,15 +62,15 @@ Seeded at `1. Introduction!C54` by raw-zip surgery: one worksheet part differs a
 
 | | |
 |---|---|
-| predicates reading that cell | `P-0021`, `P-0051` |
-| predicates that FAILED | `P-0021`, `P-0051` |
+| predicates reading that cell | `P-0020`, `P-0050` |
+| predicates that FAILED | `P-0020`, `P-0050` |
 
 The clean filing produced **zero** failures. Without that control the seeded number would carry no
 information.
 
 ## The smoke filing, and why its number is not on this page as a claim
 
-`clean__template-computed__fme-q1.xlsx` — run state `INVALID`, 349 checks.
+`clean__template-computed__fme-q1.xlsx` — run state `INVALID`, 348 checks.
 
 > SMOKE ONLY — NON-GATING — NON-DISCRIMINATING (arithmetic). src/cdfc/calc/ wrote this filing's derived cells, and the arithmetic predicates assert exactly the identities calc/ enforced when it did. The oracle and the system under test are the same function, so a zero here is x == x. It may not be cited in a gate, in a severity tier, or in any published rate.
 

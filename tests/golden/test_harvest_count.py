@@ -133,3 +133,35 @@ def test_golden__the_transfer_note_lives_in_one_file_and_names_the_number(result
     assert "P15" in doc and "human cost" in doc, (
         "the note must say what it does NOT claim: the per-predicate human cost is P15's arm"
     )
+
+
+def test_golden__the_distribution_json_and_markdown_agree() -> None:
+    """**The JSON published 592 while the markdown beside it published 571.**
+
+    It was a committed snapshot from before the repairs in `docs/HARVEST-DELTA.md`, with no
+    generator and no reader — and the one test that named it asserted its FILENAME and never
+    opened it, so it would have passed had the file been deleted. Both now come out of the same
+    call in `cdfc harvest --report`, and this test reads the numbers rather than the name.
+    """
+    import json
+    import re
+
+    d = json.loads(P4_HARVEST_DISTRIBUTION.read_text(encoding="utf-8"))
+    md = (P4_HARVEST_DISTRIBUTION.parent / "P4-harvest-distribution.md").read_text(encoding="utf-8")
+
+    total = d["predicates_with_a_TEMPLATE_obligation"]
+    assert total == sum(r["n"] for r in d["rows"]), "the JSON does not add up to its own rows"
+    assert d["predicates_with_a_STATUTE_obligation"] == 0
+    assert f"**{total}**" in md, (
+        f"the JSON says {total} and the markdown beside it does not carry that number"
+    )
+    # Every workbook of the corpus appears, zeroes included — publishing the total alone is banned.
+    assert len(d["rows"]) == 9
+    assert sum(1 for r in d["rows"] if r["n"] == 0) == 2, "the two zero-yield workbooks are rows"
+
+    # The skip pile is the coverage declaration's other half and must be non-trivial: before the
+    # completeness sweep, 1,060 of 1,495 formula cells were neither an obligation nor a skip.
+    assert sum(r["skips"] for r in d["rows"]) > total, (
+        "the declared weak pile is smaller than the predicate count; the sweep is not running"
+    )
+    assert re.search(r"\b571\b", md), "the corpus total must be on the page"

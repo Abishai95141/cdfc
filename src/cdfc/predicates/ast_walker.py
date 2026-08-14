@@ -40,7 +40,32 @@ from cdfc.predicates.errors import (
     DeclaredKeyUnread,
     KeyGrammarError,
     UndeclaredKeyRead,
+    UnresolvableMemberBase,
 )
+
+def _is_path_shaped(node: object) -> bool:
+    """Is this expression a dotted path — a name, or a chain of `.field` / `[i]` from one?
+
+    The distinction decides WHICH refusal a member access gets, and both must stay available.
+
+    - `prior.x.y` IS path-shaped. It fails because `prior` is a third free root, and
+      `check_subset` reports exactly that — P9's un-runnable R-07 depends on the accurate message.
+    - `(filing.a).b` and `(c ? p : q).z` are NOT. Their base is an expression the walker cannot
+      resolve, and recording only the inner path made the static read set smaller than the
+      runtime's — the truncation that let a predicate PASS over an unchecked key.
+
+    Collapsing the two would replace an accurate diagnosis with a vaguer one.
+    """
+    n = _unwrap(node)  # type: ignore[arg-type]
+    if not isinstance(n, lark.Tree):
+        return False
+    data = str(n.data)
+    if data == "ident":
+        return True
+    if data in ("member_dot", "member_index"):
+        return _is_path_shaped(n.children[0])
+    return False
+
 
 Root = Literal["filing", "template"]
 TypeHint = Literal["STRING", "INT", "LIST", "BOOL", "DATE"]
@@ -155,6 +180,37 @@ class _Walker:
 
         if data == "member_dot":
             base = self.resolve(node.children[0], env)
+            if base is None and not _is_path_shaped(node.children[0]):
+                # **AN UNRESOLVABLE BASE IS A REFUSAL, NEVER A SILENT TRUNCATION.**
+                #
+                # `(filing.a).b` parses as `member_dot(paren_expr(...), 'b')`. Returning `None`
+                # here made `walk` fall through and record only the INNER path `filing.a`, so the
+                # static read set was strictly SMALLER than the runtime's. `check_declared_keys`
+                # then agreed both ways — the declaration matched the (truncated) static set —
+                # pre-flight guarded a key that was never read, `filing.a.b` was never checked for
+                # presence, and the predicate reached `PASS`. One pair of parentheses was the
+                # whole difference between `UndeclaredKeyRead` and a clean pass.
+                #
+                # It is the exact defect `preflight.py`'s claim — *"the declared set IS the read
+                # set"* — exists to make impossible, and both existing controls were blind: the
+                # differential's CASES list and the property test's generator contain no
+                # parentheses.
+                #
+                # Recovering the path where it is recoverable would fix `(filing.a).b` and leave
+                # `(cond ? p : q).z`, which is not statically resolvable at all. So the rule is
+                # the subset's rule: a construct that defeats static key recovery is not admitted.
+                raise UnresolvableMemberBase(
+                    "a member access whose base is not a statically resolvable path — e.g. "
+                    "`(filing.a).b` or `(cond ? p : q).z`. The admitted subset exists so that the "
+                    "key set a predicate reads can be determined STATICALLY; a base the walker "
+                    "cannot resolve makes the read set larger than anything it can declare, and "
+                    "pre-flight would guard a key the runtime does not read. Write the path "
+                    "without parentheses."
+                )
+            # An unresolved plain IDENTIFIER is a different refusal and keeps its own message: it
+            # is a third free root, which `check_subset` already reports as such — `prior.x` in
+            # P9's un-runnable R-07, for instance. Collapsing the two would replace an accurate
+            # diagnosis with a vaguer one.
             return None if base is None else base.extend(str(node.children[1]))
 
         if data == "member_index":

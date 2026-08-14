@@ -97,8 +97,12 @@ def main() -> int:
     )
 
     grid = _grid(formulas, literals, deferred)
-    agree = sum(1 for k in cached if k in grid.values and k not in grid.not_run)
-    notrun = sum(1 for k in cached if k in grid.not_run or k not in grid.values)
+    # **THIS ROW USED TO COUNT CELLS THE EVALUATOR PRODUCED ANY VALUE FOR** and render the count
+    # under the label *"reproduced, equal to the regulator's cached value"*. The cached string was
+    # never read. Demonstrated: replacing `SUM` with a constant makes arm 1 report 155 of 505 cells
+    # DISAGREEING, and this row still said 475. A reproduction figure that is unchanged by an
+    # evaluator wrong on a third of the workbook is not a reproduction figure.
+    agree, disagree, notrun = _compare(cached, grid)
 
     rows = sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
     L = [
@@ -130,6 +134,7 @@ def main() -> int:
         "|---|---:|",
         f"| formula cells | {len(cached)} |",
         f"| reproduced, equal to the regulator's cached value | {agree} |",
+        f"| **DISAGREED with the cached value** | {disagree} |",
         f"| **NOT RUN — declared, not silently answered** | {notrun} |",
         "",
         "The not-run population is the honest half. It was **10** until P6, when `AGGREGATE`",
@@ -225,6 +230,45 @@ def main() -> int:
 
 def _cells_using(where: dict[str, list[str]], fns: list[str]) -> int:
     return len({c for fn in fns for c in where[fn]})
+
+
+def _compare(cached, grid) -> tuple[int, int, int]:
+    """`(agree, disagree, not_run)` — and `agree` MEANS agree.
+
+    The comparison is arm 1's, reproduced here rather than approximated: Excel caches ~15
+    significant decimal digits and this evaluator computes at 34, so an exact string comparison
+    reports a disagreement that is an artifact of OUR precision being higher. A relative
+    `1e-15` admits that and nothing else; a boolean caches as `1`/`0`, not `TRUE`/`FALSE`.
+    """
+    from decimal import Decimal, InvalidOperation
+
+    from cdfc.calc.errors import is_error
+
+    agree = disagree = notrun = 0
+    for key, want in cached.items():
+        if key in grid.not_run or key not in grid.values:
+            notrun += 1
+            continue
+        got = grid.values[key]
+        if is_error(got):
+            got_s = str(got)
+        elif isinstance(got, bool):
+            got_s = "1" if got else "0"
+        elif isinstance(got, Decimal):
+            got_s = str(got.normalize())
+        else:
+            got_s = "" if got is None else str(got)
+        w = (want or "").strip()
+        try:
+            a, b = Decimal(got_s or "0"), Decimal(w or "0")
+            same = a == b or (a != 0 and abs(a - b) / abs(a) < Decimal("1e-15"))
+        except (InvalidOperation, ValueError):
+            same = got_s.strip().upper() == w.upper()
+        if same:
+            agree += 1
+        else:
+            disagree += 1
+    return agree, disagree, notrun
 
 
 def _grid(formulas, literals, deferred):

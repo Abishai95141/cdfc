@@ -293,3 +293,51 @@ def render_both_ways(results: Sequence[Any]) -> str:
         ]
     L.append("")
     return "\n".join(L)
+
+
+def distribution_json(results: Sequence[Any]) -> dict[str, Any]:
+    """The same numbers `render_report` renders, as JSON — **generated, not remembered.**
+
+    `docs/measurements/p4-harvest-distribution.json` was committed with no generator and no
+    reader. It published `predicates_with_a_TEMPLATE_obligation: 592` while the markdown beside it
+    published **571 / 571** for the same metric: the JSON was a snapshot from before the harvest
+    repairs in `docs/HARVEST-DELTA.md` and nothing re-derived it. The one test naming it asserted
+    its FILENAME and never opened it — a constant dressed as a check, green if the file were
+    deleted.
+
+    Emitting it from the same call that renders the markdown makes the two incapable of
+    disagreeing, and `test_golden__the_distribution_json_and_markdown_agree` asserts they do not.
+    """
+    from cdfc.predicates.harvest import distribution
+
+    rows = distribution(results)
+    total = sum(r.n for r in rows)
+    claimed: set[str] = set()
+    for res in results:
+        for c in res.candidates:
+            claimed |= set(c.claims_fault_classes)
+    from cdfc.qualify.fault_model import FAULT_CLASSES
+
+    return {
+        "warrant": "MEASURED",
+        "non_empty_workbooks": sum(1 for r in rows if r.n),
+        # BOTH numbers of the coverage pair, always together (arbitration C2).
+        "predicates_with_a_STATUTE_obligation": 0,
+        "predicates_with_a_TEMPLATE_obligation": total,
+        "total_candidates": total,
+        "fault_classes_claimed_by_no_harvested_candidate": sorted(
+            f.id for f in FAULT_CLASSES if f.id not in claimed
+        ),
+        "rows": [
+            {
+                "workbook": r.workbook,
+                "sha8": r.sha8,
+                "n": r.n,
+                "by_class": dict(sorted(r.by_class.items())),
+                "skips": r.skips,
+                "skips_by_kind": dict(sorted(r.skips_by_kind.items())),
+                "cells_reachable": r.cells_reachable,
+            }
+            for r in rows
+        ],
+    }

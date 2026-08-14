@@ -137,10 +137,19 @@ def _harvest(args: argparse.Namespace) -> int:
           f"{len(rows)} workbooks; {written} envelopes written under {args.out}")
 
     if args.report is not None:
-        from cdfc.measure.harvest_report import render_report
+        import json
+
+        from cdfc.measure.harvest_report import distribution_json, render_report
 
         args.report.write_text(render_report(results), encoding="utf-8")
-        print(f"wrote {args.report}")
+        # The JSON beside it, from the SAME call. It used to be a committed snapshot with no
+        # generator, publishing 592 where the markdown published 571.
+        side = args.report.parent / "p4-harvest-distribution.json"
+        side.write_text(
+            json.dumps(distribution_json(results), indent=1, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        print(f"wrote {args.report} and {side}")
     return 0
 
 

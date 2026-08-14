@@ -12,16 +12,16 @@ concentration line below — and `571` on its own conceals which workbooks produ
 
 | workbook | sha8 | candidates | conditional_required | cross_sheet_equality | date_bound | integer_bound | membership | numeric_bound | same_sheet_equality | sum_identity | skipped | cells reachable |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| `ALR_V2_3_20250808_1024.xlsx` | `a414d8d3` | **32** | 0 | 8 | 0 | 1 | 1 | 5 | 9 | 8 | 2 | 1492 |
-| `AL_monthly_report_updated_final_20260717_0257.xlsx` | `79e43a7f` | **16** | 1 | 0 | 0 | 0 | 9 | 0 | 0 | 6 | 0 | 1661 |
-| `Draft_ACAC_Format_20260605_0631.xlsx` | `74ba7b89` | **0** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `ALR_V2_3_20250808_1024.xlsx` | `a414d8d3` | **32** | 0 | 8 | 0 | 1 | 1 | 5 | 9 | 8 | 622 | 1492 |
+| `AL_monthly_report_updated_final_20260717_0257.xlsx` | `79e43a7f` | **16** | 1 | 0 | 0 | 0 | 9 | 0 | 0 | 6 | 155 | 1661 |
+| `Draft_ACAC_Format_20260605_0631.xlsx` | `74ba7b89` | **0** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 112 | 0 |
 | `EDR_1__Exposure_Data_Report_1__V2_3_20250808_1030.xlsx` | `230a6f0c` | **1** | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 | 1 |
-| `IBU_Operations_Report_V2_3_20250808_1033.xlsx` | `bf6bbf6b` | **10** | 0 | 6 | 0 | 0 | 4 | 0 | 0 | 0 | 0 | 18 |
+| `IBU_Operations_Report_V2_3_20250808_1033.xlsx` | `bf6bbf6b` | **10** | 0 | 6 | 0 | 0 | 4 | 0 | 0 | 0 | 1 | 18 |
 | `IFSCA_Annual_Reporting_Format_30April_2026_Approved_20260504_1247.xlsx` | `4b2d4a2b` | **0** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| `ITFS_Monthly_report201220241626.xlsx` | `446b811a` | **25** | 1 | 1 | 0 | 1 | 8 | 1 | 0 | 13 | 2 | 88 |
-| `Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx` | `7d9a1960` | **348** | 0 | 181 | 5 | 11 | 20 | 10 | 42 | 79 | 181 | 2794 |
-| `Updated___Quarterly_Reporting_Format_for_Capital_Market_Intermediaries_20260409_1019.xlsx` | `82dd291f` | **139** | 10 | 0 | 17 | 32 | 47 | 10 | 0 | 23 | 117 | 1040 |
-| **total** | — | **571** | 12 | 196 | 22 | 45 | 90 | 26 | 51 | 129 | 302 | 7094 |
+| `ITFS_Monthly_report201220241626.xlsx` | `446b811a` | **25** | 1 | 1 | 0 | 1 | 8 | 1 | 0 | 13 | 20 | 88 |
+| `Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx` | `7d9a1960` | **348** | 0 | 181 | 5 | 11 | 20 | 10 | 42 | 79 | 325 | 2794 |
+| `Updated___Quarterly_Reporting_Format_for_Capital_Market_Intermediaries_20260409_1019.xlsx` | `82dd291f` | **139** | 10 | 0 | 17 | 32 | 47 | 10 | 0 | 23 | 127 | 1040 |
+| **total** | — | **571** | 12 | 196 | 22 | 45 | 90 | 26 | 51 | 129 | 1362 | 7094 |
 
 **Concentration: 487 of 571 come from two workbooks.** That is why the total
 is never published without this table.
@@ -35,17 +35,17 @@ nothing about per-predicate human cost, which is P15's arm and is not touched he
 An undeclared suppression is a coverage lie. Every construct the class set cannot express
 is a typed `SkipRecord` naming the sheet, the cell and the reason.
 
-| workbook | `dv_no_type` | `function_outside_vocabulary` | `key_unresolved` | `list_unresolved` | total |
-|---|---:|---:|---:|---:|---:|
-| `ALR_V2_3_20250808_1024.xlsx` | 0 | 0 | 2 | 0 | 2 |
-| `AL_monthly_report_updated_final_20260717_0257.xlsx` | 0 | 0 | 0 | 0 | 0 |
-| `Draft_ACAC_Format_20260605_0631.xlsx` | 0 | 0 | 0 | 0 | 0 |
-| `EDR_1__Exposure_Data_Report_1__V2_3_20250808_1030.xlsx` | 0 | 0 | 0 | 0 | 0 |
-| `IBU_Operations_Report_V2_3_20250808_1033.xlsx` | 0 | 0 | 0 | 0 | 0 |
-| `IFSCA_Annual_Reporting_Format_30April_2026_Approved_20260504_1247.xlsx` | 0 | 0 | 0 | 0 | 0 |
-| `ITFS_Monthly_report201220241626.xlsx` | 1 | 0 | 1 | 0 | 2 |
-| `Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx` | 2 | 59 | 118 | 2 | 181 |
-| `Updated___Quarterly_Reporting_Format_for_Capital_Market_Intermediaries_20260409_1019.xlsx` | 18 | 0 | 99 | 0 | 117 |
+| workbook | `dv_no_type` | `function_outside_vocabulary` | `if_conditional_carry` | `iferror_wrapper` | `key_unresolved` | `list_unresolved` | `other_formula` | total |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| `ALR_V2_3_20250808_1024.xlsx` | 0 | 558 | 9 | 0 | 2 | 0 | 53 | 622 |
+| `AL_monthly_report_updated_final_20260717_0257.xlsx` | 0 | 2 | 0 | 0 | 0 | 0 | 153 | 155 |
+| `Draft_ACAC_Format_20260605_0631.xlsx` | 0 | 0 | 0 | 0 | 0 | 0 | 112 | 112 |
+| `EDR_1__Exposure_Data_Report_1__V2_3_20250808_1030.xlsx` | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `IBU_Operations_Report_V2_3_20250808_1033.xlsx` | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 1 |
+| `IFSCA_Annual_Reporting_Format_30April_2026_Approved_20260504_1247.xlsx` | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `ITFS_Monthly_report201220241626.xlsx` | 1 | 12 | 1 | 0 | 1 | 0 | 5 | 20 |
+| `Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx` | 2 | 59 | 14 | 130 | 118 | 2 | 0 | 325 |
+| `Updated___Quarterly_Reporting_Format_for_Capital_Market_Intermediaries_20260409_1019.xlsx` | 18 | 0 | 8 | 0 | 99 | 0 | 2 | 127 |
 
 **The FME reconciliation, in one sentence.** The 2 `list_unresolved` skips on
 `7d9a1960` are exactly the pinned `22 list-type validations - 20 resolving` gap: both

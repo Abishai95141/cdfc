@@ -41,6 +41,23 @@ class SubsetViolation(CelLayerError):
         super().__init__(f"{slot} slot, offset {offset}: {construct} — {reason}")
 
 
+class UnresolvableMemberBase(SubsetViolation):
+    """A member access whose base is not a statically resolvable path.
+
+    `(filing.a).b` used to record only `filing.a`, so the static read set was strictly smaller
+    than the runtime's — and because the DECLARED set matched the truncated static set,
+    `check_declared_keys` agreed both ways, pre-flight guarded a key nobody read, and the
+    predicate reached `PASS` over a key that was never checked for presence. One pair of
+    parentheses separated `UndeclaredKeyRead` from a clean pass.
+
+    It is a `SubsetViolation` and not a new family: the admitted subset exists precisely so the
+    read set is statically decidable, and this is a construct that defeats that.
+    """
+
+    def __init__(self, reason: str) -> None:
+        super().__init__("member access on a non-path base", slot="expr", reason=reason, offset=0)
+
+
 class UndeclaredKeyRead(CelLayerError):
     """The program reads a key `schema_keys` does not declare. The pre-flight set is too small."""
 
