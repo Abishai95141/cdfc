@@ -30,6 +30,7 @@ ADDED_LIVE_AT_P8 = set(range(57, 64))   # docs/GATE-CHANGES.md, 13 Aug 2026
 # Rows 64 and 65 guard the P9 ENTRY criteria and their subjects shipped at P3 — they are
 # `demonstrable_red_at P9` because that is when the guard was written, not when the code arrived.
 ADDED_LIVE_AT_P9 = set(range(64, 78))   # docs/GATE-CHANGES.md, 14 Aug 2026
+ADDED_LIVE_AT_P10 = set(range(78, 91))  # docs/GATE-CHANGES.md, 14 Aug 2026
 # 76 and 77 are gates that RAN in `make greps` from P0 with no row at all — registered
 # during the audit repair, so the liveness ratio counts what CI actually executes.
 # Rows 14 and 16 moved PENDING -> LIVE at P6: their subjects shipped at P5 and the audit
@@ -37,6 +38,7 @@ ADDED_LIVE_AT_P9 = set(range(64, 78))   # docs/GATE-CHANGES.md, 14 Aug 2026
 PROMOTED_AT_P6 = {14, 16}
 LIVE_EXPECTED = (LIVE_AT_P0 | ADDED_LIVE_AT_P4 | ADDED_LIVE_AT_P5 | ADDED_LIVE_AT_P6
                  | ADDED_LIVE_AT_P7 | ADDED_LIVE_AT_P8 | ADDED_LIVE_AT_P9
+                 | ADDED_LIVE_AT_P10
                  | PROMOTED_AT_P6)
 PENDING_AT_P0 = {14, 15, 16}
 # The PENDING set SHRINKS as subjects ship, and a row may only leave it into LIVE — never the

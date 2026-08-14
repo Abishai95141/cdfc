@@ -85,7 +85,33 @@ def test_sweep__provisional_entries_are_excluded_from_caught() -> None:
 
 
 def test_sweep__report_carries_no_timing_field() -> None:
-    """R3. A duration in a hashed or compared artifact makes it non-reproducible."""
-    blob = REPORT.read_text() if REPORT.exists() else ""
-    for banned in ("elapsed", "duration", "seconds", "_ms", "took"):
-        assert banned not in blob, f"the sweep report carries a timing field: {banned!r}"
+    """R3. A duration in a hashed or compared artifact makes it non-reproducible.
+
+    **Over the report's KEYS, not over its text**, and the difference is not cosmetic. The report
+    captures each red guard's assertion message so a reviewer can see WHY it went red — and P10's
+    F23 guard is a gate against duration fields, so its message necessarily contains the word
+    `elapsed`. A substring scan reads that as a violation and the only way to satisfy it is to
+    stop capturing assertion text, which destroys the reviewability the sweep exists for.
+
+    So the ban is on the structure: no key of any object in this report may name a duration. That
+    is what "no timing field enters this report" means, and it is checkable without silencing the
+    evidence.
+    """
+    import json as _json
+
+    blob = _json.loads(REPORT.read_text()) if REPORT.exists() else {}
+    banned = ("elapsed", "duration", "seconds", "_ms", "took")
+    offenders: list[str] = []
+
+    def walk(node, path: str) -> None:
+        if isinstance(node, dict):
+            for k, v in node.items():
+                if any(b in str(k).lower() for b in banned):
+                    offenders.append(f"{path}.{k}")
+                walk(v, f"{path}.{k}")
+        elif isinstance(node, list):
+            for i, v in enumerate(node):
+                walk(v, f"{path}[{i}]")
+
+    walk(blob, "$")
+    assert offenders == [], f"the sweep report carries timing FIELDS: {offenders}"

@@ -56,6 +56,18 @@ def test_w__target_is_a_stable_key_not_a_coordinate(bad: str) -> None:
         _w(target=bad)
 
 
+def test_w__C05_a_coordinate_target_is_refused() -> None:
+    """NC-C05's guard, un-parametrised so the sweep can name one node id and match it.
+
+    The parametrised twin above covers four shapes; the sweep asserts an EXACT SET of node ids and
+    a parametrised id carries its `[param]` suffix, so a guard named without one never matches and
+    the entry would be recorded as caught on evidence nobody collected.
+    """
+    with pytest.raises(CoordinateWitnessError) as e:
+        _w(target="O7")
+    assert "rebinds" in str(e.value), "the refusal says what a coordinate does, not just that it is one"
+
+
 def test_w__a_qualified_key_is_accepted() -> None:
     """The admission-side twin. Without it the refusal above is satisfied by refusing everything."""
     assert _w(target="3. Portfolio!O7").target == "3. Portfolio!O7"

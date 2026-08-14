@@ -3,7 +3,7 @@
 **This is the phase's cheapest structural gate**, and it is the AST twin of
 `ci/no-timing-in-hashed-payload.sh`. Two instruments, one rule: the grep is fast and can be
 defeated by a line break, the AST walk cannot and is slower. Neither is decoration — `CanaryRow`
-carried `elapsed_us: int` inside a structure whose canonicalised digest feeds `livenessProof` and
+carried an `elapsed_us` integer field inside a structure whose canonicalised digest feeds `livenessProof` and
 `run.jsonl`, so two runs would have produced different bytes and `E2E-VERIFY` would have failed
 permanently on the first green run of P11.
 
@@ -170,3 +170,11 @@ def test_contract__the_ci_grep_and_this_walk_police_the_same_rule() -> None:
     script = (REPO / "ci" / "no-timing-in-hashed-payload.sh").read_text(encoding="utf-8")
     for token in ("elapsed", "duration", "_ms", "_seconds"):
         assert token in script, f"the shell gate does not police {token!r} but this walk does"
+    # AND THE SAME SCOPE. Tokens alone are not the rule: this walk exempts `src/cdfc/measure/perf/`
+    # and the gate did not, so the two disagreed the moment P10 wrote the module the F23 ruling
+    # asked for — and the stricter one won by accident rather than by argument.
+    assert "src/cdfc/measure/perf/" in script, (
+        "the shell gate does not exempt the directory this walk exempts. A gate and its AST twin "
+        "that disagree about scope are two rules, and nobody chose which one is real."
+    )
+    assert str(EXEMPT.relative_to(REPO)) == "src/cdfc/measure/perf"

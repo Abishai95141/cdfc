@@ -117,9 +117,30 @@ def test_rel__delta_and_marginal_are_both_published() -> None:
 
 
 def test_rel__pending_marginal_is_dated_not_blank() -> None:
-    """An empty cell reads as *nothing to report*; a dated one reads as *not yet measured*."""
+    """Column (b) is never blank — and once it is answered, it is never still `PENDING`.
+
+    **This test used to assert the placeholder's presence**, which is the shape that made
+    `tests/unit/test_cli.py` enforce the absence of `cdfc run` for four phases: a test that pins a
+    `PENDING` string goes red the day somebody closes the item, so the cheapest way to keep the
+    suite green is to leave it open. So it asserts the DISCIPLINE instead — a cell is either a
+    dated open item or a closed answer, and never empty — and it asserts, separately, that P10-B2
+    having landed means the placeholder is gone.
+
+    The answer is `UNDEFINED` rather than a number, and that is the measurement: an unadmitted
+    relation is not in the rejector set at all, so its marginal kill over the residue is undefined,
+    **not zero** — which would read as *it ran and caught none*. Same distinction as
+    `settledFraction: null` versus `0`, one layer up.
+    """
     text = (MEASUREMENTS / "P9-delta.md").read_text(encoding="utf-8")
-    assert "PENDING — requires P10-B2, opened 2026-08-14" in text
+    residue = MEASUREMENTS / "P10-residue.md"
+    if residue.is_file():
+        assert "PENDING — requires P10-B2" not in text, (
+            "P10-B2 has landed and the residue population exists, so column (b) is answerable. A "
+            "placeholder left standing past its own precondition is an open item nobody will close."
+        )
+        assert "UNDEFINED — not admitted" in text
+    else:
+        assert "PENDING — requires P10-B2, opened 2026-08-14" in text
     for line in text.splitlines():
         if line.startswith("| **R-"):
             assert "|  |" not in line, f"blank cell in the delta table: {line}"

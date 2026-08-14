@@ -9,13 +9,13 @@
 
 | id | (a) settled-count delta | (b) marginal kill over the residue population |
 |---|---:|---|
-| **R-01** | not admitted — see `P9-relation-attrition.md` | PENDING — requires P10-B2, opened 2026-08-14 |
-| **R-02** | 0 | PENDING — requires P10-B2, opened 2026-08-14 |
-| **R-03** | 0 | PENDING — requires P10-B2, opened 2026-08-14 |
-| **R-07** | 0 | PENDING — requires P10-B2, opened 2026-08-14 |
-| **R-05** | not admitted — see `P9-relation-attrition.md` | PENDING — requires P10-B2, opened 2026-08-14 |
-| **R-06** | not admitted — see `P9-relation-attrition.md` | PENDING — requires P10-B2, opened 2026-08-14 |
+| **R-01** | not admitted — see `P9-relation-attrition.md` | UNDEFINED — not admitted, so not in the rejector set (residue measured 6 relations, 374 survivors, 2026-08-14) |
+| **R-02** | 0 | UNDEFINED — not admitted, so not in the rejector set (residue measured 6 relations, 374 survivors, 2026-08-14) |
+| **R-03** | 0 | UNDEFINED — not admitted, so not in the rejector set (residue measured 6 relations, 374 survivors, 2026-08-14) |
+| **R-07** | 0 | UNDEFINED — not admitted, so not in the rejector set (residue measured 6 relations, 374 survivors, 2026-08-14) |
+| **R-05** | not admitted — see `P9-relation-attrition.md` | UNDEFINED — not admitted, so not in the rejector set (residue measured 6 relations, 374 survivors, 2026-08-14) |
+| **R-06** | not admitted — see `P9-relation-attrition.md` | UNDEFINED — not admitted, so not in the rejector set (residue measured 6 relations, 374 survivors, 2026-08-14) |
 
-Column (b) needs the residue population, which is P10-B2's. The placeholder is a **dated open item** — `PENDING — requires P10-B2, opened 2026-08-14` — and never an empty cell: an empty cell reads as *nothing to report* and a dated one reads as *not yet measured*, which is the difference this whole product is about. `test_rel__pending_marginal_is_dated_not_blank` asserts it.
+**Column (b) is CLOSED as of 2026-08-14, and the answer is `UNDEFINED` rather than a number.** The residue population now exists (`docs/measurements/P10-residue.md`), and the measurement it permits is this: an unadmitted relation is not in the rejector set at all, so its marginal kill over the residue is undefined — **not zero**, which would read as *it ran and caught none*. That distinction is the same one `settledFraction: null` versus `0` carries one layer up. Originally: The placeholder is a **dated open item** — `UNDEFINED — not admitted, so not in the rejector set (residue measured 6 relations, 374 survivors, 2026-08-14)` — and never an empty cell: an empty cell reads as *nothing to report* and a dated one reads as *not yet measured*, which is the difference this whole product is about. `test_rel__pending_marginal_is_dated_not_blank` asserts it.
 
 **A relation that moved nothing is reported as moving nothing.** Every relation appears here, including the ones with a delta of zero and the ones that were not admitted at all.

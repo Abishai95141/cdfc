@@ -63,6 +63,7 @@ moves without updating this table is red.
 | caller | `formula_source` | because |
 |---|---|---|
 | `cdfc.qualify.observability` | **`FILING`** | observability is a question about THE ARTIFACT UNDER TEST. Recalculating a filing through the blank's formulas asks whether the fault survives a repair we performed on it, which is not the question. A cell the filing carries as a literal STAYS a literal. |
+| `cdfc.selfcheck.witness` | **`FILING`** | the canary loop asks the SAME question the observability filter asks, one mutant at a time and at run time: *is this fault visible on THIS artifact*. It must therefore give the same answer — a run-time filter that differed from the campaign-time one would be replaying a stored kill against a population `K/O` was never measured over. Under TEMPLATE an F11 override is overwritten by the very formula it deleted, so the flagship class would be inapplicable on every filing and the whole liveness proof would be silently narrower than it claims. |
 | `cdfc.probes.template_diff` | **`TEMPLATE`** | the relation IS the comparison of the two sources: the pinned blank's formula graph over the filed inputs, against what the filing actually holds. This is the only caller for which TEMPLATE is correct. |
 
 **The defect this prevents (F19), stated once.** The observability filter classifies a

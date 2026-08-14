@@ -181,6 +181,11 @@ class FilingImage:
     _cone_cache: dict[CellRef, frozenset[CellRef]] = field(
         default_factory=dict, repr=False, compare=False
     )
+    # `(cell, clean, mutant)` per witness digest. **`observability()` and `apply()` are called back
+    # to back on the same witness and each recomputed BOTH grids**, so every canary paid four
+    # cone-restricted recalculations where two suffice. Measured: PERF-CANARY2 fell from 4,081 ms
+    # to the figure `docs/measurements/P10-canary-cost.md` publishes.
+    _grid_cache: dict[str, Any] = field(default_factory=dict, repr=False, compare=False)
 
     def resolve(self, target: StableKey) -> CellRef:
         cell = self.cell_of.get(target)
@@ -252,13 +257,21 @@ def image_of(filing: Path, template: Path, *, facts: Any = None) -> FilingImage:
 
 
 def _grids(w: FaultWitness, image: FilingImage) -> tuple[CellRef, ValueGrid, ValueGrid]:
-    """`(cell, clean, mutant)` — both restricted to the edit's downstream cone.
+    """`(cell, clean, mutant)` — both restricted to the edit's downstream cone. Memoised.
+
+    **The cache is keyed on the witness digest, which is a function of the witness alone** — so it
+    cannot serve one witness's grids for another, which is the shape that made P6's extraction
+    cache serve one mutant's formulas for the next (`observability.extract`'s docstring records
+    that one). The image is per-run and immutable, so the grids are too.
 
     The cone restriction is the P6 optimisation and it is EXACT rather than a widening: a cell
     outside the downstream cone cannot change under this edit, so its baseline value is a valid
     input and is supplied as a literal. Without the baseline the restriction silently recomputes
     different numbers — `'3. Portfolio'!O7` came back 11 where the full grid said 12.
     """
+    key = w.digest()
+    if key in image._grid_cache:
+        return image._grid_cache[key]
     cell = image.resolve(w.target)
     cone = image.cone(cell)
     outside = {
@@ -286,6 +299,7 @@ def _grids(w: FaultWitness, image: FilingImage) -> tuple[CellRef, ValueGrid, Val
         formula_source="FILING",
         deferred={k: v for k, v in image.deferred.items() if k in cone},
     )
+    image._grid_cache[key] = (cell, clean, mutant)
     return cell, clean, mutant
 
 
@@ -478,26 +492,35 @@ def _diverse(ordered: Sequence[FaultWitness], cap: int) -> tuple[FaultWitness, .
     return tuple(out)
 
 
-_V = re.compile(r"<v[^>]*>([^<]*)</v>")
-_T = re.compile(r"<t[^>]*>([^<]*)</t>")
-
-
 def _value_of(new_xml: str, old_xml: str) -> tuple[Any, bool]:
     """The literal the edit writes, and whether it dropped the cell's `<f>`.
 
-    The `<c>` element is read with two narrow patterns rather than parsed, and that is the one
-    place in this package where that is admissible: the string being read is one this project
-    WROTE, in `surgery._mutate_element`, whose shape is fixed at `<c …>[<v>…</v>|<is><t>…</t></is>]`.
-    `ci/no-regex-over-xml.sh` scopes its prohibition to the ingest path, where the input is the
-    regulator's file and its shape is not ours to assume.
+    **The `<c>` element is PARSED, not pattern-matched**, and the first version of this function
+    was not. It read `<v>` and `<t>` with two narrow regexes on the argument that the string is
+    one this project WROTE, in `surgery._mutate_element`, whose shape is fixed —
+    `ci/no-regex-over-xml.sh` disagreed, and the gate was right. The exemption would have been the
+    first crack in a rule that exists because *a pattern over this format returned a correct count
+    with wrong contents three times in this project*, most recently by producing malformed XML
+    that LibreOffice "repaired" by dropping 424 of 505 formulas. Parsing costs two lines.
     """
-    m = _V.search(new_xml) or _T.search(new_xml)
-    raw = m.group(1) if m else None
-    removes_formula = "<f" in old_xml and "<f" not in new_xml
-    if raw is None:
-        return None, removes_formula
     from decimal import Decimal, InvalidOperation
 
+    from cdfc.ingest.xmlsafe import fromstring
+
+    M = "{http://schemas.openxmlformats.org/spreadsheetml/2006/main}"
+    cell = fromstring(new_xml.encode("utf-8"))
+    node = cell.find(f"{M}v")
+    if node is None:
+        inline = cell.find(f"{M}is")
+        raw = "".join(t.text or "" for t in inline.iter(f"{M}t")) if inline is not None else None
+    else:
+        raw = node.text
+    removes_formula = (
+        fromstring(old_xml.encode("utf-8")).find(f"{M}f") is not None
+        and cell.find(f"{M}f") is None
+    )
+    if raw is None:
+        return None, removes_formula
     try:
         return Decimal(raw), removes_formula
     except (TypeError, ValueError, InvalidOperation):

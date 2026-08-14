@@ -186,3 +186,12 @@ runnability:
 
 relation-attrition:
 	$(PY) tools/measure/p9_attrition.py
+
+# --- P10 -----------------------------------------------------------------------------
+# The adjudication record, |RESIDUE| against BOTH rejector sets, and the two exhibits.
+# Re-runs from the committed campaign; it opens no artifact and reads no clock.
+residue:
+	$(PY) tools/measure/p10_residue.py
+
+canary-cost:
+	$(PY) tools/measure/p10_canary_cost.py

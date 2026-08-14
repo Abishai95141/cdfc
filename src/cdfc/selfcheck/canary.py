@@ -13,7 +13,7 @@ that the failure of the demonstration **withholds the verdict** rather than bein
 
 ## NOTHING IN THIS LOOP READS A CLOCK, and adversary F23 is why
 
-`CanaryRow` carried `elapsed_us: int` — a wall-clock duration — inside a structure whose
+`CanaryRow` carried an `elapsed_us` integer field — a wall-clock duration — inside a structure whose
 canonicalised digest feeds `livenessProof` and `run.jsonl`. Two runs produce different microsecond
 counts, therefore different bytes, therefore `E2E-VERIFY` fails permanently. And the obvious repair
 is the dangerous one: deleting the field silently removes the evidence that the loop *executed*

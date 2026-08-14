@@ -242,11 +242,23 @@ def summarise(
 
 
 def write_reports(campaign: Campaign, outcomes: Sequence[MutantOutcome], out_dir: Path) -> Path:
-    """`manifest.json` · `killed.jsonl` · `unobservable.jsonl` · `indeterminate.jsonl` ·
-    `unreachable.jsonl`.
+    """`manifest.json` · `killed` · `unobservable` · `indeterminate` · `unreachable` · `survived`.
 
     **An unobservable mutant is RETAINED with its reason, never destroyed** (§0.7). Destroying it
     makes `U/G` unauditable and takes P10's residue feedstock with it. NC-Q37.
+
+    **`survived.jsonl` was missing, and it is the residue feedstock the sentence above is about.**
+    The five buckets were killed / unobservable / indeterminate / unreachable — so a mutant that
+    was OBSERVABLE, REACHABLE and killed by NOTHING landed in no file at all and was the only
+    outcome the campaign did not retain. That is precisely `{WRONG mutants no predicate rejects}`,
+    which is P10-B2's whole subject: on the committed campaign, all 32 `F10` (enum substitution)
+    and all 4 `F14` (vocabulary-gap) mutants are of exactly that shape, and both classes are the
+    residue's most important members.
+
+    Found by P10-B2 asking the campaign for its survivors and being handed nothing. The counts were
+    never wrong — `G − U − I − K` always named this population — but the ROWS were unrecoverable,
+    so `|RESIDUE|`'s per-survivor class of falsehood could not be reported and neither exhibit
+    family could be drawn from a real run.
     """
     target = out_dir / campaign.campaign_id
     target.mkdir(parents=True, exist_ok=True)
@@ -262,6 +274,10 @@ def write_reports(campaign: Campaign, outcomes: Sequence[MutantOutcome], out_dir
         "unreachable.jsonl": [
             o for o in outcomes
             if o.observability is Observability.OBSERVABLE and not o.reachable
+        ],
+        "survived.jsonl": [
+            o for o in outcomes
+            if o.observability is Observability.OBSERVABLE and o.reachable and not o.killed
         ],
     }
     for name, rows in buckets.items():
@@ -279,5 +295,7 @@ def _row_with_reason(o: MutantOutcome, bucket: str) -> dict[str, Any]:
                                "evaluator could not compute; the cells are named below",
         "unreachable.jsonl": "observable, but no distinguishing cell lies in any predicate's read set",
         "killed.jsonl": "at least one predicate returned FAIL under the P5 verdict model",
+        "survived.jsonl": "observable, reachable, and rejected by NOTHING — this is P10's residue "
+                          "feedstock, and it was the one outcome the campaign did not retain",
     }
     return o.as_row() | {"reason": reasons[bucket]}

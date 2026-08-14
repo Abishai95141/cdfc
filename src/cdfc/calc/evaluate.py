@@ -73,6 +73,19 @@ FORMULA_SOURCE_CONTRACT: tuple[SourceRule, ...] = (
         ),
     ),
     SourceRule(
+        caller="cdfc.selfcheck.witness",
+        source="FILING",
+        because=(
+            "the canary loop asks the SAME question the observability filter asks, one mutant at "
+            "a time and at run time: *is this fault visible on THIS artifact*. It must therefore "
+            "give the same answer — a run-time filter that differed from the campaign-time one "
+            "would be replaying a stored kill against a population `K/O` was never measured over. "
+            "Under TEMPLATE an F11 override is overwritten by the very formula it deleted, so the "
+            "flagship class would be inapplicable on every filing and the whole liveness proof "
+            "would be silently narrower than it claims."
+        ),
+    ),
+    SourceRule(
         caller="cdfc.probes.template_diff",
         source="TEMPLATE",
         because=(

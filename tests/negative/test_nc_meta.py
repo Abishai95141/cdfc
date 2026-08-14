@@ -99,3 +99,49 @@ def test_nc_meta__every_injector_actually_changes_something() -> None:
                 p: hashlib.sha256(p.read_bytes()).hexdigest() if p.is_file() else None for p in inj.touches
             }
         assert before != after, f"injector {inj.name!r} changed nothing; its control is vacuous"
+
+
+def test_nc_meta__none_injector_entries_carry_a_layer_exists_assertion() -> None:
+    """**Adversary F6, in its general form**, and it is two lines of meta-test.
+
+    NC-C03 says the canary layer did NOT fire on a structurally-broken fixture — and as written,
+    that is trivially true of a build in which `src/cdfc/selfcheck/` does not exist at all. Naming
+    NC-C04 as its positive control is not enough: the two are separate catalogue rows that go red
+    and green independently, and a phase gate reading `caught == active` will not notice that
+    NC-C03 alone is vacuous.
+
+    So every `injector: NONE` row whose claim is that some layer did not fire must carry a
+    `layer_exists_assertion` naming what it proves first, IN THE SAME TEST BODY. The general form
+    is checked here rather than the one instance, because the next such row will be written by
+    somebody who has not read NC-C03.
+    """
+    import re
+
+    import yaml
+
+    entries = yaml.safe_load((REPO_ROOT / "tests" / "negative" / "catalogue.yaml").read_text())["entries"]
+    none_rows = [e for e in entries if str(e.get("injector", "")).upper() == "NONE"]
+    assert none_rows, "no injector:NONE row exists, so this meta-test is checking nothing"
+
+    # A row CLAIMS a layer did not fire when its break names one layer being credited for another
+    # layer's catch. The phrasing is the catalogue's own: "credited to".
+    claims_absence = [e for e in none_rows if "credited" in str(e.get("break", ""))]
+    assert claims_absence, (
+        "no injector:NONE row claims a layer did not fire — if that is genuinely so, this "
+        "assertion should be deleted with an argument rather than left passing over an empty set"
+    )
+    for e in claims_absence:
+        assertion = str(e.get("layer_exists_assertion", "")).strip()
+        assert assertion, (
+            f"{e['id']} claims a layer did NOT fire and carries no layer_exists_assertion. A test "
+            "that proves a layer did not fire must, in the same breath, prove the layer exists — "
+            "otherwise it is satisfied by a build in which that layer was never written."
+        )
+        assert re.search(r"\b(before|first)\b", assertion), (
+            f"{e['id']}: the layer_exists_assertion must say it runs BEFORE the absence claim. "
+            "Afterwards it is a separate fact about a separate run."
+        )
+        assert any(t in assertion for t in ("> 0", "greater than zero", "non-empty")), (
+            f"{e['id']}: the layer_exists_assertion must assert a POSITIVE quantity. "
+            "'the layer exists' is not checkable; 'canariesRun > 0' is."
+        )

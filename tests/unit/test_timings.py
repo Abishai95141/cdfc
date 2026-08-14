@@ -54,15 +54,20 @@ def test_tim__timings_are_written_outside_the_payload(tmp_path: Path) -> None:
 
 def test_tim__the_budget_is_the_plan_s_and_it_supersedes_the_old_one() -> None:
     assert t.BUDGET_ID == "PERF-CANARY2"
-    assert (t.BASELINE_MS, t.WARN_ABOVE_MS, t.FAIL_ABOVE_MS) == (70, 110, 160)
-    assert "anti-canary" in t.SUPERSEDES, (
-        "PERF-CANARY2 supersedes PERF-CANARY because the anti-canary doubles the loop; a budget "
-        "that replaces another without saying why is a budget that was raised to fit"
+    assert (t.BASELINE_MS, t.WARN_ABOVE_MS, t.FAIL_ABOVE_MS) == (4_200, 6_000, 9_000)
+    assert "anti-canary" in t.SUPERSEDES and "mutation throughput" in t.SUPERSEDES, (
+        "a budget that replaces another without saying why is a budget that was raised to fit. "
+        "PERF-CANARY2 supersedes TWO figures and must name both reasons: the anti-canary doubling "
+        "the loop, and the DERIVED baseline having been derived from the wrong quantity."
+    )
+    changes = (REPO / "perf" / "BUDGET-CHANGES.md").read_text(encoding="utf-8")
+    assert "PERF-CANARY2" in changes and str(t.BASELINE_MS) in changes.replace(",", ""), (
+        "the budget moved without a dated row in perf/BUDGET-CHANGES.md carrying its argument"
     )
 
 
-@pytest.mark.parametrize("ms,verdict", [(0, "OK"), (70, "OK"), (110, "OK"), (111, "WARN"),
-                                        (160, "WARN"), (161, "FAIL")])
+@pytest.mark.parametrize("ms,verdict", [(0, "OK"), (4_200, "OK"), (6_000, "OK"), (6_001, "WARN"),
+                                        (9_000, "WARN"), (9_001, "FAIL")])
 def test_tim__the_verdict_is_a_function_of_the_two_thresholds(ms: int, verdict: str) -> None:
     assert t.verdict_for(ms) == verdict
 

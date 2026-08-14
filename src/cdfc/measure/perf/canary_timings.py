@@ -34,13 +34,22 @@ from cdfc.measure.paths import PERF_DIR
 
 T = TypeVar("T")
 
-# `plan/05`'s budget row, verbatim. Recorded here so the tool that measures and the document that
+# `plan/05`'s budget row, REVISED. Recorded here so the tool that measures and the document that
 # publishes read one list.
+#
+# **MEASURED, 14 August 2026. The ≈70 ms it replaces was DERIVED from the wrong quantity** — from
+# raw-zip mutation throughput, which does not contain the step that dominates a canary: a full CEL
+# evaluation over a freshly-built 3,747-cell activation. `perf/BUDGET-CHANGES.md` carries the row,
+# the argument, and what it costs the plan's "there is still no reason not to" sentence.
 BUDGET_ID: Final[str] = "PERF-CANARY2"
-BASELINE_MS: Final[int] = 70      # DERIVED from the measured 7,946 mutations/s
-WARN_ABOVE_MS: Final[int] = 110
-FAIL_ABOVE_MS: Final[int] = 160
-SUPERSEDES: Final[str] = "PERF-CANARY (~35 ms) — the anti-canary was added in §0.4 and doubles the loop"
+BASELINE_MS: Final[int] = 4_200     # MEASURED: 4,063 ms for 66 executions on the reference fill
+WARN_ABOVE_MS: Final[int] = 6_000
+FAIL_ABOVE_MS: Final[int] = 9_000
+SUPERSEDES: Final[str] = (
+    "PERF-CANARY (~35 ms) — the anti-canary was added in §0.4 and doubles the loop; and the "
+    "≈70 ms DERIVED figure, which was derived from mutation throughput and not from evaluation "
+    "cost (perf/BUDGET-CHANGES.md, 14 August 2026)"
+)
 
 
 @dataclass(frozen=True, slots=True)

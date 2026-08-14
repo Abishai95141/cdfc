@@ -234,3 +234,54 @@ on fact-tree access and the blow-up is inside the runtime. `celrt.Budget`'s own 
 that state: *a declared budget nobody enforces is worse than no budget.* Pre-flight now refuses a
 heterogeneous column — decidably unsatisfiable, not undecidable — and the predicate reports
 `NOT_RUN` in 0.0 s at 90 MB.
+
+**Rows 78–90 were added at P10, dated 14 August 2026, all LIVE, all observed red in the same
+session.** They are L6.5's gates and they divide into three kinds.
+
+Rows 78–79 are **adversary F23**, and they are the phase's cheapest structural gates: no duration
+field inside any dataclass that reaches a hash, and no clock reachable from `src/cdfc/selfcheck/`
+at all. The second is stronger than the plan asked for. `plan/05` puts `timings.py` inside the
+selfcheck package, which would have required widening `ci/no-clock-in-core.sh` — the gate the F23
+ruling extends in the same breath — so the timing lives in `src/cdfc/measure/perf/` and the loop
+**cannot** read a clock rather than being trusted not to.
+
+Rows 80–83 are §P10·L's own gates. Row 80 is the one a reviewer should look for first: under every
+apparatus break the `invalid` cause set is **exactly** `{canary_silent}`, which is what makes the
+control a statement about the canary layer rather than about whichever layer happened to fire.
+Row 81 is its indispensable twin — without an admission-side positive control, all six deaths are
+satisfied by a layer that returns `INVALID` unconditionally. Row 82 proves liveness is demonstrated
+on the in-memory fact table, with a `sys.addaudithook` over the real `open` event rather than an
+import scan, and arms the hook over a deliberate open so its silence means something. Row 83 is
+§P10·L.4's single line: the expected-silent set is a module constant, never derived from the loaded
+registry.
+
+Rows 84–87 are B2/B3/B4's refusals — a threshold that moved without its dated row, a `|RESIDUE|`
+printed without the rejector set it was computed against, an adjudication with no argument, and the
+2,790-cell recompute-blind measurement with its paired value assertion.
+
+Rows 88–89 are the two defects P10 found in earlier phases by running against them: the counts are
+`len()` of a row set rather than a variable (death D5), and a cell with no value is `ABSENT` and
+never the four-character string `"None"` (D-P10-01, which cost 68 of 257 recorded kills).
+
+Row 90 is **adversary F6 in its general form**: every `injector: NONE` catalogue row whose claim is
+that some layer did *not* fire must carry a `layer_exists_assertion`, because *"the renamed sheet
+produced `template_unbound` and not `canary_silent`"* is trivially true of a system with no canary
+layer at all.
+
+`ADDED_LIVE_AT_P10` is a seventh frozen literal.
+
+| id | kind | gate | subject_exists_at | demonstrable_red_at | broken_build | liveness |
+|---:|---|---|---|---|---|---|
+| 78 | contract | `test_contract__no_duration_field_in_a_hashed_object` — no duration inside any hashed dataclass | P10 | P10 | `injectors/elapsed_us_in_canary_row.py` | LIVE |
+| 79 | contract | `test_contract__no_clock_is_reachable_from_the_selfcheck_package` — the loop cannot read a clock | P10 | P10 | import `time` into `src/cdfc/selfcheck/` | LIVE |
+| 80 | pytest | `test_liveness__only_cause_is_canary_silent` — under an apparatus break the cause set is exactly `{canary_silent}` | P10 | P10 | `injectors/canaries_noop.py` · `keys_resolver_offbyone` · `celrt_short_circuits` · `apply_returns_clean_facts` | LIVE |
+| 81 | pytest | `test_canary__healthy_run_is_VALID` — a healthy run is VALID with digits | P10 | P10 | `injectors/keys_resolver_offbyone.py` | LIVE |
+| 82 | pytest | `test_nc__C05c_no_artifact_is_opened_during_the_canary_loop` — liveness is proved in memory | P10 | P10 | `injectors/canary_reopens_file.py` | LIVE |
+| 83 | pytest | `test_st__expected_set_is_a_constant` — the expected-silent set is never derived from the registry | P10 | P10 | `injectors/selftest_behind_a_flag.py` | LIVE |
+| 84 | pytest | `test_th__ceiling_is_pre_registered` — a threshold moves only with its dated row | P10 | P10 | change `CANARY_INAPPLICABLE_CEILING` without touching `docs/SELFCHECK-THRESHOLDS.md` | LIVE |
+| 85 | pytest | `test_res__renderer_refuses_without_all_five_fields` — the residue count never prints without its rejector set | P10 | P10 | blank any of the five fields | LIVE |
+| 86 | pytest | `test_adj__verdict_without_argument_is_refused` — an adjudication with no argument is an opinion wearing a schema | P10 | P10 | remove the `argument` check from the loader | LIVE |
+| 87 | pytest | `test_golden__2790_cells_feed_no_formula` — the recompute-blind set, with a paired value assertion | P10 | P10 | change the pinned count without the per-sheet split | LIVE |
+| 88 | pytest | `test_c__counts_are_row_counts_not_variables` — every published liveness count is `len()` of a row set | P10 | P10 | `injectors/canary_count_asserted.py` | LIVE |
+| 89 | pytest | `test_patch__none_is_absent_never_the_string` — a cell with no value is ABSENT | P6 | P10 | `injectors/coerce_none_to_string.py` | LIVE |
+| 90 | pytest | `test_nc_meta__none_injector_entries_carry_a_layer_exists_assertion` — an absence claim proves the layer exists | P10 | P10 | delete `layer_exists_assertion` from NC-C03 | LIVE |

@@ -1563,3 +1563,206 @@ entries:
         flips: true
     positive_control: "the gate is green on a clean tree"
     status: active
+
+  # ------------------------------------------------------------------------------------------
+  # P10 — L6.5: the canary layer. §P10·L's six deaths, each a DIFFERENT MECHANISM.
+  #
+  # Every `flips` value below was MEASURED by applying the injector and re-running the guards,
+  # not chosen from the plan. Three injectors were rewritten and one was withdrawn when the
+  # measurement said they flipped nothing — the record of that is in `injectors/__init__.py`.
+  #
+  # The row that matters most is the one that says `flips: false`:
+  # `test_liveness__only_cause_is_canary_silent` stays GREEN under every apparatus break, which
+  # is cause isolation (§P10·L.2.1) as a measurement rather than as a claim.
+  # ------------------------------------------------------------------------------------------
+
+  - id: NC-C01
+    component: selfcheck
+    break: the canary loop is a stub — every canary is reported as having fired
+    measured_instance: "death D4. Without it the other five deaths are all satisfied by a layer that never executes anything"
+    injector: CanariesNoop
+    guard_tests:
+      - path: "tests/negative/test_nc_selfcheck.py::test_nc__C01_the_loop_is_not_a_stub"
+        flips: true
+      - path: "tests/negative/test_nc_selfcheck.py::test_liveness__only_cause_is_canary_silent"
+        flips: false
+    positive_control: "a healthy run is VALID with 33/33 canaries — tests/relational/test_rel__canary_positive.py::test_canary__healthy_run_is_VALID"
+    status: active
+
+  - id: NC-C01b
+    component: selfcheck
+    break: canariesRun is the size of the population rather than the number of rows written
+    measured_instance: "death D5. A loop that runs and reports a number it did not compute is a lie with a true premise"
+    injector: CanaryCountAsserted
+    guard_tests:
+      - path: "tests/negative/test_nc_selfcheck.py::test_nc__C01b_the_counts_are_row_counts"
+        flips: true
+      - path: "tests/relational/test_rel__canary_positive.py::test_canary__inapplicable_below_the_ceiling_stays_VALID"
+        flips: true
+      - path: "tests/negative/test_nc_selfcheck.py::test_liveness__only_cause_is_canary_silent"
+        flips: false
+    positive_control: "on a filing where every witness is applicable the two counts agree and the substitution is undetectable — which is why the guard runs on the sparse fixture"
+    status: active
+    note: >
+      The guard deliberately runs on `formula-overwritten__portfolio-O7.xlsx`, where the loop
+      makes 46 attempts over 33 predicates. On the reference fill the two numbers are equal and a
+      guard placed there would be green under the injector.
+
+  - id: NC-C03
+    component: selfcheck
+    break: a renamed or restructured sheet is credited to the canary layer when the template binder caught it
+    measured_instance: "the binder works by structural fingerprint over (sheet names + states, dimensions, merged ranges, defined names, unlocked mask); a row inserted into '3. Portfolio' changes the fingerprint five steps before the loop runs"
+    injector: NONE
+    why_impossible: "the fixture is the artifact and the binder is correct; there is nothing to break. The control is an ASSERTION about WHICH cause fires, not an injection"
+    layer_exists_assertion: "IN THE SAME TEST BODY, before the structural assertion: run the reference fill and assert canariesRun > 0. NC-C03 asserts a layer did NOT fire; it must therefore prove, in the same breath, that the layer exists (adversary F6)"
+    guard_tests:
+      - path: "tests/negative/test_nc_selfcheck.py::test_nc__C03_renamed_sheet_is_template_unbound_not_canary_silent"
+        flips: false
+    positive_control: "the same body asserts a lawful filing DOES bind against this catalogue, so the refusal is about the fixture and not about the catalogue"
+    status: active
+
+  - id: NC-C04
+    component: selfcheck
+    break: an apparatus break that leaves template binding, reader agreement, closure and cells_bound intact goes undetected
+    measured_instance: "death D3, mechanism 1 of 3: every witness resolves one row low, so every fault is applied to the wrong cell"
+    injector: KeysResolverOffbyone
+    guard_tests:
+      - path: "tests/negative/test_nc_selfcheck.py::test_nc__C04a_apparatus_break_is_canary_silent"
+        flips: true
+      - path: "tests/relational/test_rel__canary_positive.py::test_canary__healthy_run_is_VALID"
+        flips: true
+      - path: "tests/negative/test_nc_selfcheck.py::test_liveness__only_cause_is_canary_silent"
+        flips: false
+    positive_control: "the cause set stays exactly {canary_silent} — no other layer fired, so the canary layer and only the canary layer made the catch"
+    status: active
+
+  - id: NC-C04b
+    component: selfcheck
+    break: the CEL runtime returns true for every expr, so every predicate PASSes everything
+    measured_instance: "death D3, mechanism 2 of 3. The most direct apparatus break there is, and every layer above it is blind: the predicate ran, bound its cells, pre-flighted its keys, and returned PASS"
+    injector: CelrtShortCircuits
+    guard_tests:
+      - path: "tests/negative/test_nc_selfcheck.py::test_nc__C04a_apparatus_break_is_canary_silent"
+        flips: true
+      - path: "tests/negative/test_nc_selfcheck.py::test_nc__C08a_always_flag_predicate_fails_its_pass_case"
+        flips: true
+      - path: "tests/negative/test_nc_selfcheck.py::test_liveness__only_cause_is_canary_silent"
+        flips: false
+    positive_control: "cause isolation holds: a short-circuited runtime produces invalid.canary_silent and nothing else"
+    status: active
+
+  - id: NC-C04c
+    component: selfcheck
+    break: the fault is never applied — apply() hands back the filing's own facts
+    measured_instance: "death D3, mechanism 3 of 3. Binding intact, observability intact (the grids are computed separately and still differ), and every predicate is asked about a filing to which no fault was applied"
+    injector: ApplyReturnsCleanFacts
+    guard_tests:
+      - path: "tests/negative/test_nc_selfcheck.py::test_nc__C04a_apparatus_break_is_canary_silent"
+        flips: true
+      - path: "tests/relational/test_rel__canary_positive.py::test_canary__healthy_run_is_VALID"
+        flips: true
+      - path: "tests/negative/test_nc_selfcheck.py::test_liveness__only_cause_is_canary_silent"
+        flips: false
+    positive_control: "the loop tolerates ONE mis-applied fault by trying the next stored witness; it is only when no fault is ever applied that every canary goes silent"
+    status: active
+    note: >
+      `plan/05` §P10·L.1 lists FOUR D3 injectors. This build demonstrates THREE, and the two
+      substitutions are recorded rather than counted. `tolerance_widened` has no subject: the CEL
+      comparison is exact `==` and the only tolerance in the system is P9's `template_diff.agree()`,
+      which is a relation. `facts_trailing_space` was measured and flips no canary — this
+      population's witnesses are numeric, and a trailing space on an already-illegal value leaves
+      it illegal — so it is filed under NC-C13 against the patcher, which is what it really breaks.
+
+  - id: NC-C05
+    component: selfcheck
+    break: a witness resolves at its recorded COORDINATE rather than through the induced key
+    measured_instance: "spec §II.4.1 stores a path; §II.6.2 applies the kill case to THIS filing's facts. The two cannot both be right, and resolving by coordinate silently applies the fault to a different cell on a filing whose rows have moved"
+    injector: WitnessFromArtifact
+    guard_tests:
+      - path: "tests/unit/test_witness.py::test_w__C05_a_coordinate_target_is_refused"
+        flips: true
+    positive_control: "tests/unit/test_witness.py::test_w__a_qualified_key_is_accepted — a sheet-qualified key and a label-derived key are both accepted, so the refusal is not a reject-everything baseline"
+    status: active
+
+  - id: NC-C05c
+    component: selfcheck
+    break: the canary loop re-opens or re-serialises the artifact under test
+    measured_instance: "death D6. Liveness must be proved on the in-memory fact table so the attested hash keeps hashing the filing that was received (ties to NC-P04)"
+    injector: CanaryReopensFile
+    guard_tests:
+      - path: "tests/negative/test_nc_selfcheck.py::test_nc__C05c_no_artifact_is_opened_during_the_canary_loop"
+        flips: true
+    positive_control: "the same body arms the audit hook over a deliberate open and asserts it fires — a hook that never fires scores perfectly"
+    status: active
+
+  - id: NC-C06
+    component: selfcheck
+    break: an inapplicable witness is scored as a passed canary
+    measured_instance: null
+    injector: InapplicableCountsAsPass
+    guard_tests:
+      - path: "tests/negative/test_nc_selfcheck.py::test_nc__C06a_inapplicable_is_not_a_pass"
+        flips: true
+    positive_control: "tests/relational/test_rel__canary_positive.py::test_canary__inapplicable_below_the_ceiling_stays_VALID — sub-ceiling inapplicability stays VALID with a LOWER fraction"
+    status: active
+
+  - id: NC-C08
+    component: selfcheck
+    break: the anti-canary is skipped, so a predicate that has drifted to flagging everything passes every kill-case canary
+    measured_instance: "SPADE: selecting ALL generated candidates yields 100% coverage and 100% FFR"
+    injector: AnticanarySkipped
+    guard_tests:
+      - path: "tests/negative/test_nc_selfcheck.py::test_nc__C08a_always_flag_predicate_fails_its_pass_case"
+        flips: true
+    positive_control: "tests/relational/test_rel__canary_positive.py::test_canary__healthy_run_is_VALID — 33 of 33 anti-canaries pass on the clean fill"
+    status: active
+
+  - id: NC-C09
+    component: selfcheck
+    break: the canary self-test is behind an environment variable, so it is off in production
+    measured_instance: "plan/01-validation-methodology.md §2.5 NC-C01b specifies CDFC_CANARY_SELFTEST=1"
+    injector: SelftestBehindAFlag
+    guard_tests:
+      - path: "tests/negative/test_nc_selfcheck.py::test_nc__C09a_selftest_runs_with_no_environment_set"
+        flips: true
+      - path: "tests/negative/test_nc_selfcheck.py::test_nc__C01_the_loop_is_not_a_stub"
+        flips: true
+    positive_control: "tests/unit/test_selftest.py::test_st__C09a_selftest_runs_with_no_environment_set runs it in a subprocess with the environment stripped"
+    status: active
+
+  - id: NC-C10
+    component: selfcheck
+    break: a wall-clock duration is inside a canonicalised, hashed object, so byte-identity is unreachable -- and the quiet repair deletes the evidence that the loop executed
+    measured_instance: "adversary F23. CanaryRow carried elapsed_us: int inside the structure whose digest feeds livenessProof and run.jsonl"
+    injector: ElapsedUsInCanaryRow
+    guard_tests:
+      - path: "tests/contract/test_contract_timing.py::test_contract__no_duration_field_in_a_hashed_object"
+        flips: true
+      - path: "tests/negative/test_nc_selfcheck.py::test_nc__C10_no_duration_reaches_the_hashed_liveness_proof"
+        flips: true
+    positive_control: "tests/unit/test_timings.py::test_tim__timings_are_written_outside_the_payload — the measurement still EXISTS, in reports/perf/, which is the half of the repair that keeps the evidence"
+    status: active
+
+  - id: NC-C12
+    component: facts
+    break: a cell with no value enters the fact model as the four-character string "None", and every equality over it returns false
+    measured_instance: "D-P10-01. 68 of 257 recorded kills in the committed campaign were '' == 'None' returning false; on mutant edfc99e6, P-0012's kill compared two coercion artifacts"
+    injector: CoerceNoneToString
+    guard_tests:
+      - path: "tests/negative/test_nc_selfcheck.py::test_nc__C12a_a_none_coerced_kill_is_not_a_kill"
+        flips: true
+      - path: "tests/unit/test_fact_patch.py::test_patch__none_is_absent_never_the_string"
+        flips: true
+    positive_control: "tests/unit/test_fact_patch.py::test_patch__an_absent_patch_deletes_the_leaf_value — absence is byte-for-byte the shape filing_tree produces for a cell the workbook does not carry"
+    status: active
+
+  - id: NC-C13
+    component: facts
+    break: the shared fact-tree patcher coerces a value differently from the way the clean tree was built
+    measured_instance: "written as a fourth D3 injector on the argument that membership predicates would stop matching their vocabulary. MEASURED: no canary goes silent — this population's witnesses are numeric, and a trailing space on an already-illegal value leaves it illegal. It breaks the patcher, which is a smaller and true claim"
+    injector: FactsTrailingSpace
+    guard_tests:
+      - path: "tests/unit/test_fact_patch.py::test_patch__none_is_absent_never_the_string"
+        flips: true
+    positive_control: "tests/unit/test_fact_patch.py::test_patch__the_campaign_and_the_canary_share_one_patcher — one patcher, so the canary cannot be testing a different fact tree from the one the campaign scored"
+    status: active
