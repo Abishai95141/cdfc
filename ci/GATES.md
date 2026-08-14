@@ -36,7 +36,7 @@ a row between sets fails the build.
 | 9 | pytest | `test_cli__unimplemented_subcommand_exits_nonzero` — a stub exits 2, not 0 | P0 | P0 | `injectors/stub_exits_zero.py` | LIVE |
 | 10 | pytest | `test_cli__version_reports_gate_count` — printed count equals parsed rows | P0 | P0 | add a row without touching `cli.py` | LIVE |
 | 11 | shell | `ci/licence-denylist.sh` — no denylisted licence in the resolved set | P0 | P0 | two denylisted packages are installed right now | LIVE |
-| 12 | shell | `ci/catalogue-ids.sh` — `NC-` ids unique, defined, non-dangling, UTF-8 | P0 | P0 | duplicate an id in the registry | LIVE |
+| 12 | shell | `ci/catalogue-ids.sh` — the CATALOGUE's ids unique, every injector and guard resolvable, plan docs UTF-8 (plan cross-references ADVISORY, counts printed) | P0 | P0 | duplicate an id, or a guard naming a file that does not exist | LIVE |
 | 13 | pytest | `test_nc__CI01_missing_scan_root_fails` — a grep over a missing root is red | P0 | P0 | `injectors/remove_scan_root.py` | LIVE |
 | 14 | ast | `test_no_model_in_verdict_path` — no model client reachable from L5/L6/L7 | P5 | P5 | import a model client in `verdict/` | LIVE |
 | 15 | schema | attestation schema has no `result`/`status`/`pass` at any depth | P11 | P11 | add the field to the schema | PENDING |

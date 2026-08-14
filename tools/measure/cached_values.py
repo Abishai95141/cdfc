@@ -66,10 +66,14 @@ def main() -> int:
         }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps({"warrant": "MEASURED", "workbooks": rows}, indent=1, sort_keys=True) + "\n")
-    print(f"{'workbook':44s} {'cells':>6} {'distinct':>9} {'trivial':>8}")
+    # TWO INTEGERS, never the share alone. This line printed the share as a percentage — a rate
+    # with no denominator a reader could reconstruct — and `ci/no-bare-rate.sh` could not see it
+    # because `tools/` was not in its scan roots, which is the only surface that reaches a reader
+    # today. The gate fired on dead comments inside `src/` and stayed silent on this `print`.
+    print(f"{'workbook':44s} {'cells':>6} {'distinct':>9} {'trivial':>12}")
     for name, r in rows.items():
         print(f"  {name[:42]:42s} {r['formula_cells']:>6} {r['distinct_cached_values']:>9} "
-              f"{r['trivial_share_pct']:>7}%")
+              f"{r['trivial']:>6}/{r['formula_cells']:<6}")
     print(f"\nwrote {OUT}")
     return 0
 

@@ -39,7 +39,7 @@ FME_SUBCATEGORIES = frozenset(
 DELAY_S = 0.35
 
 # The fields kept. The detail payload carries ~90 keys of framework scaffolding; a snapshot that
-# vendored all of them would be 90% noise and would carry contact emails and addresses this
+# vendored all of them would be mostly scaffolding and would carry contact emails and addresses this
 # measurement has no use for. **Minimising what is stored is part of taking it.**
 KEEP = ("Title", "RegistrationNumber", "DateOfRegistration", "ValidityFromDate",
         "ValidityToDate", "DirSubCategoryName", "IsActive")

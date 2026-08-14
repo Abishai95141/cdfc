@@ -13,13 +13,20 @@ cd "$(dirname "$0")/.."
 source ci/_roots.sh
 assert_roots_exist cdfc_roots || { echo "GATE FAIL: refusing to report success over a missing root" >&2; exit 1; }
 
-PY="${CDFC_PY:-.venv/bin/python}"
+# `$PY` is DISCOVERED by ci/_roots.sh, which refuses when no interpreter can import cdfc.
 "$PY" - <<'PYEOF'
 import pathlib, re, sys
 
 # The surfaces a rate can reach a reader from. Plan documents are excluded: they are the design
 # record and quote the literature's figures, which is a different act from this build printing one.
-ROOTS = ["src/cdfc", "docs/measurements", "reports"]
+#
+# **`tools/` WAS MISSING, AND IT IS THE ONLY ONE THAT REACHES A READER TODAY.** `cdfc run` exits 2
+# and the report template has no renderer, so the programs that actually print a coverage
+# declaration to a human are `tools/demo_*.py` and `tools/measure/*.py`. Demonstrated: a bare rate
+# `print()`-ed from `tools/demo_template_diff.py` was invisible to this gate, while the same text
+# as a DEAD COMMENT inside `src/cdfc` made it red. The gate fired on what nobody sees and stayed
+# silent on what everybody does.
+ROOTS = ["src/cdfc", "tools", "docs/measurements", "reports"]
 BARE = re.compile(r"(?<![\d/])\d+(?:\.\d+)?\s*%|\}\s*%|:\s*\.\d+[fg]\}%")
 HAS_FRACTION = re.compile(r"\d[\d,]*\s*(?:/|of|out of)\s*\d")
 ALLOW = re.compile(r"(https?://|%s|%d|%r|width:|# *noqa)")

@@ -181,3 +181,33 @@ is 12. Repairing it moves every envelope digest, the registry root, P7's funnel 
 is a phase of its own. What row 75 prevents is a **partial** repair landing quietly: scaling the
 tree without moving the literals, or the reverse, is the same defect with the sign flipped and
 would be much harder to see than the one we have now.
+
+## 14 Aug 2026 — row 12 restated, and rows 3 / 28 / 48 rebound to injectors that break them
+
+**Row 12 claimed four subjects and enforced one.** `ci/catalogue-ids.sh` ran
+`plan/scripts/nc_audit.py` and DISCARDED its exit status behind `|| { echo "advisory at P0"; }`,
+so only the UTF-8/NUL half could fail the gate — and the swallowed half had been red the whole
+time: 17 orphan ids, 56 dangling ids, `VERDICT: NOT CLEAN`. A gate that prints its own subject's
+failure and exits 0 is worse than one that never looked.
+
+The two halves are now separated rather than conflated. **Enforced:** the CATALOGUE's own ids —
+unique, every injector defined in `injectors/`, every guard path a real file, and `injector: NONE`
+admissible only with a `why_impossible`. That is the registry this build actually runs against and
+it is checkable. **Advisory, with its numbers printed on every run:** the plan documents'
+cross-references. `plan/*.md` is the design record and names controls that were specified and never
+built; making that fatal would demand the plan be edited to match what shipped, which is backwards —
+the plan is the input. The count is on screen so it cannot be forgotten, and it is labelled
+advisory rather than presented as a pass.
+
+**Rows 3, 28 and 48 were published OBSERVED RED on injectors that break something else.** Row 3
+(`scan-roots-exist`) was bound to `DefeatBareExceptGate`, which replaces a different script; rows
+28 (`no-regex-over-xml`) and 48 (`no-wallclock-z3`) to injectors that edit a markdown table and a
+Z3 verdict reading respectively. Under all three the gate exits 0. The gates were functional the
+whole time — this was a wrong evidence binding, not a dead gate, and `tools/gate_liveness.py`'s
+own docstring argues that a hand-maintained list drifts, which is what its `EVIDENCE` map did.
+
+Two repairs. `gate_liveness` now RUNS a shell gate under its bound injector and requires a
+non-zero exit, reporting `BINDING NOT VERIFIED` instead of counting a red observation nobody can
+reproduce; it distinguishes the two injector shapes, because the `_DefeatGate` family replaces the
+gate script itself and exits 0 BY DESIGN. And NC-CI18 / NC-CI19 / NC-CI20 plant each gate's own
+subject — a missing scan root, a pattern over a cell element, a wall clock on the solver.
