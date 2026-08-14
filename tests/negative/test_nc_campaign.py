@@ -266,8 +266,14 @@ def test_nc__Q64_no_bare_rate_reaches_a_surface() -> None:
     A percentage carries no evidence of its own arithmetic. On its first run this gate found
     fourteen bare rates in this repository, one of them in a published measurement file.
     """
+    # Through `injectors.run_gate` and not a third copy of the same three lines: a local runner
+    # that does not declare its interpreter discovers a different one in a fresh clone, and the
+    # gate then fails for a reason that has nothing to do with what it guards.
     import subprocess
 
-    r = subprocess.run(["bash", str(REPO / "ci" / "no-bare-rate.sh")],
-                       cwd=REPO, capture_output=True, text=True)
-    assert r.returncode == 0, (r.stdout + r.stderr)[:600]
+    from injectors import run_gate
+
+    assert run_gate("ci/no-bare-rate.sh") == 0, subprocess.run(
+        ["bash", str(REPO / "ci" / "no-bare-rate.sh")], cwd=REPO, capture_output=True, text=True,
+        env={**__import__("os").environ, "CDFC_PY": __import__("sys").executable},
+    ).stdout[:600]

@@ -250,9 +250,16 @@ def test_nc__CI17_machine_local_path_is_rejected() -> None:
 
 
 def _gate(script: str) -> int:
-    import subprocess
+    """**`injectors.run_gate`, not a second implementation.**
 
-    return subprocess.run(["bash", script], cwd=REPO_ROOT, capture_output=True).returncode
+    This file carried its own copy, and it did not pass `CDFC_PY` — so in a fresh clone with no
+    `.venv` the gates it invoked discovered the bare system interpreter and failed with
+    `ModuleNotFoundError`, while the identical calls through `injectors.run_gate` were green.
+    Two runners for one job, and the one that drifts is the one nobody is reading.
+    """
+    from injectors import run_gate
+
+    return run_gate(script)
 
 
 def test_nc__CI18_a_missing_scan_root_makes_the_gate_red() -> None:
