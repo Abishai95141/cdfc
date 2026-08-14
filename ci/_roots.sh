@@ -18,12 +18,27 @@ set -euo pipefail
 #
 # So: discover, in order, and REFUSE if nothing works. A gate with no interpreter must be red, not
 # quiet — that is the whole rule this file exists to enforce, applied to itself.
+# **THE PROBE HAS TO BE THE WHOLE JOB, NOT A HANDSHAKE.** It used to be `import cdfc` — and
+# `src/cdfc/__init__.py` imports nothing, so a bare system interpreter with none of the project's
+# dependencies installed passes it. On a fresh clone with no `.venv`, `_pick_python` therefore
+# selected that interpreter, announced nothing, and the gates built on it failed one by one with
+# `ModuleNotFoundError: No module named 'yaml'` — a diagnosis about the wrong thing, three layers
+# from the cause.
+#
+# The whole point of this discovery is to REFUSE rather than half-work. So it probes for what the
+# gates actually use — `yaml` (`catalogue-ids`), `lxml` (the ingest path) — as well as for `cdfc`
+# itself. An interpreter that can import an empty package and nothing else is not an interpreter
+# that can run this build, and saying so once here is worth more than a stack trace per gate.
+#
+# **Found by a fresh clone, which is the only place it could be found**: every developer machine
+# has a `.venv`, and the first candidate that works masks the probe's weakness completely.
 _here="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+_PROBE='import sys; sys.path.insert(0,"'"$_here"'/src"); import cdfc, yaml, lxml.etree'
 _pick_python() {
   local c
   for c in "${CDFC_PY:-}" "$_here/.venv/bin/python" "$(command -v python3 || true)"; do
     [ -n "$c" ] && [ -x "$c" ] || continue
-    if "$c" -c 'import sys; sys.path.insert(0,"'"$_here"'/src"); import cdfc' >/dev/null 2>&1; then
+    if "$c" -c "$_PROBE" >/dev/null 2>&1; then
       printf '%s' "$c"
       return 0
     fi
@@ -31,7 +46,11 @@ _pick_python() {
   return 1
 }
 if ! PY="$(_pick_python)"; then
-  echo "GATE FAIL: no interpreter can import cdfc. Tried \$CDFC_PY, .venv/bin/python, python3." >&2
+  echo "GATE FAIL: no interpreter can run this build. Tried \$CDFC_PY, .venv/bin/python, python3." >&2
+  echo "  The probe is 'import cdfc, yaml, lxml.etree' and not merely 'import cdfc': cdfc's" >&2
+  echo "  __init__ imports nothing, so a bare interpreter passes that and then fails inside" >&2
+  echo "  every gate with a ModuleNotFoundError about something else." >&2
+  echo "  Install the lockfile (pip install -r requirements.lock) or set CDFC_PY." >&2
   echo "  A gate that cannot read its own scan roots must be RED, never quiet: a grep over" >&2
   echo "  nothing reports success, which is NC-CI01." >&2
   exit 1

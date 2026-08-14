@@ -17,8 +17,10 @@ from __future__ import annotations
 
 import contextlib
 import hashlib
+import os
 import shutil
 import subprocess
+import sys
 from collections.abc import Iterator
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -130,9 +132,23 @@ def inject(inj: Injector) -> Iterator[Injector]:
 
 
 def run_gate(script: str) -> int:
-    """Run a shell gate and return its exit code."""
+    """Run a shell gate and return its exit code.
+
+    **`CDFC_PY` is set to the interpreter running the tests, and that is not a workaround.**
+    `ci/_roots.sh` discovers an interpreter by probing `$CDFC_PY`, then `.venv/bin/python`, then
+    `python3` — and in a fresh clone with no `.venv`, `python3` is the bare system interpreter with
+    none of this project's dependencies. The gate then failed with `ModuleNotFoundError: No module
+    named 'yaml'` while the pytest process that invoked it was running under a perfectly good
+    interpreter three feet away.
+
+    The subprocess cannot discover that; the caller already knows it. So the caller says so. The
+    discovery path is still exercised — `make verify` runs every gate with nothing passed by hand,
+    and `_pick_python` now REFUSES loudly rather than selecting an interpreter that can import an
+    empty package and nothing else.
+    """
     return subprocess.run(
-        ["bash", str(REPO_ROOT / script)], cwd=REPO_ROOT, capture_output=True, text=True
+        ["bash", str(REPO_ROOT / script)], cwd=REPO_ROOT, capture_output=True, text=True,
+        env={**os.environ, "CDFC_PY": sys.executable},
     ).returncode
 
 
