@@ -87,6 +87,7 @@ a row between sets fails the build.
 | 60 | pytest | `test_nc__Q10_set_ffr_is_at_least_one_not_a_mean` — the registry cannot drift to flag-everything | P8 | P8 | `injectors/SetFfrIsMean` | LIVE |
 | 61 | pytest | `test_nc__Q09_severity_uses_wilson_upper` — a sample of four cannot buy BLOCKING | P8 | P8 | `injectors/SeverityPointEstimate` | LIVE |
 | 62 | pytest | `test_severity__synthetic_corpus_cannot_buy_blocking` — F2's second half: the non-synthetic floor | P8 | P8 | `injectors/SyntheticBuysBlocking` | LIVE |
+| 63 | pytest | `test_nc__Q65_a_mixed_column_blocks_expr` — a heterogeneous column is decidable, and never reaches the runtime | P8 | P8 | `injectors/MixedColumnProceeds` | LIVE |
 
 **Rows 17 and 18 exist as gates from the first commit, dated 11 Aug 2026, and their reason is recorded
 rather than assumed.** Row 17: a `CanaryRow.elapsed_us` inside a canonicalised payload was found in the
@@ -94,7 +95,7 @@ plan and would have made byte-identical re-derivation impossible; the gate exist
 Row 18: a displayed critical-path total that did not equal the sum of its own rows was found in the plan,
 which is the shared-denominator error in a schedule; the gate exists before any other total does.
 
-**LIVE = {1,…,14,16,…,62} (61 rows). PENDING = {15} (1 row). Total 62.**
+**LIVE = {1,…,14,16,…,63} (62 rows). PENDING = {15} (1 row). Total 63.**
 
 **Row 20 was added at P3, dated 11 Aug 2026.** R4 requires the evaluator to be `Decimal` from its first line rather than converted later; the gate exists so that cannot drift in unnoticed.
 
@@ -202,3 +203,12 @@ statement about a SAMPLE, and a sample the product generates is unbounded in `n`
 command. `BLOCKING` needs thirty filings a person or the world produced, whatever the interval says.
 
 `ADDED_LIVE_AT_P8` is a sixth frozen literal.
+
+**Row 63 was added 14 Aug 2026, and it is the only gate in this registry whose subject was found by
+an input nobody in this project produced.** The blind-fill probe handed the evaluator a column of
+45 numbers and 125 numeric strings; `c.v >= 0` over it took the process from 85 MB to **6 GB
+without returning**, and `Budget(steps=2000)` could not stop it because the step meter ticks only
+on fact-tree access and the blow-up is inside the runtime. `celrt.Budget`'s own docstring names
+that state: *a declared budget nobody enforces is worse than no budget.* Pre-flight now refuses a
+heterogeneous column — decidably unsatisfiable, not undecidable — and the predicate reports
+`NOT_RUN` in 0.0 s at 90 MB.

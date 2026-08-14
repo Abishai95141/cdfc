@@ -187,3 +187,11 @@ which parts of the return are underspecified**, arriving from five independent f
 
 **The measured result of the probe therefore stands as:** 5 filings, 1 fire each, **0 false
 failures**, and one column of the FME return identified as unfillable from the form alone.
+
+**The counts are UNCHANGED by this triage — `P-0185` needs no repair — and they are re-stated
+because `tests/golden/test_harvest_count.py` reads them from the LAST entry of this ledger, so an
+entry that changed nothing and dropped them would leave the harvest unpinned:**
+
+- `test_golden__harvest_count__fme` -> **348**
+- `test_golden__cross_workbook_harvest_distribution` -> **571**
+- `test_golden__zero_formula_template__edr1` -> **1**

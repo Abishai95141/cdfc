@@ -1339,3 +1339,21 @@ entries:
         flips: false
     positive_control: "the absence is a declared state with a consequence (BLOCKING == 0), not a gap"
     status: active
+
+  - id: NC-Q65
+    component: evaluate
+    break: a repeated node whose element types disagree is waved through pre-flight
+    measured_instance: "a blind-filled column of 45 numbers and 125 numeric strings took the evaluator from 85MB to 6GB on ONE predicate and did not return; Budget(steps=2000) could not stop it because the meter only ticks on fact-tree access"
+    injector: MixedColumnProceeds
+    guard_tests:
+      - path: "tests/negative/test_nc_verdict.py::test_nc__Q65_a_mixed_column_blocks_expr"
+        flips: true
+      - path: "tests/negative/test_nc_verdict.py::test_nc__Q65b_a_homogeneous_column_still_runs"
+        flips: false
+    positive_control: "a homogeneous column still runs; the rule is not indistinguishable from one that blocks every repeated node, which would stop every membership and bound predicate in the system"
+    status: active
+    note: >
+      The join of two individually-reasonable decisions. Reporting a mixture as `not one type` is
+      right; reading `not one type` as `proceed` is wrong. A column that is half text cannot satisfy
+      one numeric comparison - decidable, not unknown. Found by the blind-fill probe, which is the
+      only input to this system that neither we nor a seeded generator produced.

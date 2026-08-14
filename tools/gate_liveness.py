@@ -98,6 +98,7 @@ EVIDENCE: dict[int, str] = {
     60: "NC-Q10",   # set-FFR is `at least one`, never the mean
     61: "NC-Q09",   # the tier is keyed on the upper bound
     62: "NC-Q60b",  # F2's second half — the non-synthetic floor
+    63: "NC-Q65",   # a heterogeneous column never reaches the runtime
     14: "NC-E33",   # no model client in the verdict path (promoted at P6)
     16: "NC-E30",   # the seven-term closure invariant (promoted at P6)
 }
