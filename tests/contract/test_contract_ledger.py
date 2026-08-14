@@ -128,12 +128,26 @@ def test_contract__every_measurement_path_resolves() -> None:
     sys.path.insert(0, str(_P(__file__).resolve().parents[2] / "src"))
     from cdfc.measure import paths
 
+    # A constant naming a FILE must resolve. A constant naming an OUTPUT DIRECTORY — `reports/perf`
+    # is gitignored and created by the run that writes timings — is checked one level up instead,
+    # which still catches a misspelling without demanding that an output be committed.
+    #
+    # **A FRESH CLONE FOUND THIS AND THE WORKING TREE COULD NOT**: `reports/perf/` existed locally
+    # and does not exist in a clone, so a test that demanded every path exist passed here and
+    # failed there. That is what the clone step is for.
+    OUTPUT_DIRS = {"PERF_DIR"}
+
     missing = []
     for name in sorted(dir(paths)):
         if not name.isupper():
             continue
         v = getattr(paths, name)
-        if isinstance(v, _P) and not v.exists():
+        if not isinstance(v, _P):
+            continue
+        if name in OUTPUT_DIRS:
+            if not v.parent.is_dir():
+                missing.append(f"{name} -> {v} (its parent does not exist either)")
+        elif not v.exists():
             missing.append(f"{name} -> {v}")
     assert not missing, (
         f"{len(missing)} measurement-path constants name something that does not exist: {missing}"
