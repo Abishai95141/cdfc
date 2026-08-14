@@ -251,3 +251,57 @@ The first is `docs/decisions/D-P10-01-none-is-not-a-value.md`. The third is the 
 campaign's own docstring said unobservable mutants are retained *"so P10 has its residue
 feedstock"* — the reasoning was right and the bucket list was incomplete, and nothing noticed until
 something asked for the rows.
+
+---
+
+## The fresh clone, and a claim from the previous phase that has to be corrected
+
+Every phase of this build closes with a fresh clone, because a measurement that only re-derives in
+the tree that produced it is a screenshot. P10's clone run found **three** things, and one of them
+is a correction to what P9's close reported.
+
+### What re-derives
+
+`tools/measure/p10_residue.py` in a fresh clone produces **no diff at all**: `|RESIDUE|`, the
+adjudication record's digest, the per-class survivor split and both exhibits are byte-identical.
+`tools/measure/p10_canary_cost.py` produces exactly one changed line — the measured wall clock,
+which is the only number on that page that is a clock read rather than a function of the inputs,
+and it says so on its own face.
+
+### What the clone found
+
+1. **`_pick_python` accepted an interpreter that cannot run the build.** It probed with
+   `import cdfc`, and `src/cdfc/__init__.py` imports nothing — so a bare system interpreter with
+   none of this project's dependencies passed. On a clone with no `.venv` it was selected silently,
+   and the gates failed one by one with `ModuleNotFoundError: No module named 'yaml'`: a diagnosis
+   about the wrong thing, three layers from the cause. The probe is now
+   `import cdfc, yaml, lxml.etree` — what the gates actually use.
+
+2. **Three gate runners for one job, and only one declared its interpreter.**
+   `injectors.run_gate` passed `CDFC_PY`; a local `_gate` in `test_nc_ci.py` and one inline call in
+   `test_nc_campaign.py` did not. Six tests went red in the clone for a reason having nothing to do
+   with what they guard. One runner now.
+
+3. **A gitignored output directory asserted to pre-exist** — caught at P9's close, in the same way,
+   and the reason the `OUTPUT_DIRS` carve-out exists.
+
+### The correction
+
+**P9's close recorded *"a fresh clone with no `CDFC_PY`, no `PY`, nothing passed by hand: `make
+verify` exit 0"*. That claim cannot have been true in the form it was stated**, and this phase's
+clone run is what shows why: with both variables unset and no `.venv` present, `_pick_python`
+reaches the bare system interpreter, and `ci/catalogue-ids.sh` needs `yaml`. Either that run had a
+`.venv` inside the clone, or it did not reach the gates that need third-party imports. The claim
+was not checked as carefully as it was written.
+
+**What is true, and what this phase verifies:**
+
+| branch | result |
+|---|---|
+| clone, no dependencies, nothing declared | **REFUSES, loudly**, naming the probe and telling the reader to install the lockfile or set `CDFC_PY`. A gate with no interpreter must be RED, never quiet — NC-CI01, applied to the discovery itself |
+| clone, `CDFC_PY` naming an interpreter with the lockfile installed | **green**: full suite, `make verify`, and every P10 measurement re-derived byte-identically |
+
+Supplying an interpreter is not passing a workaround by hand: it is the one thing a clone genuinely
+lacks. Supplying a *fixed absolute path baked into a script* is the defect, and that is what
+`ci/_roots.sh`'s discovery replaced. The two are not the same, and the difference is now stated
+here rather than assumed.
