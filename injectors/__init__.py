@@ -1964,3 +1964,29 @@ ALL_INJECTORS = ALL_INJECTORS + (
     SeverityPointEstimate, SyntheticBuysBlocking,
 )
 BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+class MixedColumnProceeds(Injector):
+    """A repeated node whose element types DISAGREE is waved through pre-flight.
+
+    NC-Q65. `type_of` reports a mixture as `MIXED`; the injector puts it back to `None`, which
+    pre-flight reads as *"the fact side cannot decide either; still presence only"* and PROCEEDS.
+    A blind-filled return whose column held 45 numbers and 125 numeric strings then reached the CEL
+    runtime, where `c.v >= 0` is a type error on 125 of 170 elements — and evaluating that ONE
+    predicate took the process from 85 MB to **6 GB without returning**, with a 2,000-step budget
+    unable to stop it because the step meter only ticks on fact-tree access.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="mixed_column_proceeds", touches=[REPO_ROOT / "src/cdfc/facts/view.py"])
+
+    def apply(self) -> None:
+        p = REPO_ROOT / "src/cdfc/facts/view.py"
+        p.write_text(p.read_text().replace(
+            '        # NOT None. `None` means *nobody can tell*; this is *we can tell, and they disagree*.\n'
+            '        return "MIXED"',
+            "        return None  # INJECTED", 1))
+
+
+ALL_INJECTORS = ALL_INJECTORS + (MixedColumnProceeds,)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}

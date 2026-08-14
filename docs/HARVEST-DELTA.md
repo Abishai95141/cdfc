@@ -159,3 +159,31 @@ and the declared skip rather than quietly finding no subject.
 - `test_golden__zero_formula_template__edr1` -> **1**
 
 and `total obligations` -> **571**.
+
+## 14 Aug 2026 — the blind-fill probe's one fire, TRIAGED: a true positive, not a defect
+
+**`P-0185` fired on 5 of 5 blind-filled returns, and the predicate is RIGHT.**
+
+    P-0185  membership
+    filing.n_3_portfolio.dv_w88.cells.all(c, c.v == "" || c.v in template.vocab.n_3_portfolio_w88)
+
+The pinned blank attaches ONE list validation — twelve instrument types — across **ten ranges** in
+five columns (`W`, `R`, `M`, `H`, `C`, rows 75–84 and 88–97). Four of the five columns were filled
+with instrument types. **Column `M` rows 88–97 was filled `No / No / Yes / No / No`.**
+
+**Why every filler did the same thing.** The label extraction found **no header text** above that
+column block — the probe offered it as `label: "NA"`. A filler with no label guessed a Yes/No
+field. The regulator's own form attaches an instrument-type vocabulary there and prints nothing
+above it to say so.
+
+**So the fire is a TRUE POSITIVE and contributes ZERO to the false-failure rate**: the return
+genuinely violates the template's own data validation. `P-0185` needs no repair.
+
+**And the finding is about the INSTRUMENT, which is what the fill brief exists to capture.** *"A
+cell a competent filler cannot complete from the template and the regulation alone is evidence
+about the instrument, not noise."* An unlabelled cell under a twelve-member vocabulary is exactly
+that, and it feeds `no_predicate.rule_ambiguous` — **the only independent read this project has on
+which parts of the return are underspecified**, arriving from five independent fillers agreeing.
+
+**The measured result of the probe therefore stands as:** 5 filings, 1 fire each, **0 false
+failures**, and one column of the FME return identified as unfillable from the form alone.

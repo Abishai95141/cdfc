@@ -310,8 +310,23 @@ class FactSet:
         return present
 
     def type_of(self, key: str) -> str | None:
-        """`STRING` | `INT` | `LIST` | `BOOL`, or None when the key resolves to nothing or to a
-        mixture. A mixture is reported as unknown rather than as the first value's type."""
+        """`STRING` | `INT` | `LIST` | `BOOL` | **`MIXED`**, or None when the key resolves to
+        nothing.
+
+        **`MIXED` was added 14 Aug 2026 and it closes a hang, not a cosmetic gap.** A mixture used
+        to return `None`, and `preflight` reads `None` as *"the fact side cannot decide either;
+        still presence only"* — so it PROCEEDED. A blind-filled return whose `2. Summary!F` column
+        held 45 numbers and 125 numeric STRINGS was therefore handed to the CEL runtime, where
+        `c.v >= 0` is a type error on 125 of 170 elements, and evaluating that ONE predicate took
+        the process from 85 MB to **6 GB without returning** — with `Budget(steps=2000)` unable to
+        stop it, because the step meter only ticks on fact-tree access and the blow-up is inside
+        the runtime.
+        
+        Two individually-reasonable decisions joined into a defect: reporting a mixture as *not one
+        type* is right, and reading *not one type* as *proceed* is wrong. **A column that is half
+        text cannot satisfy one numeric comparison**, and that is a decidable fact, not an unknown
+        one.
+        """
         present, values = self._walk(key)
         if not present or not values:
             return None
@@ -329,4 +344,7 @@ class FactSet:
                 kinds.add("OBJECT")
             else:
                 kinds.add("OTHER")
-        return kinds.pop() if len(kinds) == 1 else None
+        if len(kinds) == 1:
+            return kinds.pop()
+        # NOT None. `None` means *nobody can tell*; this is *we can tell, and they disagree*.
+        return "MIXED"

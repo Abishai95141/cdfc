@@ -69,6 +69,13 @@ def preflight(p: Any, facts: Any) -> PreflightResult:
         actual = facts.type_of(key)
         if actual is None:
             continue                      # the fact side cannot decide either; still presence only
+        if actual == "MIXED":
+            # A repeated node whose elements disagree in type. NOT undecidable — decidably
+            # unsatisfiable: no single comparison holds over a column that is part number and part
+            # text. Letting it through hung the evaluator at 6 GB on one predicate.
+            type_checked += 1
+            mistyped.append((key, expected, "MIXED"))
+            continue
         type_checked += 1
         if not _compatible(expected, actual):
             mistyped.append((key, expected, actual))
@@ -88,6 +95,8 @@ def _compatible(expected: str, actual: str) -> bool:
     Deliberately narrow. A permissive compatibility table is a pre-flight that passes everything,
     which is the same as no pre-flight with a count beside it.
     """
+    if actual == "MIXED":
+        return False        # a heterogeneous column satisfies no single comparison
     if expected == actual:
         return True
     # A blank ENUM/TEXT cell is the empty string, and a bound written against a number may read it.

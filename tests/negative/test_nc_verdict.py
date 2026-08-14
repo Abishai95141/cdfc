@@ -240,3 +240,62 @@ def test_nc__E02c_a_complete_fact_set_proceeds_to_expr() -> None:
 
     res = run_filing(INDEPENDENT)
     assert any(c.order in (8, 9) for c in res.checks), "no predicate reached `expr` at all"
+
+
+# --------------------------------------------------------------------------------
+# P8 — NC-Q65: a heterogeneous column is decidably unsatisfiable, not undecidable
+# --------------------------------------------------------------------------------
+
+
+def test_nc__Q65_a_mixed_column_blocks_expr() -> None:
+    """**The 6 GB hang, as a unit test.**
+
+    A repeated node whose elements disagree in type used to return `None` from `type_of`, and
+    pre-flight reads `None` as *proceed*. Two individually-reasonable decisions joined into a
+    defect: reporting a mixture as *not one type* is right; reading *not one type* as *proceed* is
+    wrong. **A column that is half text cannot satisfy one numeric comparison** — that is a
+    decidable fact, not an unknown one.
+    """
+    from cdfc.evaluate.preflight import _compatible, preflight
+    from cdfc.facts.view import FactSet
+
+    facts = FactSet(
+        filing={"t": {"cells": [{"v": 1}, {"v": "181.24"}, {"v": 3}]}},
+        template={},
+    )
+    assert facts.type_of("filing.t.cells[*].v") == "MIXED", (
+        "a mixture is decidable: we CAN tell, and they disagree"
+    )
+    assert not _compatible("INT", "MIXED")
+    assert not _compatible("STRING", "MIXED")
+
+    class Cand:
+        id = "P-MIXED"
+        schema_keys = ("filing.t.cells", "filing.t.cells[*].v")
+        applicable = "has(filing.t.cells)"
+        expr = "filing.t.cells.all(c, c.v >= 0)"
+        witness = "[]"
+
+    res = preflight(Cand(), facts)
+    assert not res.proceed, "a mixed column must never reach the runtime"
+    assert res.blocking_key == "filing.t.cells[*].v"
+    assert res.mistyped[0][2] == "MIXED"
+
+
+def test_nc__Q65b_a_homogeneous_column_still_runs() -> None:
+    """THE ADMISSION-SIDE TWIN. Without it the rule is indistinguishable from one that blocks every
+    repeated node, which would stop every membership and bound predicate in the system."""
+    from cdfc.evaluate.preflight import preflight
+    from cdfc.facts.view import FactSet
+
+    facts = FactSet(filing={"t": {"cells": [{"v": 1}, {"v": 2}, {"v": 3}]}}, template={})
+    assert facts.type_of("filing.t.cells[*].v") == "INT"
+
+    class Cand:
+        id = "P-CLEAN"
+        schema_keys = ("filing.t.cells", "filing.t.cells[*].v")
+        applicable = "has(filing.t.cells)"
+        expr = "filing.t.cells.all(c, c.v >= 0)"
+        witness = "[]"
+
+    assert preflight(Cand(), facts).proceed

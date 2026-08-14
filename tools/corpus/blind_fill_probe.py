@@ -78,8 +78,30 @@ def expand(fill: dict, groups: list) -> dict[tuple[str, str], object]:
         if not vals:
             continue
         for i, ref in enumerate(sorted(g["refs"], key=_row)):
-            out[(g["sheet"], ref)] = vals[i % len(vals)]
+            out[(g["sheet"], ref)] = _as_declared(vals[i % len(vals)], g["kind"])
     return out
+
+
+def _as_declared(value: object, kind: str) -> object:
+    """Coerce to the kind the FORM declares, not to whatever JSON happened to carry.
+
+    A filler writing `181.24` for a `decimal` field may emit it as a JSON string; written back as
+    an inline STRING it makes the column part number and part text. That is a transport artefact,
+    not the filler's intent — and it is what produced a 6 GB hang before pre-flight learned to
+    refuse a heterogeneous column.
+
+    A value that does NOT parse as the declared kind stays exactly as written, so a filler who
+    genuinely puts text in a numeric field is still visible rather than coerced into looking fine.
+    """
+    from decimal import Decimal, InvalidOperation
+
+    if kind not in ("decimal", "whole", "date") or not isinstance(value, str):
+        return value
+    try:
+        d = Decimal(value.strip())
+    except (InvalidOperation, ValueError):
+        return value
+    return int(d) if d == d.to_integral_value() else d
 
 
 def main() -> int:

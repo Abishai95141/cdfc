@@ -156,5 +156,30 @@ def formula_values(blob: Path) -> dict[tuple[str, str], object]:
                 v = c.find(f"{{{M}}}v")
                 if v is None or v.text is None:
                     continue
-                out[(name, c.get("r") or "")] = v.text
+                out[(name, c.get("r") or "")] = _typed(v.text)
     return out
+
+
+def _typed(text: str) -> object:
+    """A cached value carries its TYPE, not just its characters.
+
+    **This is the root cause of the 6 GB hang.** `formula_values` returned `v.text` — a `str` — for
+    every derived cell, and `_set_value` writes a `str` as an inline STRING. So every
+    foreign-engine-derived cell in the corpus was TEXT, a numeric column came back part number and
+    part text, and a `c.v >= 0` over it is a type error the runtime cannot cheaply refuse.
+
+    A cached numeric value is a number. Anything that does not parse as one stays a string, which
+    is what an error literal or a genuine text result is.
+    """
+    from decimal import Decimal, InvalidOperation
+
+    t = (text or "").strip()
+    if not t:
+        return t
+    try:
+        d = Decimal(t)
+    except (TypeError, ValueError, InvalidOperation):
+        return text
+    # `Decimal`, never `float`: R4 makes every quantity here exact, and a float in a filing is a
+    # value nobody can re-derive. `_set_value` stringifies it, so the XML carries the same digits.
+    return int(d) if d == d.to_integral_value() else d
