@@ -1357,3 +1357,154 @@ entries:
       right; reading `not one type` as `proceed` is wrong. A column that is half text cannot satisfy
       one numeric comparison - decidable, not unknown. Found by the blind-fill probe, which is the
       only input to this system that neither we nor a seeded generator produced.
+
+  - id: NC-R01
+    component: probes
+    break: a relation returns PASS on a filing that satisfies it only because the filing is empty
+    measured_instance: "the FME blank's own cached grid: '1. Introduction'!D17/D18/D19/D20 all cache 0 and C92/D92/E92 all cache 'NA' (MEASURED 14 Aug 2026)"
+    injector: RelationNoPrecondition
+    guard_tests:
+      - path: "tests/negative/test_nc_probes.py::test_nc__R01a_all_zero_filing_is_OUT_OF_SCOPE"
+        flips: true
+      - path: "tests/relational/test_rel_p9.py::test_rel__every_partition_is_OUT_OF_SCOPE_on_an_all_zero_filing"
+        flips: true
+      - path: "tests/negative/test_nc_probes.py::test_rel__td_precondition_holds"
+        flips: false
+    positive_control: "tests/relational/test_rel_p9.py::test_rel__td_fires_on_the_overwritten_pair - the relation DOES fire on a real override, so a precondition that refused everything would not pass"
+    status: active
+
+  - id: NC-R02
+    component: probes
+    break: a TEMPLATE_DIFF finding binds the formula cell itself, which is not in the field surface
+    measured_instance: "497 of 505 FME formula cells are locked, therefore outside the 3,747-cell field surface (MEASURED 14 Aug 2026)"
+    injector: TdBindsTheFormulaCell
+    guard_tests:
+      - path: "tests/negative/test_nc_probes.py::test_nc__R02a_binding_outside_the_denominator_aborts_closure"
+        flips: true
+      - path: "tests/property/test_prop_template_diff.py::test_prop__binding_is_a_subset_of_the_denominator"
+        flips: true
+    positive_control: "tests/golden/test_p9_ceiling.py::test_golden__ceiling_is_957_of_3747 - the relation does bind cells, so a binder that returned the empty set would not pass"
+    status: active
+
+  - id: NC-R03
+    component: probes
+    break: a relation with no qualification block settles a cell
+    measured_instance: null
+    injector: RelationWithoutQualification
+    guard_tests:
+      - path: "tests/negative/test_nc_probes.py::test_unqualified_relation_cannot_settle_a_cell"
+        flips: true
+      - path: "tests/negative/test_nc_probes.py::test_nc__R03b_qualified_relation_does_settle"
+        flips: false
+    positive_control: "test_nc__R03b - a converter that refused every relation would satisfy the first guard and fail this one"
+    status: active
+
+  - id: NC-R04
+    component: probes
+    break: the oracle is defective and the relation reports the regulator's own defect as the filer's failure
+    measured_instance: "'1. Introduction'!D17 = SUM(D18:D20) over four COUNTIF patterns matching 7 of the 9 scheme types in Dropdown!F3:F11; Special Situation Fund and Family Investment Fund match none (MEASURED 14 Aug 2026, tools/probes/p9_scheme_vocabulary.py)"
+    injector: DefectTableIgnored
+    guard_tests:
+      - path: "tests/negative/test_nc_probes.py::test_nc__R04a_declared_defect_is_INFORMATIONAL_not_FAIL"
+        flips: true
+      - path: "tests/unit/test_probe_template_diff.py::test_td__declared_defect_is_INFORMATIONAL_when_something_else_binds_the_cells"
+        flips: true
+      - path: "tests/negative/test_nc_probes.py::test_nc__R04b_an_undeclared_cell_still_FAILs"
+        flips: false
+    positive_control: "test_nc__R04b - an undeclared mismatch still FAILs, so a defect table that swallowed everything would not pass"
+    status: active
+
+  - id: NC-R05
+    component: probes
+    break: a relation drafted across two accounting bases is admitted
+    measured_instance: "'3. Portfolio'!A130 note 3 - 'While information in Table 3.5 should be provided on non-look through basis, the information in Table 3.6 should be provided on look-through basis.' (MEASURED 14 Aug 2026)"
+    injector: BasisGuardDisabled
+    guard_tests:
+      - path: "tests/negative/test_nc_probes.py::test_nc__R05a_a_cross_basis_relation_does_not_load"
+        flips: true
+      - path: "tests/unit/test_relation_registry.py::test_reg__step4_bases_must_be_a_singleton"
+        flips: true
+      - path: "tests/unit/test_relation_registry.py::test_rel__single_basis_relation_is_admitted"
+        flips: false
+    positive_control: "test_rel__single_basis_relation_is_admitted - a guard that refused every relation would satisfy the first two and fail this one"
+    status: active
+
+  - id: NC-R06
+    component: probes
+    break: the probe search draws its seed from entropy, so the report cannot be re-derived
+    measured_instance: null
+    injector: ProbeSeedFromEntropy
+    guard_tests:
+      - path: "tests/negative/test_nc_probes.py::test_nc__R06a_the_probe_seed_is_a_pinned_constant"
+        flips: true
+      - path: "tests/determinism/test_det_probes.py::test_det__probe_results_are_seed_stable"
+        flips: false
+    positive_control: "tests/determinism/test_det_probes.py::test_det__probe_results_differ_under_a_different_seed - a seed that changes nothing is not doing anything, and the determinism test would be vacuously green"
+    status: active
+
+  - id: NC-R07
+    component: probes
+    break: a relation duplicates a harvested predicate, so the before/after delta counts the same cell twice
+    measured_instance: "P-0017 already asserts every cell of '1. Introduction'!G54:G63 holds a term from template.vocab.n_1_introduction_g54, resolved from the pinned blank; 20 membership predicates cover the validation ranges (MEASURED 14 Aug 2026)"
+    injector: SubsumptionCheckDisabled
+    guard_tests:
+      - path: "tests/negative/test_nc_probes.py::test_nc__R07a_redundant_relation_is_removed_and_the_removal_is_recorded"
+        flips: true
+      - path: "tests/unit/test_relation_registry.py::test_reg__R04_is_refused_because_the_harvest_already_asserts_it"
+        flips: true
+      - path: "tests/negative/test_nc_probes.py::test_nc__R07b_a_genuinely_new_relation_moves_the_count"
+        flips: false
+    positive_control: "test_nc__R07b - a review that refused every candidate would satisfy the first two and leave the catalogue empty"
+    status: active
+
+  - id: NC-R09
+    component: probes
+    break: a value-deletion transform raises the settled fraction, because precondition-driven OUT_OF_SCOPE leaves the denominator
+    measured_instance: "inScope = cellsTotal - outOfScope - informational (spec II.3.3); NC-R01's defence against the empty filing is a mechanism that SHRINKS the denominator (adversary F13)"
+    injector: DegenerateScopeLeavesTheDenominator
+    guard_tests:
+      - path: "tests/negative/test_nc_probes.py::test_nc__R09a_a_degenerate_precondition_stays_in_the_denominator"
+        flips: true
+      - path: "tests/unit/test_probe_template_diff.py::test_td__scope_kind_distinguishes_declared_from_precondition"
+        flips: true
+      - path: "tests/negative/test_nc_probes.py::test_nc__R09b_a_structurally_unreachable_cell_does_leave_the_denominator"
+        flips: false
+    positive_control: "test_nc__R09b - a cell no relation over this template could ever reach IS a statement about the instrument, and that one legitimately leaves. Without it the rule would be indistinguishable from one that retains everything"
+    status: active
+
+  - id: NC-R10
+    component: probes
+    break: adding a row to template_defects.yaml raises the settled fraction, because the cell moves from NO_PREDICATE (in scope) to INFORMATIONAL (out of scope)
+    measured_instance: "'1. Introduction'!D17 is bound by TEMPLATE_DIFF alone under the nine-member scheme vocabulary; declaring it moves its ten bound cells out of inScope and fraction = s/(i-1) > s/i (adversary F14)"
+    injector: DefectMovesASoleEvaluationOutOfScope
+    guard_tests:
+      - path: "tests/negative/test_nc_probes.py::test_defect_table_cannot_raise_the_settled_fraction"
+        flips: true
+      - path: "tests/unit/test_probe_template_diff.py::test_td__defect_that_would_raise_the_fraction_becomes_rule_ambiguous"
+        flips: true
+      - path: "tests/unit/test_probe_template_diff.py::test_td__declared_defect_is_INFORMATIONAL_when_something_else_binds_the_cells"
+        flips: false
+    positive_control: "test_td__declared_defect_is_INFORMATIONAL_when_something_else_binds_the_cells - where the fraction would NOT rise, INFORMATIONAL is still the right disposition, so a fallback that fired always would be caught"
+    status: active
+
+  - id: NC-R12
+    component: probes
+    break: the tolerance unit mismatch is repaired on ONE side only, so the literals and the fact tree disagree in the other direction
+    measured_instance: "HALF_ULP = 5 is half a unit of MILLI_USD_MILLION (0.005 USD Million), but facts/build.py::_coerce returns the workbook's own number UNSCALED, so P-0114 admits a 60 USD Million discrepancy on a row whose true total is 12. 29 of 79 tolerance-bearing predicates also carry it on a degree-0 cell. MEASURED 14 Aug 2026, docs/measurements/P9-template-diff-ceiling.md open items (a) and (b)"
+    injector: ToleranceUnitsSilentlyReconciled
+    guard_tests:
+      - path: "tests/negative/test_nc_probes.py::test_nc__R12a_the_tolerance_unit_mismatch_is_still_open"
+        flips: true
+      - path: "tests/negative/test_nc_probes.py::test_nc__R12b_a_new_relation_carries_no_tolerance_literal"
+        flips: false
+    positive_control: "test_nc__R12b - the relation layer does not inherit the defect, so a guard that merely asserted 'something is wrong somewhere' would not distinguish the two"
+    status: active
+    note: >
+      This entry guards an OPEN defect rather than a closed one, and that is deliberate. The
+      measurement error is correlated with the quantity being measured but in the direction that
+      does NOT flatter us: an arithmetic mutant smaller than the over-wide tolerance is WRONG,
+      observable and not killed, so it DEPRESSES K/O. The published kill rate is a lower bound.
+      Repairing it moves every envelope digest, the registry root, P7's funnel and P8's FFR, so it
+      is a phase of its own. What this guard prevents is a PARTIAL repair landing quietly: scaling
+      the fact tree without moving the literals, or the reverse, is the same defect with the sign
+      flipped and would be much harder to see.

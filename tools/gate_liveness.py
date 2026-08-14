@@ -101,6 +101,23 @@ EVIDENCE: dict[int, str] = {
     63: "NC-Q65",   # a heterogeneous column never reaches the runtime
     14: "NC-E33",   # no model client in the verdict path (promoted at P6)
     16: "NC-E30",   # the seven-term closure invariant (promoted at P6)
+    # --- P9, rows 64-75 -----------------------------------------------------------------
+    # Rows 64 and 65 guard the P9 ENTRY criteria, whose subjects shipped at P3. They are bound
+    # to the NC entries whose injectors break the same rule: NC-R03 breaks the envelope
+    # adapter's refusal, which is what makes the flagship's demonstration a demonstration, and
+    # NC-R12 pins the tolerance-unit pair. See docs/GATE-CHANGES.md, 14 Aug 2026.
+    64: "NC-R03",   # `recalculate`'s source is explicit at every call site
+    65: "NC-R12",   # G-EVAL's label is computed from the oracle's author
+    66: "NC-R01",   # a relation never PASSes an empty filing
+    67: "NC-R02",   # a finding binds inside the field surface
+    68: "NC-R03",   # the spike is a demonstration, not an admission
+    69: "NC-R04",   # a defective oracle never fails a filer
+    70: "NC-R05",   # no relation spans two accounting bases
+    71: "NC-R06",   # the probe seed is an input, not entropy
+    72: "NC-R07",   # a rename does not inflate the delta
+    73: "NC-R09",   # filling in less never scores better
+    74: "NC-R10",   # declaring a defect never raises the headline
+    75: "NC-R12",   # a half repair of the unit defect cannot land quietly
 }
 
 

@@ -1,0 +1,144 @@
+# catalogue.yaml — one row per ADMITTED relation.
+#
+# **THE ROW COUNT IS A MEASUREMENT, NOT A TARGET.** An earlier version of this design produced five
+# relations of which four false-alarm on a correct filing and the fifth is vacuous; the failure
+# mode is authoring, not execution. So nothing downstream carries a literal count — every
+# denominator reads `registry.CATALOGUE_SIZE`, and `docs/measurements/P9-relation-runnability.md`
+# publishes the split computed from this file.
+#
+# **THE REFUSALS ARE IN `docs/RELATION-REVIEW.md` AND THEY ARE THE MORE INTERESTING HALF.** Two
+# candidates were drafted and refused at review: R-04 (vocabulary closure) as redundant with the
+# harvested membership set, and the country-breakup arm of R-02 as inexpressible in the admitted
+# subset. A protocol with no refusals is a protocol nobody ran.
+#
+# **Every row is SINGLE-SIGNER.** There is no second person on this project, so the literal
+# `SINGLE-SIGNER — a weaker review` is carried on every row and rendered beside every
+# relation-derived number. What is not available is a second signature nobody's calendar contains;
+# saying so is.
+#
+# Long CEL is BUILT from the pinned blank by a named function under `cdfc.probes.relations`, not
+# typed here. A review of three hundred characters of dotted paths is not a review.
+
+relations:
+  - id: R-01
+    title: TEMPLATE_DIFF — the filed value against the template's own formula over filed inputs
+    necessity: NECESSARY
+    inputs: FILING_AND_BLANK
+    bases: [NON_LOOK_THROUGH]
+    precondition: "at least one field-surface precedent of the formula cell carries a value"
+    expr: "cdfc.probes.template_diff:template_diff"
+    witness: "the overwritten formula cell"
+    evidence: >
+      All 505 formula cells of the pinned blank carry cached values (MEASURED). A filer who
+      overwrites one with a literal deletes the inconsistency along with the formula, so every
+      harvested carry and sum identity is satisfied by construction. Only a comparison against the
+      pinned blank detects it. Ceiling 957 of 3,747 field-surface cells; 869 of 3,747 over the 497
+      formula cells whose overwrite still binds — docs/measurements/P9-template-diff-ceiling.md.
+    claims_fault_classes: [F11]
+    reviewed_by: [the build]
+    reviewed_at: 2026-08-14
+    review_label: SINGLE-SIGNER — a weaker review
+    degree: {money: 1}
+
+  - id: R-02
+    title: Funds-raised partition — the investor-category and accreditation breakups must agree
+    necessity: NECESSARY
+    inputs: FILING_ONLY
+    bases: [INVESTOR_SIDE]
+    builder: cdfc.probes.relations.partition:build
+    evidence: >
+      '4. Investors' Tables 4.1 (rows 21-30, by investor category, totals AA/AB) and 4.2 (rows
+      42-51, by accreditation status, totals G/H) are two breakups of the same per-scheme
+      funds-raised figure, computed by the workbook's own SUMs from DISJOINT filer inputs. NO
+      FORMULA IN THE WORKBOOK READS AA21, G42 OR ANY COUNTRY CELL — MEASURED 14 Aug 2026 via
+      build_precedent_map(...).by_formula_cell, which returns an empty reader set for all three.
+      The workbook enforces agreement between none of them. This is the highest-value relation in
+      the design and it is not in the brief.
+    claims_fault_classes: [F01, F02, F04, F05, F07, F08]
+    reviewed_by: [the build]
+    reviewed_at: 2026-08-14
+    review_label: SINGLE-SIGNER — a weaker review
+    degree: {money: 1, count: 0}
+
+  - id: R-03
+    title: Scheme-total consistency against the full nine-member scheme-type vocabulary
+    necessity: EXPECTED
+    inputs: FILING_ONLY
+    bases: [INVESTOR_SIDE]
+    builder: cdfc.probes.relations.schemes:build
+    evidence: >
+      '1. Introduction'!D17 = SUM(D18:D20) over COUNTIF patterns *Angel*, *Venture*, *Restricted*,
+      *Retail* and *Exchange Traded Fund*, against the nine-member scheme-type vocabulary at
+      Dropdown!F3:F11. Seven of nine match; Special Situation Fund and Family Investment Fund match
+      none. MEASURED 14 Aug 2026 — tools/probes/p9_scheme_vocabulary.py re-derives it and exits
+      non-zero if it stops holding.
+    guidance_note: >
+      Template defect TD-01 in src/cdfc/probes/template_defects.yaml, with its evidence command.
+      The disagreement is a property of the regulator's formula, not of the filer, so a violation
+      is INFORMATIONAL and can never fail a filing. A NECESSARY version of this relation would fail
+      the filer who filled the form correctly and pass the one who reproduced the omission.
+    claims_fault_classes: [F09]
+    reviewed_by: [the build]
+    reviewed_at: 2026-08-14
+    review_label: SINGLE-SIGNER — a weaker review
+    degree: {count: 0}
+
+  - id: R-05
+    title: Denominator self-agreement — the two independent field-surface computations agree
+    necessity: NECESSARY
+    inputs: SELF_TEST
+    bases: [INVESTOR_SIDE]
+    reported_to_filer: false
+    precondition: "the pinned blank ships a cell-protection mask"
+    expr: "cdfc.probes.relations.selftest:denominator_agrees"
+    witness: "the two computed field-surface counts"
+    evidence: >
+      Barrier 1 (G-DENOM). The field surface is computed twice by independent paths —
+      schema/styles_mask.py and schema/styles_mask_b.py — and docs/measurements/P2-field-surface.md
+      publishes 9 of 9 agreeing. The denominator of the product's headline number is the one
+      quantity a single implementation must not be trusted with.
+    claims_fault_classes: [F13]
+    reviewed_by: [the build]
+    reviewed_at: 2026-08-14
+    review_label: SINGLE-SIGNER — a weaker review
+
+  - id: R-06
+    title: Canary-population self-agreement — canaries_run equals the canary rows written
+    necessity: NECESSARY
+    inputs: SELF_TEST
+    subject_exists_at: P10
+    bases: [INVESTOR_SIDE]
+    reported_to_filer: false
+    precondition: "a canary population exists for this run"
+    expr: "cdfc.probes.relations.selftest:canary_population_agrees"
+    witness: "the declared count and the written rows"
+    evidence: >
+      §0.4 and P10-B1. The attestation reports canariesRun as an integer; if that integer is not
+      the number of canary rows actually written to run.jsonl, the liveness proof is a claim about
+      a loop nobody can count. A merged count would let a kill-case failure hide behind an
+      anti-canary success.
+    claims_fault_classes: [F13]
+    reviewed_by: [the build]
+    reviewed_at: 2026-08-14
+    review_label: SINGLE-SIGNER — a weaker review
+
+  - id: R-07
+    title: Prior-period opening/closing continuity of Total Portfolio Value
+    necessity: NECESSARY
+    inputs: TWO_CONSECUTIVE
+    bases: [NON_LOOK_THROUGH]
+    builder: cdfc.probes.relations.prior_period:build
+    evidence: >
+      '3. Portfolio'!A129, note 2 — "'Total Portfolio Value' of the scheme is same as Column 'O' of
+      Table 3.1." The closing Total Portfolio Value of one quarter is the opening value of the
+      next, so two consecutive filings of one entity must agree at that boundary. MEASURED from the
+      pinned blank, 14 Aug 2026. UN-RUNNABLE TODAY on two counts, and the second is the stronger:
+      we hold zero real filed FME returns, AND the expression needs a `prior.` root that
+      cel_profile.BOUND_ROOTS refuses at compile time. Widening the subset for a relation that
+      cannot be run or qualified against anything would open the same door for a predicate about
+      the filing.
+    claims_fault_classes: [F12]
+    reviewed_by: [the build]
+    reviewed_at: 2026-08-14
+    review_label: SINGLE-SIGNER — a weaker review
+    degree: {money: 1}

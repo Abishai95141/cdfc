@@ -4,7 +4,7 @@ export PYTHONPATH := $(CURDIR)/src
 .PHONY: all lint licence greps contract unit property golden differential nc-sweep \
         determinism perf mutation-pr e2e nightly demo corpus-verify measure-foundation gates \
         harvest cel-conformance host-fn-mutation predicate-schema verify \
-        gen-contract instruments evaluator-arm1 p3-reproduction ceiling
+        gen-contract instruments evaluator-arm1 p3-reproduction ceiling runnability relation-attrition
 
 all: lint licence greps corpus-verify contract unit golden determinism negative gates
 
@@ -171,3 +171,9 @@ p3-reproduction:
 
 ceiling:
 	$(PY) tools/measure/p9_ceiling.py
+
+runnability:
+	$(PY) tools/measure/p9_runnability.py
+
+relation-attrition:
+	$(PY) tools/measure/p9_attrition.py

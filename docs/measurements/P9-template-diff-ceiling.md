@@ -59,10 +59,24 @@ The remedy is named and is **not** taken here: making the fingerprint's mask sty
 
 Every assignment names the regulator's own words and the cell they are in — `'1. Introduction'!D17` is degree 0 on the authority of `'1. Introduction'!C17`, *"Total No. of Schemes of the FME authorised by IFSCA"*. **A person, and a scheme, is not a rounded quantity**: under a blanket `τ(n) = 5n` that cell could be wrong by fifteen schemes and pass.
 
-### Open item, dated 14 Aug 2026 — the harvest still applies `τ` to counts
+### TWO OPEN ITEMS IN THE HARVEST, dated 14 Aug 2026, found by building the degree map
 
-**29 of the 79 harvested predicates that carry a tolerance carry it on a cell this degree map assigns degree 0.** `harvest_classes/sum_identity.py` gives every `=SUM(range)` a `τ(n) = 5n` allowance without asking what the cells hold. That is NC-E08's defect standing in the harvest rather than in the probe layer.
+Neither is repaired here, and the reason is the same for both: changing a harvested predicate's tolerance changes its envelope, therefore its `code_sha256`, therefore the registry root, therefore P7's funnel and P8's FFR. A phase that silently moves another phase's published numbers is how a build stops being re-derivable. Both are published, dated, and guarded so they cannot be forgotten.
 
-It is **not** repaired here: changing a harvested predicate's tolerance changes its envelope, therefore its `code_sha256`, therefore the registry root, therefore P7's funnel and P8's FFR. It is published, dated, and left as a named open item.
+**(a) `τ` is applied to counts.** **29 of the 79** harvested predicates that carry a tolerance carry it on a cell this degree map assigns degree 0. `harvest_classes/sum_identity.py` gives every `=SUM(range)` a `τ(n) = 5n` allowance without asking what the cells hold. That is NC-E08's defect standing in the harvest rather than in the probe layer.
 
 Examples: `P-0007 at '1. Introduction'!D17 (COUNT_MARKER)`, `P-0220 at '3. Portfolio'!C167 (RATIO_MARKER)`, `P-0221 at '3. Portfolio'!D167 (RATIO_MARKER)`, `P-0222 at '3. Portfolio'!E167 (RATIO_MARKER)`, `P-0223 at '3. Portfolio'!F167 (RATIO_MARKER)`, `P-0224 at '3. Portfolio'!G167 (RATIO_MARKER)`.
+
+**(b) Every emitted tolerance is 1,000× the one it was written to express, and this is the larger of the two.** `HALF_ULP = 5` is half a unit of `MILLI_USD_MILLION`, i.e. **0.005 USD Million**. `facts/fact_table.py` scales money to that unit — but only when given `money_keys`, and the runner does not use it. The tree the runner evaluates is `facts/build.py::fact_set_for`, whose `_coerce` returns the workbook's own number unscaled and says so in its own docstring: *"this builder does not know a cell's unit"*. So the literal in every emitted expression is a tolerance in **whole USD Million**.
+
+Measured: the largest tolerance literal in the harvested set is **60**, and the distinct literals are [15, 20, 50, 55, 60]. Worked instance — `P-0114` over `'3. Portfolio'!O7`:
+
+```
+filing.n_3_portfolio.r7.co.v - (…twelve summands…) <= 60
+```
+
+On the reference clean filing that row's twelve summands are `1` each and the total is `12`. **The check passes for any total between −48 and 72.** The tolerance it was written to express is 0.06 USD Million.
+
+This is a measurement error correlated with the quantity being measured, in the direction that flatters us: an arithmetic mutant smaller than the over-wide tolerance is `WRONG`, observable, and **not killed** — so it depresses `K/O` rather than inflating it. The sign matters and it is the reason this is an open item rather than an emergency: the published kill rate is a LOWER bound on what these predicates can do, not an upper one.
+
+Guarded by `tests/negative/test_nc_probes.py::test_nc__R12a_the_tolerance_unit_mismatch_is_still_open`, which fails the day either side is repaired without the other — because a scaled fact tree with unscaled literals, or the reverse, is the same defect with the sign flipped.

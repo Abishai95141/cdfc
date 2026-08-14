@@ -88,6 +88,18 @@ a row between sets fails the build.
 | 61 | pytest | `test_nc__Q09_severity_uses_wilson_upper` — a sample of four cannot buy BLOCKING | P8 | P8 | `injectors/SeverityPointEstimate` | LIVE |
 | 62 | pytest | `test_severity__synthetic_corpus_cannot_buy_blocking` — F2's second half: the non-synthetic floor | P8 | P8 | `injectors/SyntheticBuysBlocking` | LIVE |
 | 63 | pytest | `test_nc__Q65_a_mixed_column_blocks_expr` — a heterogeneous column is decidable, and never reaches the runtime | P8 | P8 | `injectors/MixedColumnProceeds` | LIVE |
+| 64 | pytest | `test_contract__formula_source_is_explicit` — every `recalculate` call site passes a LITERAL source | P3 | P9 | edit any call site to pass a variable | LIVE |
+| 65 | pytest | `test_arm_two_author_is_not_the_evaluator_author` — G-EVAL's independence label is computed, not declared | P3 | P9 | set `ARM2.oracle_author` to `cdfc` | LIVE |
+| 66 | pytest | `test_nc__R01a_all_zero_filing_is_OUT_OF_SCOPE` — a relation never PASSes an empty filing | P9 | P9 | `injectors/RelationNoPrecondition` | LIVE |
+| 67 | pytest | `test_nc__R02a_binding_outside_the_denominator_aborts_closure` — a finding binds inside the field surface | P9 | P9 | `injectors/TdBindsTheFormulaCell` | LIVE |
+| 68 | pytest | `test_unqualified_relation_cannot_settle_a_cell` — the B1 spike is a demonstration, not an admission | P9 | P9 | `injectors/RelationWithoutQualification` | LIVE |
+| 69 | pytest | `test_nc__R04a_declared_defect_is_INFORMATIONAL_not_FAIL` — a defective oracle never fails a filer | P9 | P9 | `injectors/DefectTableIgnored` | LIVE |
+| 70 | pytest | `test_nc__R05a_a_cross_basis_relation_does_not_load` — no relation spans two accounting bases | P9 | P9 | `injectors/BasisGuardDisabled` | LIVE |
+| 71 | pytest | `test_nc__R06a_the_probe_seed_is_a_pinned_constant` — the probe seed is an input, not entropy | P9 | P9 | `injectors/ProbeSeedFromEntropy` | LIVE |
+| 72 | pytest | `test_nc__R07a_redundant_relation_is_removed_and_the_removal_is_recorded` — a rename does not inflate the delta | P9 | P9 | `injectors/SubsumptionCheckDisabled` | LIVE |
+| 73 | pytest | `test_nc__R09a_a_degenerate_precondition_stays_in_the_denominator` — filling in less never scores better | P9 | P9 | `injectors/DegenerateScopeLeavesTheDenominator` | LIVE |
+| 74 | pytest | `test_defect_table_cannot_raise_the_settled_fraction` — declaring a defect never raises the headline | P9 | P9 | `injectors/DefectMovesASoleEvaluationOutOfScope` | LIVE |
+| 75 | pytest | `test_nc__R12a_the_tolerance_unit_mismatch_is_still_open` — a half repair of the unit defect cannot land quietly | P9 | P9 | `injectors/ToleranceUnitsSilentlyReconciled` | LIVE |
 
 **Rows 17 and 18 exist as gates from the first commit, dated 11 Aug 2026, and their reason is recorded
 rather than assumed.** Row 17: a `CanaryRow.elapsed_us` inside a canonicalised payload was found in the

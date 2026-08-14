@@ -59,18 +59,24 @@ def style_only_unlocked(blob: Path) -> set[tuple[str, str]]:
     return out
 
 
-def harvested_tolerance_on_counts() -> tuple[int, int, list[str]]:
-    """`(predicates carrying a tolerance on a degree-0 cell, predicates with a tolerance, examples)`.
+def harvested_tolerance_audit() -> dict[str, object]:
+    """The two open items the degree map surfaced in the HARVEST, both measured.
 
-    The open item `probes/degree.py` names and does not fix: `harvest_classes/sum_identity.py`
-    gives every `=SUM(range)` a `τ(n) = 5n` allowance without asking what the cells hold.
+    (a) `harvest_classes/sum_identity.py` gives every `=SUM(range)` a `τ(n) = 5n` allowance
+        without asking what the cells hold, so a count acquires a tolerance (NC-E08's defect).
+    (b) `τ` is defined in `MILLI_USD_MILLION` — `HALF_ULP = 5` is half a unit of 10⁻³ USD
+        Million — but the fact tree the runner evaluates (`facts.build.fact_set_for`) carries
+        the workbook's own numbers UNSCALED. Only `facts.fact_table.build(..., money_keys=...)`
+        scales, and the runner does not use it. So every emitted literal is 1,000× the
+        tolerance it was written to express.
     """
     from cdfc.predicates.harvest import harvest
 
     res = harvest(FME)
     dm = degree_map(FME)
     with_tol = [c for c in res.candidates if getattr(c, "tolerance", None) is not None]
-    bad: list[str] = []
+    on_counts: list[str] = []
+    taus: list[int] = []
     for c in with_tol:
         cell = res.constructs.get(c.obligation_id)
         if cell is None:
@@ -78,8 +84,17 @@ def harvested_tolerance_on_counts() -> tuple[int, int, list[str]]:
         _kind, _parts, sheet, ref = cell
         a = dm.get(f"{sheet}!{ref}")
         if a is not None and a.degree == 0:
-            bad.append(f"{c.id} at '{sheet}'!{ref} ({a.basis})")
-    return len(bad), len(with_tol), sorted(bad)
+            on_counts.append(f"{c.id} at '{sheet}'!{ref} ({a.basis})")
+        for token in c.expr.replace("(", " ").replace(")", " ").split():
+            if token.isdigit():
+                taus.append(int(token))
+    return {
+        "with_tolerance": len(with_tol),
+        "on_degree_zero_cells": len(on_counts),
+        "examples": sorted(on_counts),
+        "max_tau_literal": max(taus) if taus else 0,
+        "distinct_tau_literals": sorted(set(taus)),
+    }
 
 
 def main() -> int:
@@ -98,7 +113,9 @@ def main() -> int:
 
     dm = degree_map(FME)
     bases = Counter(a.basis for a in dm.values())
-    n_bad_tol, n_tol, bad_examples = harvested_tolerance_on_counts()
+    tol = harvested_tolerance_audit()
+    n_bad_tol, n_tol = tol["on_degree_zero_cells"], tol["with_tolerance"]
+    bad_examples = tol["examples"]
 
     fs = build_mask(FME, Rule.V3)
     lab = label()
@@ -219,18 +236,51 @@ def main() -> int:
         "rounded quantity**: under a blanket `τ(n) = 5n` that cell could be wrong by fifteen "
         "schemes and pass.",
         "",
-        "### Open item, dated 14 Aug 2026 — the harvest still applies `τ` to counts",
+        "### TWO OPEN ITEMS IN THE HARVEST, dated 14 Aug 2026, found by building the degree map",
         "",
-        f"**{n_bad_tol} of the {n_tol} harvested predicates that carry a tolerance carry it on a "
-        "cell this degree map assigns degree 0.** `harvest_classes/sum_identity.py` gives every "
+        "Neither is repaired here, and the reason is the same for both: changing a harvested "
+        "predicate's tolerance changes its envelope, therefore its `code_sha256`, therefore the "
+        "registry root, therefore P7's funnel and P8's FFR. A phase that silently moves another "
+        "phase's published numbers is how a build stops being re-derivable. Both are published, "
+        "dated, and guarded so they cannot be forgotten.",
+        "",
+        "**(a) `τ` is applied to counts.** "
+        f"**{n_bad_tol} of the {n_tol}** harvested predicates that carry a tolerance carry it on a "
+        "cell this degree map assigns degree 0. `harvest_classes/sum_identity.py` gives every "
         "`=SUM(range)` a `τ(n) = 5n` allowance without asking what the cells hold. That is NC-E08's "
         "defect standing in the harvest rather than in the probe layer.",
         "",
-        "It is **not** repaired here: changing a harvested predicate's tolerance changes its "
-        "envelope, therefore its `code_sha256`, therefore the registry root, therefore P7's funnel "
-        "and P8's FFR. It is published, dated, and left as a named open item.",
-        "",
         "Examples: " + (", ".join(f"`{e}`" for e in bad_examples[:6]) or "none") + ".",
+        "",
+        "**(b) Every emitted tolerance is 1,000× the one it was written to express, and this is "
+        "the larger of the two.** `HALF_ULP = 5` is half a unit of `MILLI_USD_MILLION`, i.e. "
+        "**0.005 USD Million**. `facts/fact_table.py` scales money to that unit — but only when "
+        "given `money_keys`, and the runner does not use it. The tree the runner evaluates is "
+        "`facts/build.py::fact_set_for`, whose `_coerce` returns the workbook's own number "
+        "unscaled and says so in its own docstring: *\"this builder does not know a cell's unit\"*. "
+        "So the literal in every emitted expression is a tolerance in **whole USD Million**.",
+        "",
+        f"Measured: the largest tolerance literal in the harvested set is **{tol['max_tau_literal']}**, "
+        f"and the distinct literals are {tol['distinct_tau_literals']}. Worked instance — `P-0114` "
+        "over `'3. Portfolio'!O7`:",
+        "",
+        "```",
+        "filing.n_3_portfolio.r7.co.v - (…twelve summands…) <= 60",
+        "```",
+        "",
+        "On the reference clean filing that row's twelve summands are `1` each and the total is "
+        "`12`. **The check passes for any total between −48 and 72.** The tolerance it was written "
+        "to express is 0.06 USD Million.",
+        "",
+        "This is a measurement error correlated with the quantity being measured, in the direction "
+        "that flatters us: an arithmetic mutant smaller than the over-wide tolerance is `WRONG`, "
+        "observable, and **not killed** — so it depresses `K/O` rather than inflating it. The sign "
+        "matters and it is the reason this is an open item rather than an emergency: the published "
+        "kill rate is a LOWER bound on what these predicates can do, not an upper one.",
+        "",
+        "Guarded by `tests/negative/test_nc_probes.py::test_nc__R12a_the_tolerance_unit_mismatch_is_still_open`, "
+        "which fails the day either side is repaired without the other — because a scaled fact "
+        "tree with unscaled literals, or the reverse, is the same defect with the sign flipped.",
         "",
     ]
     OUT_MD.write_text("\n".join(L), encoding="utf-8")
@@ -248,8 +298,7 @@ def main() -> int:
             "unreachable_by_reading": {r: len(maps[r].unreachable) for r in READINGS},
             "unlocked_formula_cells": unbinding,
             "degree_bases": dict(sorted(bases.items())),
-            "harvested_tolerance_on_degree_zero": n_bad_tol,
-            "harvested_with_tolerance": n_tol,
+            "harvested_tolerance": tol,
             "geval": {"status": gate_status(), "label": lab},
         }, indent=1, sort_keys=True) + "\n",
         encoding="utf-8",

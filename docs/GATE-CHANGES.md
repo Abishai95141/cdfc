@@ -152,3 +152,32 @@ percentage on a surface is indistinguishable from a measured rate to a reader. T
 renders once, in prose, above the table.
 
 `ADDED_LIVE_AT_P8` is a sixth frozen literal.
+
+## 14 Aug 2026 — P9 adds rows 64–75, and two of them guard a subject that shipped at P3
+
+`ADDED_LIVE_AT_P9 = set(range(64, 76))` — a sixth frozen literal.
+
+**Rows 64 and 65 are the unusual pair.** Their subjects — `recalculate`'s explicit
+`formula_source` and G-EVAL's arm-2 independence — shipped at P3. They are recorded
+`subject_exists_at P3` and `demonstrable_red_at P9` because **that is when a guard was written for
+them**, not when the code arrived. A row whose two phases differ is the honest shape for a gate
+that was owed earlier; collapsing them to `P9 | P9` would hide that the subject went unguarded for
+six phases, and collapsing them to `P3 | P3` would claim a demonstration nobody performed.
+
+Writing row 65 is what found the stale measurement: `tools/measure/evaluator_arm1.py` had been
+raising `KeyError: 'cells'` since a rename, no make target ran it, and
+`docs/measurements/P3-evaluator.md` was therefore an artifact of a version that no longer executed
+— publishing FME as 495 agree / 10 not-run when the truth after P6's `AGGREGATE` repair was
+475 / 30. **A measurement with no way to re-run it is a memory.** Both measurement tools now have
+make targets.
+
+Rows 66–75 are the NC-R family: the relation layer's ten controls, one injector each.
+
+**Row 75 guards an OPEN defect rather than a closed one**, and that is deliberate. `HALF_ULP = 5`
+is half a unit of `MILLI_USD_MILLION`, but the fact tree the runner evaluates carries the
+workbook's own numbers unscaled — so every harvested tolerance literal is 1,000× the tolerance it
+was written to express, and `P-0114` admits a 60 USD Million discrepancy on a row whose true total
+is 12. Repairing it moves every envelope digest, the registry root, P7's funnel and P8's FFR, so it
+is a phase of its own. What row 75 prevents is a **partial** repair landing quietly: scaling the
+tree without moving the literals, or the reverse, is the same defect with the sign flipped and
+would be much harder to see than the one we have now.

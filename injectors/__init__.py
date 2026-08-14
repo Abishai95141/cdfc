@@ -1990,3 +1990,197 @@ class MixedColumnProceeds(Injector):
 
 ALL_INJECTORS = ALL_INJECTORS + (MixedColumnProceeds,)
 BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+# ---------------------------------------------------------------------------------------
+# P9 — the probe layer. Each injector breaks ONE rule of the relation layer, and each leaves
+# every other guard in the system silent: that is what makes the control a control rather than
+# a demonstration that something somewhere is broken.
+# ---------------------------------------------------------------------------------------
+
+
+class RelationNoPrecondition(Injector):
+    """NC-R01. `applicable()` is bypassed, so a relation returns PASS on a filing that satisfies
+    it only because the filing is EMPTY.
+
+    The blank's own cached grid is essentially zeros and `"NA"` strings — `'1. Introduction'!D17`,
+    `D18`, `D19`, `D20` all cache `0`; `C92`, `D92`, `E92` all cache `"NA"` (MEASURED). Without the
+    precondition an unfilled filing scores a clean sweep through the flagship's door.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="relation_no_precondition",
+                         touches=[REPO_ROOT / "src/cdfc/probes/template_diff.py"])
+
+    def apply(self) -> None:
+        p = REPO_ROOT / "src/cdfc/probes/template_diff.py"
+        p.write_text(p.read_text().replace(
+            "        scope = applicable(filed, cell, pm)",
+            '        scope = "IN_SCOPE"  # INJECTED', 1))
+
+
+class TdBindsTheFormulaCell(Injector):
+    """NC-R02. A `TEMPLATE_DIFF` finding binds the FORMULA CELL, which is not in the field
+    surface — 497 of FME's 505 formula cells are locked, therefore outside the 3,747-cell
+    denominator. The numerator would then be choosing its own denominator."""
+
+    def __init__(self) -> None:
+        super().__init__(name="td_binds_the_formula_cell",
+                         touches=[REPO_ROOT / "src/cdfc/probes/template_diff.py"])
+
+    def apply(self) -> None:
+        p = REPO_ROOT / "src/cdfc/probes/template_diff.py"
+        p.write_text(p.read_text().replace(
+            "        bound = pm.in_field_surface.get(cell, frozenset())",
+            "        bound = frozenset({cell})  # INJECTED", 1))
+
+
+class RelationWithoutQualification(Injector):
+    """NC-R03. The envelope adapter admits a relation whose expression the CEL subset cannot
+    parse, so the flagship would be routed to the gates with no declarable read set and its
+    demonstration output would become an admission."""
+
+    def __init__(self) -> None:
+        super().__init__(name="relation_without_qualification",
+                         touches=[REPO_ROOT / "src/cdfc/probes/qualify.py"])
+
+    def apply(self) -> None:
+        p = REPO_ROOT / "src/cdfc/probes/qualify.py"
+        p.write_text(p.read_text().replace(
+            '    if spec.expr_language != "CEL":',
+            "    if False:  # INJECTED", 1))
+
+
+class DefectTableIgnored(Injector):
+    """NC-R04. `template_defects.yaml` is read and discarded, so the regulator's own defect at
+    `'1. Introduction'!D17` — four COUNTIF patterns matching seven of the nine scheme types in
+    `Dropdown!F3:F11` — is reported as the FILER's failure."""
+
+    def __init__(self) -> None:
+        super().__init__(name="defect_table_ignored",
+                         touches=[REPO_ROOT / "src/cdfc/probes/template_diff.py"])
+
+    def apply(self) -> None:
+        p = REPO_ROOT / "src/cdfc/probes/template_diff.py"
+        p.write_text(p.read_text().replace(
+            "    declared = defects.for_template(pm.template_sha256).by_cell",
+            "    declared = {}  # INJECTED", 1))
+
+
+class DefectMovesASoleEvaluationOutOfScope(Injector):
+    """NC-R10. The F14 fallback is removed, so a declared defect on a cell with no other binding
+    evaluation emits `INFORMATIONAL` — which LEAVES the denominator, so `fraction = s/(i-1) >
+    s/i`. **Adding a row to the defect table would raise the headline.**"""
+
+    def __init__(self) -> None:
+        super().__init__(name="defect_moves_a_sole_evaluation_out_of_scope",
+                         touches=[REPO_ROOT / "src/cdfc/probes/template_diff.py"])
+
+    def apply(self) -> None:
+        p = REPO_ROOT / "src/cdfc/probes/template_diff.py"
+        p.write_text(p.read_text().replace(
+            "            sole = frozenset(bound) - otherwise_bound",
+            "            sole = frozenset()  # INJECTED", 1))
+
+
+class BasisGuardDisabled(Injector):
+    """NC-R05. A relation drafted across two accounting bases is admitted. `'3. Portfolio'!A130`
+    puts Table 3.5 on a non-look-through basis and Table 3.6 on a look-through one, so such a
+    relation adds two different measurements of the same money and reports the difference as the
+    filer's error — a false alarm on a CORRECT filing."""
+
+    def __init__(self) -> None:
+        super().__init__(name="basis_guard_disabled",
+                         touches=[REPO_ROOT / "src/cdfc/probes/relations/registry.py"])
+
+    def apply(self) -> None:
+        p = REPO_ROOT / "src/cdfc/probes/relations/registry.py"
+        p.write_text(p.read_text().replace(
+            "    if len(bases) != 1:",
+            "    if False:  # INJECTED", 1))
+
+
+class ProbeSeedFromEntropy(Injector):
+    """NC-R06. The probe search draws its seed from entropy, so the report cannot be
+    re-derived. A search with an unpinned seed makes `verify` unable to reproduce a probe result
+    at all."""
+
+    def __init__(self) -> None:
+        super().__init__(name="probe_seed_from_entropy",
+                         touches=[REPO_ROOT / "src/cdfc/probes/driver.py"])
+
+    def apply(self) -> None:
+        p = REPO_ROOT / "src/cdfc/probes/driver.py"
+        p.write_text(p.read_text().replace(
+            'DEFAULT_SEED: Final[int] = 0',
+            "import os as _os  # INJECTED\nDEFAULT_SEED: Final[int] = int.from_bytes(_os.urandom(2))", 1))
+
+
+class SubsumptionCheckDisabled(Injector):
+    """NC-R07. The redundancy check at protocol step 6 is removed, so R-04 — vocabulary closure,
+    which `P-0017` already asserts from the blank — would be admitted and the before/after delta
+    would count the same cell twice under a new name."""
+
+    def __init__(self) -> None:
+        super().__init__(name="subsumption_check_disabled",
+                         touches=[REPO_ROOT / "src/cdfc/probes/relations/catalogue.yaml"])
+
+    def apply(self) -> None:
+        p = REPO_ROOT / "src/cdfc/probes/relations/catalogue.yaml"
+        p.write_text(p.read_text() + (
+            "\n  - id: R-04\n"
+            "    title: Vocabulary closure under the pinned blank (INJECTED — refused at step 6)\n"
+            "    necessity: NECESSARY\n"
+            "    inputs: FILING_AND_BLANK\n"
+            "    bases: [INVESTOR_SIDE]\n"
+            "    precondition: 'has(filing.n_1_introduction.r54.cg.v)'\n"
+            "    expr: 'filing.n_1_introduction.r54.cg.v in template.vocab.n_1_introduction_g54'\n"
+            "    witness: '[filing.n_1_introduction.r54.cg.__cell__]'\n"
+            "    evidence: Dropdown is hidden and unprotected\n"
+            "    claims_fault_classes: [F09]\n"
+            "    reviewed_by: [injected]\n"
+            "    reviewed_at: 2026-08-14\n"
+            "    review_label: SINGLE-SIGNER — a weaker review\n"
+        ))
+
+
+class DegenerateScopeLeavesTheDenominator(Injector):
+    """NC-R09. `applicable()` returns `DECLARED_CHARACTERISTIC` for a degenerate precondition, so
+    a cell that is out of scope because THIS FILER left its inputs empty LEAVES the in-scope
+    denominator — and a filer who fills in less gets a better settled fraction."""
+
+    def __init__(self) -> None:
+        super().__init__(name="degenerate_scope_leaves_the_denominator",
+                         touches=[REPO_ROOT / "src/cdfc/probes/template_diff.py"])
+
+    def apply(self) -> None:
+        p = REPO_ROOT / "src/cdfc/probes/template_diff.py"
+        p.write_text(p.read_text().replace(
+            '    return "PREDICATE_PRECONDITION"',
+            '    return "DECLARED_CHARACTERISTIC"  # INJECTED', 1))
+
+
+class ToleranceUnitsSilentlyReconciled(Injector):
+    """NC-R12. The measured, still-open unit defect is 'repaired' on ONE side only: the harvested
+    `τ` literals are divided by 1,000 while the fact tree stays unscaled, or the reverse. Either
+    half alone is the same defect with the sign flipped, and the guard exists so that a partial
+    repair cannot land quietly."""
+
+    def __init__(self) -> None:
+        super().__init__(name="tolerance_units_silently_reconciled",
+                         touches=[REPO_ROOT / "src/cdfc/facts/units.py"])
+
+    def apply(self) -> None:
+        p = REPO_ROOT / "src/cdfc/facts/units.py"
+        p.write_text(p.read_text().replace(
+            "HALF_ULP: Final[int] = 5",
+            "HALF_ULP: Final[int] = 0  # INJECTED", 1))
+
+
+ALL_INJECTORS = ALL_INJECTORS + (
+    RelationNoPrecondition, TdBindsTheFormulaCell, RelationWithoutQualification,
+    DefectTableIgnored, DefectMovesASoleEvaluationOutOfScope, BasisGuardDisabled,
+    ProbeSeedFromEntropy, SubsumptionCheckDisabled, DegenerateScopeLeavesTheDenominator,
+    ToleranceUnitsSilentlyReconciled,
+)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}

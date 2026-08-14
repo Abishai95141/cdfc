@@ -1,0 +1,61 @@
+{
+ "authored": 6,
+ "ceiling": {
+  "field_surface": 3747,
+  "reachable": 957
+ },
+ "converted": 3,
+ "marginal_pending": "PENDING \u2014 requires P10-B2, opened 2026-08-14",
+ "refused": [
+  {
+   "id": "R-01",
+   "why": "R-01: its expression is PYTHON, not CEL"
+  },
+  {
+   "id": "R-05",
+   "why": "R-05: a SELF_TEST relation is not a predicate"
+  },
+  {
+   "id": "R-06",
+   "why": "R-06: a SELF_TEST relation is not a predicate"
+  }
+ ],
+ "rows": [
+  {
+   "already_bound": 10,
+   "bound": 10,
+   "claims": [
+    "F01",
+    "F02",
+    "F04",
+    "F05",
+    "F07",
+    "F08"
+   ],
+   "delta": 0,
+   "id": "R-02",
+   "keys": 80
+  },
+  {
+   "already_bound": 11,
+   "bound": 11,
+   "claims": [
+    "F09"
+   ],
+   "delta": 0,
+   "id": "R-03",
+   "keys": 23
+  },
+  {
+   "already_bound": 10,
+   "bound": 10,
+   "claims": [
+    "F12"
+   ],
+   "delta": 0,
+   "id": "R-07",
+   "keys": 20
+  }
+ ],
+ "warrant": "MEASURED"
+}

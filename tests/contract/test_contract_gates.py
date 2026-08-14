@@ -27,11 +27,14 @@ ADDED_LIVE_AT_P5 = {28, 29, 30, 31, 32, 33, 34, 35, 36}   # docs/GATE-CHANGES.md
 ADDED_LIVE_AT_P6 = set(range(37, 48))   # docs/GATE-CHANGES.md, 13 Aug 2026
 ADDED_LIVE_AT_P7 = set(range(48, 57))   # docs/GATE-CHANGES.md, 13 Aug 2026
 ADDED_LIVE_AT_P8 = set(range(57, 64))   # docs/GATE-CHANGES.md, 13 Aug 2026
+# Rows 64 and 65 guard the P9 ENTRY criteria and their subjects shipped at P3 — they are
+# `demonstrable_red_at P9` because that is when the guard was written, not when the code arrived.
+ADDED_LIVE_AT_P9 = set(range(64, 76))   # docs/GATE-CHANGES.md, 14 Aug 2026
 # Rows 14 and 16 moved PENDING -> LIVE at P6: their subjects shipped at P5 and the audit
 # found them still deferred. See docs/GATE-CHANGES.md, 13 Aug 2026.
 PROMOTED_AT_P6 = {14, 16}
 LIVE_EXPECTED = (LIVE_AT_P0 | ADDED_LIVE_AT_P4 | ADDED_LIVE_AT_P5 | ADDED_LIVE_AT_P6
-                 | ADDED_LIVE_AT_P7 | ADDED_LIVE_AT_P8
+                 | ADDED_LIVE_AT_P7 | ADDED_LIVE_AT_P8 | ADDED_LIVE_AT_P9
                  | PROMOTED_AT_P6)
 PENDING_AT_P0 = {14, 15, 16}
 # The PENDING set SHRINKS as subjects ship, and a row may only leave it into LIVE — never the

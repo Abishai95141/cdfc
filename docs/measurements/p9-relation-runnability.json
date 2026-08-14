@@ -1,0 +1,29 @@
+{
+ "by_input_class": {
+  "FILING_AND_BLANK": 1,
+  "FILING_ONLY": 2,
+  "SELF_TEST": 2,
+  "TWO_CONSECUTIVE": 1
+ },
+ "refused": 2,
+ "reported_to_filer": 4,
+ "runnable": 4,
+ "single_signer": 6,
+ "total": 6,
+ "unrunnable": 2,
+ "unrunnable_detail": [
+  {
+   "id": "R-06",
+   "inputs": "SELF_TEST",
+   "reason": "not_run.deactivated",
+   "subject_exists_at": "P10"
+  },
+  {
+   "id": "R-07",
+   "inputs": "TWO_CONSECUTIVE",
+   "reason": "not_run.input_unavailable.prior_period",
+   "subject_exists_at": "P9"
+  }
+ ],
+ "warrant": "MEASURED"
+}
