@@ -33,7 +33,7 @@ where = ["src"]
 # ---------------------------------------------------------------------------
 # THE NON-NEGOTIABLE BLOCK (methodology §1.0)
 #
-# filterwarnings = ["default"] is not hygiene. openpyxl emits
+# filterwarnings = ["error"] is not hygiene. openpyxl emits
 #   "Data Validation extension is not supported and will be removed"
 # when it reads the FME workbook — and that discarded warning is exactly how a
 # parser comes to report 35 of 54 validations, and the AML-CFT sheet as having
@@ -43,7 +43,7 @@ where = ["src"]
 [tool.pytest.ini_options]
 addopts = "--strict-markers --strict-config -q"
 xfail_strict = true
-filterwarnings = ["default"]
+filterwarnings = ["error"]
 markers = [
   "linux_only: collected only in the Linux CI image (R7)",
 ]

@@ -2644,3 +2644,67 @@ ALL_INJECTORS = ALL_INJECTORS + (
     ElapsedUsInCanaryRow, WitnessFromArtifact, CoerceNoneToString,
 )
 BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+class ResidueWithoutRegistryRoot(Injector):
+    """**NC-C07** — `|RESIDUE|` renders without the rejector set it was computed against.
+
+    An unqualified `|RESIDUE| = 12` is not a smaller claim than a qualified one; it is a different
+    and false one, because the reader supplies the missing rejector set from their own optimism.
+    Its measured instance is this build: on G-CORPUS's FAIL branch the admitted set is EMPTY and
+    every WRONG mutant survives by construction, so the number without its label reads as a strong
+    result and is a ceiling.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(
+            name="residue_without_registry_root",
+            touches=[REPO_ROOT / "src" / "cdfc" / "selfcheck" / "residue.py"],
+        )
+
+    def apply(self) -> None:
+        _sub(
+            REPO_ROOT / "src" / "cdfc" / "selfcheck" / "residue.py",
+            "    missing = result.missing_fields()\n    if missing:",
+            "    missing = result.missing_fields()\n    if False:  # INJECTED",
+        )
+
+
+class LayerExistsAssertionRemoved(Injector):
+    """**Adversary F6** — an `injector: NONE` row claims a layer did not fire and proves nothing.
+
+    *"The renamed sheet produced `template_unbound` and not `canary_silent`"* is trivially true of
+    a system in which `src/cdfc/selfcheck/` does not exist at all. The catalogue shape carries
+    `layer_exists_assertion` so the claim comes with its own precondition; deleting the field is
+    the whole break.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(
+            name="layer_exists_assertion_removed",
+            touches=[REPO_ROOT / "tests" / "negative" / "catalogue.yaml"],
+        )
+
+    def apply(self) -> None:
+        p = REPO_ROOT / "tests" / "negative" / "catalogue.yaml"
+        src = p.read_text()
+        out, dropping = [], False
+        for line in src.splitlines(keepends=True):
+            if line.lstrip().startswith("layer_exists_assertion:"):
+                dropping = True
+                continue
+            if dropping:
+                # a folded scalar's continuation lines are more-indented; the next key ends it
+                if line.strip() and not line.startswith("      "):
+                    dropping = False
+                else:
+                    continue
+            out.append(line)
+        assert len(out) < len(src.splitlines(keepends=True)), (
+            "no layer_exists_assertion found to remove — the injector's needle has drifted"
+        )
+        p.write_text("".join(out))
+
+
+ALL_INJECTORS = ALL_INJECTORS + (ResidueWithoutRegistryRoot, LayerExistsAssertionRemoved)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}

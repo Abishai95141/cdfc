@@ -101,6 +101,25 @@ def test_res__renderer_refuses_without_all_five_fields(field: str) -> None:
     assert field in str(e.value)
 
 
+def test_res__C07_the_renderer_refuses_a_nameless_rejector_set() -> None:
+    """NC-C07's guard, un-parametrised so the sweep can name one node id and match it.
+
+    The parametrised twin above covers all five fields; the sweep asserts an EXACT SET of node ids
+    and a parametrised id carries its `[param]` suffix, so a guard named without one never matches
+    and the entry would be recorded as caught on evidence nobody collected.
+    """
+    import dataclasses
+
+    good = _compute({"a": "WRONG"}, {}, rejector_set="ADMITTED")
+    assert "|RESIDUE| = 1" in render(good)
+    with pytest.raises(ResidueError) as e:
+        render(dataclasses.replace(good, registry_root=""))
+    assert "own optimism" in str(e.value), (
+        "the refusal must say WHY a bare number is worse than no number: the reader supplies the "
+        "missing rejector set themselves"
+    )
+
+
 def test_res__the_ceiling_label_travels_with_an_empty_rejector_set() -> None:
     """NC-C07's measured instance: on G-CORPUS's FAIL branch every WRONG mutant survives by
     construction, and that is a CEILING rather than a strong result."""

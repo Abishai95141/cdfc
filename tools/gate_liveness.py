@@ -129,6 +129,26 @@ EVIDENCE: dict[int, str] = {
     # only the MONOTONIC clocks, so a `time.time()` in the deterministic core left it green.
     76: "NC-CI21",  # a wall clock in the deterministic core
     77: "NC-CI22",  # a bare absence on a surface
+    # --- P10, rows 78-90 ----------------------------------------------------------------
+    # L6.5's gates. Row 80 is bound to NC-C04 and NOT to NC-C01, deliberately: cause isolation is
+    # only meaningful under an APPARATUS break — a stubbed loop trips it too, but a broken key
+    # resolver is the case where every other layer stays green and only the canary layer knows.
+    78: "NC-C10",   # no duration field inside a hashed object (F23)
+    79: "NC-C10",   # no clock reachable from the selfcheck package — the same ruling's other half
+    80: "NC-C04",   # under an apparatus break the cause set is exactly {canary_silent}
+    81: "NC-C04c",  # a healthy run is VALID with digits — the admission-side positive control
+    82: "NC-C05c",  # liveness is proved on the in-memory fact table (D6)
+    83: "NC-C09",   # the expected-silent set is a constant, never derived from the registry
+    84: "NC-C01b",  # a threshold moves only with its dated row
+    85: "NC-C07",   # the residue never prints without the rejector set it was computed against
+    86: "NC-C07",   # an adjudication with no argument is refused — the same renderer's refusal
+    87: "NC-C13",   # the recompute-blind set, with its paired value assertion
+    88: "NC-C01b",  # every published liveness count is len() of a row set (D5)
+    89: "NC-C12",   # a cell with no value is ABSENT, never the string "None"
+    # NC-C03 carries `injector: NONE`, so the sweep can never report it CAUGHT — an entry that
+    # injects nothing catches nothing. Its GENERAL form is what row 90 guards, and NC-C03b
+    # injects that: deleting `layer_exists_assertion` from the catalogue.
+    90: "NC-C03b",  # an absence claim proves, in the same breath, that the layer exists (F6)
 }
 
 

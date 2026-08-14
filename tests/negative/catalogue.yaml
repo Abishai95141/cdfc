@@ -1766,3 +1766,27 @@ entries:
         flips: true
     positive_control: "tests/unit/test_fact_patch.py::test_patch__the_campaign_and_the_canary_share_one_patcher — one patcher, so the canary cannot be testing a different fact tree from the one the campaign scored"
     status: active
+
+  - id: NC-C07
+    component: selfcheck
+    break: the residue count is reported against a rejector set that is not named, so an empty registry looks like a strong result
+    measured_instance: "on G-CORPUS's FAIL branch the admitted set is EMPTY and every WRONG mutant survives by construction: 517 of 517. Without the label that is a headline; with it, it is a ceiling"
+    injector: ResidueWithoutRegistryRoot
+    guard_tests:
+      - path: "tests/unit/test_residue.py::test_res__C07_the_renderer_refuses_a_nameless_rejector_set"
+        flips: true
+      - path: "tests/unit/test_adjudication.py::test_adj__verdict_without_argument_is_refused"
+        flips: false
+    positive_control: "tests/unit/test_residue.py::test_res__the_survivors_are_reported_by_class_of_falsehood — a residue WITH all five fields renders, so the refusal is not a reject-everything baseline"
+    status: active
+
+  - id: NC-C03b
+    component: selfcheck
+    break: an injector-NONE catalogue row claims a layer did not fire and does not prove the layer exists
+    measured_instance: "adversary F6. NC-C03 as written is satisfied by a build in which src/cdfc/selfcheck/ does not exist at all — the renamed sheet produces template_unbound in a system with no canary layer too"
+    injector: LayerExistsAssertionRemoved
+    guard_tests:
+      - path: "tests/negative/test_nc_meta.py::test_nc_meta__none_injector_entries_carry_a_layer_exists_assertion"
+        flips: true
+    positive_control: "NC-C03's own guard runs the reference fill and asserts canariesRun > 0 BEFORE it touches the fixture, in the same test body"
+    status: active
