@@ -3172,3 +3172,76 @@ class GreenInThePalette(Injector):
 
 ALL_INJECTORS = ALL_INJECTORS + (AffirmativeThroughData, GreenInThePalette)
 BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+UNCHECKED_PY = REPO_ROOT / "src" / "cdfc" / "surface" / "unchecked.py"
+REMEDIES_YAML = REPO_ROOT / "src" / "cdfc" / "surface" / "remedies.yaml"
+
+
+class GenericRemedyFallback(Injector):
+    """**NC-A13** — the Unchecked panel falls back to a generic remedy, so every entry says the same.
+
+    Deliberately BOTH a generic fallback and a wildcard selector, so **both** of NC-A13's guards go
+    red under one injector. An injector that reached only the first would leave
+    `test_unchecked__wildcard_remedy_does_not_load` permanently unobserved while the entry still
+    counted as `caught` — which is the defect the `flips` field exists to expose.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="generic_remedy_fallback", touches=[UNCHECKED_PY])
+
+    def apply(self) -> None:
+        _sub(
+            UNCHECKED_PY,
+            "        if self.applies_to.strip() == FORBIDDEN_SELECTOR:",
+            "        if False:  # INJECTED: a wildcard selector now loads",
+        )
+        _sub(
+            UNCHECKED_PY,
+            "            else:\n                raise MissingRemedy(",
+            "            else:\n                rem = Remedy(id='fallback', reason_code=code,\n"
+            "                             applies_to='*', text='see documentation',\n"
+            "                             source=None, specific=True)\n"
+            "                _unused = MissingRemedy(",
+        )
+
+
+class HideUnmeasuredResidue(Injector):
+    """**NC-A14** — an unmeasured residue renders as a measured-empty one.
+
+    `None` is a statement about US; `()` is a statement about the CHECK SET, and per NC-C02 a
+    residue of exactly zero is a finding rather than good news. Collapsing them makes *we have not
+    looked* indistinguishable from *we looked and found nothing*, which is the collapse this whole
+    project is named for, occurring on its own strongest panel.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="hide_unmeasured_residue", touches=[UNCHECKED_PY])
+
+    def apply(self) -> None:
+        _sub(
+            UNCHECKED_PY,
+            '        if self.exhibits is None:\n'
+            '            return "residue not yet measured — the procedure has not been run against this predicate set"',
+            '        if self.exhibits is None:\n'
+            '            return "no survivors"  # INJECTED: unmeasured now reads as measured-empty',
+        )
+
+
+class PlantLuxembourgThreshold(Injector):
+    """**NC-CI11** — an imported prior becomes our threshold.
+
+    1.72% is another regulator's figure, over another fund population, in another year. The moment
+    it reaches a remedy string a reader takes it as the number this system checks against.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="plant_luxembourg_threshold", touches=[REMEDIES_YAML])
+
+    def apply(self) -> None:
+        _sub(REMEDIES_YAML, "(0.20% money-market", "(1.72% as observed in Luxembourg, 0.20% money-market")
+
+
+ALL_INJECTORS = ALL_INJECTORS + (GenericRemedyFallback, HideUnmeasuredResidue,
+                                 PlantLuxembourgThreshold)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}

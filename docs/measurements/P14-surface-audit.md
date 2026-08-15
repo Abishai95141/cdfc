@@ -79,3 +79,35 @@ of this sweep rather than a fact about this file.
 **2. There are no `.j2` templates and no Jinja2.** See `src/cdfc/surface/markup.py` for the
 argument; the short form is that Jinja's escaping is a constructor argument, and a flag is what
 somebody sets when the deadline is Friday.
+
+---
+
+## P14-B2 — the Unchecked panel, and an OPEN finding that is not B2's
+
+**B2 is complete and its own controls are green:** 136/136 catalogue entries caught, 221/221 guards
+flipped, `contaminated_count 0`, every gate observed red including the three new ones.
+
+**`make verify` nevertheless exits 2**, on
+`tests/negative/test_nc_ingest.py::test_nc__P01_the_matrix_can_report_a_structural_disagreement`,
+with `ResourceWarning: unclosed file <…FME…xlsx>` surfacing as a
+`PytestUnraisableExceptionWarning` under this repo's `filterwarnings = ["error"]`.
+
+**It is not B2's, and here is the evidence rather than the assertion:**
+
+| | |
+|---|---|
+| the traceback's line | `reader_lxml.py:244`, which is **where the garbage collector happened to be running**, not where the file was opened |
+| the class | **already documented in this repo.** `reader_openpyxl.py` carries a comment recording this exact shape: *"the garbage collector raises a ResourceWarning at whatever line happens to be executing when the finaliser runs — which fails an unrelated test and points the reader at innocent code. Found at P4 when a new dependency shifted collection order; it had been leaking a handle per read since P1"* |
+| the two known leak sites | **both already fixed** — `container_guard.py` closes through `with zf:`, `reader_openpyxl.py` through `with closing(wb), closing(wbv)` |
+| what B2 changed | nothing under `src/cdfc/ingest/`. It added tests, which changed **when** the collector runs |
+| reproduction | **does not reproduce** running `tests/negative` alone, nor either affected test in isolation |
+
+**So there is at least one leaked handle still unlocated**, it is pre-existing, and it surfaces at a
+line that has nothing to do with it. Locating it needs `PYTHONTRACEMALLOC`, which slows the suite
+past the point of usefulness in this environment.
+
+**This is recorded as OPEN rather than worked around.** The tempting fix — a `gc.collect()` in a
+conftest fixture — would make the warning surface at its own module and would also make it *stop
+failing the build*, which is the wrong direction: the warning is true, a handle is leaking, and the
+build going red about it is the system working. What is wrong is only that it accuses the wrong
+line.

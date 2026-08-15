@@ -178,6 +178,10 @@ EVIDENCE: dict[int, str] = {
     110: "NC-A30",   # SG3 -- a settled count cannot render without its admission state
     111: "NC-A32",   # SG4 -- a success green in the palette
     112: "NC-A30",   # the surface registry is append-only
+    # --- P14-B2: the Unchecked panel. Row 114 keeps `None` and `()` apart.
+    113: "NC-A33",   # an imported prior may not become our threshold
+    114: "NC-A14",   # unmeasured residue is not measured-empty
+    115: "NC-A13",   # there is no fallback remedy string
 }
 
 

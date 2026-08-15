@@ -1,0 +1,288 @@
+# P14-B2 — what would make each unchecked group checkable.
+#
+# THERE IS NO FALLBACK STRING. A reason code that reaches a cell either has a remedy here, or is
+# listed under `deliberately_unremediable` WITH AN ARGUMENT. A generic remedy — "see documentation"
+# — turns a panel of reasons into one sentence repeated, and it is indistinguishable from a panel
+# that thought about each group. That is the flattering failure: the page looks complete and says
+# nothing.
+#
+# `applies_to: "*"` does not load. A wildcard is a generic remedy wearing a specific one's clothes.
+#
+# NOTHING HERE MAY CARRY AN IMPORTED PRIOR. `ci/no-imported-prior.sh` greps this file and the
+# surface package for Luxembourg's 1.72% and for "NAV tolerance" used as a threshold rather than as
+# a question. That figure is a comparator for the pitch and an input to nothing (do-not-build row
+# 9). Citing the KIND OF INSTRUMENT that would settle a question is lawful; importing somebody
+# else's number as our threshold is not.
+
+remedies:
+  - id: R-NP-NOT-YET-SYNTHESISED
+    reason_code: no_predicate.not_yet_synthesised
+    applies_to: "cells whose obligation is latent in the template's own formulas or validations"
+    specific: true
+    text: >
+      a predicate harvested from the template's own formula graph or data validations, then carried
+      through all five gates — G0 scope, G1 binding, G3 degeneracy, G2 a measured kill rate against
+      seeded faults, and G4 a measured false-failure rate on a corpus this project did not author.
+      For these cells the obligation is already in the artifact; what is missing is a check that has
+      been qualified rather than merely written.
+    source: "the five-gate admission test, plan/04 §G0-G4"
+
+  - id: R-NP-REQUIRES-JUDGMENT
+    reason_code: no_predicate.requires_judgment
+    applies_to: "Third Schedule Part A(g) — whether the valuation is appropriate"
+    specific: true
+    text: >
+      a materiality threshold by scheme class of the kind CSSF Circular 24/856 Tables 1-3 specify
+      (0.20% money-market / 0.50% bond and mixed / 1.00% equity and other), plus a
+      compensation-direction rule of the kind its Tables 4-5 specify.
+    source: "CSSF Circular 24/856, Tables 1-5"
+
+  - id: R-NP-NO-OBLIGATION
+    reason_code: no_predicate.no_obligation_specified
+    applies_to: "cells the template leaves unlocked but no instrument requires"
+    specific: true
+    text: >
+      an obligation in a pinned instrument that names this field. The cell is fillable and nothing
+      published says it must be filled or how — so a check here would be this project inventing a
+      rule, which is the failure the whole gate order exists to prevent.
+    source: null
+
+  - id: R-NP-RULE-AMBIGUOUS
+    reason_code: no_predicate.rule_ambiguous
+    applies_to: "obligations whose promoted clause region could not be structured"
+    specific: true
+    text: >
+      a human reading of the clause region the promoter could not structure, recorded with its page
+      span and an actor id. The text exists; what is missing is an unambiguous reading of it, and
+      guessing one would produce a predicate that enforces a rule nobody wrote.
+    source: null
+
+  - id: R-NR-INPUT-REGISTER
+    reason_code: not_run.input_unavailable.register
+    applies_to: "checks whose truth depends on a register record"
+    specific: true
+    text: >
+      a register snapshot pinned by digest, with a stated staleness bound, retrieved under terms of
+      use that have been read. A live lookup is refused: a verdict that depends on what a remote
+      endpoint said at run time cannot be re-derived from the filing's bytes.
+    source: "the register snapshot policy, P15-B3"
+
+  - id: R-NR-INPUT-PRIOR-PERIOD
+    reason_code: not_run.input_unavailable.prior_period
+    applies_to: "checks comparing this filing against the entity's previous return"
+    specific: true
+    text: >
+      the entity's prior filing for the immediately preceding period, pinned by digest alongside
+      this one. Period-over-period checks are among the cheapest real checks available and none can
+      run against a single filing.
+    source: null
+
+  - id: R-NR-TEMPLATE-UNBOUND
+    reason_code: not_run.template_unbound
+    applies_to: "cells whose key did not resolve against this template version"
+    specific: true
+    text: >
+      a label-anchored re-resolution of the key against this template version, through
+      `transfer/rekey.py`. The predicate exists and its key no longer locates; a version bump is a
+      re-resolution rather than a rewrite, and an unresolved key is a human's work rather than a
+      failure of the filing.
+    source: "P15-B1, the transfer measurement"
+
+  - id: R-IND-TOLERANCE-STRADDLE
+    reason_code: indeterminate.tolerance_straddle
+    applies_to: "arithmetic checks whose result falls inside the declared tolerance band"
+    specific: true
+    text: >
+      a tolerance derived from the instrument's own rounding rule rather than from a half-ULP
+      default. The check ran and the answer sits inside the band, which is not a pass and not a
+      failure — it is the band being wider than the question.
+    source: null
+
+  - id: R-NP-FAILED-QUALIFICATION
+    reason_code: no_predicate.failed_qualification
+    applies_to: "cells whose only candidate predicate was rejected by one of the five gates"
+    specific: true
+    text: >
+      a candidate that clears the gate that rejected this one, and the attrition row says which:
+      G0 if the clause did not locate uniquely, G1 if it did not bind, G3 if it was degenerate, G2
+      if its measured kill rate was below the bar, G4 if its false-failure rate was. A rejected
+      candidate is not a missing check — it is a check we declined to ship, and the number that
+      declined it is on the record.
+    source: "the attrition funnel, reports/*/attrition.csv"
+
+  - id: R-NP-NOT-YET-REQUALIFIED
+    reason_code: no_predicate.not_yet_requalified
+    applies_to: "predicates whose template or instrument version moved under them"
+    specific: true
+    text: >
+      a re-qualification run of this predicate against the current template hash and instrument
+      version. The check exists and was admitted against a version that is no longer the one being
+      filed, so its measured kill rate and false-failure rate are about a different artifact.
+    source: "P15-B2, version churn and re-qualification"
+
+  - id: R-NR-BUDGET-EXHAUSTED
+    reason_code: not_run.budget_exhausted
+    applies_to: "checks the run reached after its evaluation budget was spent"
+    specific: true
+    text: >
+      a larger evaluation budget, or a smaller predicate set. The check exists and would have run;
+      the run stopped first. This is recorded rather than retried because a silent retry would make
+      the coverage number a function of how long somebody was willing to wait.
+    source: null
+
+  - id: R-NR-DEACTIVATED
+    reason_code: not_run.deactivated
+    applies_to: "predicates a human moved out of the active set"
+    specific: true
+    text: >
+      a human decision to re-admit, recorded with an actor id and a decision-record hash through
+      `cdfc admit --clear`. Nothing re-activates a predicate automatically, including the watcher
+      that deactivated it: the mechanism that applies pessimism does not get to undo it.
+    source: "the quarantine rule, P13-B4"
+
+  - id: R-NR-EXTERNAL-LACKS-FIELD
+    reason_code: not_run.external_source_lacks_field
+    applies_to: "checks whose external source exists but does not carry the field"
+    specific: true
+    text: >
+      a source that publishes this field. The snapshot was retrieved and read and the field is not
+      in it — which is a finding about the source rather than about the filing, and is why this is
+      distinguished from the source being unavailable.
+    source: null
+
+  - id: R-NR-EXTERNAL-UNAVAILABLE
+    reason_code: not_run.external_source_unavailable
+    applies_to: "checks whose external source could not be read at all"
+    specific: true
+    text: >
+      a snapshot of the source, pinned by digest, taken within the declared staleness bound. The
+      run does not fall back to a live fetch: a verdict depending on what a remote endpoint said at
+      run time cannot be re-derived from the filing's bytes.
+    source: null
+
+  - id: R-NR-EXTRACTOR-DISAGREEMENT
+    reason_code: not_run.extractor_disagreement
+    applies_to: "cells the two independent readers of the filing read differently"
+    specific: true
+    text: >
+      a third reading, or a normalisation rule that resolves the disagreement and is recorded in the
+      extraction manifest. Two competent readers disagreeing about what the filing says means no
+      party's reading is authoritative there, and checking against either one would be checking
+      against a guess.
+    source: "the dual-reader discipline, P1"
+
+  - id: R-NR-INPUT-COUNTERPARTY
+    reason_code: not_run.input_unavailable.counterparty
+    applies_to: "checks whose truth depends on a fact held by a counterparty"
+    specific: true
+    text: >
+      a confirmation from the counterparty, or a field in the filing that carries the fact. It is
+      not derivable from this document and no amount of work on our side would make it so, which is
+      why the row is here rather than absent.
+    source: null
+
+  - id: R-NR-SOURCE-UNREADABLE
+    reason_code: not_run.source_unreadable
+    applies_to: "attachments and cells whose bytes could not be read"
+    specific: true
+    text: >
+      a readable copy of the source. The run does not retry and does not guess: a transient failure
+      yields this state rather than a second call, because a fact produced on the second attempt
+      cannot be distinguished from one produced on the first.
+    source: null
+
+  - id: R-IND-CONFLICTING-SOURCES
+    reason_code: indeterminate.conflicting_sources
+    applies_to: "checks whose two admissible sources give different answers"
+    specific: true
+    text: >
+      a stated precedence between the sources, or a reconciliation rule. The check ran and both
+      inputs are admissible and they disagree, so the answer is neither a pass nor a failure — it is
+      a question about which source governs, and inventing a precedence would settle it by
+      preference.
+    source: null
+
+  - id: R-IND-ENGINE-DISAGREEMENT
+    reason_code: indeterminate.engine_disagreement
+    applies_to: "cells the two evaluation engines compute differently"
+    specific: true
+    text: >
+      a resolution of the differential between the two engines, recorded with the construct they
+      disagree on. A cell where our own two implementations differ is a cell where we do not know
+      our own answer, and reporting either engine's result would report a coin toss.
+    source: "the D-series differentials, plan/01 §1.4"
+
+  - id: R-IND-EXTRACTION-ABSTAINED
+    reason_code: indeterminate.extraction_abstained
+    applies_to: "values an extractor declined to bind rather than guessing"
+    specific: true
+    text: >
+      a value the extractor can bind with confidence, or a human reading of the source recorded with
+      an actor id. An abstention is the extractor working correctly: it is the alternative to a
+      guess that would be indistinguishable from a reading.
+    source: null
+
+  - id: R-IND-ERR-CANARY-SILENT
+    reason_code: error.canary_silent
+    applies_to: "predicates whose stored kill case did not fire on replay"
+    specific: true
+    text: >
+      an investigation of why the predicate no longer rejects the fault it was admitted for. This is
+      the instrument failing its own liveness check, and the run is INVALID rather than clean: a
+      broken filing and a broken instrument are different events and this is the second.
+    source: "the canary loop, P10-B1"
+
+  - id: R-ERR-CELLS-BOUND-ZERO
+    reason_code: error.cells_bound_zero
+    applies_to: "predicates that bound no cell in this filing"
+    specific: true
+    text: >
+      a key re-resolution against this template version, or the removal of a predicate whose subject
+      is not in this form. A check that binds nothing contributes nothing and must not be counted as
+      having run.
+    source: null
+
+  - id: R-ERR-CLOSURE-VIOLATED
+    reason_code: error.closure_violated
+    applies_to: "runs whose seven-term closure does not add up"
+    specific: true
+    text: >
+      a repair of the accounting. Nothing else in this report can be relied on while the terms do
+      not sum: the settled fraction, the panel total and the hero all divide by a denominator the
+      closure defines, and the report aborts rather than rendering them.
+    source: "the closure invariant, P5-B4"
+
+  - id: R-ERR-PARSER-DISAGREEMENT
+    reason_code: error.parser_disagreement_structural
+    applies_to: "cells where the two structural readers of the workbook disagree"
+    specific: true
+    text: >
+      a resolution of the structural difference between the readers, with the construct named. One
+      of them is wrong about the shape of the document, and a check run over either reading would be
+      a check over a shape we have not established.
+    source: null
+
+  - id: R-ERR-PREDICATE-RAISED
+    reason_code: error.predicate_raised
+    applies_to: "predicates that raised during evaluation"
+    specific: true
+    text: >
+      a fix to the predicate, or its withdrawal. An exception is not a failing check and is not a
+      passing one; it is a check that did not produce an answer, and counting it either way would
+      put a number on an event that has none.
+    source: null
+
+# A reason code may be declined a remedy ONLY with an argument, and the argument is rendered in the
+# panel in the remedy's place. Declining without saying why would be a way of moving a reason code
+# out of the panel.
+deliberately_unremediable:
+  no_predicate.undecidable_by_construction: >
+    nothing would make these checkable from the filing alone, and that is a property of the
+    obligation rather than a gap in this instrument. The fact the obligation turns on is not in the
+    document and is not derivable from it; a check here would need a second document that the filer
+    is not required to submit. This row exists so the count is visible rather than absorbed.
+  no_predicate.rule_withdrawn: >
+    the rule these cells implemented has been withdrawn by the regulator, so there is nothing left
+    to check. They are retained in the panel rather than dropped because a cell that silently stops
+    being counted is how a denominator shrinks, and the settled fraction would rise for a reason
+    that has nothing to do with coverage.

@@ -96,3 +96,24 @@ def test_surface__required_numbers_all_name_a_registered_surface() -> None:
 def test_surface__both_registries_are_non_empty() -> None:
     """The admission-side control for the two tests above: deleting every row would satisfy them."""
     assert len(SURFACES) >= 5 and len(REQUIRED_NUMBERS) >= 5
+
+
+def test_surface__residue_section_always_present() -> None:
+    """The residue section renders whether or not the residue has been measured.
+
+    An absent section is how the panel's strongest row disappears silently: a reader who does not
+    see it concludes there is nothing to see, and there is no way to tell that from a section that
+    was never rendered. Only its CONTENTS are pending.
+    """
+    from pathlib import Path as _P
+
+    from cdfc.measure.p10_run import run_filing
+    from cdfc.measure.p5_run import TEMPLATE_COMPUTED
+    from cdfc.surface.render import render_report
+
+    import tempfile
+    with tempfile.TemporaryDirectory() as d:
+        html = render_report(run_filing(TEMPLATE_COMPUTED),
+                             out=_P(d) / "r.html").path.read_text(encoding="utf-8")
+    assert "demonstrated survivors" in html, "the residue section is absent from the report"
+    assert "residue not yet measured" in html, "its unmeasured state does not render"

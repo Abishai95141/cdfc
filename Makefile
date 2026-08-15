@@ -38,6 +38,7 @@ greps:
 	bash ci/no-bare-rate.sh
 	bash ci/no-openpyxl-writer.sh
 	bash ci/no-wallclock-z3.sh
+	bash ci/no-imported-prior.sh
 
 contract:
 	$(PY) -m pytest tests/contract -q

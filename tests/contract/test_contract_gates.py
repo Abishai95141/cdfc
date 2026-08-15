@@ -48,7 +48,7 @@ ADDED_LIVE_AT_P12 = set(range(99, 108))  # docs/GATE-CHANGES.md, 15 Aug 2026
 # P14-B1's five. Rows 108 and 111 are STRUCTURAL arms of gates plan/07 specifies against a headless
 # browser; the browser halves are recorded NOT RUN rather than passed. Row 112 guards the gate's own
 # denominator against M1.
-ADDED_LIVE_AT_P14 = set(range(108, 113))  # docs/GATE-CHANGES.md, 15 Aug 2026
+ADDED_LIVE_AT_P14 = set(range(108, 116))  # docs/GATE-CHANGES.md, 15 Aug 2026 (B1 108-112, B2 113-115)
 LIVE_EXPECTED = (LIVE_AT_P0 | ADDED_LIVE_AT_P4 | ADDED_LIVE_AT_P5 | ADDED_LIVE_AT_P6
                  | ADDED_LIVE_AT_P7 | ADDED_LIVE_AT_P8 | ADDED_LIVE_AT_P9
                  | ADDED_LIVE_AT_P10 | ADDED_LIVE_AT_P11 | ADDED_LIVE_AT_P12

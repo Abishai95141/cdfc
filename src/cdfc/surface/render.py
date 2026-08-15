@@ -91,6 +91,27 @@ def _band_markup(segments: tuple[band_mod.Segment, ...]) -> tuple[str, str]:
     return bars, legend
 
 
+def _unchecked_markup(panel: Any) -> str:
+    """One block per reason group, each carrying its own remedy.
+
+    The remedy is rendered IN the group, not in a footnote: a reader looking at 1,849 unchecked
+    cells needs the answer to *what would make this checkable* in the same glance, or the panel is
+    a list of complaints.
+    """
+    out = []
+    for g in panel.groups:
+        src = (f'<p class="meta">source: {esc(g.remedy.source)}</p>'
+               if g.remedy.source else "")
+        out.append(
+            f'<div class="card" style="margin-bottom:16px">'
+            f'<p><span class="figure">{g.count:,}</span> '
+            f'<span class="pill">{esc(g.reason_code)}</span></p>'
+            f'<p class="meta">applies to: {esc(g.remedy.applies_to)}</p>'
+            f"<p>{esc(g.remedy.text)}</p>{src}</div>"
+        )
+    return "".join(out)
+
+
 def _open_items_markup(run: Any) -> str:
     from cdfc.surface.openitems import standing_open_items
 
@@ -117,6 +138,16 @@ def render_report(run: Any, *, out: Path | None = None) -> ReportArtifact:
     segments = band_mod.band_segments(sf, getattr(sf, "residue", None))
     bars, legend = _band_markup(segments)
 
+    from cdfc.surface.unchecked import build_unchecked_panel
+
+    panel = build_unchecked_panel(run, getattr(sf, "residue", None))
+    if panel.total != h.unchecked:
+        raise ClosureViolation(
+            f"the Unchecked panel totals {panel.total} and the hero's second line says "
+            f"{h.unchecked}. They are the same set counted twice, and a report in which they "
+            "disagree is a report whose two halves describe different runs."
+        )
+
     template = (TEMPLATE_DIR / "report.html").read_text(encoding="utf-8")
     html = fill(template, {
         "run_id": run.run_id,
@@ -140,6 +171,9 @@ def render_report(run: Any, *, out: Path | None = None) -> ReportArtifact:
         "filing_sha": run.filing_sha256[:16],
         "band_bars": Raw(bars),
         "band_legend": Raw(legend),
+        "unchecked_heading": f"{panel.total:,} fields were not checked",
+        "unchecked_groups": Raw(_unchecked_markup(panel)),
+        "residue_state": panel.residue_state,
         "open_items": Raw(_open_items_markup(run)),
         "style": Raw(f"<style>\n{stylesheet()}\n</style>"),
     })

@@ -303,3 +303,21 @@ def test_nc__CI22_a_bare_absence_makes_the_gate_red() -> None:
     """NC-CI22. `ci/no-bare-absence.sh` also ran unregistered. An absence reported by an
     instrument nobody proved could see a presence is a broken query with a confident face."""
     assert _gate("ci/no-bare-absence.sh") == 0
+
+
+def test_nc__CI11_imported_prior_is_caught() -> None:
+    """`ci/no-imported-prior.sh`, run as a guard.
+
+    Luxembourg's 1.72% is a comparator for the pitch and an input to nothing (do-not-build row 9).
+    The gate walks the LOADED VALUES and the rendered report rather than the file's bytes — its
+    first version went red on `remedies.yaml`'s own comment explaining the ban, which is the
+    eleventh time in this build a check was defeated by prose describing the thing it checks for.
+    """
+    import subprocess
+
+    from injectors import run_gate
+
+    assert run_gate("ci/no-imported-prior.sh") == 0, subprocess.run(
+        ["bash", str(REPO / "ci" / "no-imported-prior.sh")], cwd=REPO, capture_output=True,
+        text=True, env={**__import__("os").environ, "CDFC_PY": __import__("sys").executable},
+    ).stdout[:600]
