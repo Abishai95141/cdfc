@@ -136,6 +136,10 @@ def _normalise(text: str) -> str:
     return " ".join(text.split())[:400]
 
 
+class GuardNodeNotFound(RuntimeError):
+    """A catalogue entry names a test that does not exist."""
+
+
 def _run_guards(node_ids: list[str]) -> dict[str, tuple[bool, str]]:
     """Run guards in one pytest process. -> {node_id: (passed, assertion_text)}."""
     if not node_ids:
@@ -158,6 +162,27 @@ def _run_guards(node_ids: list[str]) -> dict[str, tuple[bool, str]]:
         },
     )
     out = proc.stdout + proc.stderr
+
+    # AN UNRESOLVABLE GUARD NODE ID IS AN ERROR, NOT SILENCE.
+    #
+    # pytest exits 4 on a usage error and prints `ERROR: not found: <nodeid>` with NO `FAILED`
+    # line — so `red = nid in failed_nodes` is False for every guard and the entry reports
+    # "observed red []". A control naming a test that does not exist then looks exactly like a
+    # control whose injector did nothing, and the sweep says the second while meaning the first.
+    #
+    # Found twice: once on `test_nc__CI14_nul_byte_in_a_plan_doc_fails` and once on
+    # `test_nc__CI03_green_tick_is_rejected`. `test_nc_meta__no_orphan_guard` does catch these —
+    # but it runs later, and until it does the sweep emits a mismatch that reads as a broken
+    # injector. This is the THIRD diagnostic hole found in this harness: the others were a
+    # discarded post-restore assertion and blindness to undeclared writes.
+    if proc.returncode == 4 or "ERROR: not found:" in out:
+        missing = [ln.split("ERROR: not found:")[1].strip()
+                   for ln in out.splitlines() if "ERROR: not found:" in ln]
+        raise GuardNodeNotFound(
+            f"guard node id(s) do not resolve: {missing or node_ids}. A catalogue entry naming a "
+            "test that does not exist is a control that cannot be observed, and it must not be "
+            "reported as an injector that changed nothing."
+        )
 
     # Map failures by NODE ID. Mapping by file path marked every guard in a file red as
     # soon as one of them failed — which silently inflated the flipped set and would
@@ -222,7 +247,13 @@ def sweep(catalogue: Path = CATALOGUE) -> dict[str, Any]:
             results.append(er)
             continue
 
-        clean = _run_guards(node_ids)
+        try:
+            clean = _run_guards(node_ids)
+        except GuardNodeNotFound as exc:
+            er.error = str(exc)
+            er.guards = [GuardResult(g["path"], g["flips"], False, node_id=g["path"]) for g in guards]
+            results.append(er)
+            continue
         not_green = [n for n, (ok, _) in clean.items() if not ok]
         if not_green:
             er.error = f"guards not green before injection: {not_green}"

@@ -172,6 +172,12 @@ EVIDENCE: dict[int, str] = {
     105: "NC-M16",  # decide() takes a result and a lock, and nothing else
     106: "NC-M14",  # one extension; there is no third stage
     107: "NC-M34",  # the pool is fixed before the draw
+    # --- P14-B1: the surfaces. Row 112 guards the gate's own denominator.
+    108: "NC-A31",   # a banned token reaching the surface THROUGH DATA
+    109: "NC-A30",   # SG2 -- an FFR refuses a digit in all three uninformative cases
+    110: "NC-A30",   # SG3 -- a settled count cannot render without its admission state
+    111: "NC-A32",   # SG4 -- a success green in the palette
+    112: "NC-A30",   # the surface registry is append-only
 }
 
 

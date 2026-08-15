@@ -218,3 +218,17 @@ e6-status:
 		from cdfc.experiment import prereg; \
 		print(json.dumps(prereg.lock_summary(), indent=1)); \
 		print('ancestry:', prereg.ancestry_state())"
+
+# --- P14 -----------------------------------------------------------------------------
+# The four surface gates, run over a RENDERED artifact. SG1's DOM arm and SG4's computed-style
+# arm need a headless browser that is not in the lockfile; they are recorded NOT RUN in
+# docs/measurements/P14-surface-audit.md rather than reported as passed.
+surface-audit:
+	PYTHONPATH=$(CURDIR)/src $(PY) ci/surface_audit.py
+
+report:
+	PYTHONPATH=$(CURDIR)/src $(PY) -c "import sys; sys.path.insert(0,'src'); \
+		from pathlib import Path; from cdfc.surface.render import render_report; \
+		from cdfc.measure.p10_run import run_filing; from cdfc.measure.p5_run import TEMPLATE_COMPUTED; \
+		a = render_report(run_filing(TEMPLATE_COMPUTED)); \
+		print(f'  {a.path}  {a.n_bytes:,} bytes  sha256 {a.sha256[:16]}')"
