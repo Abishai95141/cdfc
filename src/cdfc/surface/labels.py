@@ -114,3 +114,191 @@ BANNED_IN_COPY: tuple[str, ...] = (
 def banned_tokens() -> tuple[str, ...]:
     """Everything the surface grep looks for, in one tuple, for the shell gate."""
     return BANNED_GLYPHS + BANNED_PHRASES
+
+
+# =====================================================================================
+# P14-B1 — THE THREE REGISTRIES, AND WHY THEY ARE APPEND-ONLY
+#
+# The exit gate reads `surfaces_passing_all_four_gates == len(SURFACES)` — and this build
+# writes SURFACES. A surface that cannot be made to pass can be DELETED from the registry
+# and the gate goes green with the sweep still reporting caught == active.
+#
+# **That is M1, this plan's founding defect — the numerator choosing its own denominator —
+# sitting inside the gate written to prevent it.** The residue entry NC-N09 declares the
+# registry's INCOMPLETENESS honestly and says nothing about its SHRINKAGE, which is a
+# different and much cheaper failure.
+#
+# So: append-only, with a growth log; a row may be RETIRED with a dated argument and never
+# deleted; both cardinalities publish as a time series, so a registry that shrinks the day
+# before a gate is read is visible in the artifact the gate is read from. A retired surface
+# leaves the gate's DENOMINATOR and stays in the SCAN — we may give up auditing a surface,
+# never on prohibiting an all-clear on it.
+# =====================================================================================
+
+from collections.abc import Callable, Mapping  # noqa: E402
+from dataclasses import dataclass  # noqa: E402
+from typing import Any, Final, Literal  # noqa: E402
+
+Renders = Literal["SETTLED_COUNT", "FFR", "VERDICT_NAME", "STATE", "RATE", "NONE"]
+
+
+@dataclass(frozen=True, slots=True)
+class Label:
+    id: str
+    binding: str          # the exact run-record path this label reads
+    template: str
+    surfaces: tuple[str, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class SurfaceSpec:
+    id: str
+    kind: Literal["HTML", "JSON", "STDOUT", "DOC"]
+    renders: frozenset[Renders]
+    entrypoint: str
+    retired_on: str = ""
+    retired_because: str = ""
+
+    def __post_init__(self) -> None:
+        if bool(self.retired_on) != bool(self.retired_because):
+            raise ValueError(
+                f"{self.id}: a retirement carries BOTH a date and an argument. A row retired with "
+                "no reason is a row deleted with extra steps."
+            )
+
+    @property
+    def retired(self) -> bool:
+        return bool(self.retired_on)
+
+
+@dataclass(frozen=True, slots=True)
+class NumberSpec:
+    id: str
+    extract: Callable[[Any], str]     # the rendered string, canonical formatting
+    surfaces: tuple[str, ...]         # where it MUST appear
+
+
+# --- the label registry: the hero cannot drift, because it is data ---------------------
+#
+# `hero.left` and `hero.right` take the SAME type token, the SAME weight and the SAME ink
+# (cdfc.surface.design.HERO_TOKEN / HERO_INK). The moment one is larger or more coloured
+# than the other, the reader has been told which matters — and the one they would be told
+# to ignore is the count of fields nobody checked.
+LABEL_REGISTRY: Final[Mapping[str, Label]] = {
+    lb.id: lb for lb in (
+        Label("hero.left", "fraction.settled.failed + fraction.settled.total",
+              "{F} failures across {S} checks", ("S02.report-hero",)),
+        Label("hero.right",
+              "fraction.unsettled.indeterminate + notRun + noPredicate + error",
+              "{U} fields were not checked", ("S02.report-hero",)),
+        Label("hero.admission", "surface.admission.admission_state(run)",
+              "predicate set: {A}", ("S02.report-hero",)),
+        # REQUIRED IN THE SAME BLOCK AS ANY SETTLED COUNT. A count whose denominator rule is
+        # somewhere else on the page is a count whose denominator a reader will not find.
+        Label("hero.denominator_rule", "fraction.denominator.generatorRule",
+              "denominator: {R}", ("S02.report-hero",)),
+        Label("strapline.predicates", "len(run.selection)",
+              "{N} predicates", ("S03.report-strapline",)),
+        Label("strapline.fraction", "fraction.fraction",
+              "settled fraction {P}", ("S03.report-strapline",)),
+    )
+}
+
+# --- the surface registry: THE DENOMINATOR OF THIS PHASE'S NUMBER. APPEND-ONLY. --------
+SURFACES: Final[tuple[SurfaceSpec, ...]] = (
+    SurfaceSpec("S01.report-file", "HTML", frozenset({"NONE"}),
+                "cdfc.surface.render.render_report"),
+    SurfaceSpec("S02.report-hero", "HTML", frozenset({"SETTLED_COUNT", "STATE"}),
+                "cdfc.surface.render.render_report"),
+    SurfaceSpec("S03.report-strapline", "HTML", frozenset({"SETTLED_COUNT", "RATE"}),
+                "cdfc.surface.render.render_report"),
+    SurfaceSpec("S04.report-band", "HTML", frozenset({"SETTLED_COUNT"}),
+                "cdfc.surface.band.band_segments"),
+    SurfaceSpec("S05.report-openitems", "HTML", frozenset({"NONE"}),
+                "cdfc.surface.openitems.standing_open_items"),
+    SurfaceSpec("S06.cli-version", "STDOUT", frozenset({"NONE"}), "cdfc.cli.main"),
+)
+
+# --- the number registry: THE DENOMINATOR OF "renders every number". APPEND-ONLY. ------
+REQUIRED_NUMBERS: Final[tuple[NumberSpec, ...]] = (
+    NumberSpec("settledFraction.settled.passed",
+               lambda r: f"{int(r.fraction.settled.passed):,}", ("S04.report-band",)),
+    NumberSpec("settledFraction.settled.failed",
+               lambda r: f"{int(r.fraction.settled.failed):,}",
+               ("S02.report-hero", "S04.report-band")),
+    NumberSpec("settledFraction.unsettled.indeterminate",
+               lambda r: f"{int(r.fraction.unsettled.indeterminate):,}", ("S04.report-band",)),
+    NumberSpec("settledFraction.unsettled.notRun",
+               lambda r: f"{int(r.fraction.unsettled.notRun):,}", ("S04.report-band",)),
+    NumberSpec("settledFraction.unsettled.noPredicate",
+               lambda r: f"{int(r.fraction.unsettled.noPredicate):,}", ("S04.report-band",)),
+    NumberSpec("settledFraction.unsettled.error",
+               lambda r: f"{int(r.fraction.unsettled.error):,}", ("S04.report-band",)),
+    NumberSpec("settledFraction.inScope",
+               lambda r: f"{int(r.fraction.inScope):,}",
+               ("S02.report-hero", "S03.report-strapline")),
+    NumberSpec("settledFraction.cellsTotal",
+               lambda r: f"{int(r.fraction.cellsTotal):,}", ("S03.report-strapline",)),
+)
+
+
+def live_surfaces() -> tuple[SurfaceSpec, ...]:
+    """The gate's DENOMINATOR — retired rows excluded."""
+    return tuple(s for s in SURFACES if not s.retired)
+
+
+def scanned_surfaces() -> tuple[SurfaceSpec, ...]:
+    """The SCAN set — retired rows INCLUDED.
+
+    A surface we gave up on auditing is not a surface we gave up on prohibiting an all-clear on.
+    """
+    return SURFACES
+
+
+@dataclass(frozen=True, slots=True)
+class FfrCell:
+    text: str
+    digits: bool
+
+
+UNINFORMATIVE: Final[str] = "uninformative"
+
+
+def render_ffr(q: Any | None) -> FfrCell:
+    """A false-failure rate, or the refusal to print one. **THREE uninformative cases, not one.**
+
+    (a) there is no qualification row at all;
+    (b) the corpus provenance is `SELF-AUTHORED`;
+    (c) **the corpus is not computed-independent of the predicate** — the COMPUTED field, true
+        whenever the generator's import closure meets the predicate's evaluation closure, or the
+        predicate's `read_keys` intersect the corpus's `computed_cells`.
+
+    **(c) is the one that matters.** A clean corpus whose derived cells are computed by the same
+    evaluator an arithmetic predicate re-checks makes that predicate's false-failure rate **zero by
+    construction, regardless of its quality** — and the generator is deterministic from a seed, so
+    the `n ≥ 189` that buys `BLOCKING` costs one command. This function is the last place that can
+    refuse to print it, and the refusal must not be keyed on the provenance LABEL alone.
+
+    **There is no code path here that formats a float in any of the three cases.**
+    """
+    if q is None:
+        return FfrCell(UNINFORMATIVE, False)
+    provenance = str(
+        getattr(q, "corpus_provenance", None)
+        or getattr(getattr(q, "g4", None), "corpus_provenance", "")
+    ).upper()
+    if not provenance or "SELF-AUTHORED" in provenance:
+        return FfrCell(UNINFORMATIVE, False)
+    independent = (
+        getattr(q, "clean_corpus_independent_of_predicate", None)
+        if getattr(q, "clean_corpus_independent_of_predicate", None) is not None
+        else getattr(getattr(q, "g4", None), "clean_corpus_independent_of_predicate", None)
+    )
+    if independent is not True:
+        return FfrCell(UNINFORMATIVE, False)
+    rate = getattr(q, "false_failure_rate", None)
+    if rate is None:
+        return FfrCell(UNINFORMATIVE, False)
+    # Reached only when all three preconditions hold. `n` travels with the rate, always.
+    n = getattr(q, "n", None) or getattr(getattr(q, "g4", None), "n", None)
+    return FfrCell(f"{rate} of {n}" if n else str(rate), True)

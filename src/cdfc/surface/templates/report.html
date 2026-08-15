@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coverage declaration — run {{run_id}}</title>
+{{style}}
+</head>
+<body>
+<div class="wrap">
+  <div class="wash" aria-hidden="true"></div>
+
+  <p class="meta">coverage declaration &middot; run {{run_id}} &middot; {{run_state}}</p>
+
+  <div class="hero-block reveal">
+    <p class="hero">{{hero_left}}</p>
+    <p class="hero">{{hero_right}}</p>
+    <p class="meta">{{hero_admission}} &middot; {{hero_denominator}}</p>
+    <p class="caveat">{{admission_caveat}}</p>
+  </div>
+
+  <section>
+    <h2>What this run settled, and what it did not</h2>
+    <div class="band">{{band_bars}}</div>
+    <ul class="legend">{{band_legend}}</ul>
+    <p class="caveat">{{denominator_warning}}</p>
+  </section>
+
+  <section>
+    <div class="panel-dark">
+      <p class="meta">the two integers, never one number</p>
+      <table>
+        <tr><th>settled</th><td class="num">{{settled_text}}</td></tr>
+        <tr><th>field surface</th><td class="num">{{field_surface}}</td></tr>
+        <tr><th>in scope</th><td class="num">{{in_scope}}</td></tr>
+        <tr><th>predicates that ran</th><td class="num">{{n_predicates}}</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Standing open items</h2>
+    <div class="card">
+      <table>
+        <tr><th>item</th><th>age</th></tr>
+        {{open_items}}
+      </table>
+    </div>
+  </section>
+
+  <p class="strapline">
+    settled fraction {{subordinate}} &middot; template {{template_sha}}&hellip; &middot;
+    filing {{filing_sha}}&hellip; &middot; this document states what was checked and what was not.
+    It is not an audit opinion, an assurance engagement, or a regulatory clearance.
+  </p>
+</div>
+</body>
+</html>
