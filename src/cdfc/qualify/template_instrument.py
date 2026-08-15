@@ -32,6 +32,7 @@ from __future__ import annotations
 
 import hashlib
 import warnings
+from contextlib import closing
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any, Final
@@ -188,6 +189,20 @@ def _party_b(blob: Path, sheet_order: Mapping[str, int]) -> tuple[dict[str, Unit
         warnings.simplefilter("ignore")
         wb = openpyxl.load_workbook(blob, data_only=False)
 
+    # THE HANDLE IS CLOSED. It was not, and the cost was not a leaked descriptor — it was a
+    # `ResourceWarning` raised by the garbage collector at whatever line happened to be executing
+    # when the finaliser ran, which under this repo's `filterwarnings = ["error"]` failed an
+    # UNRELATED test and pointed the reader at innocent code. It accused
+    # `ingest/reader_lxml.py:244`, a module that closes everything it opens.
+    #
+    # `reader_openpyxl.py` already carries a comment recording this exact shape, found at P4. This
+    # is the SECOND reader to do it, which is why the repair is a structural guard
+    # (`tests/contract/test_contract__handles_are_closed.py`) rather than one more fix.
+    with closing(wb):
+        return _party_b_units(wb, sheet_order)
+
+
+def _party_b_units(wb: object, sheet_order: Mapping[str, int]) -> tuple[dict[str, Unit], set[str]]:
     units: dict[str, Unit] = {}
     array_keys: set[str] = set()
     for ws in wb.worksheets:

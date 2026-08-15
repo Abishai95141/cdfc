@@ -106,7 +106,30 @@ with `ResourceWarning: unclosed file <…FME…xlsx>` surfacing as a
 line that has nothing to do with it. Locating it needs `PYTHONTRACEMALLOC`, which slows the suite
 past the point of usefulness in this environment.
 
-**This is recorded as OPEN rather than worked around.** The tempting fix — a `gc.collect()` in a
+**FOUND AND FIXED, 16 Aug 2026.** `qualify/template_instrument.py::_party_b` loaded a workbook and
+never closed it — the one opener under `src/` with neither a context manager nor a `close()`. It is
+the **second** reader to do this (`reader_openpyxl.py` was the first, at P4), so the repair is a
+**structural guard** rather than one more fix:
+`tests/contract/test_contract__handles_are_closed.py` walks every `.py` under `src/cdfc/` by AST
+and asserts that every `load_workbook` and `ZipFile` result is closed — through a `with`, through
+`contextlib.closing`, or through an explicit `.close()`. It was observed red against the very
+defect it was written for, and it carries an admission-side control asserting the walk actually
+reaches the three known openers, because a walk that matched nothing would pass while checking
+nothing.
+
+**How it was located.** A throwaway pytest plugin collecting garbage after every test — the
+finaliser then runs at a known point instead of wherever the collector happens to be. That run
+passed cleanly, which was itself the finding: *prompt collection prevents the cross-test
+contamination*, so the leak was real and its damage was entirely in **when** it surfaced. The
+remaining work was a direct search for openers, which found one.
+
+`make verify` after the fix: **136/136 entries caught, 221/221 guards flipped,
+`contaminated_count 0`, 115 of 115 live gates observed red, 0 PENDING, exit 0.**
+
+*The paragraph below is retained as written at the time, because the reasoning it records is why
+the fix took the shape it did.*
+
+**This was recorded as OPEN rather than worked around.** The tempting fix — a `gc.collect()` in a
 conftest fixture — would make the warning surface at its own module and would also make it *stop
 failing the build*, which is the wrong direction: the warning is true, a handle is leaking, and the
 build going red about it is the system working. What is wrong is only that it accuses the wrong
