@@ -253,3 +253,55 @@ P12's measurements are `k of 20`, `|A|/|drawn|`, the campaign's six integers, th
 marginal kill, and the stratification's discriminative value. **None of them exists**, because none
 survives the absent instrument. A ledger row for a number nobody measured would be the defect the
 ledger's eleven required fields and its 60-character caveat rule exist to prevent.
+
+---
+
+## `make verify` is GREEN — and it was green **1 run in 3**, which is itself a finding
+
+**The final run exits 0:** `130/130 entries caught · 211/211 guards flipped · 107 of 107 live
+gates observed red · "every gate green, every negative control caught"`.
+
+**It is recorded here that it took three attempts, because a control suite that is intermittently
+green is a control suite you cannot rely on, and this project does not get to describe that as
+noise.**
+
+| run | outcome |
+|---|---|
+| `make verify` #1 | **RC=2** — its sweep reported `NC-Q61: guards not green before injection` |
+| `make verify` #2 | **RC=2** — `NC-Q30` **leaked**; `NC-Q31` and `NC-Q61` failed as collateral behind it |
+| `make verify` #3 | **RC=0** — clean |
+| standalone `tools/nc_sweep.py` | **130/130 · 211/211**, three times, no errors, no leaks |
+| full `pytest tests` | **green** |
+| fresh clone | **green** |
+
+### What was ruled out, by experiment rather than by argument
+
+| hypothesis | test | result |
+|---|---|---|
+| `NC-Q30`'s injector restores badly | inject → restore → re-run its two guards, in isolation | **no leak** |
+| the guards share an on-disk artifact | read the tests | all use `tmp_path`; no shared state |
+| a LibreOffice profile lock | grep the observability path for `soffice` | **no LibreOffice on this path at all** |
+| a sweep subprocess timeout | grep `nc_sweep.py`; time the guards | **no timeout**; the three run in 0.06–0.12 s |
+| cumulative `mtime + 1` drift into the future from `_purge_bytecode` | stat the touched files against the clock | **no future mtimes** |
+| the full `pytest tests` run that precedes the sweep inside `make verify` poisons it | run the full suite, then the three guards, then `NC-Q30` through `inject()` | **all green; no leak** |
+
+**The mechanism is not identified.** What is established is the shape: the three affected controls
+are **`NC-Q30`, `NC-Q31` and `NC-Q61`, all of which call `seed_mutant`**, all P6-era, and **none of
+them touched by P12** — this phase added no code under `qualify/surgery.py`, `qualify/observability.py`
+or `tests/negative/test_nc_campaign.py`. Each failure appeared on a different entry, and every one
+of them is green in isolation, green after a full suite run, and green now.
+
+### Why this is written down rather than absorbed
+
+The first two failures were also the mechanism by which **three injector leaks** reached the working
+tree earlier in this phase — `ci/GATES.md` lost nine freshly-appended rows, `src/cdfc/cli.py` was
+left with `EXIT_NOT_IMPLEMENTED = 0`, and `src/cdfc/qualify/surgery.py` kept an openpyxl round-trip
+that only the **fresh clone** caught. Two of those were my own fault for working in the tree while a
+detached sweep ran; the third came from a `make verify` whose shell was reaped mid-injection.
+
+**`inject()`'s own self-check cannot see any of this.** It digests the source before and after
+within its own context, and both are self-consistent — the same blind spot its docstring already
+records for bytecode, one level out. `docs/measurements/P12-exit-gate.md` is therefore the honest
+place for it: **an intermittently-green control suite is an OPEN finding**, its blast radius is
+"an interrupted sweep leaves the tree silently broken", and the mitigation until it is understood
+is procedural — run the sweep detached, touch nothing while it runs, and `git status` afterwards.
