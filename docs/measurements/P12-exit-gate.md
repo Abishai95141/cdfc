@@ -285,7 +285,9 @@ noise.**
 | cumulative `mtime + 1` drift into the future from `_purge_bytecode` | stat the touched files against the clock | **no future mtimes** |
 | the full `pytest tests` run that precedes the sweep inside `make verify` poisons it | run the full suite, then the three guards, then `NC-Q30` through `inject()` | **all green; no leak** |
 
-**The mechanism is not identified.** What is established is the shape: the three affected controls
+**The mechanism was not identified at the time of writing. A REAL CONTAMINATION WAS FOUND
+AFTERWARDS AND IS FIXED — see the section at the end of this document — but it cannot have caused
+these three, and that is stated there rather than glossed.** What is established is the shape: the three affected controls
 are **`NC-Q30`, `NC-Q31` and `NC-Q61`, all of which call `seed_mutant`**, all P6-era, and **none of
 them touched by P12** — this phase added no code under `qualify/surgery.py`, `qualify/observability.py`
 or `tests/negative/test_nc_campaign.py`. Each failure appeared on a different entry, and every one
@@ -305,3 +307,69 @@ records for bytecode, one level out. `docs/measurements/P12-exit-gate.md` is the
 place for it: **an intermittently-green control suite is an OPEN finding**, its blast radius is
 "an interrupted sweep leaves the tree silently broken", and the mitigation until it is understood
 is procedural — run the sweep detached, touch nothing while it runs, and `git status` afterwards.
+
+---
+
+## The contamination the sweep could not see — FOUND AND FIXED
+
+The intermittency above was chased to a real defect, though **not to the one that explains it.**
+Both halves are recorded because reporting only the fix would leave a reader believing the
+flakiness is closed.
+
+### What was found
+
+**`NC-CI14` was changing a file its injector never declared.** `NulByteInPlanDoc` declares
+`plan/00-decomposition.md`. Its guard runs `ci/catalogue-ids.sh`, which runs
+`plan/scripts/nc_audit.py`, which **writes `plan/scripts/nc_audit_result.json`** — from a plan
+document carrying an injected NUL byte. The corrupted artifact **survived the restore** and stayed
+in the tree for every entry that followed.
+
+**`inject()` could not see it.** Its digest is scoped to `touches`, so it verifies exactly what it
+was told about — the same shape of defect this harness exists to catch, occurring inside the
+harness, one level out from the bytecode blind spot its own docstring already records.
+
+> **The rule that was wrong: `touches` is not "what `apply()` edits". It is EVERYTHING THE ENTRY
+> CAN CHANGE, guard tests included** — because the guards run inside the injected tree, and a
+> producer they invoke writes real repository artifacts from broken input.
+
+### How it was found
+
+By digesting the **whole tracked tree** around every entry rather than trusting each injector's
+declaration — 1,220 files, once per entry. That is too slow for the shipped sweep, so the shipped
+version takes `git status --porcelain` around each entry and **hashes the paths git already lists**.
+
+### What was changed
+
+| | |
+|---|---|
+| `NulByteInPlanDoc` | declares `nc_audit_result.json`, with the reasoning at the declaration |
+| `tools/nc_sweep.py` | records `contaminated` per entry — every path it changed and did not declare. It enters `caught`, it prints, and the sweep **exits non-zero** |
+| `tools/nc_sweep.py` | a leak now carries its **assertion text**. It was discarded — `(ok, _)` — so `leaked: [...]` said *which* guard was still red and never *why* |
+| `tests/negative/test_nc_sweep.py` | `test_sweep__no_entry_changes_a_path_it_does_not_declare` and `test_sweep__a_leak_carries_its_assertion_text` |
+
+### The positive control earned its place twice
+
+**The first detector compared git STATUS CODES**, so a file going from modified-with-content-A to
+modified-with-content-B carried the same two characters both times and read as unchanged — it
+reported a clean tree over the very contamination it was written to find. The control caught it,
+and the digest is content-based now.
+
+**The control's own first version was also wrong**: it removed the path from the *comparison set*
+while leaving it in `touches`, so `inject()` still restored the file and there was nothing to
+detect. It reported the detector blind when the detector had simply never been given anything to
+see. A control that cannot fail is not a control, and that took two attempts to get right.
+
+### What this does NOT claim
+
+**`plan/scripts/nc_audit_result.json` is read by nothing at runtime.** The contamination was real
+and **inert for other controls** — it dirtied the tree and nothing consumed it. **It therefore
+cannot be the cause of the `NC-Q30` / `NC-Q31` / `NC-Q61` intermittency**, and that finding stays
+**OPEN**.
+
+What has changed is that the next occurrence is **diagnosable**: it will arrive with its
+post-restore assertion text and a contamination list attached, instead of as a bare list of node
+ids that costs a 20-minute reproduction to interpret.
+
+**Since the fix: `make verify` green 2 of 2**, with `contaminated_count 0` on both, plus a
+standalone sweep at `130/130 · 211/211 · contaminated 0`. Before the fix it was green 1 of 3. Two
+successes are evidence, not proof, and the sample is stated so nobody reads it as more.
