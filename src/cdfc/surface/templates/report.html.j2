@@ -1,9 +1,22 @@
 {# P14 renders here. NC-A02 injector target.
    Jinja comments are stripped at render; HTML comments are not, and would reach the
    browser. Nothing in this file may contain a banned surface token — see
-   cdfc.surface.labels and ci/no-green-tick.sh (registry row 1). #}
+   cdfc.surface.labels and ci/no-green-tick.sh (registry row 1).
+
+   THE TWO HERO LINES TAKE THE SAME CLASS. Same size, same weight, same ink — design.HERO_TOKEN
+   and design.HERO_INK are single constants precisely so that a stylesheet cannot give one of them
+   the accent and the other not. The line that would lose is the count of fields nobody checked.
+
+   The reveal animates opacity and transform ONLY (docs/DESIGN-ADAPTATION.md, rule one): every
+   row below is in the DOM and laid out before any animation runs, so a reader who scrolls past
+   mid-stagger sees every finding rather than the ones that had their turn. #}
 <section class="report">
-  <p class="hero">{{ failures }} failures across {{ checks }} checks</p>
-  <p class="hero">{{ unchecked }} fields were not checked</p>
-  <p class="admission">predicate set: {{ admission_state }}</p>
+  <div class="report__wash" aria-hidden="true"></div>
+
+  <div class="report__hero reveal">
+    <p class="hero">{{ failures }} failures across {{ checks }} checks</p>
+    <p class="hero">{{ unchecked }} fields were not checked</p>
+  </div>
+
+  <p class="admission label">predicate set: {{ admission_state }}</p>
 </section>

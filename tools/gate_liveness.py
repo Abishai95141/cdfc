@@ -162,6 +162,16 @@ EVIDENCE: dict[int, str] = {
     96: "NC-A18",   # E2E-VERIFY catches the clock read three layers away
     97: "NC-A20",   # an INVALID run projects to nothing
     98: "NC-A16",   # the non-determinism enumeration is complete and states its boundary
+    # --- P12: the settling experiment. Each row guards the ORDERING rather than a verdict.
+    99: "NC-M02",   # the pre-registration's h0 cannot move
+    100: "NC-M03",  # the Stratum-B cap never truncates the denominator
+    101: "NC-M04",  # inverse sampling is corrected and labelled, not assumed away
+    102: "NC-M10",  # retry is impossible, not merely banned
+    103: "NC-M11",  # the discard pile is stage 0 of the funnel
+    104: "NC-M13",  # no model client on the qualification or verdict path
+    105: "NC-M16",  # decide() takes a result and a lock, and nothing else
+    106: "NC-M14",  # one extension; there is no third stage
+    107: "NC-M34",  # the pool is fixed before the draw
 }
 
 

@@ -79,13 +79,29 @@ BANNED_PHRASES: tuple[str, ...] = (
     "passed all checks",
     "fully compliant",
     "100% compliant",  # rate-ok: this list IS the banned vocabulary
-    # From DESIGN.md (Meta commerce), excluded by docs/DESIGN-ADAPTATION.md. The design
-    # system ships `badge-success` for "In stock / Verified / Free shipping" — an
-    # affirmative green pill, which is precisely the all-clear this product refuses to
-    # render. The exclusion is a gate rather than a note.
+    # From the SUPERSEDED DESIGN.md (Meta commerce), excluded by docs/DESIGN-ADAPTATION.md. That
+    # system shipped `badge-success` for "In stock / Verified / Free shipping" — an affirmative
+    # green pill, which is precisely the all-clear this product refuses to render.
+    #
+    # THESE THREE STAY BANNED THOUGH THEIR SOURCE IS GONE. DESIGN.md is now Ecosystem
+    # Visualization and defines none of them. A banned token whose source has been removed is
+    # exactly the entry somebody deletes as tidy-up — and the list would then be one design system
+    # behind forever, which is how a gate dies quietly rather than loudly.
     "badge-success",
     "badge-promo-yellow",
     "promo-banner",
+    # ADDED 15 Aug 2026 with the Ecosystem Visualization adaptation. Its genre is the operations
+    # dashboard, whose reassurance does not live in a component that can be banned — it lives in
+    # the composition. These are the words that genre reaches for, and each is an all-clear in one
+    # word. The list is narrow because the scan root is narrow: it runs over src/cdfc/surface only.
+    "all systems",
+    "systems normal",
+    "systems nominal",
+    "operational",
+    "uptime",
+    "healthy",
+    "nominal",
+    "in good standing",
 )
 
 # Words that may appear in code but never in rendered user-facing copy.

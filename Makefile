@@ -201,3 +201,20 @@ canary-cost:
 # under four environment variations. It exits NON-ZERO when anything differs.
 byte-identity:
 	$(PY) tools/measure/p11_byte_identity.py
+
+# --- P12 -----------------------------------------------------------------------------
+# The settling experiment. `preregister` generates the criterion and LOCKS it; `pool` reports
+# the instrument's absence and exits 2; `e6-status` prints the lock's state and whether the run
+# may proceed. None of the three makes a model call, and `pool` exiting non-zero is the finding.
+preregister:
+	PYTHONPATH=$(CURDIR):$(CURDIR)/src $(PY) tools/e6/preregister.py
+
+pool:
+	PYTHONPATH=$(CURDIR):$(CURDIR)/src $(PY) tools/e6/enumerate_shall.py
+
+e6-status:
+	PYTHONPATH=$(CURDIR)/src $(PY) -c "import json, sys; \
+		sys.path.insert(0, 'src'); \
+		from cdfc.experiment import prereg; \
+		print(json.dumps(prereg.lock_summary(), indent=1)); \
+		print('ancestry:', prereg.ancestry_state())"

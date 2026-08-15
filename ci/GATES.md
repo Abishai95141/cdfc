@@ -323,3 +323,29 @@ argument recorded in `docs/GATE-CHANGES.md`.
 | 96 | pytest | `test_e2e__VERIFY_byte_identical` — the payload re-derives and the signature is valid | P11 | P11 | `injectors/expires_from_now.py` | LIVE |
 | 97 | pytest | `test_oscal__invalid_raises_not_representable` — an INVALID run projects to nothing | P11 | P11 | `injectors/oscal_projects_invalid.py` | LIVE |
 | 98 | pytest | `test_v__the_non_determinism_document_lists_six_and_six` — the enumeration is complete and says what it has not verified | P11 | P11 | delete a row from `docs/NON-DETERMINISM.md` | LIVE |
+
+---
+
+## P12 — the settling experiment (rows 99–107)
+
+Nine rows, and they guard a property no earlier phase has: **not that a filing was judged
+correctly, but that the criterion which decides what the result MEANS was fixed before the result
+existed.** Rows 99–101 are the pool and the estimator; 102–104 the run's refusals; 105–107 the
+decision's purity and the pool's ordering.
+
+Row 105 is the one to read twice. `decide()` acquiring a keyword-only `override=None` changes no
+behaviour and passes every behavioural test — so the gate is a **signature** check, and its
+positive control staying green under the injection is the demonstration that nothing behavioural
+could have caught it.
+
+| id | kind | gate | subject_exists_at | demonstrable_red_at | broken_build | liveness |
+|---:|---|---|---|---|---|---|
+| 99 | pytest | `test_nc__M02a_h0_mismatch_fails_the_build` — the pre-registration's h0 cannot move | P12 | P12 | `PreregEditThreshold` | LIVE |
+| 100 | pytest | `test_nc__M03_decidable_fraction_uses_all_drawn` — the Stratum-B cap never truncates the denominator | P12 | P12 | `TruncateBDenominator` | LIVE |
+| 101 | pytest | `test_nc__M04a_both_estimators_are_reported_and_labelled` — inverse sampling is corrected, not assumed away | P12 | P12 | `NaiveRatioEstimator` | LIVE |
+| 102 | pytest | `test_nc__M10a_retry_is_impossible_not_merely_banned` — no attempt parameter, and max_retries is a rule | P12 | P12 | `ProposeRetry` | LIVE |
+| 103 | pytest | `test_nc__M11_funnel_stage_zero_equals_the_planned_count` — the discard pile is stage 0 | P12 | P12 | `FunnelDropsDiscards` | LIVE |
+| 104 | pytest | `test_nc__M13a_qualify_import_closure_has_no_model_client` — no model on the qualification or verdict path | P12 | P12 | `ModelClientInQualify` | LIVE |
+| 105 | pytest | `test_nc__M16b_inadmissible_arguments_cannot_enter_decide` — decide() takes a result and a lock, and nothing else | P12 | P12 | `DecideTakesAnOverride` | LIVE |
+| 106 | pytest | `test_nc__M14_a_third_stage_raises` — one extension, and there is no third stage | P12 | P12 | `ThirdStage` | LIVE |
+| 107 | pytest | `test_nc__M34a_textsource_and_exclusion_hashes_precede_the_draw` — the pool is fixed before the draw | P12 | P12 | `ExclusionsEditedAfterTheDraw` | LIVE |

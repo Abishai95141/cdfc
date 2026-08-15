@@ -1884,3 +1884,164 @@ entries:
         flips: false
     positive_control: "tests/unit/test_oscal.py::test_oscal__valid_run_projects_and_declares_its_loss — a VALID run DOES project, so the refusal is about INVALID and not about the projector"
     status: active
+
+  # ===================================================================================
+  # P12 — the settling experiment. Nine entries, and they guard a different thing from
+  # every phase below: P12 produces no verdict, so its controls are about whether the
+  # criterion could have been written to fit the result.
+  # ===================================================================================
+
+  - id: NC-M02
+    component: experiment
+    break: PREREGISTRATION.md is edited after the run -- a threshold is moved to fit the result
+    measured_instance: "the specification's own P(X<=2 | n=20, p=0.30) is printed as 0.036 and is 0.035; a document nobody re-derives is a document that drifts"
+    injector: PreregEditThreshold
+    guard_tests:
+      - path: "tests/negative/test_nc_model.py::test_nc__M02a_h0_mismatch_fails_the_build"
+        flips: true
+      - path: "tests/negative/test_nc_model.py::test_nc__M02b_the_committed_threshold_is_the_one_the_code_uses"
+        flips: true
+      - path: "tests/negative/test_nc_model.py::test_nc__M02c_appending_an_artefact_hash_is_allowed"
+        flips: false
+    positive_control: "tests/negative/test_nc_model.py::test_nc__M02c_appending_an_artefact_hash_is_allowed -- the lock is append-only, NOT frozen, so a lock that refused every write would satisfy both rejection guards while making the experiment unrunnable"
+    status: active
+    note: >
+      The positive control is built from the MODULE CONSTANTS rather than copied from the
+      committed document, because the injector edits that document. A flips:false guard that
+      went red for the right reason would still be the wrong guard.
+
+  - id: NC-M03
+    component: experiment
+    break: the decidable fraction is computed over a denominator the Stratum-B generation cap truncated
+    measured_instance: "the same mechanism as NC-D01: a cap on what is PROCESSED silently becomes a cap on what is COUNTED"
+    injector: TruncateBDenominator
+    guard_tests:
+      - path: "tests/negative/test_nc_model.py::test_nc__M03_decidable_fraction_uses_all_drawn"
+        flips: true
+      - path: "tests/property/test_prop_experiment_draw.py"
+        flips: false
+      - path: "tests/negative/test_nc_model.py::test_nc__M03b_the_generation_cap_still_bites"
+        flips: false
+    positive_control: "tests/negative/test_nc_model.py::test_nc__M03b_the_generation_cap_still_bites -- 'the cap never touches the denominator' would otherwise be satisfiable by removing the cap, which would send ninety Stratum-B obligations to the model at ten candidates each"
+    status: active
+    note: >
+      The injector attacks the REPORTING path, not the constructor. Truncating stratum_b_all at
+      construction is refused by Draw.__post_init__, so draw() raised and every guard went red
+      including the positive control -- an injector that breaks the harness rather than the
+      measurement. That the invariant catches the constructional form is the stronger property.
+
+  - id: NC-M04
+    component: experiment
+    break: "|A|/|drawn| is reported as an unbiased estimate under inverse sampling, and its Wilson interval as exact"
+    measured_instance: "drawing until a fixed number of successes biases a/n upward; the unbiased estimator is (a-1)/(n-1)"
+    injector: NaiveRatioEstimator
+    guard_tests:
+      - path: "tests/negative/test_nc_model.py::test_nc__M04a_both_estimators_are_reported_and_labelled"
+        flips: true
+      - path: "tests/unit/test_experiment_power.py::test_power__inverse_sampling_estimator_is_a_minus_one_over_n_minus_one"
+        flips: true
+      - path: "tests/negative/test_nc_model.py::test_nc__M04b_interval_carries_the_approximate_label"
+        flips: false
+    positive_control: "tests/negative/test_nc_model.py::test_nc__M04b_interval_carries_the_approximate_label -- the label survives, so the guard is about the arithmetic rather than about the string"
+    status: active
+
+  - id: NC-M10
+    component: experiment
+    break: a malformed candidate is silently re-prompted, so the discard rate is understated and the funnel starts from a curated set
+    measured_instance: null
+    injector: ProposeRetry
+    guard_tests:
+      - path: "tests/negative/test_nc_model.py::test_nc__M10a_retry_is_impossible_not_merely_banned"
+        flips: true
+      - path: "tests/negative/test_nc_model.py::test_nc__M10b_a_malformed_candidate_appears_as_a_discard"
+        flips: false
+    positive_control: "tests/negative/test_nc_model.py::test_nc__M10b_a_malformed_candidate_appears_as_a_discard -- rubbish becomes a ROW and parse never raises on model output; an exception would end the batch and make the discard rate a function of where the rubbish landed"
+    status: active
+
+  - id: NC-M11
+    component: experiment
+    break: the discard pile is dropped from the attrition funnel, so stage 0 reads planned minus discards
+    measured_instance: null
+    injector: FunnelDropsDiscards
+    guard_tests:
+      - path: "tests/negative/test_nc_model.py::test_nc__M11_funnel_stage_zero_equals_the_planned_count"
+        flips: true
+      - path: "tests/negative/test_nc_model.py::test_nc__M11b_a_run_with_zero_discards_still_reports_the_row"
+        flips: false
+    positive_control: "tests/negative/test_nc_model.py::test_nc__M11b_a_run_with_zero_discards_still_reports_the_row -- the parsed stage exists even when nothing died there, so the funnel is not merely refusing to assemble"
+    status: active
+    note: >
+      Without the guard, a run with three hundred malformed candidates and a run with none
+      produce identical funnels. The discard pile is data, and it is stage 0.
+
+  - id: NC-M13
+    component: experiment
+    break: a model client is reachable from the qualification or verdict path, so the gate adjudicates using the thing it is adjudicating
+    measured_instance: "LLM judges detect false success at AUROC <= 0.65 and 13% recall at a 10% flag rate"
+    injector: ModelClientInQualify
+    guard_tests:
+      - path: "tests/negative/test_nc_model.py::test_nc__M13a_qualify_import_closure_has_no_model_client"
+        flips: true
+      - path: "tests/negative/test_nc_model.py::test_nc__M13c_run_module_may_import_the_client"
+        flips: false
+    positive_control: "tests/negative/test_nc_model.py::test_nc__M13c_run_module_may_import_the_client -- a rule banning cdfc.experiment from everything would pass the rejection guard while forbidding the build, so run.py MUST still be able to reach the client"
+    status: active
+    note: >
+      The closure is seeded with EVERY MODULE FILE under each root, not with the package
+      __init__. The first version seeded it with the package name, cdfc/qualify/__init__.py
+      imports almost nothing, and the injected import in g2_kill was never reached -- the guard
+      reported itself caught while checking a boundary nothing crosses. That is this project's
+      own recurring defect occurring inside the control written to catch it.
+
+  - id: NC-M14
+    component: experiment
+    break: a third extension is taken after an unwelcome second result
+    measured_instance: null
+    injector: ThirdStage
+    guard_tests:
+      - path: "tests/negative/test_nc_model.py::test_nc__M14_a_third_stage_raises"
+        flips: true
+      - path: "tests/unit/test_decide.py::test_decide__stage_three_raises"
+        flips: true
+      - path: "tests/negative/test_nc_model.py::test_nc__M16a_decision_is_a_pure_function_of_its_inputs"
+        flips: false
+    positive_control: "tests/negative/test_nc_model.py::test_nc__M16a_decision_is_a_pure_function_of_its_inputs -- stages 1 and 2 still decide, so the refusal is about the third stage and not about decide()"
+    status: active
+
+  - id: NC-M16
+    component: experiment
+    break: decide() acquires a parameter an argument can enter through, so a criterion can be revised after the result
+    measured_instance: "the four inadmissible arguments are hashed into the pre-registration; the signature is what makes them unrepresentable rather than merely disallowed"
+    injector: DecideTakesAnOverride
+    guard_tests:
+      - path: "tests/negative/test_nc_model.py::test_nc__M16b_inadmissible_arguments_cannot_enter_decide"
+        flips: true
+      - path: "tests/unit/test_decide.py::test_decide__is_a_pure_function"
+        flips: true
+      - path: "tests/negative/test_nc_model.py::test_nc__M16a_decision_is_a_pure_function_of_its_inputs"
+        flips: false
+    positive_control: "tests/negative/test_nc_model.py::test_nc__M16a_decision_is_a_pure_function_of_its_inputs -- the verdict is unchanged, which is exactly why the guard has to be a signature check"
+    status: active
+    note: >
+      A keyword-only override=None changes no existing behaviour and passes every behavioural
+      test. The positive control staying green under the injection is the demonstration that a
+      behavioural guard could not have caught this.
+
+  - id: NC-M34
+    component: experiment
+    break: the pool's exclusion set or extractor configuration is edited after the draw, so k of 20 measures our curation of the instrument
+    measured_instance: "the disputed-region exclusion rule is produced by an instrument we wrote, over a document we chose, under a normalisation we defined; nothing ordered it before the draw"
+    injector: ExclusionsEditedAfterTheDraw
+    guard_tests:
+      - path: "tests/negative/test_nc_model.py::test_nc__M34a_textsource_and_exclusion_hashes_precede_the_draw"
+        flips: true
+      - path: "tests/unit/test_experiment_prereg.py::test_append__draw_hash_before_the_pool_hashes_raises"
+        flips: true
+      - path: "tests/negative/test_nc_model.py::test_nc__M34c_a_correctly_ordered_exclusion_and_draw_pair_passes"
+        flips: false
+    positive_control: "tests/negative/test_nc_model.py::test_nc__M34c_a_correctly_ordered_exclusion_and_draw_pair_passes -- the ordering rule permits the honest sequence, so it is an ORDER and not a prohibition"
+    status: active
+    note: >
+      The injector reorders APPENDABLE without touching the `if` that reads it, which is what
+      makes it a realistic edit rather than an obvious one. A curated pool and a model result are
+      indistinguishable in the published number, which is why the ordering is code and not prose.

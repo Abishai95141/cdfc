@@ -40,9 +40,14 @@ ADDED_LIVE_AT_P11 = set(range(91, 99)) | {15}  # docs/GATE-CHANGES.md, 15 Aug 20
 # Rows 14 and 16 moved PENDING -> LIVE at P6: their subjects shipped at P5 and the audit
 # found them still deferred. See docs/GATE-CHANGES.md, 13 Aug 2026.
 PROMOTED_AT_P6 = {14, 16}
+# P12's nine rows. They guard a property no earlier row does: not that a filing was judged
+# correctly, but that the criterion deciding what the result MEANS was fixed before the result
+# existed. Row 105 is a SIGNATURE check — `decide()` acquiring a keyword-only `override=None`
+# changes no behaviour and passes every behavioural test, so nothing behavioural could catch it.
+ADDED_LIVE_AT_P12 = set(range(99, 108))  # docs/GATE-CHANGES.md, 15 Aug 2026
 LIVE_EXPECTED = (LIVE_AT_P0 | ADDED_LIVE_AT_P4 | ADDED_LIVE_AT_P5 | ADDED_LIVE_AT_P6
                  | ADDED_LIVE_AT_P7 | ADDED_LIVE_AT_P8 | ADDED_LIVE_AT_P9
-                 | ADDED_LIVE_AT_P10 | ADDED_LIVE_AT_P11
+                 | ADDED_LIVE_AT_P10 | ADDED_LIVE_AT_P11 | ADDED_LIVE_AT_P12
                  | PROMOTED_AT_P6)
 PENDING_AT_P0 = {14, 15, 16}
 # The PENDING set SHRINKS as subjects ship, and a row may only leave it into LIVE — never the
@@ -107,3 +112,23 @@ def test_contract__registry_parser_rejects_a_nul_byte(tmp_path: Path) -> None:
     p.write_bytes(Path("ci/GATES.md").read_bytes() + b"\x00")
     with pytest.raises(RegistryError, match="NUL"):
         parse(p)
+
+
+# The sentinel `AddGateRow` injects with. It must stay outside any id the registry can reach, and
+# the assertion exists because the alternative — "a number beyond the current registry" — has now
+# been outrun by the build TWICE: the injector used 19 until row 19 was registered, then 99 until
+# row 99 was registered at P12, and each time a real row silently turned a one-guard control into
+# a two-guard exact-set mismatch.
+INJECTOR_SENTINEL_ID = 9_999_999
+
+
+def test_contract__registry_ids_are_below_the_injector_sentinel() -> None:
+    """A real row may never collide with the id the duplicate-row injector plants."""
+    ids = {g.id for g in parse()}
+    assert ids, "an empty registry would make this assertion vacuous"
+    assert max(ids) < INJECTOR_SENTINEL_ID, (
+        f"gate id {max(ids)} has reached the injector's sentinel {INJECTOR_SENTINEL_ID}. "
+        "AddGateRow would then plant a DUPLICATE of a real row, the parser would raise, and a "
+        "control that guards one thing would go red for another — which is how this was found, "
+        "twice."
+    )

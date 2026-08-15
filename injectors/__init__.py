@@ -325,10 +325,18 @@ class AddGateRow(Injector):
         marker = "| 18 | pytest |"
         idx = t.index(marker)
         end = t.index("\n", idx) + 1
-        # id 99: the injector must not collide with a REAL row. It used 19, and the
-        # moment row 19 was genuinely registered the parser raised on the duplicate and a
-        # second guard went red — the sweep caught it as an exact-set mismatch.
-        row = "| 99 | shell | an injected row nobody registered | P0 | P0 | injector | LIVE |\n"
+        # THE ID MUST NOT COLLIDE WITH A REAL ROW, AND THIS HAS NOW BEEN LEARNED TWICE.
+        # It used 19; row 19 was genuinely registered, the parser raised on the duplicate, a
+        # second guard went red, and the sweep caught it as an exact-set mismatch. It was
+        # changed to 99 — and at P12 row 99 was genuinely registered and the identical failure
+        # recurred, in the identical form, against a comment that describes it.
+        #
+        # A number "beyond the current registry" is not a property; it is a race with the
+        # build. 9_999_999 is chosen because it is outside any id this registry could reach,
+        # and `test_contract__registry_ids_are_below_the_injector_sentinel` now asserts that
+        # rather than leaving it to the next person to rediscover.
+        row = ("| 9999999 | shell | an injected row nobody registered "
+               "| P0 | P0 | injector | LIVE |\n")
         GATES_MD.write_text(t[:end] + row + t[end:])
 
 
@@ -2857,5 +2865,217 @@ class OscalProjectsInvalid(Injector):
 ALL_INJECTORS = ALL_INJECTORS + (
     FloatRateInPayload, BannedNamesSubstringOnly, ExpiresFromNow, VerifyResigns,
     OscalProjectsInvalid,
+)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+# =====================================================================================
+# P12 — the settling experiment. Nine injectors, one per refusal the phase rests on.
+#
+# The shape to notice: EIGHT of these break the EXPERIMENT'S OWN INTEGRITY rather than a
+# verdict. P12 produces no verdict — it produces a number and an ordering — so its controls
+# are about whether the criterion could have been written to fit the result. That is a
+# different failure surface from every phase below it, and it needs its own injectors rather
+# than a reuse of the verdict ones.
+# =====================================================================================
+
+EXPERIMENT = REPO_ROOT / "src" / "cdfc" / "experiment"
+E6 = REPO_ROOT / "experiments" / "E6"
+
+
+class PreregEditThreshold(Injector):
+    """**NC-M02** — `PREREGISTRATION.md` is edited after the run: a threshold is moved.
+
+    `6` becomes `4`, which is the edit somebody makes at 6pm when `k` came back 4. The lock
+    records `h0` over the file's bytes, so the edit is detectable — but only if something reads
+    the lock back and compares. This is what proves something does.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="prereg_edit_threshold", touches=[E6 / "PREREGISTRATION.md"])
+
+    def apply(self) -> None:
+        _sub(E6 / "PREREGISTRATION.md", "RETAIN1 = 6", "RETAIN1 = 4")
+
+
+class TruncateBDenominator(Injector):
+    """**NC-M03** — the decidable fraction is computed over a denominator the cap truncated.
+
+    `_consume` returns the GENERATED Stratum-B slice as if it were the whole drawn set, so
+    `|drawn|` shrinks to `|A| + 10` and `|A| / |drawn|` rises. This is NC-D01's mechanism —
+    scope truncation — applied to the headline number of this phase, and it moves it in the
+    flattering direction.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="truncate_b_denominator", touches=[EXPERIMENT / "draw.py"])
+
+    def apply(self) -> None:
+        # THE TRUNCATION IS APPLIED WHERE THE FRACTION IS *REPORTED*, not where the Draw is
+        # built. The first version truncated `stratum_b_all` at construction — and
+        # `Draw.__post_init__` refused it, so `draw()` raised and every guard went red including
+        # the positive control, which is an injector that breaks the harness rather than the
+        # measurement. That the invariant catches the constructional form is a real property and
+        # it is why this injector attacks the reporting path instead: somebody computing the
+        # fraction from the capped field is the version that would survive review.
+        _sub(
+            EXPERIMENT / "draw.py",
+            "        return len(self.stratum_a), len(self.drawn), self.excluded_count",
+            "        return (len(self.stratum_a),  # INJECTED\n"
+            "                len(self.stratum_a) + len(self.stratum_b_generated),\n"
+            "                self.excluded_count)",
+        )
+
+
+class NaiveRatioEstimator(Injector):
+    """**NC-M04** — `|A|/|drawn|` is reported as unbiased under inverse sampling.
+
+    Drawing until a fixed number of successes biases `a/n` **upward**, and the unbiased
+    estimator is `(a−1)/(n−1)`. Returning the naive ratio under both labels publishes the
+    biased number as the corrected one — and the bias is in our favour.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="naive_ratio_estimator", touches=[EXPERIMENT / "power.py"])
+
+    def apply(self) -> None:
+        _sub(
+            EXPERIMENT / "power.py",
+            "    return Fraction(a, n), Fraction(a - 1, n - 1)",
+            "    return Fraction(a, n), Fraction(a, n)  # INJECTED",
+        )
+
+
+class ProposeRetry(Injector):
+    """**NC-M10** — a malformed candidate is silently re-prompted.
+
+    The discard rate is then understated and the funnel starts from a curated set while
+    printing the planned count. Retry is meant to be IMPOSSIBLE here rather than discouraged:
+    this injector makes it merely configurable, which is the state the guard must reject.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="propose_retry", touches=[EXPERIMENT / "client.py"])
+
+    def apply(self) -> None:
+        _sub(EXPERIMENT / "client.py", "MAX_RETRIES: Final[int] = 0", "MAX_RETRIES: Final[int] = 3")
+        _sub(
+            EXPERIMENT / "client.py",
+            "        if self.max_retries != 0:",
+            "        if False:  # INJECTED: retry is now a default rather than a rule",
+        )
+
+
+class FunnelDropsDiscards(Injector):
+    """**NC-M11** — the discard pile is dropped, so stage 0 reads `planned minus discards`.
+
+    The parse stage then becomes invisible: a run with 300 malformed candidates and a run with
+    none produce identical funnels. The discard pile is data, and it is stage 0.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="funnel_drops_discards", touches=[EXPERIMENT / "funnel.py"])
+
+    def apply(self) -> None:
+        _sub(
+            EXPERIMENT / "funnel.py",
+            "    return obligations * regimes * k",
+            "    return obligations * regimes * k - 1  # INJECTED: discards leave the denominator",
+        )
+
+
+class ModelClientInQualify(Injector):
+    """**NC-M13** — a model is reachable from the qualification path.
+
+    The gate would then adjudicate using the thing it is adjudicating, and a model is a
+    measured-poor judge of exactly this failure: false-success detection at AUROC ≤ 0.65 and
+    13% recall at a 10% flag rate. The import is added to `g2_kill` — the kill gate — because
+    that is where it would do the most damage and where somebody would most plausibly reach
+    for it.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="model_client_in_qualify", touches=[QUALIFY / "g2_kill.py"])
+
+    def apply(self) -> None:
+        _sub(
+            QUALIFY / "g2_kill.py",
+            "from __future__ import annotations",
+            "from __future__ import annotations\n\nfrom cdfc.experiment import client  # INJECTED",
+        )
+
+
+class ThirdStage(Injector):
+    """**NC-M14** — a third extension is taken after an unwelcome second result.
+
+    Two stages is the whole discipline: the extension resolves a sample-size ambiguity once,
+    and a third would be re-rolling a criterion that has already been evaluated twice.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="third_stage", touches=[EXPERIMENT / "decide.py"])
+
+    def apply(self) -> None:
+        _sub(
+            EXPERIMENT / "decide.py",
+            "    if result.stage not in (1, 2):",
+            "    if result.stage not in (1, 2, 3):  # INJECTED",
+        )
+
+
+class DecideTakesAnOverride(Injector):
+    """**NC-M16** — `decide()` acquires a parameter an argument can enter through.
+
+    The four inadmissible arguments are hashed into the pre-registration, and the signature is
+    what makes them *unrepresentable* rather than merely disallowed. A keyword-only `override`
+    with a `None` default changes no existing behaviour and passes every behavioural test —
+    which is exactly why the guard is a signature check.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="decide_takes_an_override", touches=[EXPERIMENT / "decide.py"])
+
+    def apply(self) -> None:
+        _sub(
+            EXPERIMENT / "decide.py",
+            "def decide(result: SettlingResult, *, lock: Lock) -> Decision:",
+            "def decide(result: SettlingResult, *, lock: Lock, override: str | None = None"
+            ") -> Decision:  # INJECTED",
+        )
+
+
+class ExclusionsEditedAfterTheDraw(Injector):
+    """**NC-M34** — the draw hash may be appended before the pool is fixed.
+
+    The exclusion set, the extractor configurations and the normalisation are all OURS. If they
+    can move after the draw, `k of 20` measures our curation of the instrument and reports it
+    as a property of the model — and the two are indistinguishable in the published number.
+    Reordering `APPENDABLE` defeats the ordering rule without touching the `if` that reads it,
+    which is what makes it a realistic edit rather than an obvious one.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(
+            name="exclusions_edited_after_the_draw", touches=[EXPERIMENT / "prereg.py"]
+        )
+
+    def apply(self) -> None:
+        _sub(
+            EXPERIMENT / "prereg.py",
+            '    "textsource_sha256",        # the pinned instrument text',
+            '    "draw_sha256",              # INJECTED: the draw now precedes the pool\n'
+            '    "textsource_sha256",',
+        )
+        _sub(
+            EXPERIMENT / "prereg.py",
+            '    "draw_sha256",              # the realised draw — AFTER the two above (NC-M34)',
+            "",
+        )
+
+
+ALL_INJECTORS = ALL_INJECTORS + (
+    PreregEditThreshold, TruncateBDenominator, NaiveRatioEstimator, ProposeRetry,
+    FunnelDropsDiscards, ModelClientInQualify, ThirdStage, DecideTakesAnOverride,
+    ExclusionsEditedAfterTheDraw,
 )
 BY_NAME = {c.__name__: c for c in ALL_INJECTORS}

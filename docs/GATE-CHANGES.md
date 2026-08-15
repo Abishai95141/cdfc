@@ -261,3 +261,38 @@ identity, the OSCAL refusal on an `INVALID` run, and the completeness of
 Row 94's injector, `expires_from_now`, turns **row 96** red as well — the byte-identity acceptance
 test catching a single clock read three layers away, without being told where to look. That
 coupling is the phase's strongest single piece of evidence and it was measured, not arranged.
+
+## 15 Aug 2026 — P12 adds rows 99–107, all LIVE on the day they land
+
+Nine rows for the settling experiment. **None was PENDING for a moment**, because each subject was
+written before its gate: the injectors exist, and every one was observed to turn its guard red with
+its positive control holding, before the rows were appended.
+
+| row | what it guards | injector |
+|---:|---|---|
+| 99 | the pre-registration's `h0` cannot move | `PreregEditThreshold` |
+| 100 | the Stratum-B cap never truncates the denominator | `TruncateBDenominator` |
+| 101 | inverse sampling is corrected and labelled, not assumed away | `NaiveRatioEstimator` |
+| 102 | retry is impossible, not merely banned | `ProposeRetry` |
+| 103 | the discard pile is stage 0 of the funnel | `FunnelDropsDiscards` |
+| 104 | no model client on the qualification or verdict path | `ModelClientInQualify` |
+| 105 | `decide()` takes a result and a lock, and nothing else | `DecideTakesAnOverride` |
+| 106 | one extension; there is no third stage | `ThirdStage` |
+| 107 | the pool is fixed before the draw | `ExclusionsEditedAfterTheDraw` |
+
+**Two of the nine had to be rebuilt after their first observation, and both corrections are the
+kind this register exists to record.**
+
+**Row 104's guard was checking nothing.** The import closure was seeded with the package name, and
+`cdfc/qualify/__init__.py` imports almost nothing — so the walk never reached `g2_kill`, the
+injected model client sat there undetected, and the control reported itself caught. The fix seeds
+the walk with **every module file under each root**, which is also the stronger rule: *no module in
+this package may import a model client*, undefeatable by a module simply not being re-exported.
+This is the project's own recurring defect — a gate that reports OK having looked at nothing —
+occurring inside the gate written to catch it.
+
+**Row 100's injector broke the harness rather than the measurement.** Truncating `stratum_b_all`
+at construction is refused by `Draw.__post_init__`, so `draw()` raised and *every* guard went red
+including the positive control. That the invariant catches the constructional form is a real
+property; the injector now attacks the **reporting** path instead, which is the version that would
+survive review.
