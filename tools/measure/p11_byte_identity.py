@@ -93,8 +93,21 @@ def main() -> int:
 
 
 def render(rows, differing: int, total: int, results) -> str:
+    # **THE ATTESTATION PAYLOAD'S ABSOLUTE DIGEST IS NOT PINNED, AND IT CANNOT BE.**
+    #
+    # It embeds `code_git_sha`, so its digest is a function of the commit — and this file lives
+    # INSIDE that commit. Recording the digest here guarantees the file is stale the instant it is
+    # committed: the fresh clone re-derives at the same commit, computes a different `code_git_sha`
+    # from the one baked in when the file was generated, and reports a spurious difference.
+    #
+    # A fixed point, not a defect. What IS stable and IS recorded is the measurement that matters:
+    # the payload's SIZE, and its agreement across every environment. The other three artifacts do
+    # not embed the commit hash, so their digests are pinnable and are pinned.
+    EMBEDS_COMMIT = {"attestation payload"}
     table = "\n".join(
-        f"| `{a}` | {s:,} | `{d[:16]}…` | {'**identical**' if ok else '**DIFFERS**'} |"
+        f"| `{a}` | {s:,} | "
+        + ("*not pinnable — embeds `code_git_sha`*" if a in EMBEDS_COMMIT else f"`{d[:16]}…`")
+        + f" | {'**identical**' if ok else '**DIFFERS**'} |"
         for a, s, d, ok in rows
     )
     envs = "\n".join(
@@ -115,6 +128,14 @@ def render(rows, differing: int, total: int, results) -> str:
 | artifact | bytes | sha256 | across all four environments |
 |---|---:|---|---|
 {table}
+
+**One digest is deliberately absent from that table.** The attestation payload embeds
+`code_git_sha`, so its digest is a function of the commit — and this document lives inside that
+commit. Pinning it would make the file stale the instant it was committed, and a fresh clone
+re-deriving at the same commit would report a spurious difference. **A fixed point, not a defect.**
+What is recorded instead is what is stable: the payload's size, and the fact that all four
+environments produce the same bytes. The other three artifacts do not embed the commit hash, and
+their digests are pinned.
 
 ## What was varied
 

@@ -8,10 +8,18 @@
 
 | artifact | bytes | sha256 | across all four environments |
 |---|---:|---|---|
-| `attestation payload` | 4,015 | `5a03fa2ba790c46c…` | **identical** |
+| `attestation payload` | 4,015 | *not pinnable — embeds `code_git_sha`* | **identical** |
 | `oscal projection` | 1,227,393 | `28041b2a88948d1b…` | **identical** |
 | `ro-crate projection` | 954 | `7b8052b4cca1daec…` | **identical** |
 | `run.jsonl` | 335,823 | `d647047e3560e6b4…` | **identical** |
+
+**One digest is deliberately absent from that table.** The attestation payload embeds
+`code_git_sha`, so its digest is a function of the commit — and this document lives inside that
+commit. Pinning it would make the file stale the instant it was committed, and a fresh clone
+re-deriving at the same commit would report a spurious difference. **A fixed point, not a defect.**
+What is recorded instead is what is stable: the payload's size, and the fact that all four
+environments produce the same bytes. The other three artifacts do not embed the commit hash, and
+their digests are pinned.
 
 ## What was varied
 
