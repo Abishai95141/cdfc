@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import json
 import sys
 from pathlib import Path
 
@@ -83,7 +84,21 @@ def build_parser() -> argparse.ArgumentParser:
     closure.add_argument("run_id", nargs="?", default=None)
     closure.add_argument("--out", type=Path, default=Path("runs"))
 
-    for name in ("ingest", "induce", "qualify", "attest", "verify"):
+    # P11. `attest` takes `--time-verified` as an ARGUMENT because it is an input recorded in the
+    # manifest: defaulting it to the clock would make every attestation differ from its own
+    # re-derivation on the following day.
+    attest = sub.add_parser("attest", help="sign a settlement statement over a checked filing (P11)")
+    attest.add_argument("filing", type=Path)
+    attest.add_argument("--time-verified", required=True,
+                        help="ISO-8601 instant. An INPUT, never a clock read.")
+    attest.add_argument("--out", type=Path, default=Path("runs"))
+
+    verify = sub.add_parser("verify", help="re-derive a statement byte-for-byte and check its signature (P11)")
+    verify.add_argument("attestation", type=Path)
+    verify.add_argument("--blobs", type=Path, action="append", default=None,
+                        help="a directory to resolve filing and template blobs from, by DIGEST")
+
+    for name in ("ingest", "induce", "qualify"):
         sub.add_parser(name, help=f"{name} (not implemented; built in {OWNER.get(name, '?')})")
     return p
 
@@ -292,7 +307,91 @@ def _partition_from(d: dict) -> "object":
     return ClosurePartition(**{k: v for k, v in d.items() if k in known})
 
 
-HANDLERS = {"harvest": _harvest, "run": _run, "closure": _closure}
+def _attest(args: argparse.Namespace) -> int:
+    """`cdfc attest <filing> --time-verified <instant>` — P11's deliverable.
+
+    **There is nothing to sign until the canaries run**, so this goes through the P10 path and
+    refuses to attest a run whose liveness was not demonstrated: signing a statement produced by an
+    instrument nobody showed was working is the exact thing the liveness layer exists to prevent,
+    committed one layer up.
+    """
+    from cdfc.attest import dsse
+    from cdfc.evaluate.run import write as write_run
+    from cdfc.measure.p10_run import run_filing
+    from cdfc.measure.p11_attest import statement_for, write
+
+    if not args.filing.is_file():
+        print(f"cdfc attest: {args.filing} is not a file", file=sys.stderr)
+        return EXIT_NOT_IMPLEMENTED
+
+    result = run_filing(args.filing)
+    write_run(result, args.out)
+    if result.liveness is None:
+        print(
+            "cdfc attest: this run carries no liveness proof, so there is nothing to sign. An "
+            "attestation without one is a statement about a filing produced by an instrument "
+            "nobody demonstrated was working.",
+            file=sys.stderr,
+        )
+        return EXIT_NOT_IMPLEMENTED
+
+    statement = statement_for(result, filing=args.filing, time_verified=args.time_verified)
+    path = write(statement, args.out)
+    envelope = json.loads(path.read_text(encoding="utf-8"))
+
+    print(f"  filing      {args.filing.name}")
+    print(f"  run         {result.run_id}")
+    print(f"  state       {result.run_state}")
+    print(f"  verified    {statement.time_verified}   expires {statement.expires}")
+    print(f"  signature   {envelope['signatures'][0]['keyid']}")
+    print(f"  {envelope['signatures'][0]['implementation']}")
+    _print_liveness(result)
+    if result.run_state == "INVALID":
+        print("\n  settledFraction and verdict are NULL — present, and null. This run makes no")
+        print("  claim about the filing, which is a different thing from claiming zero.")
+    print(f"\n  wrote {path}")
+    return 0
+
+
+def _verify(args: argparse.Namespace) -> int:
+    """`cdfc verify <attestation.json>` — **the programme's acceptance test, as a command.**
+
+    Two facts, reported separately and never merged: whether the payload re-derives, and whether
+    the stored signature is valid over it.
+    """
+    from cdfc.attest.verify import BlobStore, verify
+
+    if not args.attestation.is_file():
+        print(f"cdfc verify: {args.attestation} is not a file", file=sys.stderr)
+        return EXIT_NOT_IMPLEMENTED
+
+    repo = Path(__file__).resolve().parents[2]
+    roots = args.blobs or [repo / "fixtures"]
+    result = verify(args.attestation, BlobStore(roots=roots), repo=repo)
+
+    print(f"  artifact    {args.attestation}")
+    print(f"  pins        {len(result.manifest_pins_checked)} checked: "
+          f"{', '.join(result.manifest_pins_checked)}")
+    print(f"  reproduced  {'YES' if result.reproduced else 'NO'}")
+    sig = {True: "VALID", False: "INVALID", None: "NO KEY IN ENVELOPE — no claim"}[
+        result.signature_valid
+    ]
+    print(f"  signature   {sig}")
+    if not result.tree_clean:
+        print("\n  WORKING TREE IS DIRTY. `code_git_sha` pins the COMMIT, not the tree, so this")
+        print("  re-derivation ran against code the manifest does not describe. A `reproduced`")
+        print("  from a dirty tree is a weaker statement than the same value from a clean one.")
+    if result.detail:
+        print(f"\n  {result.detail}")
+    for d in result.diffs:
+        print(f"    {d.render()}")
+    print("\n  These are TWO FACTS. A changed report and a changed key are different events,")
+    print("  and a tool that answered with one number could not tell you which happened.")
+    return 0 if (result.reproduced and result.signature_valid is not False) else 1
+
+
+HANDLERS = {"harvest": _harvest, "run": _run, "closure": _closure,
+            "attest": _attest, "verify": _verify}
 
 
 if __name__ == "__main__":
