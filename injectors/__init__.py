@@ -2724,3 +2724,138 @@ class LayerExistsAssertionRemoved(Injector):
 
 ALL_INJECTORS = ALL_INJECTORS + (ResidueWithoutRegistryRoot, LayerExistsAssertionRemoved)
 BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+# --------------------------------------------------------------------------------
+# P11 — L7: ATTESTATION, `verify`, BYTE IDENTITY.
+#
+# The attestation cannot express a pass, the report re-derives byte for byte, and a
+# projection never publishes a clean document for a run that declared no coverage.
+# Each injector below breaks exactly one of those three.
+# --------------------------------------------------------------------------------
+
+ATTEST = REPO_ROOT / "src" / "cdfc" / "attest"
+
+
+class FloatRateInPayload(Injector):
+    """**NC-A16** — a float in the payload makes the canonicalisation implementation-dependent.
+
+    The specification's own example payload carries `rate 0.021` and `wilson [0.006, 0.074]` while
+    another section of the same specification states there is no floating point. Byte identity
+    stops being a property of the system and becomes a property of whichever machine formatted the
+    number.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(
+            name="float_rate_in_payload",
+            touches=[REPO_ROOT / "src/cdfc/canon.py", ATTEST / "statement.py"],
+        )
+
+    def apply(self) -> None:
+        # BOTH halves, and the second is what makes this a control rather than a description.
+        # Relaxing the canonicaliser alone changes nothing observable, because nothing in the
+        # payload is a float — so a guard on the PAYLOAD would stay green and the entry would be
+        # recorded as caught on evidence nobody collected. The injector has to put a float where
+        # the spec's own example payload put one: in a rate.
+        _sub(
+            REPO_ROOT / "src/cdfc/canon.py",
+            "    if isinstance(obj, float):",
+            "    if isinstance(obj, float):\n        return repr(obj)  # INJECTED\n    if False:",
+        )
+        _sub(
+            ATTEST / "statement.py",
+            '            "corpusProvenance": self.corpus_provenance,',
+            '            "corpusProvenance": self.corpus_provenance,\n'
+            '            "scope": {**dict(self.scope), "rate": 0.021},  # INJECTED',
+        )
+
+
+class BannedNamesSubstringOnly(Injector):
+    """**NC-A17** — the name prohibition becomes a substring scan.
+
+    Then it rejects the specification's own `canariesPassed` — a count of executions of our own
+    instrument — while an exact-only scan would admit `overallStatus`. Neither single rule is
+    acceptable, and the injector proves the three-part rule is doing work rather than describing
+    what one scan already does.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(
+            name="banned_names_substring_only",
+            touches=[REPO_ROOT / "tests/contract/schema_walk.py"],
+        )
+
+    def apply(self) -> None:
+        _sub(
+            REPO_ROOT / "tests/contract/schema_walk.py",
+            "    return [(n, p) for n, p in property_names(schema) if n.lower() in BANNED_EXACT]",
+            "    return [(n, p) for n, p in property_names(schema)  # INJECTED: substring\n"
+            "            if any(b in n.lower() for b in BANNED_EXACT)]",
+        )
+
+
+class ExpiresFromNow(Injector):
+    """**NC-A18** — `expires` is computed from the wall clock instead of from `timeVerified`.
+
+    Every attestation then differs from its own re-derivation on the following day, and
+    `E2E-VERIFY` fails permanently for a reason that reads like clock skew rather than like a bug.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="expires_from_now", touches=[ATTEST / "policy.py"])
+
+    def apply(self) -> None:
+        _sub(
+            ATTEST / "policy.py",
+            "    out = stamp + _dt.timedelta(days=POLICY_VALIDITY_DAYS)",
+            "    out = _dt.datetime.now(_dt.UTC) + _dt.timedelta(days=POLICY_VALIDITY_DAYS)  # INJECTED",
+        )
+
+
+class VerifyResigns(Injector):
+    """**NC-A19** — `verify` re-signs the payload instead of checking the stored signature.
+
+    A key change then reads as a report change, and a report change reads as nothing at all. Both
+    answers are about the key and neither is about the report.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="verify_resigns", touches=[ATTEST / "verify.py"])
+
+    def apply(self) -> None:
+        _sub(
+            ATTEST / "verify.py",
+            "    signature_valid = dsse.verify(envelope)",
+            "    from cdfc.attest import ed25519  # INJECTED\n"
+            "    signature_valid = dsse.sign(payload_of(envelope)).sig == __import__('base64')"
+            ".b64decode(envelope['signatures'][0]['sig'])",
+        )
+
+
+class OscalProjectsInvalid(Injector):
+    """**NC-A20** — an `INVALID` run is projected to an Assessment Result with zero findings.
+
+    Schema-valid, and it reads as *checked and nothing found*: a clean assurance document for a run
+    in which we could not demonstrate our instrument was working.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(
+            name="oscal_projects_invalid",
+            touches=[ATTEST / "projections" / "oscal.py"],
+        )
+
+    def apply(self) -> None:
+        _sub(
+            ATTEST / "projections" / "oscal.py",
+            '    if pred["runState"] == "INVALID":',
+            '    if False:  # INJECTED: an INVALID run now projects',
+        )
+
+
+ALL_INJECTORS = ALL_INJECTORS + (
+    FloatRateInPayload, BannedNamesSubstringOnly, ExpiresFromNow, VerifyResigns,
+    OscalProjectsInvalid,
+)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}

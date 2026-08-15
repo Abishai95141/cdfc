@@ -149,6 +149,19 @@ EVIDENCE: dict[int, str] = {
     # injects nothing catches nothing. Its GENERAL form is what row 90 guards, and NC-C03b
     # injects that: deleting `layer_exists_assertion` from the catalogue.
     90: "NC-C03b",  # an absence claim proves, in the same breath, that the layer exists (F6)
+    # --- P11, rows 91-98, and row 15 -----------------------------------------------------
+    # Row 15 waited eleven phases for a schema to walk. Its evidence is NC-A17's injector,
+    # because the substring/exact substitution is the shape that makes the walk wrong in a way
+    # that still reports a number.
+    15: "NC-A17",   # the attestation schema has no banned name at any depth
+    91: "NC-A17",   # the same walk, and the same break
+    92: "NC-A17",   # the three-part rule, both halves
+    93: "NC-A16",   # no JSON float token in the canonicalised bytes
+    94: "NC-A18",   # expires is a function of timeVerified, not of the clock
+    95: "NC-A19",   # verify checks the stored signature, never a fresh one
+    96: "NC-A18",   # E2E-VERIFY catches the clock read three layers away
+    97: "NC-A20",   # an INVALID run projects to nothing
+    98: "NC-A16",   # the non-determinism enumeration is complete and states its boundary
 }
 
 

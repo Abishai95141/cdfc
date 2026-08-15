@@ -229,3 +229,35 @@ a `time.time()` planted in `src/cdfc/verdict/closure.py`, the deterministic core
 Nothing in `src/cdfc` uses a wall clock today, so the widening cost nothing.
 
 NC-CI21 and NC-CI22 plant each gate's own subject.
+
+---
+
+## 15 August 2026 — P11. Rows 91–98 added LIVE, and **row 15 promoted PENDING → LIVE**
+
+**Row 15 is the first row in this registry ever to change its liveness**, and the registry is built
+so that doing so fails the build until somebody writes down why. This is why.
+
+It was written at P0: *the attestation schema has no `result`/`status`/`pass` property at any
+depth*. It sat `PENDING` for eleven phases for the only admissible reason — **its subject did not
+exist**. There was no attestation schema to walk, so the gate could not be observed red, and a gate
+that cannot be observed red is not evidence whatever colour it reports.
+
+P11-B1 wrote `src/cdfc/attest/schema/attestation.schema.json`. The gate now walks it: 95 property
+names at every depth, through every combinator, with **zero blocking hits**. It is demonstrated red
+by `injectors/banned_names_substring_only.py`, and the shape it has to catch is NC-A01's own — a
+`status` planted inside a `$defs` entry referenced from an `allOf` two levels down, which a walker
+reading only top-level `properties` would miss while reporting success.
+
+**The PENDING set is now empty.** Every gate in this registry is LIVE, and every LIVE gate has been
+observed red.
+
+### Rows 91–98
+
+L7's gates: the name prohibition in both its halves, the float refusal over the canonicalised
+bytes, `expires` as a function of `timeVerified`, `verify` never re-signing, `E2E-VERIFY`'s byte
+identity, the OSCAL refusal on an `INVALID` run, and the completeness of
+`docs/NON-DETERMINISM.md`'s enumeration.
+
+Row 94's injector, `expires_from_now`, turns **row 96** red as well — the byte-identity acceptance
+test catching a single clock read three layers away, without being told where to look. That
+coupling is the phase's strongest single piece of evidence and it was measured, not arranged.

@@ -31,6 +31,10 @@ ADDED_LIVE_AT_P8 = set(range(57, 64))   # docs/GATE-CHANGES.md, 13 Aug 2026
 # `demonstrable_red_at P9` because that is when the guard was written, not when the code arrived.
 ADDED_LIVE_AT_P9 = set(range(64, 78))   # docs/GATE-CHANGES.md, 14 Aug 2026
 ADDED_LIVE_AT_P10 = set(range(78, 91))  # docs/GATE-CHANGES.md, 14 Aug 2026
+# Row 15 was PENDING from P0: its subject — the attestation schema — did not exist until
+# P11 wrote it. It is the only row in this registry to have moved between the two sets,
+# and the move is dated in docs/GATE-CHANGES.md.
+ADDED_LIVE_AT_P11 = set(range(91, 99)) | {15}  # docs/GATE-CHANGES.md, 15 Aug 2026
 # 76 and 77 are gates that RAN in `make greps` from P0 with no row at all — registered
 # during the audit repair, so the liveness ratio counts what CI actually executes.
 # Rows 14 and 16 moved PENDING -> LIVE at P6: their subjects shipped at P5 and the audit
@@ -38,13 +42,24 @@ ADDED_LIVE_AT_P10 = set(range(78, 91))  # docs/GATE-CHANGES.md, 14 Aug 2026
 PROMOTED_AT_P6 = {14, 16}
 LIVE_EXPECTED = (LIVE_AT_P0 | ADDED_LIVE_AT_P4 | ADDED_LIVE_AT_P5 | ADDED_LIVE_AT_P6
                  | ADDED_LIVE_AT_P7 | ADDED_LIVE_AT_P8 | ADDED_LIVE_AT_P9
-                 | ADDED_LIVE_AT_P10
+                 | ADDED_LIVE_AT_P10 | ADDED_LIVE_AT_P11
                  | PROMOTED_AT_P6)
 PENDING_AT_P0 = {14, 15, 16}
 # The PENDING set SHRINKS as subjects ship, and a row may only leave it into LIVE — never the
 # other way. Keeping `PENDING_AT_P0` frozen and naming the departures separately is what stops a
 # gate that resists demonstration being quietly moved back.
-PENDING_NOW = PENDING_AT_P0 - PROMOTED_AT_P6
+# **ROW 15 SHIPPED AT P11, AND THE PENDING SET IS NOW EMPTY.** It was written at P0 — *the
+# attestation schema has no `result`/`status`/`pass` at any depth* — and could not be demonstrated
+# for eleven phases because there was no schema to walk. P11-B1 wrote one; `injectors/
+# banned_names_substring_only.py` makes the walk red; and NC-A01's own shape, a `status` planted
+# inside a `$defs` entry referenced from an `allOf` two levels down, is what the descent had to be
+# total to catch.
+#
+# This is the FIRST row in this registry to move between the two sets, and the whole design is that
+# doing so fails the build until somebody writes down why. `docs/GATE-CHANGES.md` carries the dated
+# row; this literal carries the same date.
+PROMOTED_AT_P11 = {15}   # docs/GATE-CHANGES.md, 15 Aug 2026
+PENDING_NOW = PENDING_AT_P0 - PROMOTED_AT_P6 - PROMOTED_AT_P11
 
 
 def test_contract__gates_registry_schema() -> None:

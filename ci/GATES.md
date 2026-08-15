@@ -39,7 +39,7 @@ a row between sets fails the build.
 | 12 | shell | `ci/catalogue-ids.sh` — the CATALOGUE's ids unique, every injector and guard resolvable, plan docs UTF-8 (plan cross-references ADVISORY, counts printed) | P0 | P0 | duplicate an id, or a guard naming a file that does not exist | LIVE |
 | 13 | pytest | `test_nc__CI01_missing_scan_root_fails` — a grep over a missing root is red | P0 | P0 | `injectors/remove_scan_root.py` | LIVE |
 | 14 | ast | `test_no_model_in_verdict_path` — no model client reachable from L5/L6/L7 | P5 | P5 | import a model client in `verdict/` | LIVE |
-| 15 | schema | attestation schema has no `result`/`status`/`pass` at any depth | P11 | P11 | add the field to the schema | PENDING |
+| 15 | schema | attestation schema has no `result`/`status`/`pass` at any depth | P11 | P11 | `injectors/banned_names_substring_only.py` — and NC-A01's `schema_status_deep` shape, a `status` inside a `$defs` entry referenced from an `allOf` two levels down | LIVE |
 | 16 | pytest | `test_prop__closure_seven_terms` — the seven-term closure invariant holds | P5 | P5 | `injectors/closure_drops_a_bucket.py` | LIVE |
 | 17 | shell | `ci/no-timing-in-hashed-payload.sh` — no duration field inside a hashed object | P0 | P0 | `injectors/elapsed_us_in_canary_row.py` | LIVE |
 | 18 | pytest | `test_plan__critical_path_total_equals_sum_of_rows` — a total equals its parts | P0 | P0 | change a per-phase figure without the total | LIVE |
@@ -285,3 +285,41 @@ layer at all.
 | 88 | pytest | `test_c__counts_are_row_counts_not_variables` — every published liveness count is `len()` of a row set | P10 | P10 | `injectors/canary_count_asserted.py` | LIVE |
 | 89 | pytest | `test_patch__none_is_absent_never_the_string` — a cell with no value is ABSENT | P6 | P10 | `injectors/coerce_none_to_string.py` | LIVE |
 | 90 | pytest | `test_nc_meta__none_injector_entries_carry_a_layer_exists_assertion` — an absence claim proves the layer exists | P10 | P10 | delete `layer_exists_assertion` from NC-C03 | LIVE |
+
+**Rows 91–98 were added at P11, dated 15 August 2026, all LIVE, all observed red in the same
+session.** They are L7's gates, and row 15 — which has been `PENDING` since P0 — goes **LIVE** here
+because its subject now exists.
+
+Row 91 is the one P0 wrote and could not run: *the attestation schema has no `result`/`status`/`pass`
+at any depth*. It has waited eleven phases for something to walk, and the walk is a total descent
+through `properties`, `$defs`, `definitions`, `allOf`, `anyOf`, `oneOf`, `not`, `items`,
+`prefixItems`, `patternProperties`, `additionalProperties` and `propertyNames` — because NC-A01's
+injector plants `status` inside a `$defs` entry referenced from an `allOf` two levels down, and a
+walker that reads only top-level `properties` finds nothing and reports success.
+
+Row 92 is the other half of the same rule and it is the half that needs an argument: the blocking
+scan is EXACT because a substring scan rejects the specification's own `canariesPassed`, and the
+advisory scan is a substring scan because an exact one admits `overallStatus`. Every advisory hit
+carries a written argument in `NAME-ALLOWLIST.md`, checked equal in **both** directions.
+
+Row 94 is worth reading twice. `expires_from_now` turns `E2E-VERIFY` red — the byte-identity
+acceptance test catching a single clock read three layers away, without being told where to look.
+That is what the whole phase is for.
+
+Row 97 is the projection refusal, and its substance is the absence of a flag: `project_oscal`
+raises on an `INVALID` run and there is no parameter that makes it emit one anyway, because a flag
+is what somebody sets when a pipeline is failing and the deadline is Friday.
+
+`ADDED_LIVE_AT_P11` is an eighth frozen literal, and row 15 moves from `PENDING` to `LIVE` with its
+argument recorded in `docs/GATE-CHANGES.md`.
+
+| id | kind | gate | subject_exists_at | demonstrable_red_at | broken_build | liveness |
+|---:|---|---|---|---|---|---|
+| 91 | contract | `test_contract__attestation_cannot_express_a_pass` — no banned property name at any depth | P11 | P11 | `injectors/banned_names_substring_only.py` | LIVE |
+| 92 | contract | `test_contract__banned_names_are_exact_not_substrings` — the three-part name rule, both halves | P11 | P11 | `injectors/banned_names_substring_only.py` | LIVE |
+| 93 | contract | `test_contract__no_json_float_in_the_payload` — no JSON float token in the canonicalised bytes | P11 | P11 | `injectors/float_rate_in_payload.py` | LIVE |
+| 94 | pytest | `test_prop__expires_is_a_function_of_time_verified` — no clock in the attestation | P11 | P11 | `injectors/expires_from_now.py` | LIVE |
+| 95 | pytest | `test_v__verify_never_calls_sign` — verify checks the stored signature, never a fresh one | P11 | P11 | `injectors/verify_resigns.py` | LIVE |
+| 96 | pytest | `test_e2e__VERIFY_byte_identical` — the payload re-derives and the signature is valid | P11 | P11 | `injectors/expires_from_now.py` | LIVE |
+| 97 | pytest | `test_oscal__invalid_raises_not_representable` — an INVALID run projects to nothing | P11 | P11 | `injectors/oscal_projects_invalid.py` | LIVE |
+| 98 | pytest | `test_v__the_non_determinism_document_lists_six_and_six` — the enumeration is complete and says what it has not verified | P11 | P11 | delete a row from `docs/NON-DETERMINISM.md` | LIVE |

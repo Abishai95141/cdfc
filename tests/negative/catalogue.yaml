@@ -1790,3 +1790,97 @@ entries:
         flips: true
     positive_control: "NC-C03's own guard runs the reference fill and asserts canariesRun > 0 BEFORE it touches the fixture, in the same test body"
     status: active
+
+  # ------------------------------------------------------------------------------------------
+  # P11 — L7: attestation, `verify`, byte identity.
+  #
+  # Every `flips` value below was MEASURED by applying the injector and re-running the guards.
+  # The one worth reading twice is NC-A18's: `expires_from_now` turns `E2E-VERIFY` red, which is
+  # the byte-identity acceptance test catching a single clock read three layers away.
+  # ------------------------------------------------------------------------------------------
+
+  - id: NC-A16
+    component: attest
+    break: a float in the payload makes the canonicalisation implementation-dependent
+    measured_instance: "the specification's own example payload carries rate 0.021 and wilson [0.006, 0.074] while another section of the same specification states there is no floating point"
+    injector: FloatRateInPayload
+    guard_tests:
+      - path: "tests/contract/test_contract_attestation.py::test_contract__no_json_float_in_the_payload"
+        flips: true
+      - path: "tests/property/test_prop_canon.py::test_canon__refuses_a_float"
+        flips: true
+      - path: "tests/contract/test_contract_attestation.py::test_contract__attestation_cannot_express_a_pass"
+        flips: false
+    positive_control: "the FFR fields render from integers — failures, trials and integer ppm — so the schema admits a rate without admitting a float"
+    status: active
+    note: >
+      The injector relaxes the canonicaliser AND puts a float in the payload. Relaxing the
+      canonicaliser alone changes nothing observable, because nothing in the payload is a float —
+      a guard on the payload would stay green and the entry would be recorded as caught on
+      evidence nobody collected.
+
+  - id: NC-A17
+    component: attest
+    break: the name prohibition is a substring scan and rejects canariesPassed, or an exact scan and admits overallStatus
+    measured_instance: "the specification's own livenessProof object contains canariesPassed"
+    injector: BannedNamesSubstringOnly
+    guard_tests:
+      - path: "tests/contract/test_contract_attestation.py::test_contract__banned_names_are_exact_not_substrings"
+        flips: true
+      - path: "tests/contract/test_contract_attestation.py::test_contract__attestation_cannot_express_a_pass"
+        flips: true
+      - path: "tests/contract/test_contract_attestation.py::test_contract__every_advisory_hit_is_allowlisted_with_an_argument"
+        flips: false
+    positive_control: "the advisory scan still finds overallStatusCode when it is planted, so the substring half is doing its own job while the exact half blocks"
+    status: active
+
+  - id: NC-A18
+    component: attest
+    break: expires is computed from the wall clock instead of from timeVerified
+    measured_instance: null
+    injector: ExpiresFromNow
+    guard_tests:
+      - path: "tests/property/test_prop_statement.py::test_prop__expires_is_a_function_of_time_verified"
+        flips: true
+      - path: "tests/unit/test_statement.py::test_stmt__expires_is_92_days_after_time_verified"
+        flips: true
+      - path: "tests/unit/test_statement.py::test_stmt__expires_reads_no_clock"
+        flips: true
+      - path: "tests/e2e/test_e2e__verify.py::test_e2e__VERIFY_byte_identical"
+        flips: true
+    positive_control: "2026-08-14 -> 2026-11-14 reproduces the specification's own worked example, which is what fixes the constant at 92 days"
+    status: active
+    note: >
+      E2E-VERIFY going red under this injector is the strongest thing in this catalogue: the
+      byte-identity acceptance test catches a single clock read three layers away, without being
+      told where to look.
+
+  - id: NC-A19
+    component: attest
+    break: verify re-signs the payload instead of verifying the stored signature, so a key change reads as a report change
+    measured_instance: null
+    injector: VerifyResigns
+    guard_tests:
+      - path: "tests/unit/test_verify.py::test_v__verify_never_calls_sign"
+        flips: true
+      - path: "tests/e2e/test_e2e__verify.py::test_e2e__TAMPER_ATTEST_separates_signature_from_payload"
+        flips: false
+    positive_control: "tests/e2e/test_e2e__verify.py::test_e2e__VERIFY_byte_identical — the honest path still reports both facts, so the refusal is not a reject-everything baseline"
+    status: active
+    note: >
+      The guard is an AST walk rather than a behavioural test, and deliberately: it asserts that
+      no signing function is CALLED and that the signing primitive is not even IMPORTED, because
+      importing the key operations puts them one keystroke from being used.
+
+  - id: NC-A20
+    component: attest
+    break: an INVALID run is projected to an OSCAL Assessment Result with zero findings, which is schema-valid and reads as clean
+    measured_instance: "OSCAL's finding-target.status.state is a closed two-value enum {satisfied, not-satisfied} and findings became optional in 2021"
+    injector: OscalProjectsInvalid
+    guard_tests:
+      - path: "tests/unit/test_oscal.py::test_oscal__invalid_raises_not_representable"
+        flips: true
+      - path: "tests/unit/test_oscal.py::test_oscal__valid_run_projects_and_declares_its_loss"
+        flips: false
+    positive_control: "tests/unit/test_oscal.py::test_oscal__valid_run_projects_and_declares_its_loss — a VALID run DOES project, so the refusal is about INVALID and not about the projector"
+    status: active
