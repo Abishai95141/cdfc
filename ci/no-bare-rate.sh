@@ -27,7 +27,13 @@ import pathlib, re, sys
 # as a DEAD COMMENT inside `src/cdfc` made it red. The gate fired on what nobody sees and stayed
 # silent on what everybody does.
 ROOTS = ["src/cdfc", "tools", "docs/measurements", "reports"]
-BARE = re.compile(r"(?<![\d/])\d+(?:\.\d+)?\s*%|\}\s*%|:\s*\.\d+[fg]\}%")
+# **`%` IS ALSO PYTHON'S MODULO, and RFC 8032 is written in it.** `x = x * _SQRT_M1 % _p` was
+# read as the rate `1 %` and made this gate red on a correct implementation of a published
+# standard. A percent SIGN in prose or a format string is followed by a space, a quote, a closing
+# brace or the end of a line; a modulo is followed by an operand. The negative lookahead below is
+# what separates them, and it is narrow on purpose: widening it to `%\s*\w` would also admit
+# `50% coverage`, which is exactly what this gate exists to catch.
+BARE = re.compile(r"(?<![\d/])\d+(?:\.\d+)?\s*%(?!\s*[_A-Za-z(])|\}\s*%(?!\s*[_A-Za-z(])|:\s*\.\d+[fg]\}%")
 HAS_FRACTION = re.compile(r"\d[\d,]*\s*(?:/|of|out of)\s*\d")
 ALLOW = re.compile(r"(https?://|%s|%d|%r|width:|# *noqa)")
 

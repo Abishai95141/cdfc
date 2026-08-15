@@ -2,7 +2,7 @@
 
 **`expires` is easy to under-rate and it is a real reproducibility hazard.** `timeVerified` is an
 *input recorded in the manifest*; `expires` must be **derived from it**, never from
-`datetime.now()`. A single `now()` in this derivation makes every attestation differ from its own
+the wall clock. A single clock read in this derivation makes every attestation differ from its own
 re-derivation on the following day, and `E2E-VERIFY` — the programme's acceptance test — fails
 permanently for a reason that reads like a clock skew rather than like a bug.
 
