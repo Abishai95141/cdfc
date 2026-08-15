@@ -514,6 +514,9 @@ BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
 
 
 PLAN_DOC = REPO_ROOT / "plan" / "00-decomposition.md"
+# Written by plan/scripts/nc_audit.py, which ci/catalogue-ids.sh runs. Declared by
+# NulByteInPlanDoc because that entry's GUARD causes it to be rewritten from injected input.
+NC_AUDIT_RESULT = REPO_ROOT / "plan" / "scripts" / "nc_audit_result.json"
 
 
 class HardcodeGateCount(Injector):
@@ -563,7 +566,18 @@ class NulByteInPlanDoc(Injector):
     """
 
     def __init__(self) -> None:
-        super().__init__(name="nul_byte_in_plan_doc", touches=[PLAN_DOC])
+        # `plan/scripts/nc_audit_result.json` IS DECLARED THOUGH THIS INJECTOR NEVER WRITES IT.
+        #
+        # Its guard runs `ci/catalogue-ids.sh`, which runs `plan/scripts/nc_audit.py`, which WRITES
+        # that file. Under injection the audit reads a plan document containing a NUL and writes a
+        # corrupted result — and because the path was not declared, `_save`/`_restore` never saw
+        # it, `inject()`'s digest check never covered it, and **the corrupted artifact survived the
+        # restore and stayed in the tree for every later entry in the sweep.**
+        #
+        # `touches` is therefore not "what apply() edits". It is **everything this entry can
+        # change**, guard tests included — because the guards run inside the injected tree and a
+        # producer they invoke writes real artifacts from broken inputs.
+        super().__init__(name="nul_byte_in_plan_doc", touches=[PLAN_DOC, NC_AUDIT_RESULT])
 
     def apply(self) -> None:
         PLAN_DOC.write_bytes(PLAN_DOC.read_bytes() + b"\x00")

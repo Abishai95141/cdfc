@@ -21,11 +21,26 @@ guards_flipped / guards_expected_to_flip, none_count. `provisional_count` is rep
 separately and EXCLUDED from entries_caught, because a green entry with no information in
 it must not be counted as evidence.
 
+AND THE TREE IS DIGESTED AROUND EVERY ENTRY, NOT ONLY THE PATHS THE INJECTOR DECLARES.
+
+`inject()` verifies `touches` before and after. That is blind by construction to anything the
+entry changes OUTSIDE its declaration — and the guards run INSIDE the injected tree, so a producer
+they invoke writes a real repository artifact from broken input. `NC-CI14` did exactly that:
+its guard runs `ci/catalogue-ids.sh`, which runs `plan/scripts/nc_audit.py`, which writes
+`plan/scripts/nc_audit_result.json` — a path the injector never declared. The corrupted artifact
+survived the restore and stayed in the tree for every later entry.
+
+`inject()` could not see it. The digest it takes is scoped to what it was told about, which is the
+same shape of defect this whole harness exists to catch, occurring in the harness. So the sweep
+now takes `git status --porcelain` around each entry and records `contaminated` — every path the
+entry changed and did not declare — and exits non-zero when the list is non-empty.
+
 NO TIMING FIELD ENTERS THIS REPORT (R3). Timings go to reports/perf/.
 """
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import os
@@ -74,7 +89,44 @@ class EntryResult:
     guards: list[GuardResult] = field(default_factory=list)
     caught: bool = False
     leaked: list[str] = field(default_factory=list)
+    contaminated: list[str] = field(default_factory=list)
     error: str = ""
+
+
+def _tree_state() -> dict[str, str]:
+    """`{path: status}` from `git status --porcelain`, including untracked files.
+
+    Cheap — one subprocess, content-based, and it sees a file created, deleted or modified. It is
+    the whole-tree companion to `inject()`'s per-path digest, and it exists because that digest
+    cannot see what it was not told about.
+    """
+    proc = subprocess.run(
+        ["git", "status", "--porcelain", "--untracked-files=all"],
+        cwd=REPO, capture_output=True, text=True, check=False,
+    )
+    if proc.returncode != 0:
+        # A tree with no git history cannot be checked this way. That is UNVERIFIABLE, and it is
+        # reported as such rather than as a clean tree — the same rule `g2_kill.ancestry_state`
+        # applies to an unverifiable claim ancestry.
+        return {"__NO_GIT__": "the tree state cannot be read; contamination is UNVERIFIABLE"}
+    out: dict[str, str] = {}
+    for line in proc.stdout.splitlines():
+        if len(line) <= 3:
+            continue
+        rel = line[3:].strip().strip('"')
+        # THE STATUS CODE ALONE IS NOT ENOUGH, and the positive control is what proved it. A file
+        # that goes from modified-with-content-A to modified-with-content-B carries the SAME two
+        # characters both times, so a code-only comparison reports no change — and the first
+        # version of this function did exactly that, reporting a clean tree over the very
+        # contamination it was written to find. Only the paths git already lists are hashed, so
+        # this stays one subprocess plus a handful of small reads.
+        f = REPO / rel
+        try:
+            digest = hashlib.sha256(f.read_bytes()).hexdigest()[:16] if f.is_file() else "NOTFILE"
+        except OSError:
+            digest = "UNREADABLE"
+        out[rel] = f"{line[:2]}:{digest}"
+    return out
 
 
 def _normalise(text: str) -> str:
@@ -185,11 +237,38 @@ def sweep(catalogue: Path = CATALOGUE) -> dict[str, Any]:
             continue
 
         inj: Injector = cls()
+        declared = {
+            str(Path(t).resolve().relative_to(REPO))
+            for t in inj.touches
+            if str(Path(t).resolve()).startswith(str(REPO))
+        }
+        tree_before = _tree_state()
+
         with inject(inj):
             under = _run_guards(node_ids)
 
         after = _run_guards(node_ids)
+        # THE POST-RESTORE FAILURE TEXT IS KEPT. It used to be discarded — `(ok, _)` — so a leak
+        # was reported as a bare list of node ids with no evidence, and the next person had to
+        # reproduce it to learn anything. A finding without its assertion is a rumour.
         er.leaked = [n for n, (ok, _) in after.items() if not ok]
+        if er.leaked:
+            er.error = (er.error + " | " if er.error else "") + "leaked after restore: " + "; ".join(
+                f"{n}: {txt or NO_ASSERTION_CAPTURED}" for n, (ok, txt) in after.items() if not ok
+            )
+
+        tree_after = _tree_state()
+        er.contaminated = sorted(
+            path for path in set(tree_before) | set(tree_after)
+            if tree_before.get(path) != tree_after.get(path) and path not in declared
+        )
+        if er.contaminated:
+            er.error = (er.error + " | " if er.error else "") + (
+                f"UNDECLARED TREE CHANGES {er.contaminated}: this entry changed paths its injector "
+                f"does not declare in `touches` ({sorted(declared)}), so inject()'s digest could "
+                "not see them and they SURVIVE THE RESTORE into every later entry. `touches` is "
+                "everything the entry can change, guard tests included — not only what apply() edits."
+            )
 
         for g in guards:
             nid = g["path"]
@@ -205,7 +284,7 @@ def sweep(catalogue: Path = CATALOGUE) -> dict[str, Any]:
             )
         expected = {g["path"] for g in guards if g["flips"]}
         observed = {gr.path for gr in er.guards if gr.observed_red}
-        er.caught = (expected == observed) and not er.leaked and not er.provisional
+        er.caught = (expected == observed) and not er.leaked and not er.contaminated and not er.provisional
         if expected != observed:
             er.error = (
                 f"exact-set mismatch: expected red {sorted(expected)}, observed red {sorted(observed)}"
@@ -224,6 +303,7 @@ def sweep(catalogue: Path = CATALOGUE) -> dict[str, Any]:
             1 for r in results for g in r.guards if g.flips_expected and g.observed_red and not r.provisional
         ),
         "none_count": sum(1 for r in results if r.injector == "NONE"),
+        "contaminated_count": sum(1 for r in results if r.contaminated),
         "provisional_count": sum(1 for r in results if r.provisional),
         "rows": [asdict(r) for r in results],
     }
@@ -239,7 +319,8 @@ def main() -> int:
     print(f"guards_flipped          : {rep['guards_flipped']} / {rep['guards_expected_to_flip']}")
     print(f"none_count              : {rep['none_count']}")
     print(f"provisional_count       : {rep['provisional_count']}  (excluded from entries_caught)")
-    bad = [r for r in rep["rows"] if r["error"] or r["leaked"]]
+    print(f"contaminated_count      : {rep['contaminated_count']}  (entries that changed an undeclared path)")
+    bad = [r for r in rep["rows"] if r["error"] or r["leaked"] or r["contaminated"]]
     for r in bad:
         print(f"  !! {r['id']}: {r['error']}{' LEAKED:' + str(r['leaked']) if r['leaked'] else ''}")
     print(f"wrote {REPORT}")

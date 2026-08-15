@@ -115,3 +115,43 @@ def test_sweep__report_carries_no_timing_field() -> None:
 
     walk(blob, "$")
     assert offenders == [], f"the sweep report carries timing FIELDS: {offenders}"
+
+
+def test_sweep__no_entry_changes_a_path_it_does_not_declare() -> None:
+    """An entry that writes outside its `touches` poisons every entry after it.
+
+    `inject()` digests the declared paths before and after, and is blind by construction to
+    anything else — so an undeclared write survives the restore, silently, and the harness reports
+    success. **This is the shape of defect the whole harness exists to catch, occurring in the
+    harness.**
+
+    The realised instance: `NC-CI14`'s guard runs `ci/catalogue-ids.sh`, which runs
+    `plan/scripts/nc_audit.py`, which writes `plan/scripts/nc_audit_result.json`. Under injection
+    the plan document carries a NUL byte, so the audit wrote a corrupted result — to a path the
+    injector never declared. It stayed in the tree for the remainder of the sweep.
+
+    The lesson in the assertion: **`touches` is everything the entry can change, guard tests
+    included** — not only what `apply()` edits.
+    """
+    rep = _report()
+    dirty = {r["id"]: r["contaminated"] for r in rep["rows"] if r.get("contaminated")}
+    assert dirty == {}, (
+        f"{len(dirty)} entries changed paths their injector does not declare: {dirty}. Each one "
+        "survives the restore and is present for every later entry, so the failure it causes is "
+        "attributed to whichever control happens to run next."
+    )
+
+
+def test_sweep__a_leak_carries_its_assertion_text() -> None:
+    """A leak reported as a bare list of node ids is a rumour.
+
+    The post-restore run's failure text used to be discarded, so `leaked: [...]` said WHICH guard
+    was still red and never WHY — and the next person had to reproduce the whole 20-minute sweep to
+    learn anything. This asserts the evidence travels with the finding.
+    """
+    rep = _report()
+    for row in rep["rows"]:
+        if row["leaked"]:
+            assert "leaked after restore:" in row["error"], (
+                f"{row['id']} leaked {row['leaked']} and its error carries no assertion text"
+            )
