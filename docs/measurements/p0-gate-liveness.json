@@ -1,10 +1,10 @@
 {
- "denominator_for_observed": 89,
+ "denominator_for_observed": 98,
  "evidence_source": "reports/negative-control-sweep.json (exact-set contract)",
- "gates_live": 89,
- "gates_pending": 1,
- "gates_total": 90,
- "gates_with_an_observed_red": 89,
+ "gates_live": 98,
+ "gates_pending": 0,
+ "gates_total": 98,
+ "gates_with_an_observed_red": 98,
  "live_ids": [
   1,
   2,
@@ -20,6 +20,7 @@
   12,
   13,
   14,
+  15,
   16,
   17,
   18,
@@ -94,12 +95,18 @@
   87,
   88,
   89,
-  90
+  90,
+  91,
+  92,
+  93,
+  94,
+  95,
+  96,
+  97,
+  98
  ],
  "note": "A gate is OBSERVED RED iff its catalogue entry was caught under the sweep's exact-set contract: every flips:true guard red, every flips:false guard green. PROVISIONAL entries prove nothing yet and are excluded \u2014 a green entry with no information in it must not be counted as evidence.",
- "pending_ids": [
-  15
- ],
+ "pending_ids": [],
  "per_gate": {
   "1": "NC-CI03: OBSERVED RED",
   "10": "NC-CI12: OBSERVED RED",
@@ -107,6 +114,7 @@
   "12": "NC-CI14: OBSERVED RED",
   "13": "NC-CI01: OBSERVED RED",
   "14": "NC-E33: OBSERVED RED",
+  "15": "NC-A17: OBSERVED RED",
   "16": "NC-E30: OBSERVED RED",
   "17": "NC-CI15: OBSERVED RED",
   "18": "NC-CI16: OBSERVED RED",
@@ -189,14 +197,22 @@
   "88": "NC-C01b: OBSERVED RED",
   "89": "NC-C12: OBSERVED RED",
   "9": "NC-CI05: OBSERVED RED",
-  "90": "NC-C03b: OBSERVED RED"
+  "90": "NC-C03b: OBSERVED RED",
+  "91": "NC-A17: OBSERVED RED",
+  "92": "NC-A17: OBSERVED RED",
+  "93": "NC-A16: OBSERVED RED",
+  "94": "NC-A18: OBSERVED RED",
+  "95": "NC-A19: OBSERVED RED",
+  "96": "NC-A18: OBSERVED RED",
+  "97": "NC-A20: OBSERVED RED",
+  "98": "NC-A16: OBSERVED RED"
  },
  "phase": "P0",
  "sweep": {
-  "entries_active": 116,
-  "entries_caught": 116,
-  "guards_expected_to_flip": 187,
-  "guards_flipped": 187,
+  "entries_active": 121,
+  "entries_caught": 121,
+  "guards_expected_to_flip": 197,
+  "guards_flipped": 197,
   "none_count": 3,
   "provisional_count": 1
  },

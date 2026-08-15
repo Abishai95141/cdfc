@@ -195,3 +195,9 @@ residue:
 
 canary-cost:
 	$(PY) tools/measure/p10_canary_cost.py
+
+# --- P11 -----------------------------------------------------------------------------
+# The programme's primary number: bytes differing / bytes in the artifacts, target 0,
+# under four environment variations. It exits NON-ZERO when anything differs.
+byte-identity:
+	$(PY) tools/measure/p11_byte_identity.py
