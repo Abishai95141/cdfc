@@ -1,0 +1,288 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cdfc.dev/schema/attestation/v1",
+  "title": "Filing settlement attestation",
+  "description": "An in-toto Statement v1 whose predicate declares COVERAGE. There is no `result`, no `status` and no `pass` property at any depth of this schema, and there never will be: a surface that can render an all-clear will eventually render it wrongly, and prohibiting it in the schema is the only version of that commitment that is a system property rather than a preference. tests/contract/schema_walk.py enforces it through every combinator.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["_type", "subject", "predicateType", "predicate"],
+  "properties": {
+    "_type": { "const": "https://in-toto.io/Statement/v1" },
+    "predicateType": { "const": "https://cdfc.dev/filing-settlement-attestation/v1" },
+    "subject": {
+      "description": "BOTH documents. A verdict against template v3 is meaningless if the entity filed on v4, so a statement naming one document is a statement whose meaning depends on something it does not carry.",
+      "type": "array",
+      "minItems": 2,
+      "items": { "$ref": "#/$defs/subject" }
+    },
+    "predicate": { "$ref": "#/$defs/predicate" }
+  },
+  "$defs": {
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "digest"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "digest": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["sha256"],
+          "properties": { "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" } }
+        }
+      }
+    },
+
+    "predicate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope", "runState", "invalidCauses", "settledFraction", "verdict",
+        "livenessProof", "residue", "counterEvidence", "falseFailureRate",
+        "corpusProvenance", "statements", "assessor", "manifest",
+        "timeVerified", "expires", "openItems"
+      ],
+      "properties": {
+        "scope": { "$ref": "#/$defs/scope" },
+        "runState": { "enum": ["VALID", "INVALID"] },
+        "invalidCauses": {
+          "description": "[] means we determined there are none. It is never null and never omitted.",
+          "type": "array",
+          "items": { "type": "string", "pattern": "^invalid\\." }
+        },
+        "settledFraction": {
+          "description": "null on an INVALID run, and PRESENT. Zero is a finding about the filing; null is a finding about us; absence is a bug.",
+          "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/settledFraction" }]
+        },
+        "verdict": {
+          "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/verdict" }]
+        },
+        "livenessProof": {
+          "description": "null only when the canary loop did not run on this filing. `canariesRun: 0` says the loop ran and found nothing to do; null says nobody asked.",
+          "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/livenessProof" }]
+        },
+        "residue": {
+          "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/residue" }]
+        },
+        "counterEvidence": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/counterEvidenceItem" }
+        },
+        "falseFailureRate": {
+          "description": "null with corpusProvenance SELF-AUTHORED on G-CORPUS's FAIL branch. A rate of zero would be a claim; null is the absence of one.",
+          "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/falseFailureRate" }]
+        },
+        "corpusProvenance": {
+          "enum": ["SELF-AUTHORED", "INDEPENDENTLY-COMPUTED", "FIELD-COLLECTED"]
+        },
+        "statements": { "$ref": "#/$defs/statements" },
+        "assessor": { "$ref": "#/$defs/assessor" },
+        "manifest": { "$ref": "#/$defs/manifest" },
+        "timeVerified": { "type": "string", "minLength": 1 },
+        "expires": { "type": "string", "minLength": 1 },
+        "openItems": {
+          "description": "Declared open items with their age. [] means we determined there are none, rendered as such rather than as silence.",
+          "type": "array",
+          "items": { "$ref": "#/$defs/openItem" }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "runState": { "const": "INVALID" } },
+            "required": ["runState"]
+          },
+          "then": {
+            "properties": {
+              "settledFraction": { "const": null },
+              "verdict": { "const": null }
+            },
+            "required": ["settledFraction", "verdict"]
+          }
+        }
+      ]
+    },
+
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fieldSurface", "inScope", "outOfScope", "outOfScopeRetained", "runId"],
+      "properties": {
+        "fieldSurface": { "oneOf": [{ "type": "null" }, { "type": "integer", "minimum": 0 }] },
+        "inScope": { "oneOf": [{ "type": "null" }, { "type": "integer", "minimum": 0 }] },
+        "outOfScope": { "oneOf": [{ "type": "null" }, { "type": "integer", "minimum": 0 }] },
+        "outOfScopeRetained": { "oneOf": [{ "type": "null" }, { "type": "integer", "minimum": 0 }] },
+        "runId": { "type": "string", "minLength": 1 }
+      }
+    },
+
+    "settledFraction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["settled", "inScope", "cellsTotal", "denominatorWarning", "admissibilityCaveat"],
+      "properties": {
+        "settled": { "type": "integer", "minimum": 0 },
+        "inScope": { "type": "integer", "minimum": 0 },
+        "cellsTotal": { "type": "integer", "minimum": 0 },
+        "denominatorWarning": { "type": "string", "minLength": 1 },
+        "admissibilityCaveat": { "type": "string" }
+      }
+    },
+
+    "verdict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state"],
+      "properties": {
+        "state": { "enum": ["SETTLEMENT_DECLARED", "SETTLEMENT_INSUFFICIENT"] }
+      }
+    },
+
+    "livenessProof": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rowsTotal", "canariesRun", "canariesPassed", "antiCanariesRun", "antiCanariesPassed",
+        "canariesInapplicable", "canariesIndeterminate", "canariesUnresolved",
+        "antiCanariesFired", "antiCanariesNotPass", "selfTestSilent", "maxWitnesses"
+      ],
+      "properties": {
+        "rowsTotal": { "type": "integer", "minimum": 0 },
+        "canariesRun": { "type": "integer", "minimum": 0 },
+        "canariesPassed": { "type": "integer", "minimum": 0 },
+        "antiCanariesRun": { "type": "integer", "minimum": 0 },
+        "antiCanariesPassed": { "type": "integer", "minimum": 0 },
+        "canariesInapplicable": { "type": "integer", "minimum": 0 },
+        "canariesIndeterminate": { "type": "integer", "minimum": 0 },
+        "canariesUnresolved": { "type": "integer", "minimum": 0 },
+        "antiCanariesFired": { "type": "integer", "minimum": 0 },
+        "antiCanariesNotPass": { "type": "integer", "minimum": 0 },
+        "selfTestSilent": { "type": "boolean" },
+        "maxWitnesses": { "type": "integer", "minimum": 1 }
+      }
+    },
+
+    "residue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "residue", "wrongTotal", "innocuousTotal", "unadjudicableTotal", "registryRoot",
+        "nAdmittedPredicates", "nAdmittedRelations", "faultModelVersion",
+        "adjudicationRecordSha256", "rejectorSet", "label"
+      ],
+      "properties": {
+        "residue": { "type": "integer", "minimum": 0 },
+        "wrongTotal": { "type": "integer", "minimum": 0 },
+        "innocuousTotal": { "type": "integer", "minimum": 0 },
+        "unadjudicableTotal": { "type": "integer", "minimum": 0 },
+        "registryRoot": { "type": "string", "minLength": 1 },
+        "nAdmittedPredicates": { "type": "integer", "minimum": 0 },
+        "nAdmittedRelations": { "type": "integer", "minimum": 0 },
+        "faultModelVersion": { "type": "string", "minLength": 1 },
+        "adjudicationRecordSha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "rejectorSet": { "enum": ["ADMITTED", "PRE-GATE"] },
+        "label": { "type": "string", "minLength": 1 }
+      }
+    },
+
+    "counterEvidenceItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["relationId", "state", "witness", "detail"],
+      "properties": {
+        "relationId": { "type": "string", "minLength": 1 },
+        "state": { "type": "string", "minLength": 1 },
+        "witness": { "type": "array", "items": { "type": "string" } },
+        "detail": { "type": "string" }
+      }
+    },
+
+    "falseFailureRate": {
+      "description": "Integer ppm, never a float. A rate rendered as a decimal carries no evidence of its own arithmetic.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["failures", "trials", "ppm", "lowerPpm", "upperPpm", "corpusLabel"],
+      "properties": {
+        "failures": { "type": "integer", "minimum": 0 },
+        "trials": { "type": "integer", "minimum": 0 },
+        "ppm": { "type": "integer", "minimum": 0 },
+        "lowerPpm": { "type": "integer", "minimum": 0 },
+        "upperPpm": { "type": "integer", "minimum": 0 },
+        "corpusLabel": { "type": "string", "minLength": 1 }
+      }
+    },
+
+    "statements": {
+      "description": "REQUIRED FIELDS, not template strings. Making a disclaimer a mandatory field rather than a string in a renderer is the cheapest possible way to guarantee it survives contact with a marketing page.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["boundedSilence", "purpose", "summaryIsNotSubstitute", "detectionBoundary"],
+      "properties": {
+        "boundedSilence": { "type": "string", "minLength": 60 },
+        "purpose": { "type": "string", "minLength": 60 },
+        "summaryIsNotSubstitute": { "type": "string", "minLength": 60 },
+        "detectionBoundary": { "type": "string", "minLength": 60 }
+      }
+    },
+
+    "assessor": {
+      "description": "The vendor signs nothing and appears only here. A vendor signature over a customer's compliance statement would be an assurance opinion we are not licensed to give and did not perform.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "thirdParty"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "thirdParty": { "const": false }
+      }
+    },
+
+    "manifest": {
+      "description": "The eight pins `verify` re-runs the pipeline against, plus the two run-level INPUTS the probe and attestation layers added. probe_seed and timeVerified are INPUTS recorded here, never values read at run time.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "template_sha256", "filing_sha256", "registry_root", "register_snapshot_sha256",
+        "code_git_sha", "evaluator_version", "fault_model_version", "tool_versions",
+        "probe_seed", "timeVerified"
+      ],
+      "properties": {
+        "template_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "filing_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "registry_root": { "type": "string", "minLength": 1 },
+        "register_snapshot_sha256": { "oneOf": [{ "type": "null" }, { "type": "string", "minLength": 1 }] },
+        "code_git_sha": { "type": "string", "minLength": 1 },
+        "evaluator_version": { "type": "string", "minLength": 1 },
+        "fault_model_version": { "type": "string", "minLength": 1 },
+        "tool_versions": { "$ref": "#/$defs/toolVersions" },
+        "probe_seed": { "type": "integer" },
+        "timeVerified": { "type": "string", "minLength": 1 }
+      }
+    },
+
+    "toolVersions": {
+      "description": "libreoffice is deliberately absent: it is not on the verdict path, and test_no_libreoffice_online asserts it.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["python", "lxml", "openpyxl", "celpy", "z3"],
+      "properties": {
+        "python": { "type": "string", "minLength": 1 },
+        "lxml": { "type": "string", "minLength": 1 },
+        "openpyxl": { "type": "string", "minLength": 1 },
+        "celpy": { "type": "string", "minLength": 1 },
+        "z3": { "type": "string", "minLength": 1 }
+      }
+    },
+
+    "openItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "what", "openedAt", "ageDays"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "what": { "type": "string", "minLength": 1 },
+        "openedAt": { "type": "string", "minLength": 1 },
+        "ageDays": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}
