@@ -98,10 +98,54 @@ def all_predicates() -> tuple[Any, ...]:
 
 
 def population(*, restrict_to_kill_stage: bool = True) -> tuple[Any, ...]:
+    """The predicates a run evaluates. **33 of 348, and the restriction is the KILL STAGE.**
+
+    A predicate outside `kill_stage_ids()` never killed a mutant in the pinned campaign — it is
+    exactly the set G2 refused as `g2.no_kill`. Running only predicates that have demonstrated
+    they can catch something is the right rule, and it is why the liveness loop can replay a
+    stored kill case for every predicate in the run.
+
+    **What was wrong was not the restriction. It was the silence.** The 315 excluded predicates
+    bind 735 field-surface cells, and those cells were reported as
+    `no_predicate.not_yet_synthesised` — *nobody has written a check for this cell* — when a check
+    exists and was refused. `unchecked_reasons()` below supplies the true code.
+    """
     if not restrict_to_kill_stage:
         return all_predicates()
     ids = kill_stage_ids()
     return tuple(p for p in all_predicates() if p.id in ids)
+
+
+def unchecked_reasons(
+    predicates: Sequence[Any], schema: Any, cells: Sequence[str]
+) -> dict[str, Any]:
+    """cell -> `no_predicate.failed_qualification`, for cells a REFUSED candidate binds.
+
+    The map covers only cells bound by a harvested candidate that is not in the run population.
+    Every other unchecked cell keeps `not_yet_synthesised`, which for it is true: no candidate
+    binds it at all, because the workbook declares no constraint there that the harvest could read.
+
+    **This changes no state and no count.** Every cell here is `NO_PREDICATE` before and after, and
+    the settled fraction is identical — asserted by
+    `tests/unit/test_unchecked_reasons.py::test_reasons__the_settled_fraction_is_unchanged`.
+    """
+    from cdfc.predicates.ast_walker import bound_cells
+    from cdfc.verdict import ReasonCode
+
+    running = {p.id for p in predicates}
+    surface = set(cells)
+    out: dict[str, Any] = {}
+    for cand in fme_harvest().candidates:
+        if cand.id in running:
+            continue
+        try:
+            bound = bound_cells(cand, schema)
+        except (AttributeError, TypeError, ValueError):
+            continue
+        for cell in bound:
+            if cell in surface:
+                out[cell] = ReasonCode.NP_FAILED_QUALIFICATION
+    return out
 
 
 @lru_cache(maxsize=1)
@@ -152,4 +196,5 @@ def run_filing(
         surface_cells=list(cells),
         rt=rt,
         liveness=liveness_for(filing, predicates=preds, max_witnesses=max_witnesses),
+        unchecked_reasons=unchecked_reasons(preds, res.schema, list(cells)),
     )

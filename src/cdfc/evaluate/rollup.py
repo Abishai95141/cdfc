@@ -83,13 +83,34 @@ def roll_up(
     return top, winner.reason, settled_by, winner.scope_kind
 
 
-def materialise(cells: Sequence[str]) -> dict[str, RunCell]:
-    """Every field-surface cell, before evaluation, defaulting to `NO_PREDICATE`."""
+def materialise(
+    cells: Sequence[str],
+    *,
+    reasons: Mapping[str, ReasonCode] | None = None,
+) -> dict[str, RunCell]:
+    """Every field-surface cell, before evaluation, defaulting to `NO_PREDICATE`.
+
+    **`not_yet_synthesised` is the default and it was the ONLY value, which made it a lie for 735
+    cells.** That code says *nobody has written a check for this cell*. For a cell that a harvested
+    candidate binds — and which is unchecked because the kill gate REFUSED that candidate — the
+    true statement is `no_predicate.failed_qualification`, and the vocabulary has carried it since
+    P4 precisely for this case: `qualify/pipeline.py` records `cells_would_have_covered` on every
+    rejection expressly so the count can be attributed here.
+
+    The difference is not cosmetic. *Nobody wrote a check* is a gap in our authoring backlog. *A
+    check was written and refused for never catching anything* is a gap in the evidence — and it is
+    the one a reader of a coverage report needs, because it tells them the cell is unchecked for a
+    reason somebody already investigated.
+
+    `reasons` supplies the per-cell override. It changes NO state and NO count: every cell here is
+    `NO_PREDICATE` either way and the settled fraction is untouched.
+    """
+    override = dict(reasons or {})
     return {
         key: RunCell(
             stable_key=key,
             state=ItemState.NO_PREDICATE,
-            reason=ReasonCode.NP_NOT_YET_SYNTHESISED,
+            reason=override.get(key, ReasonCode.NP_NOT_YET_SYNTHESISED),
             settled_by=None,
             evaluations=(),
         )
@@ -130,6 +151,18 @@ def roll_up_run(
     for key in sorted(cells):
         evs = tuple(by_cell[key])
         state, reason, settled_by, scope_kind = roll_up(evs)
+        # THE MATERIALISED REASON SURVIVES AN EMPTY EVALUATION SET.
+        #
+        # `roll_up(())` returns the hard-coded `not_yet_synthesised`, which is the right default
+        # and the wrong answer when the caller already knows better — and it silently overwrote the
+        # reason `materialise` had just set, so supplying one had no effect at all. That is the
+        # shape this project keeps finding: a value computed upstream, discarded downstream, and
+        # nothing in between to notice.
+        #
+        # It is scoped tightly: ONLY when no predicate evaluated the cell, and ONLY over the reason.
+        # The state stays `NO_PREDICATE` and no count moves.
+        if not evs and cells[key].reason is not None:
+            reason = cells[key].reason
         out.append(
             replace(
                 cells[key],

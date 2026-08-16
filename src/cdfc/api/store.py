@@ -132,6 +132,28 @@ def unchecked_groups(run: StoredRun) -> tuple[dict[str, Any], ...]:
     breakdown is not in this artifact. The repair is upstream — persist the unevaluated cells with
     their reasons — and it is a change to `evaluate/run.write`, not to a default here.
     """
+    # THE MANIFEST NOW CARRIES IT, and this reads it rather than deriving it.
+    #
+    # `run.jsonl` is one line per EVALUATION, so the cells nothing evaluated leave no trace in it —
+    # which is why this function used to refuse. `evaluate/run.RunResult.unchecked_by_reason()`
+    # counts them at write time and puts the result in the header beside the closure, so the
+    # breakdown is a measurement the run took rather than one the API reconstructed.
+    header = run.header().get("uncheckedByReason")
+    total = unchecked_total(run)
+    if isinstance(header, dict) and header:
+        if sum(int(v) for v in header.values()) != total:
+            raise BreakdownNotInArtifact(
+                f"{run.run_id}: uncheckedByReason sums to "
+                f"{sum(int(v) for v in header.values())} and the closure counts {total}. A "
+                "breakdown that does not sum to its own total is worse than none: it looks "
+                "complete."
+            )
+        return tuple(
+            {"reasonCode": str(k), "count": int(v)} for k, v in sorted(header.items())
+        )
+
+    # An OLDER RUN, written before the field existed. Still refused rather than derived: the
+    # stream genuinely does not contain these cells, and the total alone is what can be served.
     from_stream: dict[str, int] = {}
     for r in run.records:
         if r.get("settles"):
@@ -139,14 +161,13 @@ def unchecked_groups(run: StoredRun) -> tuple[dict[str, Any], ...]:
         code = r.get("reason")
         if code:
             from_stream[str(code)] = from_stream.get(str(code), 0) + 1
-    total = run.closure().get("noPredicate", 0) + run.closure().get("indeterminate", 0) \
-        + run.closure().get("notRun", 0) + run.closure().get("error", 0)
     if sum(from_stream.values()) != total:
         raise BreakdownNotInArtifact(
-            f"{run.run_id}: the stream accounts for {sum(from_stream.values())} unsettled cells "
-            f"and the closure counts {total}. run.jsonl records only cells that were EVALUATED, "
-            "so the no-predicate set is absent from it. The total is served; the breakdown is not "
-            "invented."
+            f"{run.run_id}: the manifest carries no `uncheckedByReason`, and the stream accounts "
+            f"for {sum(from_stream.values())} unsettled cells against a closure of {total}. "
+            "run.jsonl records only cells that were EVALUATED, so the no-predicate set is absent "
+            "from it. The total is served; the breakdown is not invented. Re-run the filing to "
+            "produce a run that carries the breakdown."
         )
     return tuple({"reasonCode": k, "count": v} for k, v in sorted(from_stream.items()))
 

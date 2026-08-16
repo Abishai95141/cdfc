@@ -44,7 +44,13 @@ def test_unchecked__missing_remedy_raises(tmp_path: Path) -> None:
     empty.write_text("remedies: []\ndeliberately_unremediable: {}\n")
     with pytest.raises(MissingRemedy) as exc:
         build_unchecked_panel(_run(), path=empty)
-    assert "no_predicate.not_yet_synthesised" in str(exc.value)
+    # The reference run now groups under TWO codes, and the panel raises on whichever it reaches
+    # first — so this asserts membership of the pair rather than one literal. Pinning one code
+    # here would make the test depend on group ORDER, which is not what it is about.
+    assert any(
+        code in str(exc.value)
+        for code in ("no_predicate.failed_qualification", "no_predicate.not_yet_synthesised")
+    ), str(exc.value)
 
 
 def test_unchecked__wildcard_remedy_does_not_load() -> None:

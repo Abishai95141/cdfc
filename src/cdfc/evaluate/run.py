@@ -16,7 +16,7 @@ bytes. The run id is the digest of what went into it, not a timestamp.
 from __future__ import annotations
 
 import json
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -54,6 +54,24 @@ class RunResult:
     liveness: Any = None
     liveness_disposition: Any = None
 
+    def unchecked_by_reason(self) -> dict[str, int]:
+        """`{reason_code: n}` over every cell no predicate settled. **Counted, never defaulted.**
+
+        A cell that is unsettled and carries no reason at all is a defect rather than a category,
+        so it is counted under its own explicit key instead of being dropped — a breakdown that
+        silently omits what it could not classify is a breakdown that always sums to something
+        tidy and never to the total.
+        """
+        out: dict[str, int] = {}
+        for cell in self.cells:
+            if cell.settled_by is not None:
+                continue
+            if str(cell.state) in ("ItemState.PASS", "ItemState.FAIL", "PASS", "FAIL"):
+                continue
+            code = str(cell.reason) if cell.reason is not None else "UNCLASSIFIED_no_reason_recorded"
+            out[code] = out.get(code, 0) + 1
+        return dict(sorted(out.items()))
+
     def as_manifest(self) -> dict[str, Any]:
         return {
             "run_id": self.run_id,
@@ -66,6 +84,14 @@ class RunResult:
             "keys_preflighted": self.keys_checked,
             "keys_type_checked": self.keys_type_checked,
             "closure": None if self.partition is None else self.partition.as_row(),
+            # THE PER-REASON BREAKDOWN OF THE UNCHECKED SET, in the header where the closure is.
+            #
+            # `run.jsonl` is one line per EVALUATION, so a cell nothing evaluated leaves no trace
+            # in it — which is why `api/store.unchecked_groups` had to REFUSE to serve a breakdown
+            # rather than invent one. The counts live here instead of in the stream because the
+            # stream's byte order is what the attestation covers and what `cdfc verify` re-derives;
+            # adding rows to it would change a file whose identity is the claim.
+            "uncheckedByReason": self.unchecked_by_reason(),
             "livenessProof": None if self.liveness is None else self.liveness.as_liveness_proof(),
             "livenessFailureKind": (
                 None if self.liveness_disposition is None
@@ -105,6 +131,10 @@ def execute(
     surface_cells: Sequence[str],
     rt: CelRuntime | None = None,
     liveness: Any = None,
+    # Per-cell reason for cells NO predicate settles. Supplied by the caller because only the
+    # caller knows which candidates were harvested and which of them a gate refused; this module
+    # sees the admitted set and would otherwise have to say `not_yet_synthesised` for every one.
+    unchecked_reasons: Mapping[str, ReasonCode] | None = None,
 ) -> RunResult:
     import hashlib
 
@@ -152,7 +182,7 @@ def execute(
         if not disp.valid:
             causes.append(disp.cause)
 
-    table = materialise(surface_cells)
+    table = materialise(surface_cells, reasons=unchecked_reasons)
     cells = roll_up_run(table, checks)
 
     part: ClosurePartition | None = None

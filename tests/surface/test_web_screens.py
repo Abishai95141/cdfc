@@ -304,14 +304,23 @@ def test_web__every_screen_is_reachable_from_the_rail_or_from_a_screen() -> None
 
 
 @pytest.mark.skipif(not _HAVE, reason="no run on disk")
-def test_web__the_unchecked_screen_renders_the_gap_rather_than_an_empty_list() -> None:
-    """`groups: null` is not `[]`. An empty list reads as *every unchecked cell is accounted for
-    and none has a reason*, which is false."""
+def test_web__the_unchecked_screen_renders_the_real_breakdown() -> None:
+    """**The flagship screen, with the reasons on it.**
+
+    This asserted the screen rendered the *gap* — `groups: null` and the sentence explaining why
+    the breakdown could not be derived. That was the honest state and it is no longer the true one:
+    the run measures the breakdown, so the screen shows it. What must never appear is an empty
+    list, and the summing assertion in `test_api__unchecked_serves_the_breakdown…` is what stops it.
+    """
     _s, body, _h = _wsgi(f"/runs/{_RUN_IDS[0]}/unchecked")
     text = body.decode("utf-8")
-    assert "not derivable" in text
-    assert "not invented" in text
     assert "1,849" in text
+    assert "no_predicate.failed_qualification" in text
+    assert "no_predicate.not_yet_synthesised" in text
+    # Every group carries a remedy, and the two differ — the panel's own rule, on the page.
+    assert "what would make this checkable" in text
+    assert "declined to ship" in text          # the failed-qualification remedy
+    assert "five gates" in text                # the not-yet-synthesised remedy
 
 
 def test_web__the_library_says_the_two_populations_are_disjoint() -> None:

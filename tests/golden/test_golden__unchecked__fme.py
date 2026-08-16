@@ -40,14 +40,39 @@ def test_golden__unchecked_groups__fme() -> None:
         "which predates P8's harvest delta and the R2 repair; a movement here is a regression in "
         "coverage accounting, not a documentation drift."
     )
-    assert [g.reason_code for g in panel.groups] == ["no_predicate.not_yet_synthesised"], (
-        "the reference run groups under exactly one reason code. More than one would mean the run "
-        "changed; a different one would mean the grouping did."
+    # **TWO GROUPS, PINNED 422 / 1,427 — and the movement from one is a repair, not a drift.**
+    #
+    # This assertion read `== ["no_predicate.not_yet_synthesised"]` and said *more than one would
+    # mean the run changed*. The run did change, and the golden caught it, which is the whole job.
+    #
+    # The single code was WRONG for 422 of these cells. `not_yet_synthesised` says *nobody has
+    # written a check for this cell*; for a cell a harvested candidate binds — and which is
+    # unchecked because G2 REFUSED that candidate — the true code is `failed_qualification`, and
+    # `qualify/pipeline.py` has recorded `cells_would_have_covered` on every rejection since P4
+    # expressly so the count could be attributed here.
+    #
+    # **The total is unmoved and so is the settled fraction.** Every cell in both groups is
+    # `NO_PREDICATE` before and after; only the attribution changed.
+    assert [g.reason_code for g in panel.groups] == [
+        "no_predicate.failed_qualification",
+        "no_predicate.not_yet_synthesised",
+    ], (
+        "the reference run groups under exactly two reason codes, in this order. A third would "
+        "mean the run changed; a different one would mean the grouping did."
     )
-    g = panel.groups[0]
-    assert g.count == MEASURED == len(g.entries)
-    assert g.remedy.id == "R-NP-NOT-YET-SYNTHESISED"
-    assert "five gates" in g.remedy.text
+    counts = {g.reason_code: g.count for g in panel.groups}
+    assert counts == {
+        "no_predicate.failed_qualification": 422,
+        "no_predicate.not_yet_synthesised": 1427,
+    }
+    assert sum(counts.values()) == MEASURED
+    for g in panel.groups:
+        assert g.count == len(g.entries)
+    by_code = {g.reason_code: g for g in panel.groups}
+    assert by_code["no_predicate.not_yet_synthesised"].remedy.id == "R-NP-NOT-YET-SYNTHESISED"
+    assert "five gates" in by_code["no_predicate.not_yet_synthesised"].remedy.text
+    # The two remedies must DIFFER. Identical text would make the split cosmetic.
+    assert len({g.remedy.text for g in panel.groups}) == 2
 
     # The residue has not been measured against this predicate set. `None`, never `()`.
     assert panel.exhibits is None

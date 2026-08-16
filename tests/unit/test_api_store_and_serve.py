@@ -81,19 +81,46 @@ def test_store__the_fraction_is_read_not_recomputed(run_id: str) -> None:
     assert f["inScope"] == c["inScope"]
 
 
-def test_store__refuses_to_invent_a_reason_code(run_id: str) -> None:
-    """**The breakdown is declared absent, never fabricated.**
+def test_store__serves_the_breakdown_the_RUN_measured(run_id: str) -> None:
+    """**The gap is closed at the source, not by the API learning to derive one.**
 
-    `run.jsonl` records only cells that were EVALUATED, so the no-predicate set is not in it. The
-    first version of this store defaulted a null reason to `NO_PREDICATE` — a code that is not in
-    the closed thirty-member vocabulary. An invented code on the wire is worse than no breakdown:
-    a client renders it beside real ones and nobody downstream can tell them apart.
+    This used to assert `pytest.raises(BreakdownNotInArtifact)`, and the refusal was right: the
+    per-reason breakdown genuinely was not in the artifact, because `run.jsonl` is one line per
+    EVALUATION and a cell nothing evaluated leaves no trace in it.
+
+    The run now COUNTS the breakdown at write time and puts it in the manifest beside the closure,
+    so this reads a measurement rather than reconstructing one. The refusal path is still tested,
+    below, against an artifact that lacks the field.
     """
     run = store.load(run_id, runs_dir=RUNS)
+    groups = store.unchecked_groups(run)
+    assert groups, "the breakdown is empty; the run did not measure it"
+    assert sum(g["count"] for g in groups) == store.unchecked_total(run)
+    from cdfc.verdict import ReasonCode
+
+    known = {str(getattr(r, "value", r)) for r in ReasonCode}
+    for g in groups:
+        assert g["reasonCode"] in known, f"{g['reasonCode']!r} is not one of the thirty"
+
+
+def test_store__still_refuses_to_invent_a_reason_code(run_id: str) -> None:
+    """**THE CONTROL, kept.** An artifact without the field gets a refusal, not a reconstruction.
+
+    The first version of this store defaulted a null reason to `NO_PREDICATE` — a code that is not
+    in the closed thirty-member vocabulary. An invented code on the wire is worse than no
+    breakdown: a client renders it beside real ones and nobody downstream can tell them apart. A
+    run written before `uncheckedByReason` existed must still get the refusal.
+    """
+    import dataclasses
+
+    run = store.load(run_id, runs_dir=RUNS)
+    older = dataclasses.replace(
+        run, manifest={k: v for k, v in run.manifest.items() if k != "uncheckedByReason"}
+    )
     with pytest.raises(store.BreakdownNotInArtifact):
-        store.unchecked_groups(run)
+        store.unchecked_groups(older)
     # The TOTAL is a real measurement and is still served.
-    assert store.unchecked_total(run) > 0
+    assert store.unchecked_total(older) > 0
 
 
 def test_store__an_absent_run_raises_rather_than_returning_empty() -> None:
@@ -122,12 +149,24 @@ def test_api__run_endpoint_returns_all_six_counts(run_id: str) -> None:
     assert frac["admissionState"] and frac["denominatorWarning"]
 
 
-def test_api__unchecked_declares_the_gap_rather_than_serving_an_empty_list(run_id: str) -> None:
-    """`groups: null` — NOT `[]`, which reads as *every cell accounted for, none has a reason*."""
+def test_api__unchecked_serves_the_breakdown_with_a_distinct_remedy_per_group(
+    run_id: str,
+) -> None:
+    """The panel that is the product. **`groups: null` was the honest answer and is no longer the
+    true one** — the run measures the breakdown now, so the endpoint serves it.
+
+    `groups: []` would still be forbidden and is not reachable: an empty list reads as *every
+    unchecked cell is accounted for and none has a reason*, and the summing assertion below would
+    fail before anybody could ship it.
+    """
     body = dispatch(Request("GET", f"/v1/runs/{run_id}/unchecked")).json()
     assert body["total"] > 0
-    assert body["groups"] is None
-    assert "not invented" in body["breakdownUnavailable"]
+    assert body["groups"], "an empty list reads as 'no cell has a reason', which is false"
+    assert body["breakdownUnavailable"] is None
+    assert sum(g["count"] for g in body["groups"]) == body["total"]
+    # NO FALLBACK REMEDY. A generic one makes a panel of reasons into one sentence repeated, and
+    # it looks exactly like a panel that thought about each group.
+    assert len({g["remedy"] for g in body["groups"]}) == len(body["groups"])
 
 
 def test_api__cells_declares_its_cap(run_id: str) -> None:
