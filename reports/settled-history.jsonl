@@ -1,0 +1,2 @@
+{"admission": "PRE-GATE", "at": "2026-08-13", "cause": null, "fieldSurface": 3747, "runId": "f5eb385a8888c55b", "settled": 1898}
+{"admission": "PRE-GATE", "at": "2026-08-16", "cause": "template 7d9a19600857 \u2192 a1ea1afcfce3: n_1_introduction_d3 changed, 9 predicates moved to PROVISIONAL and stopped settling. They still run and still report findings.", "fieldSurface": 3747, "runId": null, "settled": 1862}

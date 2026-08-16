@@ -13,7 +13,8 @@ export PYTHONPATH := $(CURDIR)/src
 .PHONY: all lint licence greps contract unit property golden differential nc-sweep \
         determinism perf mutation-pr e2e nightly demo corpus-verify measure-foundation gates \
         harvest cel-conformance host-fn-mutation predicate-schema verify \
-        gen-contract instruments evaluator-arm1 p3-reproduction ceiling runnability relation-attrition
+        gen-contract instruments evaluator-arm1 p3-reproduction ceiling runnability relation-attrition \
+        fixture-fy2029 history
 
 all: lint licence greps corpus-verify contract unit golden determinism negative gates
 
@@ -121,6 +122,11 @@ verify: lint licence build-tool-licence barrier5 greps corpus-verify
 	$(PY) tools/host_fn_mutation.py
 	$(PY) tools/cel_conformance.py
 	$(PY) -m cdfc.cli run fixtures/synthetic/clean__independently-computed__fme-q1.xlsx --out reports/runs
+	# The churn artifacts, for the same reason: `reports/settled-history.jsonl` and
+	# `reports/churn/*.json` back three screens, and a fresh clone that lacks them would SKIP
+	# their tests rather than fail — which is a green suite reporting that a chart can step down
+	# without once asking it to.
+	$(MAKE) history
 	CDFC_REQUIRE_RUN=1 $(PY) -m pytest tests -q
 	$(PY) tools/nc_sweep.py
 	$(PY) tools/gate_liveness.py
@@ -170,6 +176,18 @@ proviso-markers:
 
 attrition:
 	$(PY) tools/measure/p7_attrition.py
+
+# --- P15-B2 --------------------------------------------------------------------------
+# The churn fixture, and the demonstration that the settled fraction CAN FALL (criterion A8).
+# `history` needs a run on disk and the fixture; it produces `reports/settled-history.jsonl`
+# and `reports/churn/fy2029-30.json`, which are what `/v1/settled-fraction/history` and
+# `/v1/churn` serve. Neither endpoint recomputes: an API that re-derives a verdict is an API
+# that can disagree with the artifact the attestation covers.
+fixture-fy2029:
+	$(PY) tools/fixtures/build_fy2029.py
+
+history: fixture-fy2029
+	$(PY) tools/measure/settled_history.py
 
 # --- P8 ------------------------------------------------------------------------------
 ffr:

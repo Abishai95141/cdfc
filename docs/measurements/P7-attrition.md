@@ -8,7 +8,10 @@ produced 348 since P4-B4 — see `docs/HARVEST-DELTA.md`).
 ## The funnel
 
 **Stage one renders FOUR integers and `skipped` is never counted as a survivor**, whatever
-its value. `entered == skipped + rejected + survived` at every stage.
+its value. `entered == skipped + rejected + survived` at every stage, and that identity is
+now ASSERTED by the object this table is rendered from rather than by the arithmetic in
+the renderer — the previous form computed `survived = entered - rejected` and reported
+`skipped` beside it without subtracting it, which closes only while `skipped` is zero.
 
 | gate | entered | skipped | rejected | survived |
 |---|---:|---:|---:|---:|

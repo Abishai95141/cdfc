@@ -320,21 +320,19 @@ def _register_bullet() -> list[str]:
 
 
 def _gcorpus(corpus) -> tuple[str, str]:
-    """The trichotomy. **Leaving the middle branch unnamed meant shipping it was an undetected
-    pass**, so it is named and it renders."""
-    if corpus.n_non_synthetic >= 30:
-        return ("PASS", "Every predicate class may be admitted and `BLOCKING` is reachable.")
-    if corpus.n >= 30:
-        return (
-            "RESTRICTED",
-            f"`n = {corpus.n}` but `n_non_synthetic = {corpus.n_non_synthetic}`: the corpus is "
-            "`TEMPLATE-COMPUTED`. Admit only the classes it licenses under P8-B2's mapping table — "
-            "**all classes, because `derived_by=FOREIGN_ENGINE` makes the oracle independent** — "
-            "and **cap every tier at `ADVISORY`**. This literal string renders on every FFR-bearing "
-            "surface. It was the old FAIL branch's unnamed fallback, and leaving it unnamed meant "
-            "shipping it looked like a pass.",
-        )
-    return ("FAIL", "No predicate is admitted; every FFR renders `uninformative`.")
+    """The trichotomy, **now decided in `src/` and not here.**
+
+    It used to be implemented in this file. A rule that licenses whether any digit may appear on an
+    FFR-bearing surface cannot live in a measurement script: every other surface that needs it then
+    re-implements it or quotes a remembered string, and `cdfc.qualify.corpus.gcorpus` is where the
+    predicate library and the attrition funnel now read it from. This wrapper stays so the rendered
+    document is unchanged.
+    """
+    from cdfc.qualify.corpus.gcorpus import decide
+
+    g = decide(corpus.n, corpus.n_non_synthetic,
+               provenance=corpus.provenance.value, derived_by=corpus.derived_by.value)
+    return (g.outcome, g.detail)
 
 
 def _render_severity() -> str:

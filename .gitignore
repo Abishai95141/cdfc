@@ -18,6 +18,17 @@ reports/*
 !reports/campaigns/*/*.json
 !reports/campaigns/*/*.jsonl
 reports/campaigns/_work/
+# The qualification artifact IS the predicate library, the rejected-candidate list and the
+# attrition funnel. Three screens read it and `cdfc.qualify.artifact.load` RAISES when it is
+# absent rather than serving an empty library — so leaving it ignored would make a fresh clone
+# refuse three screens rather than pass them vacuously. Committed for the same reason the
+# campaign reports are: it is evidence, and it is what the published numbers are read from.
+!reports/qualification/
+!reports/qualification/*.json
+# The settled-fraction series, for the same reason: it is the evidence for criterion A8 — the
+# number CAN go down — and a chart with no points is indistinguishable from a chart that has
+# never fallen.
+!reports/settled-history.jsonl
 blobs/
 *.db
 __pycache__/

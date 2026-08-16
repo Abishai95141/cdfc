@@ -10,7 +10,7 @@ import json
 from pathlib import Path
 from typing import Any, Final
 
-from cdfc.api import store
+from cdfc.api import registry_store, store
 from cdfc.api.schemas import TemplateOut, json_schema
 
 REPORTS: Final[Path] = Path("reports/runs")
@@ -225,25 +225,128 @@ def post_verify(req, params):
     return _json(200, {"reproduced": False, "diff": ["no published report to verify against"]})
 
 
+def _artifact_or_503():
+    """The qualification artifact, or the refusal. **Never a `200 []`.**
+
+    `200 []` says *the gates ran and admitted nobody* — true today, and the single most interesting
+    fact this product knows about itself. An absent artifact says *nobody ran the gates*. They
+    render identically to a reader and mean opposite things, so the second is a 503 carrying the
+    command that fixes it rather than an empty list carrying the first's meaning.
+    """
+    from cdfc.qualify.artifact import ArtifactNotOnDisk, ArtifactSchemaMismatch
+
+    try:
+        return registry_store.load(), None
+    except (ArtifactNotOnDisk, ArtifactSchemaMismatch) as e:
+        return None, _err(503, "qualification_not_measured", str(e), remedy="make attrition")
+
+
 def get_predicates(req, params):
-    return _json(200, [])
+    """The ADMITTED predicate library, and the context that stops its emptiness being misread."""
+    art, refusal = _artifact_or_503()
+    if refusal is not None:
+        return refusal
+    return _json(200, {
+        "rows": list(registry_store.library_rows(art)),
+        **registry_store.library_context(art),
+    })
 
 
 def get_predicate_version(req, params):
-    return _err(404, "no_such_predicate", "not in the registry")
+    art, refusal = _artifact_or_503()
+    if refusal is not None:
+        return refusal
+    pid, ver = params.get("id", ""), params.get("v", "")
+    for row in registry_store.library_rows(art):
+        if row.get("predicateId") == pid and str(row.get("version")) == str(ver):
+            return _json(200, row)
+    return _err(404, "no_such_predicate",
+                f"{pid} v{ver} is not in the admitted registry. {len(art.rejections)} candidates "
+                "were refused at qualification; see GET /v1/rejections.")
 
 
 def get_rejections(req, params):
-    return _json(200, [])
+    """**Every candidate a gate refused, with the number that decided it.**
+
+    This is the screen that proves the gate is real, so the cap is generous and visible and the
+    filters are the three axes the gates actually partition on.
+    """
+    art, refusal = _artifact_or_503()
+    if refusal is not None:
+        return refusal
+    rows = registry_store.rejected_rows(
+        art, gate=req.query.get("gate"), reason=req.query.get("reason"), q=req.query.get("q"),
+    )
+    try:
+        cap = min(int(req.query.get("limit", registry_store.REJECTION_PAGE)),
+                  registry_store.REJECTION_PAGE)
+    except ValueError:
+        cap = registry_store.REJECTION_PAGE
+    try:
+        offset = max(int(req.query.get("offset", 0)), 0)
+    except ValueError:
+        offset = 0
+    window = rows[offset:offset + cap]
+    return _json(200, {
+        "returned": len(window), "total": len(rows), "offset": offset,
+        "totalUnfiltered": len(art.rejections),
+        "rows": list(window),
+        "facets": registry_store.facets(art),
+        "killBar": art.kill_bar, "campaignId": art.campaign_id,
+        "faultModelVersion": art.fault_model_version,
+        "instrumentLabel": art.instrument_label,
+    })
 
 
 def get_registry_roots(req, params):
-    return _json(200, [])
+    art, refusal = _artifact_or_503()
+    if refusal is not None:
+        return refusal
+    return _json(200, list(registry_store.registry_roots(art)))
+
+
+def get_funnel(req, params):
+    """The five-gate attrition funnel. **Three integers per stage, and `ran: false` is a fourth
+    state** — a gate that did not execute made no determination about anybody."""
+    art, refusal = _artifact_or_503()
+    if refusal is not None:
+        return refusal
+    return _json(200, {
+        "stages": list(registry_store.funnel_stages(art)),
+        "obligationCoverage": registry_store.obligation_pair(art),
+        "corpus": {"outcome": art.corpus_outcome, "census": art.corpus_census},
+        "campaignId": art.campaign_id,
+        "faultModelVersion": art.fault_model_version,
+        "qualifiedAt": art.qualified_at,
+        "ceilingNote": art.ceiling_note,
+    })
+
+
+def get_churn(req, params):
+    """The template-bump sweep. **`stillRunning` is the field that proves detection was kept.**
+
+    A predicate that moved to `PROVISIONAL` keeps running and keeps reporting findings; only its
+    claim to have SETTLED a cell is withdrawn. The wrong implementation — stop running it — lowers
+    the number by exactly the same amount, so the two are indistinguishable on a chart and are told
+    apart only by this field.
+    """
+    try:
+        return _json(200, registry_store.churn())
+    except registry_store.ChurnNotSwept as e:
+        return _err(503, "churn_not_swept", str(e), remedy="make history")
 
 
 def get_history(req, params):
     """The series **must be able to step down**, so nothing here sorts, clamps or smooths it."""
-    return _json(200, [])
+    try:
+        return _json(200, list(registry_store.history()))
+    except registry_store.HistoryNotMeasured as e:
+        return _err(503, "history_not_measured", str(e), remedy="make history")
+    except Exception as e:  # noqa: BLE001
+        # `UnlabelledStepDown` reaches here. It is a 500 and it SHOULD be: a decrease with no cause
+        # is a defect in the series, and serving the other points while dropping that one would
+        # hide exactly the point the chart exists for.
+        return _err(500, "history_invalid", f"{type(e).__name__}: {e}")
 
 
 def get_portfolio(req, params):

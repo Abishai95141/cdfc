@@ -24,8 +24,9 @@ from cdfc.predicates.harvest import harvest  # noqa: E402
 from cdfc.predicates.host_fns import default_registry  # noqa: E402
 from cdfc.predicates.obligations import generate_template_obligations  # noqa: E402
 from cdfc.predicates.registry import Registry, UNSIGNED, batch_manifest_sha256  # noqa: E402
-from cdfc.qualify import g0_scope, g1_binds, g2_kill, g3_degeneracy, ilp  # noqa: E402
+from cdfc.qualify import artifact, g0_scope, g1_binds, g2_kill, g3_degeneracy, ilp  # noqa: E402
 from cdfc.qualify.baselines.build import build as build_baselines  # noqa: E402
+from cdfc.qualify.corpus import gcorpus  # noqa: E402
 from cdfc.qualify.campaign_store import assert_predicate_set  # noqa: E402
 from cdfc.qualify.campaign_store import load as load_campaign  # noqa: E402
 from cdfc.qualify.domain import load as load_domain  # noqa: E402
@@ -34,6 +35,7 @@ from cdfc.qualify.pipeline import Admission, QualificationContext, qualify  # no
 from cdfc.qualify.provisos import recall as marker_recall  # noqa: E402
 from cdfc.qualify.result import GATE_ORDER, GateId  # noqa: E402
 from cdfc.qualify.template_instrument import emit  # noqa: E402
+from cdfc.surface.library import instrument_label  # noqa: E402
 
 FME = REPO / "fixtures/prescribed/Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx"
 CLEAN = REPO / "fixtures/synthetic/clean__independently-computed__fme-q1.xlsx"
@@ -116,12 +118,153 @@ def main() -> int:
     sel = ilp.select(admitted, subsumes=g3_degeneracy.subsumes,
                      cells_of={c.id: len(_cells(c, r.schema)) for c in admitted})
 
+    # ONE COMPUTATION, TWO RENDERINGS. The stages are built once, as validated objects, and both
+    # the markdown table and the served JSON are projections of them. Two renderers reading one
+    # object cannot disagree about a number; two renderers each doing their own arithmetic can, and
+    # the one that drifts is the one nobody is reading.
+    stages = _stages(r, results)
+    art = _artifact(r, obligations, stored, results, reg, stages)
+    written = art.write(REPO / artifact.ARTIFACT_PATH)
+
     OUT.write_text(_render(r, obligations, stored, baselines, invariants, results, admitted,
-                           rejections, reg, sel, spurious), encoding="utf-8")
+                           rejections, reg, sel, spurious, stages), encoding="utf-8")
     print(f"wrote {OUT.relative_to(REPO)}")
+    print(f"wrote {written.relative_to(REPO)}")
     print(f"  entered {len(r.candidates)}  admitted {len(admitted)}  rejected {len(rejections)}")
     print(f"  registry root {reg.root()[:16]}…  unsigned {reg.unsigned_count()}/{len(reg.rows())}")
     return 0
+
+
+def _stages(r, results) -> tuple[artifact.Stage, ...]:
+    """The funnel, as validated `Stage` objects.
+
+    **`survived` subtracts `skipped`.** The previous form computed `survivors - rejected` and
+    reported `skipped` in its own column without removing it, so `entered == skipped + survived +
+    rejected` held only while `skipped` was zero — which it is in this campaign, which is why the
+    published table looked right. `surface.funnel.FunnelStage` refuses that arithmetic, and the
+    `Stage` constructor puts the refusal in the path of every future campaign where a gate does
+    start declaring itself inapplicable.
+    """
+    entering = len(r.candidates)
+    out: list[artifact.Stage] = [
+        artifact.Stage(name=artifact.GENERATED, entered=entering, skipped=0,
+                       survived=entering, rejected=0, ran=True),
+    ]
+    remaining = list(results)
+    for gate in GATE_ORDER:
+        ran = any(o.gate is gate for _c, res in remaining for o in res.record.outcomes)
+        if not ran:
+            out.append(artifact.Stage(name=gate.value, entered=entering, skipped=0, survived=0,
+                                      rejected=0, ran=False))
+            continue
+        rejected_here = [(c, res) for c, res in remaining
+                         if not isinstance(res, Admission) and res.row.rejecting_gate is gate]
+        skipped_here = sum(
+            1 for _c, res in remaining
+            if any(o.gate is gate and o.skipped is not None for o in res.record.outcomes)
+        )
+        reasons = Counter(res.record.rejecting.reason for _c, res in rejected_here)
+        out.append(artifact.Stage(
+            name=gate.value, entered=entering, skipped=skipped_here,
+            survived=entering - skipped_here - len(rejected_here),
+            rejected=len(rejected_here), ran=True, reasons=dict(sorted(reasons.items())),
+        ))
+        entering -= len(rejected_here)
+        remaining = [(c, res) for c, res in remaining
+                     if isinstance(res, Admission) or res.row.rejecting_gate is not gate]
+    return tuple(out)
+
+
+def _artifact(r, obligations, stored, results, reg, stages) -> artifact.QualificationArtifact:
+    """The served form. **The library is what was ADMITTED; the rejections are what was refused.**
+
+    Today the library is empty and the rejection list has every candidate in it. That is not a gap
+    in this function: `D-P4-01` fixes four predicate states and `REJECTED` is not one of them, so a
+    refused candidate never acquires a predicate id and can never be a library row. The empty
+    library is the measurement.
+    """
+    remedies = {**g0_scope.REMEDY, **g1_binds.REMEDY, **g2_kill.REMEDY}
+    rejections = []
+    for c, res in results:
+        if isinstance(res, Admission):
+            continue
+        o = res.record.rejecting
+        rejections.append(artifact.Rejection(
+            candidate_id=c.id, candidate_sha256=res.row.candidate_sha256,
+            obligation_id=res.row.obligation_id, gate=res.row.rejecting_gate.value,
+            reason=o.reason or "", measured=dict(o.measured),
+            cells_would_have_covered=res.row.cells_would_have_covered,
+            harvest_class=r.class_of.get(c.id, ""),
+            remedy=remedies.get(o.reason or "", ""),
+        ))
+
+    library = []
+    for c, res in results:
+        if not isinstance(res, Admission):
+            continue
+        g2 = res.record.by_gate().get("G2")
+        library.append({
+            "predicateId": c.id,
+            "version": getattr(c, "version", 1),
+            "clauseQuote": getattr(c, "clause_quote", "") or "",
+            "clauseEid": getattr(c, "clause_eid", None),
+            "celSource": getattr(c, "expr", ""),
+            "harvestClass": r.class_of.get(c.id, ""),
+            "krClaimed": (g2.measured.get("kr_claimed") if g2 else None),
+            "krAllClasses": (g2.measured.get("kr_all_classes") if g2 else None),
+            "claimsFaultClasses": list((g2.measured.get("claimed_classes") if g2 else ()) or ()),
+            "flagEverythingWouldHaveScored": (g2.measured.get("flag_everything") if g2 else None),
+            "instrumentLabel": instrument_label(REPO / "ci/GATES.md"),
+            "state": "ACTIVE",
+        })
+
+    g = gcorpus.load(REPO / gcorpus.CORPUS_MANIFEST)
+    s, t, n = obligations.coverage_pair(r.candidates)
+    return artifact.QualificationArtifact(
+        schema_version=artifact.SCHEMA_VERSION,
+        qualified_at=QUALIFIED_AT,
+        campaign_id=stored.campaign.campaign_id,
+        fault_model_version=stored.campaign.fault_model_version,
+        kill_bar=g2_kill.KillBar.EXPERIMENT.name,
+        instrument_label=instrument_label(REPO / "ci/GATES.md"),
+        corpus_outcome=g.outcome, corpus_census=g.census,
+        registry_root=reg.root(), registry_rows=len(reg.rows()),
+        registry_unsigned=reg.unsigned_count(), registry_signer=UNSIGNED,
+        obligation_statute=s, obligation_template=t, obligation_total=n,
+        stages=stages, rejections=tuple(rejections), library=tuple(library),
+        predicates_that_produced_runs=_predicates_in_runs(),
+        ceiling_note=(
+            "Every admission this repository can currently issue is an EXPERIMENT admission. No "
+            "false-failure rate has been measured for any predicate under a corpus that licenses "
+            f"one: G-CORPUS is {g.outcome}, and G4 has not been executed in this campaign."
+        ),
+    )
+
+
+def _predicates_in_runs() -> int:
+    """**The number the predicate library must state about itself.**
+
+    Runs bind harvested candidates directly, under `PRE-GATE`. So a library reading *0 admitted*
+    beside a report reading *1,898 settled* invites exactly one inference — that the settled count
+    came from admitted predicates — and it did not. This counts the distinct predicates that
+    actually produced settled cells, so the library can say the two populations are disjoint
+    instead of leaving a reader to assume they are the same.
+    """
+    runs = REPO / "reports/runs"
+    if not runs.is_dir():
+        return 0
+    seen: set[str] = set()
+    for d in sorted(runs.iterdir()):
+        stream = d / "run.jsonl"
+        if not stream.is_file():
+            continue
+        for line in stream.read_text(encoding="utf-8").splitlines():
+            if not line.strip():
+                continue
+            pid = json.loads(line).get("predicate_id")
+            if pid:
+                seen.add(str(pid))
+    return len(seen)
 
 
 def _digest(c):
@@ -169,31 +312,17 @@ def _clean_values(path):
 
 
 def _render(r, obligations, stored, baselines, invariants, results, admitted, rejections,
-            reg, sel, spurious) -> str:
+            reg, sel, spurious, stages) -> str:
     entered = len(r.candidates)
-    per_stage: dict[str, Counter] = {g.value: Counter() for g in GATE_ORDER}
-    survivors = entered
-    stage_rows = []
-    remaining = list(results)
-    for gate in GATE_ORDER:
-        ran = any(o.gate is gate for _c, res in remaining for o in res.record.outcomes)
-        if not ran:
-            # G4 IS NOT RUN AT P7 AND THE ROW SAYS SO. Rendering it as `entered N / survived N`
-            # would report a stage that passed everything, which is the vacuous pass wearing a
-            # funnel row.
-            stage_rows.append((gate.value, survivors, "NOT RUN", "NOT RUN", "NOT RUN"))
-            continue
-        rejected_here = [(c, res) for c, res in remaining
-                         if not isinstance(res, Admission) and res.row.rejecting_gate is gate]
-        skipped_here = sum(
-            1 for c, res in remaining
-            if any(o.gate is gate and o.skipped is not None for o in res.record.outcomes)
-        )
-        for c, res in rejected_here:
-            per_stage[gate.value][res.record.rejecting.reason] += 1
-        stage_rows.append((gate.value, survivors, skipped_here, len(rejected_here),
-                           survivors - len(rejected_here)))
-        survivors -= len(rejected_here)
+    # READ FROM THE VALIDATED STAGES, never recomputed here. This table and the served funnel are
+    # the same objects rendered twice.
+    per_stage: dict[str, dict[str, int]] = {s.name: s.reasons for s in stages}
+    stage_rows = [
+        (st.name, st.entered, "NOT RUN" if not st.ran else st.skipped,
+         "NOT RUN" if not st.ran else st.rejected,
+         "NOT RUN" if not st.ran else st.survived)
+        for st in stages if st.name != artifact.GENERATED
+    ]
 
     s, t, n = obligations.coverage_pair(r.candidates)
     tot = stored.campaign.totals
@@ -210,7 +339,10 @@ def _render(r, obligations, stored, baselines, invariants, results, admitted, re
         "## The funnel",
         "",
         "**Stage one renders FOUR integers and `skipped` is never counted as a survivor**, whatever",
-        "its value. `entered == skipped + rejected + survived` at every stage.",
+        "its value. `entered == skipped + rejected + survived` at every stage, and that identity is",
+        "now ASSERTED by the object this table is rendered from rather than by the arithmetic in",
+        "the renderer — the previous form computed `survived = entered - rejected` and reported",
+        "`skipped` beside it without subtracting it, which closes only while `skipped` is zero.",
         "",
         "| gate | entered | skipped | rejected | survived |",
         "|---|---:|---:|---:|---:|",
@@ -233,9 +365,9 @@ def _render(r, obligations, stored, baselines, invariants, results, admitted, re
     ]
     remedies = {**g0_scope.REMEDY, **g1_binds.REMEDY, **g2_kill.REMEDY}
     for gate in GATE_ORDER:
-        for reason, k in sorted(per_stage[gate.value].items()):
+        for reason, k in sorted(per_stage.get(gate.value, {}).items()):
             L.append(f"| `{gate.value}` | `{reason}` | {k} | {remedies.get(reason, '—')} |")
-    if not any(per_stage[g.value] for g in GATE_ORDER):
+    if not any(per_stage.get(g.value) for g in GATE_ORDER):
         L.append("| — | *no rejection* | 0 | — |")
 
     L += [
