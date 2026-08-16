@@ -1,8 +1,32 @@
 # docs/FRONTEND-SCOPE.md — everything the frontend must contain
 
-**Written 16 August 2026.** The backend surfaces exist; this is the specification of what is built
-on top of them. It is written so that a frontend engineer who has never read the plan can build the
-whole product from this file plus `GET /v1/openapi.json`.
+**Written 16 August 2026. BUILT 16 August 2026** — every screen below is server-rendered in
+`src/cdfc/surface/web/` and asserted in `tests/surface/test_web_screens.py`. The §1 status column
+records what shipped; the rules and component contracts are unchanged and are what the tests check.
+
+## THE CSP DECISION, taken 16 August 2026
+
+§10.7 required `default-src 'none'` with **no `script-src`**, which is what makes *"no script
+reached this page"* enforceable rather than a claim. A real interactive product needs a script. The
+resolution is **per-route policy**, and it is a narrowing rather than a loosening:
+
+| routes | policy |
+|---|---|
+| `/v1/runs/{id}/report.html` and all of `/v1/*` | `default-src 'none'`, **no `script-src` at all** |
+| the twelve screens | `default-src 'none'; script-src 'self'` — one same-origin file, no `unsafe-inline`, no `unsafe-eval`, no host in any directive |
+
+The old header was applied to every response *because every response was static*, and a blanket
+header says nothing about what is IN any of them.
+`test_web__the_report_route_forbids_script_in_the_header_AND_in_the_bytes` now checks the policy on
+the attested artifact **and** greps its served bytes for `<script`, which the blanket header never
+did. `test_web__csp_is_chosen_by_prefix_so_a_new_api_route_cannot_get_the_looser_one` walks both
+route tables rather than sampling two paths.
+
+**Server-rendered, and the script is an enhancement.** Every count, row, reason and fraction is in
+the HTML before any script runs, and every screen — including all three POST flows — works with
+scripting off. The script adds drag-and-drop with real upload progress, copy buttons on digests, a
+hover readout on the history chart, and a busy state on submit. It adds no data and computes no
+fraction.
 
 ---
 
@@ -31,18 +55,19 @@ Use the tokens; do not add colours.
 
 | # | Screen | Route | Serves from | Status |
 |---|---|---|---|---|
-| S-1 | Drop | `/` | `cdfc.surface.drop.drop_page` | **BUILT** (server-rendered) |
-| S-2 | Run report | `/runs/{id}` | `GET /v1/runs/{id}` + `report.html` | report BUILT; interactive view NOT |
-| S-3 | Unchecked panel | `/runs/{id}/unchecked` | `GET /v1/runs/{id}/unchecked` | API BUILT; screen NOT |
-| S-4 | Cell explorer | `/runs/{id}/cells` | `GET /v1/runs/{id}/cells` | API BUILT; screen NOT |
-| S-5 | Portfolio | `/portfolio` | `GET /v1/portfolio` | API BUILT; screen NOT |
-| S-6 | Predicate library | `/predicates` | `GET /v1/predicates` | **BLOCKED** — handler returns `[]` |
-| S-7 | Rejected candidates | `/rejections` | `GET /v1/rejections` | **BLOCKED** — handler returns `[]` |
-| S-8 | Attrition funnel | `/funnel` | not yet an endpoint | **BLOCKED** |
-| S-9 | Settled-fraction history | `/history` | `GET /v1/settled-fraction/history` | **BLOCKED** — returns `[]` |
-| S-10 | Template admission | `/templates` | `GET`/`POST /v1/templates` | partially built |
-| S-11 | Verify a published report | `/verify` | `POST /v1/verify` | stub |
-| S-12 | Open items | `/open-items` | `docs/OPEN-ITEMS.md` via the report | rendered in report only |
+| S-1 | Drop | `/` (GET + POST) | `POST /v1/filings` | **BUILT** — all four refusal states render as pages |
+| S-2 | Run report | `/runs/{id}` | `GET /v1/runs/{id}` | **BUILT** — and `cdfc run` now renders `report.html`, which nothing called before |
+| S-3 | Unchecked panel | `/runs/{id}/unchecked` | `GET /v1/runs/{id}/unchecked` | **BUILT** — `groups: null` renders as the declared gap |
+| S-4 | Cell explorer | `/runs/{id}/cells` | `GET /v1/runs/{id}/cells` | **BUILT** — filters + a visible cap |
+| S-5 | Portfolio | `/portfolio` | `GET /v1/portfolio` | **BUILT** — the coverage figure renders as *not computable* |
+| S-6 | Predicate library | `/predicates` | `GET /v1/predicates` | **BUILT** — 0 admitted, and the screen says why |
+| S-7 | Rejected candidates | `/rejections` | `GET /v1/rejections` | **BUILT** — 348 rows, each with the number that decided it |
+| S-8 | Attrition funnel | `/funnel` | `GET /v1/funnel` (new) | **BUILT** — four stage states, `NOT RUN` distinct |
+| S-9 | Settled-fraction history | `/history` | `GET /v1/settled-fraction/history` | **BUILT** — and it steps down, 1,898 → 1,862 |
+| — | Template churn | `/churn` | `GET /v1/churn` (new) | **BUILT** — which predicates stopped settling, and why each moved |
+| S-10 | Template admission | `/templates` (GET + POST) | `GET`/`POST /v1/templates` | **BUILT** — stops at T7 and says so |
+| S-11 | Verify a published report | `/verify` (GET + POST) | `POST /v1/verify` | **BUILT** — the comparison is over bytes |
+| S-12 | Open items | `/open-items` | `docs/OPEN-ITEMS.md` | **BUILT** |
 
 ---
 
@@ -271,19 +296,27 @@ STATUTE count alone reads as *nothing is covered*; a TEMPLATE count alone reads 
 
 ---
 
-## §11 — Build order, and what unblocks each
+## §11 — What was found while building it
 
-| Order | Screen | Blocked on |
-|---|---|---|
-| 1 | S-2 run report (interactive) | nothing — `/v1/runs/{id}` is live |
-| 2 | S-3 unchecked | nothing — handle `breakdownUnavailable` |
-| 3 | S-4 cells | nothing |
-| 4 | S-5 portfolio | nothing |
-| 5 | S-10 templates | `POST /v1/templates` completion |
-| 6 | S-6 library · S-7 rejections · S-8 funnel | **registry-backed handlers** (`library_rows`, `rejected_rows`) — not yet written |
-| 7 | S-9 history | `reports/settled-history.jsonl` + P15-B2 churn, which is what makes it step down |
-| 8 | S-11 verify | `POST /v1/verify` completion |
+Five defects, and none of them was in the specification above.
 
-**Screens 6–8 are the ones nobody else in this category has.** They are also the last to unblock,
-because they require the qualification data to be exposed rather than merely computed. Build 1–5
-first; they are the product working end to end.
+1. **The report renderer had no caller.** `cdfc.surface.render.render_report` has existed since
+   P14-B1 and nothing in the pipeline invoked it, so no run on disk carried a `report.html`,
+   `GET /v1/runs/{id}/report.html` was a permanent 404, and *Download the report* was a control
+   that could not work. A renderer with no caller passes its own unit tests and has never once run
+   on a real artifact. `cdfc run` now renders it beside the run.
+2. **The whole test suite had never run.** `tests/negative/test_nc_model_free.py` did
+   `from negative.importgraph import …`, which pytest cannot resolve without `tests/` on the path —
+   a **collection error**, which aborts the run rather than failing a test. `make verify` reached
+   zero assertions. Fixed with `pythonpath = ["src", "tests"]`, which then exposed three more
+   failures that had been hidden behind the abort.
+3. **The funnel's stage arithmetic did not close in general** — `survived` was computed without
+   subtracting `skipped`, which holds only while `skipped` is zero.
+4. **A regex over OOXML** in the churn sweep. `ci/no-regex-over-xml.sh` caught it, and the pattern
+   was genuinely wrong: it required `name` before `r:id` in document order.
+5. **The two hatched band segments vanished at zero**, so the band could reach its own far edge —
+   the one thing it must never do.
+
+And two of the five rules went red on this file's own sibling: `ci/no-green-tick.sh` and
+`ci/no-bare-rate.sh` both refused `components.py` for naming banned tokens **in a docstring
+explaining the rule**. The gates were right; the prose moved.

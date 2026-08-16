@@ -36,7 +36,6 @@ narrowed later; a sweep that is precise and wrong cannot be detected at all.
 from __future__ import annotations
 
 import json
-import re
 import zipfile
 from dataclasses import dataclass
 from pathlib import Path
@@ -49,8 +48,15 @@ GRANULARITY: Final[str] = (
     "nonetheless wrong about a valid filing."
 )
 
-_REL_RE: Final[re.Pattern[str]] = re.compile(r'Id="(rId\d+)"[^>]*Target="([^"]+)"')
-_SHEET_RE: Final[re.Pattern[str]] = re.compile(r'<sheet[^>]*name="([^"]+)"[^>]*r:id="(rId\d+)"')
+# OOXML NAMESPACES. The parts below are PARSED, never pattern-matched: `ci/no-regex-over-xml.sh`
+# refuses a regular expression over this format, and it went red on the first draft of this module,
+# which read the sheet names with `<sheet[^>]*name="([^"]+)"`. The gate is right and the pattern was
+# wrong: a sheet whose `name` attribute follows `r:id` in document order does not match at all, and
+# the failure is a SILENTLY SHORTER sheet map — every predicate reading the unmatched sheet then
+# survives a template bump that changed it.
+_MAIN: Final[str] = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+_PKG_REL: Final[str] = "http://schemas.openxmlformats.org/package/2006/relationships"
+_DOC_REL: Final[str] = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
 
 
 class ChurnArithmeticError(AssertionError):
@@ -58,14 +64,25 @@ class ChurnArithmeticError(AssertionError):
 
 
 def _part_to_sheet(path: Path) -> dict[str, str]:
-    """`xl/worksheets/sheetN.xml` -> the sheet's display name, via the workbook relationships."""
+    """`xl/worksheets/sheetN.xml` -> the sheet's display name, via the workbook relationships.
+
+    Both parts are parsed with `cdfc.ingest.xmlsafe`, which is the reader every other path in this
+    repository uses for OOXML — and which resolves entities safely, unlike a pattern.
+    """
+    from cdfc.ingest.xmlsafe import fromstring
+
     with zipfile.ZipFile(path) as z:
-        rels = dict(_REL_RE.findall(z.read("xl/_rels/workbook.xml.rels").decode("utf-8")))
-        book = z.read("xl/workbook.xml").decode("utf-8")
+        rels_root = fromstring(z.read("xl/_rels/workbook.xml.rels"))
+        book_root = fromstring(z.read("xl/workbook.xml"))
+    rels = {
+        el.get("Id") or "": el.get("Target") or ""
+        for el in rels_root.iter(f"{{{_PKG_REL}}}Relationship")
+    }
     out: dict[str, str] = {}
-    for name, rid in _SHEET_RE.findall(book):
-        target = rels.get(rid, "")
-        if target:
+    for el in book_root.iter(f"{{{_MAIN}}}sheet"):
+        target = rels.get(el.get(f"{{{_DOC_REL}}}id") or "", "")
+        name = el.get("name")
+        if target and name:
             out["xl/" + target.lstrip("/")] = name
     return out
 

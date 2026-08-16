@@ -227,6 +227,7 @@ def _artifact(r, obligations, stored, results, reg, stages) -> artifact.Qualific
         fault_model_version=stored.campaign.fault_model_version,
         kill_bar=g2_kill.KillBar.EXPERIMENT.name,
         instrument_label=instrument_label(REPO / "ci/GATES.md"),
+        instrument_arms=_arms(),
         corpus_outcome=g.outcome, corpus_census=g.census,
         registry_root=reg.root(), registry_rows=len(reg.rows()),
         registry_unsigned=reg.unsigned_count(), registry_signer=UNSIGNED,
@@ -238,6 +239,25 @@ def _artifact(r, obligations, stored, results, reg, stages) -> artifact.Qualific
             "false-failure rate has been measured for any predicate under a corpus that licenses "
             f"one: G-CORPUS is {g.outcome}, and G4 has not been executed in this campaign."
         ),
+    )
+
+
+def _arms() -> tuple[dict, ...]:
+    """G-EVAL's arms, with independence **computed from the oracle's author, never declared.**
+
+    `ci/GATES.md` does not carry the string `NOT INDEPENDENT`, so `instrument_label()` returns
+    `None` — which means *the registry does not say*, not *it is independent*. The registry is
+    silent because the independence is not a registry entry at all: it is a consequence of
+    `ARM2.oracle_author` being The Document Foundation rather than this project, and
+    `cdfc.measure.geval` is where that is decided. Reading the arms puts the real answer on the
+    screen instead of leaving a reader with the absence.
+    """
+    from cdfc.measure.geval import ARMS
+
+    return tuple(
+        {"n": a.n, "name": a.name, "oracle": a.oracle, "oracleAuthor": a.oracle_author,
+         "independence": a.independence, "finds": a.finds, "blindTo": a.blind_to}
+        for a in ARMS
     )
 
 

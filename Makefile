@@ -14,7 +14,7 @@ export PYTHONPATH := $(CURDIR)/src
         determinism perf mutation-pr e2e nightly demo corpus-verify measure-foundation gates \
         harvest cel-conformance host-fn-mutation predicate-schema verify \
         gen-contract instruments evaluator-arm1 p3-reproduction ceiling runnability relation-attrition \
-        fixture-fy2029 history
+        fixture-fy2029 history serve
 
 all: lint licence greps corpus-verify contract unit golden determinism negative gates
 
@@ -183,6 +183,11 @@ attrition:
 # and `reports/churn/fy2029-30.json`, which are what `/v1/settled-fraction/history` and
 # `/v1/churn` serve. Neither endpoint recomputes: an API that re-derives a verdict is an API
 # that can disagree with the artifact the attestation covers.
+# The product, running. Loopback by default: a coverage tool that listens on 0.0.0.0 the first
+# time somebody runs it is a coverage tool that ends up on a network nobody meant to put it on.
+serve:
+	$(PY) -m cdfc.cli serve
+
 fixture-fy2029:
 	$(PY) tools/fixtures/build_fy2029.py
 

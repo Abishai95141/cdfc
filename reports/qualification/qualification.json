@@ -84,6 +84,26 @@
    "survived": 0
   }
  ],
+ "instrumentArms": [
+  {
+   "blindTo": "a workbook whose cached values are constant. FME caches 301 zeros and 204 copies of 'NA', so a null evaluator scores 505 of 505 here — which is why arm 2 exists",
+   "finds": "our evaluator disagreeing with the engine that produced the published file",
+   "independence": "INDEPENDENT",
+   "n": 1,
+   "name": "the regulator's own cached values",
+   "oracle": "the `<v>` elements the regulator shipped inside the blank",
+   "oracleAuthor": "IFSCA (the regulator, via whichever engine wrote the workbook)"
+  },
+  {
+   "blindTo": "a defect in the regulator's own formula. A foreign engine reads the same formula text we do, so it agrees with us about a formula that is wrong. Arm 2 green says nothing about '1. Introduction'!D17 under-counting two of the nine scheme types",
+   "finds": "our evaluator computing a different value from an implementation that shares no code and no author with it",
+   "independence": "INDEPENDENT",
+   "n": 2,
+   "name": "a foreign engine, cell for cell",
+   "oracle": "LibreOffice Calc, recalculating the same workbook",
+   "oracleAuthor": "The Document Foundation"
+  }
+ ],
  "instrumentLabel": null,
  "killBar": "EXPERIMENT",
  "library": [],
@@ -18038,5 +18058,5 @@
    "remedy": "the predicate fired on no observable mutant of any class it claims; either the claim is wrong or the check is"
   }
  ],
- "schemaVersion": 1
+ "schemaVersion": 2
 }

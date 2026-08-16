@@ -41,7 +41,7 @@ from cdfc.surface.funnel import RejectionRow as SurfaceRejectionRow
 
 ARTIFACT_PATH: Final[Path] = Path("reports/qualification/qualification.json")
 
-SCHEMA_VERSION: Final[int] = 1
+SCHEMA_VERSION: Final[int] = 2
 
 # The generated stage that precedes every gate. Not a gate; a census of what entered.
 GENERATED: Final[str] = "generated"
@@ -149,6 +149,11 @@ class QualificationArtifact:
     fault_model_version: str
     kill_bar: str
     instrument_label: str | None
+    # G-EVAL's two arms, with each one's COMPUTED independence and — the field that earns its
+    # place — what each arm is blind to even when it is green. Every kill rate in this programme
+    # rests on *our evaluator reproduces the regulator's own values*, and a screen that shows the
+    # rates without saying what the instrument cannot see is showing half a measurement.
+    instrument_arms: tuple[dict[str, Any], ...]
     corpus_outcome: str
     corpus_census: dict[str, int]
     registry_root: str
@@ -179,6 +184,7 @@ class QualificationArtifact:
             "faultModelVersion": self.fault_model_version,
             "killBar": self.kill_bar,
             "instrumentLabel": self.instrument_label,
+            "instrumentArms": list(self.instrument_arms),
             "corpus": {"outcome": self.corpus_outcome, "census": self.corpus_census},
             "registry": {
                 "root": self.registry_root, "rows": self.registry_rows,
@@ -232,6 +238,7 @@ def from_wire(w: dict[str, Any]) -> QualificationArtifact:
         fault_model_version=w["faultModelVersion"],
         kill_bar=w["killBar"],
         instrument_label=w["instrumentLabel"],
+        instrument_arms=tuple(w["instrumentArms"]),
         corpus_outcome=w["corpus"]["outcome"],
         corpus_census=w["corpus"]["census"],
         registry_root=w["registry"]["root"],

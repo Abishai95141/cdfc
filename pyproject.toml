@@ -57,6 +57,19 @@ markers = [
   "linux_only: collected only in the Linux CI image (R7)",
 ]
 testpaths = ["tests"]
+# `tests/` ON THE PATH, and it is a repair rather than a convenience.
+#
+# `tests/negative/test_nc_model_free.py` does `from negative.importgraph import ...`. With pytest's
+# default prepend import mode and no `__init__.py` under `tests/`, the directory pytest inserts is
+# `tests/negative` — so the package `negative` does not exist and the module fails to IMPORT.
+# A collection error is not a failing test: pytest aborts the whole run, so `make verify` could not
+# reach a single assertion, and the model-free guard that P13-B0 exists to enforce had never run
+# inside a full-suite invocation.
+#
+# `src` is here for the same reason: the suite should not depend on the caller remembering to
+# export `PYTHONPATH`, which is exactly the fresh-clone friction the Makefile's interpreter
+# discovery was written to remove.
+pythonpath = ["src", "tests"]
 
 [tool.ruff]
 line-length = 100

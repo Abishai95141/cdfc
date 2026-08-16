@@ -44,8 +44,13 @@ def test_nc__D02b_the_paths_do_not_share_a_module() -> None:
     names path A in prose to explain why it must not import it. A grep over prose is a
     shallow proxy for an import.
     """
-    sys.path.insert(0, str(REPO / "tests" / "negative"))
-    from importgraph import import_closure
+    # `cdfc.importgraph`, NOT `tests/negative/importgraph.py`. The two are different walkers with
+    # different signatures: the one in `tests/negative/` was rewritten for P13-B0 to take an
+    # explicit `src` root and to treat a non-literal `importlib` argument as a hard error, and
+    # these call sites kept passing the old single-argument form. The whole suite never reported
+    # it, because `test_nc_model_free.py` failed to IMPORT and pytest aborted collection before
+    # any of it ran — a collection error is not a failing test, it is no tests.
+    from cdfc.importgraph import import_closure
 
     closure_b = import_closure("cdfc.schema.styles_mask_b")
     assert "cdfc.schema.styles_mask" not in closure_b, (
@@ -146,8 +151,13 @@ def test_nc__D08_the_denominator_is_not_derived_from_any_predicate() -> None:
     """The defect committed twice in one afternoon: a denominator built out of the
     numerator. Assert structurally that the mask's import closure never reaches the
     predicate package."""
-    sys.path.insert(0, str(REPO / "tests" / "negative"))
-    from importgraph import import_closure
+    # `cdfc.importgraph`, NOT `tests/negative/importgraph.py`. The two are different walkers with
+    # different signatures: the one in `tests/negative/` was rewritten for P13-B0 to take an
+    # explicit `src` root and to treat a non-literal `importlib` argument as a hard error, and
+    # these call sites kept passing the old single-argument form. The whole suite never reported
+    # it, because `test_nc_model_free.py` failed to IMPORT and pytest aborted collection before
+    # any of it ran — a collection error is not a failing test, it is no tests.
+    from cdfc.importgraph import import_closure
 
     for mod in ("cdfc.schema.styles_mask", "cdfc.schema.styles_mask_b"):
         closure = import_closure(mod)

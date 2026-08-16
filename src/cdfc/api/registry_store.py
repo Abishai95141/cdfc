@@ -67,6 +67,7 @@ def library_context(art: artifact.QualificationArtifact) -> dict[str, Any]:
         ),
         "corpus": {"outcome": art.corpus_outcome, "census": art.corpus_census},
         "instrumentLabel": art.instrument_label,
+        "instrumentArms": list(art.instrument_arms),
         "killBar": art.kill_bar,
         "campaignId": art.campaign_id,
         "faultModelVersion": art.fault_model_version,

@@ -227,7 +227,36 @@ def _run(args: argparse.Namespace) -> int:
     print("\n  This states what was checked and what was not. It does not state that the")
     print("  filing is correct.")
     print(f"\n  wrote {target}")
+    _render_report(result, target)
     return 0
+
+
+def _render_report(result: object, target: "Path") -> None:
+    """The self-contained `report.html`, beside the run. **P14-B1's renderer had no caller.**
+
+    `render_report` has existed since P14-B1 and nothing in the pipeline invoked it, so no run on
+    disk carried a report — which made `GET /v1/runs/{id}/report.html` a permanent 404 and the
+    surface's *Download the report* a control that could not work. A renderer with no caller is a
+    feature that passes its own unit tests and has never once run on a real artifact.
+
+    It is rendered here rather than on request for the reason `api/handlers.get_report` states: the
+    attestation covers the FILE, and a served page re-rendered per request is a second artifact
+    with the same name.
+
+    **A failure to render does not fail the run.** The coverage declaration is already on disk and
+    already printed; losing it because a document would not render would be the tail wagging the
+    dog. The failure is reported in full, and it is loud.
+    """
+    from cdfc.surface.render import render_report
+
+    try:
+        art = render_report(result, out=target / "report.html")
+    except Exception as e:  # noqa: BLE001 — see the docstring; reported, never swallowed
+        print(f"\n  REPORT NOT RENDERED: {type(e).__name__}: {e}", file=sys.stderr)
+        print("  The run itself is on disk and its counts are above. The downloadable report is "
+              "absent, and absent is what every surface will say.", file=sys.stderr)
+        return
+    print(f"  wrote {art.path}  ({art.n_bytes:,} bytes, sha256 {art.sha256[:16]}…)")
 
 
 def _print_liveness(result: object) -> None:

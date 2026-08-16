@@ -75,10 +75,23 @@ def test_nc__CI02_openpyxl_warning_is_an_error() -> None:
     assert FME.exists(), f"the evidence base is missing: {FME}"
     import openpyxl
 
-    with warnings.catch_warnings():
+    # **THE HANDLE IS OPEN WHEN THE WARNING FIRES.** The previous form passed a path and carried
+    # the comment *"raises before it can return a handle"* — an assumption, and it is false:
+    # openpyxl opens the container, then warns while parsing worksheets, so under
+    # `simplefilter("error")` the exception is raised with the zip already open and the
+    # half-built workbook unreachable. The descriptor then dangled until the garbage collector
+    # ran, which under this repo's `filterwarnings = ["error"]` raised a `ResourceWarning` at
+    # whatever line happened to be executing — failing `test_nc__P01` in `test_nc_ingest.py`, a
+    # module that closes everything it opens. That is the "flaky P01" this repo has chased twice.
+    #
+    # Passing an OPEN FILE OBJECT makes the handle ours, so `finally` closes it on the raising
+    # path too. This is the THIRD instance of the shape — `reader_openpyxl.py` and
+    # `template_instrument.py` both carry the same comment — which is why the structural guard
+    # now scans `tests/` as well as `src/`.
+    with FME.open("rb") as fh, warnings.catch_warnings():
         warnings.simplefilter("error")
         with pytest.raises(UserWarning, match="[Dd]ata ?[Vv]alidation"):
-            openpyxl.load_workbook(FME)  # raises before it can return a handle
+            openpyxl.load_workbook(fh)
 
 
 def test_nc__CI02b_the_warning_is_real_not_a_test_artifact() -> None:

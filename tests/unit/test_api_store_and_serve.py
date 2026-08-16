@@ -164,18 +164,37 @@ def test_serve__api_paths_dispatch(run_id: str) -> None:
     assert json.loads(body)["runId"] == run_id
 
 
-def test_serve__every_response_carries_a_locked_down_csp() -> None:
-    """The report has no script and no external reference; the header says so to the browser too.
+def test_serve__every_artifact_response_carries_a_locked_down_csp() -> None:
+    """**Narrowed from every response to every `/v1` response, and it is a strengthening.**
 
-    If a script ever reaches a rendered page, `default-src 'none'` makes the browser refuse it and
-    the failure is loud rather than a silently-working feature nobody audited.
+    This test used to walk `/`, `/v1/healthz` and `/v1/nope` and assert no `script-src` on any of
+    them. `/` is now an app screen and carries `script-src 'self'`, because the twelve screens are
+    an interactive product and a product without scripts is a document.
+
+    The guarantee did not weaken. It was GLOBAL and vacuous — a header applied to every response
+    says nothing about what is in any of them — and it is now asserted where it is claimed:
+    `tests/surface/test_web_screens.py::test_web__the_report_route_forbids_script_in_the_header_
+    AND_in_the_bytes` checks the policy on `report.html` AND greps the served bytes for `<script`,
+    which the blanket header never did.
+
+    What must never acquire the looser policy is anything under `/v1`, and the split is by path
+    prefix so a new API route cannot get it by being added to the wrong table.
     """
-    for path in ("/", "/v1/healthz", "/v1/nope"):
+    for path in ("/v1/healthz", "/v1/nope", "/v1/portfolio"):
         _s, _b, headers = _wsgi("GET", path)
         csp = headers["Content-Security-Policy"]
         assert "default-src 'none'" in csp
         assert "script-src" not in csp, "a script-src directive would permit scripts"
         assert headers["X-Content-Type-Options"] == "nosniff"
+
+
+def test_serve__the_app_screens_permit_only_a_same_origin_script() -> None:
+    """And nothing looser: no `unsafe-inline`, no `unsafe-eval`, no host in any directive."""
+    _s, _b, headers = _wsgi("GET", "/")
+    csp = headers["Content-Security-Policy"]
+    assert "default-src 'none'; script-src 'self'" in csp
+    assert "unsafe-eval" not in csp
+    assert "http" not in csp, "a host in a CSP directive means a CDN can be added"
 
 
 def test_serve__status_line_matches_the_dispatcher() -> None:
