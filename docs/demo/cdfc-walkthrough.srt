@@ -1,0 +1,91 @@
+1
+00:00:00,000 --> 00:00:03,400
+cdfc — Every checker tells you what it found.
+
+2
+00:00:03,660 --> 00:00:07,860
+One control. No strict mode, no sheet selector, no skip-empty-rows box.
+
+3
+00:00:08,060 --> 00:00:13,260
+Every setting here would change what gets checked — without changing what the report says was checked.
+
+4
+00:00:14,400 --> 00:00:20,000
+The declaration. Two numbers, the same size, the same weight, the same ink.
+
+5
+00:00:20,200 --> 00:00:25,400
+The moment one is bigger, the reader has been told which matters — and it would be the one nobody checked.
+
+6
+00:00:26,360 --> 00:00:30,960
+The coverage band never fills. The two hatched terms carry no digit, because neither has been measured.
+
+7
+00:00:31,920 --> 00:00:37,720
+Is 3,747 the whole form? No — and a denominator that will not say what it excluded is a coverage lie.
+
+8
+00:00:39,700 --> 00:00:46,100
+505 cells the template computes. 2,505 a filer cannot write. 3,747 left, and that is the denominator.
+
+9
+00:00:46,560 --> 00:00:51,560
+This page is the product. It is not an appendix and it does not live behind a tab.
+
+10
+00:00:52,520 --> 00:00:58,520
+422 cells have a check that the kill gate refused. 1,427 have no candidate at all. Different gaps.
+
+11
+00:00:59,480 --> 00:01:04,680
+Each group carries its own remedy naming the gate that would move it. There is no fallback string.
+
+12
+00:01:06,580 --> 00:01:11,980
+348 candidate checks refused, every row carrying the number that refused it.
+
+13
+00:01:12,940 --> 00:01:17,940
+A rejection without the number that decided it is an opinion with a gate name on it.
+
+14
+00:01:19,840 --> 00:01:25,040
+Gate order. Everything survives G0, G1 and G3-proof. Everything dies at G2, the kill gate.
+
+15
+00:01:26,000 --> 00:01:31,600
+The last two stages say NOT RUN — not "passed everyone". A gate that never ran decided nothing.
+
+16
+00:01:33,500 --> 00:01:39,300
+29 predicates produced the settled count. 0 are admitted through the five gates.
+
+17
+00:01:40,260 --> 00:01:45,260
+Disjoint populations — so the screen says so, rather than leaving a reader to assume.
+
+18
+00:01:47,160 --> 00:01:52,360
+A coverage number that can only rise is a marketing chart. This one fell.
+
+19
+00:01:53,320 --> 00:01:58,920
+1,898 to 1,862 after a template change, and the cause travels with the fall.
+
+20
+00:02:00,820 --> 00:02:06,620
+Nine predicates stopped settling. They did not stop running — detection was not lost.
+
+21
+00:02:08,600 --> 00:02:15,600
+Five seeded defects. All five detected — but only one surfaces as a finding.
+
+22
+00:02:15,800 --> 00:02:20,800
+What it does not claim — It does not read the regulation — 0 of 348 predicates implement a statutory clause.
+
+23
+00:02:20,800 --> 00:02:25,000
+It tells you what it did not check. — This states what was checked and what was not.

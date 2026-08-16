@@ -52,3 +52,7 @@ reports/demo/raw/
 !reports/demo/
 reports/demo/*
 !reports/demo/*.srt
+
+# Vendored JS. `ci/no-bare-rate.sh` also excludes it at the walk — a gate that reports on a
+# dependency's own documentation produces a failure nobody here can act on.
+node_modules/

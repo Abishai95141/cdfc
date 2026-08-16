@@ -50,6 +50,13 @@ for root in ROOTS:
         print(f"GATE FAIL: {root} does not exist; a scan over it would report success", file=sys.stderr)
         sys.exit(1)
     for f in sorted(p.rglob("*")):
+        # VENDORED CODE IS NOT A SURFACE OF THIS PROJECT. `tools/demo/node_modules/` carries a
+        # dependency's own documentation, and this gate went red on a CSS `translateX(-50%)`
+        # inside it. That failure is unactionable — nobody here wrote the line and nobody here may
+        # edit it — and the only ways out are an exemption list, which is how gates get hollowed,
+        # or excluding third-party trees at the walk, which is the correct scope all along.
+        if any(part in ("node_modules", "__pycache__", ".venv", "site-packages") for part in f.parts):
+            continue
         if f.suffix not in (".py", ".md", ".json", ".jsonl", ".txt") or not f.is_file():
             continue
         for i, line in enumerate(f.read_text(encoding="utf-8", errors="replace").splitlines(), 1):
