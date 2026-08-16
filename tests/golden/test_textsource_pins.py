@@ -98,10 +98,19 @@ def test_golden__the_committed_corpus_matches_a_fresh_build(fme):
     assert stored.text == fme.text
 
 
-def test_golden__the_manifest_declares_the_statutory_corpus_empty():
-    """D-P7-01. The absence is a field with a value, not a section nobody wrote."""
+def test_golden__the_manifest_declares_the_statutory_corpus():
+    """S1, 16 Aug 2026. **This assertion was inverted, and the inversion is the point.**
+
+    Until S1 this read `statute_instruments == []` and pinned `statute_absent_reason`, because
+    D-P7-01 recorded that no statutory instrument existed and that the absence had to be a field
+    with a value rather than a section nobody wrote. The instrument is now pinned, so the same
+    discipline applies in the other direction: the presence is asserted, its count is asserted,
+    and `statute_absent_reason` must now be EMPTY. A stale absence reason beside a present statute
+    would let a reader conclude the corpus is still empty from a field nobody updated.
+    """
     m = json.loads((REPO / CORPUS / "MANIFEST.json").read_text(encoding="utf-8"))
-    assert m["statute_instruments"] == []
-    assert "No statutory instrument is pinned" in m["statute_absent_reason"]
-    assert {i["kind"] for i in m["instruments"]} == {"TEMPLATE"}
-    assert len(m["instruments"]) == 9
+    assert m["statute_instruments"] == ["statute-fm-regulations-2025"]
+    assert m["statute_absent_reason"] == ""
+    assert {i["kind"] for i in m["instruments"]} == {"TEMPLATE", "STATUTE"}
+    assert len(m["instruments"]) == 10
+    assert sum(1 for i in m["instruments"] if i["kind"] == "TEMPLATE") == 9

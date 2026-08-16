@@ -49,10 +49,15 @@ ADDED_LIVE_AT_P12 = set(range(99, 108))  # docs/GATE-CHANGES.md, 15 Aug 2026
 # browser; the browser halves are recorded NOT RUN rather than passed. Row 112 guards the gate's own
 # denominator against M1.
 ADDED_LIVE_AT_P14 = set(range(108, 116))  # docs/GATE-CHANGES.md, 15 Aug 2026 (B1 108-112, B2 113-115)
+# S1, 16 Aug 2026. Row 116 guards the EXTRACTION PARTIES that build a STATUTE instrument. It
+# exists because `ci/licence-denylist.sh` (row 11) resolves the RUNTIME set and never sees a
+# build-time tool, and the best-scoring PDF arm was AGPL-3.0 -- a denied licence entering through
+# a door the gate does not watch. Argument in docs/GATE-CHANGES.md.
+ADDED_LIVE_AT_P13 = {116}
 LIVE_EXPECTED = (LIVE_AT_P0 | ADDED_LIVE_AT_P4 | ADDED_LIVE_AT_P5 | ADDED_LIVE_AT_P6
                  | ADDED_LIVE_AT_P7 | ADDED_LIVE_AT_P8 | ADDED_LIVE_AT_P9
                  | ADDED_LIVE_AT_P10 | ADDED_LIVE_AT_P11 | ADDED_LIVE_AT_P12
-                 | ADDED_LIVE_AT_P14
+                 | ADDED_LIVE_AT_P13 | ADDED_LIVE_AT_P14
                  | PROMOTED_AT_P6)
 PENDING_AT_P0 = {14, 15, 16}
 # The PENDING set SHRINKS as subjects ship, and a row may only leave it into LIVE — never the

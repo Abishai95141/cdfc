@@ -12,6 +12,15 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+# BUILD-TIME ONLY. Nothing in `src/` imports these: the pinned `corpus/instruments/*.text.json` is
+# what the system reads, and adding three PDF parsers to the runtime closure of a package whose
+# claim is a small auditable verdict path would be the wrong trade. `pymupdf` is deliberately
+# ABSENT -- AGPL-3.0, denied by ci/licence-denylist.sh, and it was the arm that scored best.
+# Guarded by ci/no-denied-build-tool.sh (registry row 116).
+pdf = [
+  "pdfplumber==0.11.10",
+  "pypdfium2==5.13.0",
+]
 dev = [
   "pytest==8.3.4",
   "hypothesis==6.122.3",

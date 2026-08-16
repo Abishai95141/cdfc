@@ -296,3 +296,26 @@ at construction is refused by `Draw.__post_init__`, so `draw()` raised and *ever
 including the positive control. That the invariant catches the constructional form is a real
 property; the injector now attacks the **reporting** path instead, which is the version that would
 survive review.
+
+## Row 116 added LIVE — 16 August 2026, at S1
+
+**`ci/no-denied-build-tool.sh` — no extraction party carries a denied licence.**
+
+S1 pinned the first `kind: STATUTE` instrument, which required PDF extractors. Those are
+**build-time** tools: nothing in `src/` imports them, and the pinned `*.text.json` is what the
+system reads. `ci/licence-denylist.sh` (row 11) resolves the **runtime** set, so it never looked at
+them.
+
+`pymupdf` is `Dual Licensed - GNU AFFERO GPL 3.0 or Artifex commercial`. `AGPL-3.0` is on row 11's
+own `DENY` list. **It passed row 11 by not being looked at**, and it was the arm that agreed best —
+1,217 of 1,219 units against the shipped pair's 1,189 of 1,218.
+
+The exception was not taken. The arm was dropped, at a measured cost of 27 units of accuracy, and
+this row was written so the next one cannot enter the same way.
+
+**Observed red 16 August 2026** by setting `PARTIES = ("pdfplumber", "pymupdf")` in
+`tools/pin_statute.py`; the gate named `pymupdf` and both denied tokens. Restored, green.
+
+The row is checked against the DECLARED `PARTIES`, not against what happens to be installed — a
+gate that only fires when the tool is present passes on every clean CI image, which is exactly
+where a pinned instrument gets rebuilt.

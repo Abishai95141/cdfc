@@ -78,3 +78,47 @@ softened: the harness is general, the *evidence* is over templates.
 
 Related: `docs/measurements/P7-textsource.md` · `src/cdfc/qualify/instruments.py` ·
 `docs/decisions/D-P7-02-three-corroboration-states.md`
+
+---
+
+## CLOSED — 16 August 2026, at S1
+
+The three requirements this document set out are met, and the numbers it predicted have moved.
+
+| requirement | how it was met |
+|---|---|
+| a pinned PDF, sha256 in the manifest, terms recorded | `corpus/instruments/fm-regulations-2025.pdf`, `f136c7be…`, 2,909,841 bytes. Terms are in `docs/CORPUS-PROVENANCE.md` and they are recorded as **NOT ESTABLISHED FROM THE PUBLISHER** — the disclaimer page was fetched and read and contains no reproduction statement. A licence was not invented to fill the cell |
+| **two independent extractors, not one library in two modes** | `pdfplumber` (pdfminer.six, pure Python) and `pypdfium2` (PDFium, Google's C++ engine). Both EXTERNAL — unlike the template arm, where one party was ours |
+| a `kind: STATUTE` row | `statute-fm-regulations-2025`, 1,218 units, `MANIFEST.json` now carries 10 instruments and `statute_instruments` is no longer empty |
+
+**What the drop-in point cost.** This document said closing it "stays cheap" because
+`textsource.build` does not know what produced an `Extraction`. That held: no line of
+`g0_scope.py` changed, and no line of `textsource.py` changed. What was not cheap was deciding
+*what a unit is* — see `docs/measurements/S1-instrument-agreement.md`.
+
+**The caveat this document raised is NOT retired.** It said the harness is proven on
+line-structured instruments and that "the first statutory instrument pinned here will need its
+segmentation measured before its agreement rate means anything." It was measured: page-level
+equality gives 4/196 and sentence-level gives 97.62%, because a single spurious space disputes
+4,400 characters at page granularity and one sentence at sentence granularity. **The granularity
+was the finding.** The segmenter is `cdfc.experiment.enumerate_shall.sentences`, imported rather
+than reimplemented, so a unit boundary cannot disagree with an obligation boundary.
+
+**Two things this build found that this document did not anticipate.**
+
+1. **The artifact is bilingual** — Gazette pages 1–142 are Hindi, 143–196 English, and the running
+   header's language alternates with page parity *independently of the content*. Nothing would
+   have failed: `enumerate_shall` finds no `shall` in Devanagari, so the pool would have been the
+   English half **by accident**. The exclusion is declared and counted instead.
+2. **A denylisted licence entered through a door the gate does not watch.** `pymupdf` agreed at
+   99.84%, the best of four arms, and is `AGPL-3.0` — denied by `ci/licence-denylist.sh`, which
+   resolves the RUNTIME set and never sees a build-time tool. Dropping it cost real accuracy: 28
+   disputed units instead of 1. `ci/no-denied-build-tool.sh` (registry row 116) is the repair, and
+   the cost is published rather than absorbed.
+
+**What has NOT changed.** `predicates_with_a_STATUTE_obligation` is still `0 / 280` today — but
+now for the reason the plan originally expected, *no harvested predicate cites a statute yet*,
+rather than the stricter one this document recorded. **P13's clause layer now has an input.**
+
+Related: `docs/measurements/S1-instrument-agreement.md` · `docs/CORPUS-PROVENANCE.md` ·
+`tools/pdf_arms.py` · `tools/pin_statute.py` · `tests/unit/test_statute_instrument.py`

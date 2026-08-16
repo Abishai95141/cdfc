@@ -233,3 +233,8 @@ report:
 		from cdfc.measure.p10_run import run_filing; from cdfc.measure.p5_run import TEMPLATE_COMPUTED; \
 		a = render_report(run_filing(TEMPLATE_COMPUTED)); \
 		print(f'  {a.path}  {a.n_bytes:,} bytes  sha256 {a.sha256[:16]}')"
+
+.PHONY: statute
+statute:  ## rebuild the STATUTE instrument from the pinned PDF (needs .[pdf])
+	./ci/no-denied-build-tool.sh
+	$(PY) tools/pin_statute.py

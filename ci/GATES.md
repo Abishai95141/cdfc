@@ -389,3 +389,19 @@ residue of exactly zero is a finding rather than good news.
 | 113 | shell | `ci/no-imported-prior.sh` — an imported prior may not become our threshold (NC-A33, not NC-CI11: that id was taken) | P14 | P14 | `PlantLuxembourgThreshold` | LIVE |
 | 114 | pytest | `test_unchecked__none_and_empty_exhibits_render_differently` — unmeasured is not measured-empty | P14 | P14 | `HideUnmeasuredResidue` | LIVE |
 | 115 | pytest | `test_unchecked__missing_remedy_raises` — no fallback remedy string, ever | P14 | P14 | `GenericRemedyFallback` | LIVE |
+
+## S1 — the first statutory instrument (row 116)
+
+*Phase column reads `P13`, not `S1`: the registry's grammar is `P0`–`P15` and this instrument is
+the input P13's clause layer did not have. The narrower label would have needed a grammar change
+to a registry whose whole point is that its shape does not move.*
+
+`ci/licence-denylist.sh` (row 11) resolves the **runtime** set. S1 pinned an instrument using
+PDF extractors, which are **build-time** tools and outside that set entirely — and `pymupdf`,
+the arm that agreed best, is `AGPL-3.0`, which row 11 denies. It passed row 11 by not being
+looked at. **A denylisted licence entering through a door the gate does not watch** is this
+project's own subject matter happening to this project; the arm was dropped and this row exists.
+
+| id | kind | gate | subject_exists_at | demonstrable_red_at | broken_build | liveness |
+|---:|---|---|---|---|---|---|
+| 116 | shell | `ci/no-denied-build-tool.sh` — no extraction party carries a denied licence | P13 | P13 | `PARTIES` naming `pymupdf`, observed red 16 Aug 2026 | LIVE |
