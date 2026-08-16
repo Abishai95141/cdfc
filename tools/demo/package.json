@@ -1,0 +1,7 @@
+{
+  "name": "cdfc-demo-recorder",
+  "private": true,
+  "type": "module",
+  "description": "Records the product walkthrough by driving the running server. playwright-core only: the browser binaries are whatever Playwright already cached on the machine, so this installs a driver and downloads no browser.",
+  "dependencies": { "playwright-core": "1.62.1" }
+}

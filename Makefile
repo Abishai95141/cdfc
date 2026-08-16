@@ -14,7 +14,7 @@ export PYTHONPATH := $(CURDIR)/src
         determinism perf mutation-pr e2e nightly demo corpus-verify measure-foundation gates \
         harvest cel-conformance host-fn-mutation predicate-schema verify \
         gen-contract instruments evaluator-arm1 p3-reproduction ceiling runnability relation-attrition \
-        fixture-fy2029 history serve
+        fixture-fy2029 history serve demo-verify demo-video
 
 all: lint licence greps corpus-verify contract unit golden determinism negative gates
 
@@ -187,6 +187,23 @@ attrition:
 # time somebody runs it is a coverage tool that ends up on a network nobody meant to put it on.
 serve:
 	$(PY) -m cdfc.cli serve
+
+# --- the walkthrough -----------------------------------------------------------------
+# Records the product by DRIVING IT, not by capturing a desktop. `demo-verify` runs first
+# and fails the build when a caption quotes a figure the live API no longer produces — a
+# walkthrough is the one artifact nobody re-derives, so its numbers are checked here or
+# they are never checked again. Needs `make serve` running in another shell.
+.PHONY: demo-verify demo-video
+demo-verify:
+	node tools/demo/verify.mjs
+
+demo-video: demo-verify
+	cd tools/demo && npm i --silent --no-audit --no-fund
+	node tools/demo/record.mjs
+	ffmpeg -y -i reports/demo/walkthrough.webm -c:v libx264 -preset slow -crf 20 \
+		-pix_fmt yuv420p -movflags +faststart -r 30 reports/demo/cdfc-walkthrough.mp4 -loglevel error
+	rm -f reports/demo/walkthrough.webm
+	@echo "wrote reports/demo/cdfc-walkthrough.mp4 (+ .srt)"
 
 fixture-fy2029:
 	$(PY) tools/fixtures/build_fy2029.py
