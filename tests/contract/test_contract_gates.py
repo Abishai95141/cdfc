@@ -58,10 +58,15 @@ ADDED_LIVE_AT_P13 = {116}
 # portfolio cannot emit a cross-template average. 120-122: the two kill rates, the
 # funnel's three integers, and a chart that can step down.
 ADDED_LIVE_AT_P14B = {117, 118, 119, 120, 121, 122}
+# P13-B0, 16 Aug 2026. The guard precedes the thing it guards: this phase is where a
+# model first enters the codebase, and 124 refuses a proposer that ships against its
+# own experiment's answer.
+ADDED_LIVE_AT_P13B0 = {123, 124, 125}
 LIVE_EXPECTED = (LIVE_AT_P0 | ADDED_LIVE_AT_P4 | ADDED_LIVE_AT_P5 | ADDED_LIVE_AT_P6
                  | ADDED_LIVE_AT_P7 | ADDED_LIVE_AT_P8 | ADDED_LIVE_AT_P9
                  | ADDED_LIVE_AT_P10 | ADDED_LIVE_AT_P11 | ADDED_LIVE_AT_P12
                  | ADDED_LIVE_AT_P13 | ADDED_LIVE_AT_P14 | ADDED_LIVE_AT_P14B
+                 | ADDED_LIVE_AT_P13B0
                  | PROMOTED_AT_P6)
 PENDING_AT_P0 = {14, 15, 16}
 # The PENDING set SHRINKS as subjects ship, and a row may only leave it into LIVE — never the

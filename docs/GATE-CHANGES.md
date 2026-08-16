@@ -337,3 +337,35 @@ Three ids in `plan/07` could not be used as written. `NC-A31` and `NC-A32` were 
 (a banned phrase arriving through data, and a green entering the palette), so the B4 controls take
 `NC-A35` and `NC-A36`. That is F27's shape for the third time in this build, and
 `ci/catalogue-ids.sh` caught it each time.
+
+## Rows 123–125 added LIVE — 16 August 2026, at P13-B0
+
+**Criterion A6.** Until today *"no model is in the verdict path"* was a design intention that
+happened to be true. It is now a property CI re-establishes on every commit.
+
+`ci/barrier5.sh` did not exist. `plan/06` names it as an entry criterion for **both** P12 and P13,
+and no build created it — an entry criterion naming a file nobody writes is a phase that cannot
+start and nobody finds out until it does. P13-B0 creates it, and it enforces both directions: a
+proposer that ships before its experiment, and — the one that gets forgotten — a proposer that
+ships **against** its experiment's answer, which is worse, because a record exists and says no.
+
+**Two findings while building the guard, both in the guard.**
+
+1. **The first closure walk was a silent pass.** It seeded with the root module alone, and six of
+   the seven verdict roots are packages whose `__init__.py` imports nothing — so it returned a
+   clean closure of **size 1** for each and passed. R3's finding, occurring inside the check
+   written to make the central claim mechanical. `_seed` now expands a package to its members, and
+   `test_nc__A04a_the_closure_is_not_empty` asserts a floor so it cannot regress silently.
+2. **A bound enforced in one module and relied on in another.** `probes/qualify.py` imported a
+   relation builder by dotted name without re-checking the `cdfc.probes.relations` prefix that
+   `relations/registry.py` enforces — so a `RelationSpec` built by any other path could have named
+   any importable module. The repair is two lines in `qualify.py` rather than an exemption in the
+   walker: **a bound the walker cannot see is a bound a reader cannot check.**
+
+Closures after the repairs: `evaluate` 366 · `verdict` 251 · `probes` 293 · `selfcheck` 253 ·
+`attest` 422 · `qualify` 330 · `surface` 53. **None reaches a banned module.**
+
+`cdfc.api` is deliberately outside `VERDICT_ROOTS`: an API binds a socket by definition, and the
+honest response to *"the rule cannot hold here"* is to say where the rule applies rather than to
+weaken it everywhere. `tests/unit/test_api.py::test_api__no_socket_in_the_import_closure` carries
+the API's own narrower rule — no socket in the dispatcher, only in the server.

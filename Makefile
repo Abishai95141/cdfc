@@ -115,7 +115,7 @@ host-fn-mutation:
 
 # THE PHASE-CLOSING RITUAL, in one target. A phase is not closed until this is green in a
 # FRESH CLONE — the working tree silently supplies things a clone does not.
-verify: lint licence build-tool-licence greps corpus-verify
+verify: lint licence build-tool-licence barrier5 greps corpus-verify
 	# Producers first. A consumer that runs before its producer either fails on a missing file
 	# or — worse — reads a stale one and reports a number nobody computed this run.
 	$(PY) tools/host_fn_mutation.py
@@ -132,6 +132,11 @@ verify: lint licence build-tool-licence greps corpus-verify
 # all, while printing a target name that said it had. `make verify` was unaffected (it runs
 # `pytest tests`), which is why nothing went red. A duplicate target is a silent pass with a
 # warning nobody reads.
+.PHONY: barrier5
+barrier5:
+	./ci/barrier5.sh
+	./ci/no-model-in-verdict.sh
+
 .PHONY: build-tool-licence
 build-tool-licence:
 	./ci/no-denied-build-tool.sh

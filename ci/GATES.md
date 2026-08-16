@@ -425,3 +425,19 @@ door it was written for. Row 119 is the one the buyer decision made load-bearing
 | 120 | pytest | `test_library__both_kill_rates_render_or_neither_does` — the gap between claimed and all-classes is the number a reviewer wants | P14 | P14 | `KrRendersClaimedOnly` | LIVE |
 | 121 | pytest | `test_funnel__stage_arithmetic_closes` — a skip cannot be laundered into a survival | P14 | P14 | `FunnelSkippedCountsAsSurvived` | LIVE |
 | 122 | pytest | `test_history__can_step_down` — the settled-fraction chart is never clamped or smoothed | P14 | P14 | `HistoryMonotone` | LIVE |
+
+## P13-B0 — the model-free claim, made mechanical (rows 123–125)
+
+Criterion A6. The spec listed `test_no_model_in_verdict_path` as a build gate and recorded it
+**not yet written**; these rows close it. `ci/barrier5.sh` is named as an entry criterion by both
+P12 and P13 and **no build had created it** — the same class as an entry criterion naming a
+measurement file nobody writes.
+
+Row 123 is the guard; row 125 is a cheap companion that proves nothing on its own and exists
+because a thirty-second failure gets fixed and a twenty-minute one gets skipped.
+
+| id | kind | gate | subject_exists_at | demonstrable_red_at | broken_build | liveness |
+|---:|---|---|---|---|---|---|
+| 123 | pytest | `test_nc__A04a_no_model_import_reachable` — the AST import closure of every verdict root reaches nothing banned | P13 | P13 | a planted `import httpx`, observed red 16 Aug 2026 | LIVE |
+| 124 | shell | `ci/barrier5.sh` — `propose.py` may not exist without a RETAIN decision record | P13 | P13 | `propose.py` planted against the PENDING record, observed red 16 Aug 2026 | LIVE |
+| 125 | shell | `ci/no-model-in-verdict.sh` — the stage-2 grep arm | P13 | P13 | a planted `import httpx`, observed red 16 Aug 2026 | LIVE |

@@ -57,6 +57,9 @@ RELATION_EVALUATOR_MODULES: Final[Mapping[str, str]] = {
 OBLIGATION_PREFIX: Final[str] = "OBL-TEMPLATE-R-"
 
 
+RELATION_BUILDER_PACKAGE = "cdfc.probes.relations"
+
+
 class RelationEnvelopeError(TypeError):
     """A relation that cannot become a predicate. Never silently skipped."""
 
@@ -67,6 +70,18 @@ def _keys_of(spec: RelationSpec) -> tuple[str, ...]:
         module, _, _fn = spec.builder.partition(":")
         import importlib
 
+        # THE BOUND IS ENFORCED HERE, not merely relied upon. `registry.build_expression` already
+        # refuses a builder outside `cdfc.probes.relations`, and this function trusted that check
+        # from another module -- so a RelationSpec constructed by any other path could name any
+        # importable module at all. P13-B0's import-closure walker found it: a dynamic import
+        # whose bound lives somewhere else is a bound the walker cannot see and a reader cannot
+        # check. Re-stating it costs two lines and makes the closure provable locally.
+        if not module.startswith(RELATION_BUILDER_PACKAGE + "."):
+            raise RelationEnvelopeError(
+                f"builder {spec.builder!r} lives outside {RELATION_BUILDER_PACKAGE}. A relation "
+                "whose key set is computed somewhere else is a relation nobody reviewing this "
+                "package saw."
+            )
         mod = importlib.import_module(module)
         if hasattr(mod, "schema_keys"):
             return tuple(mod.schema_keys())
