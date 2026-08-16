@@ -98,6 +98,11 @@ def build_parser() -> argparse.ArgumentParser:
     verify.add_argument("--blobs", type=Path, action="append", default=None,
                         help="a directory to resolve filing and template blobs from, by DIGEST")
 
+    serve = sub.add_parser("serve", help="serve the drop screen and /v1/* over HTTP (P14-B3)")
+    serve.add_argument("--host", default="127.0.0.1",
+                       help="binds loopback by default; a public bind is an explicit argument")
+    serve.add_argument("--port", type=int, default=8765)
+
     for name in ("ingest", "induce", "qualify"):
         sub.add_parser(name, help=f"{name} (not implemented; built in {OWNER.get(name, '?')})")
     return p
@@ -390,7 +395,20 @@ def _verify(args: argparse.Namespace) -> int:
     return 0 if (result.reproduced and result.signature_valid is not False) else 1
 
 
-HANDLERS = {"harvest": _harvest, "run": _run, "closure": _closure,
+def _serve(args) -> int:
+    """Bind and serve. The import is LOCAL so `cdfc.cli` does not pull a socket into its closure.
+
+    `cdfc.api.serve` is the one module in the package that opens one, and a top-level import here
+    would put it in the closure of every CLI invocation -- including `cdfc run`, whose whole claim
+    is that it computes a verdict with the network down.
+    """
+    from cdfc.api.serve import serve
+
+    serve(args.host, args.port)
+    return 0
+
+
+HANDLERS = {"harvest": _harvest, "run": _run, "closure": _closure, "serve": _serve,
             "attest": _attest, "verify": _verify}
 
 

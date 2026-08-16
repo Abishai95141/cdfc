@@ -120,7 +120,8 @@ verify: lint licence build-tool-licence barrier5 greps corpus-verify
 	# or — worse — reads a stale one and reports a number nobody computed this run.
 	$(PY) tools/host_fn_mutation.py
 	$(PY) tools/cel_conformance.py
-	$(PY) -m pytest tests -q
+	$(PY) -m cdfc.cli run fixtures/synthetic/clean__independently-computed__fme-q1.xlsx --out reports/runs
+	CDFC_REQUIRE_RUN=1 $(PY) -m pytest tests -q
 	$(PY) tools/nc_sweep.py
 	$(PY) tools/gate_liveness.py
 	@echo "verify: every gate green, every negative control caught"

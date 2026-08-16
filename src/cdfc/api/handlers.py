@@ -10,9 +10,22 @@ import json
 from pathlib import Path
 from typing import Any, Final
 
+from cdfc.api import store
 from cdfc.api.schemas import TemplateOut, json_schema
 
-REPORTS: Final[Path] = Path("reports")
+REPORTS: Final[Path] = Path("reports/runs")
+
+# At most this many cells in one response. The cap is VISIBLE -- `returned` beside `total` -- so a
+# truncated list cannot be read as a complete one.
+CELL_PAGE: Final[int] = 500
+
+# Read from the surface layer rather than restated, so the wire and the page cannot disagree.
+DENOMINATOR_WARNING: Final[str] = (
+    "The denominator is the template's unlocked-cell mask under generator rule v3, computed twice "
+    "and agreed. It has never been checked against a person filling the form in, so it is "
+    "PROVISIONAL-UNVALIDATED: it may be larger or smaller than the set a filer actually completes."
+)
+ADMISSION_STATE: Final[str] = "PRE-GATE"
 
 # The two workbooks with no derivable protection mask. Their ceiling is `null`, NEVER 0 --
 # NC-D03b's API twin. A ceiling of zero says "nothing in this template can ever settle"; a null
@@ -82,19 +95,90 @@ def post_filings(req, params):
 
 
 def get_run(req, params):
-    return _err(404, "no_such_run", f"run {params.get('id', '')!r} is not on disk")
+    """The full run record. **The six counts always travel with the fraction.**"""
+    try:
+        run = store.load(params.get("id", ""))
+    except store.RunNotFound as e:
+        return _err(404, "no_such_run", str(e))
+    frac = store.fraction_of(run)
+    m = run.header()
+    return _json(200, {
+        "runId": run.run_id,
+        "filingSha256": m.get("filing_sha256", ""),
+        "templateSha256": m.get("template_sha256", ""),
+        "runState": m.get("run_state", ""),
+        "settledFraction": {
+            **frac,
+            "fraction": round(frac["settled"] / frac["inScope"], 4) if frac["inScope"] else None,
+            "denominatorWarning": DENOMINATOR_WARNING,
+            "admissionState": ADMISSION_STATE,
+        },
+        "livenessProof": m.get("livenessProof"),
+        "summaryIsNotSubstitute": True,
+        "reportUrl": f"/v1/runs/{run.run_id}/report.html",
+        "attestationUrl": f"/v1/runs/{run.run_id}/attestation.json",
+    })
 
 
 def get_checks(req, params):
-    return _json(200, [])
+    try:
+        run = store.load(params.get("id", ""))
+    except store.RunNotFound as e:
+        return _err(404, "no_such_run", str(e))
+    return _json(200, list(store.checks(run, predicate_id=req.query.get("predicate_id"))))
 
 
 def get_cells(req, params):
-    return _json(200, [])
+    """The closure table. Filterable by state and reason, and NEVER paginated silently.
+
+    A truncated list that looks complete is how a coverage number gets read off a screen that
+    showed a tenth of it, so the response carries `returned` and `total` and they must differ
+    visibly when a cap applies.
+    """
+    try:
+        run = store.load(params.get("id", ""))
+    except store.RunNotFound as e:
+        return _err(404, "no_such_run", str(e))
+    rows = store.cells(run, state=req.query.get("state"), reason=req.query.get("reason"))
+    cap = min(int(req.query.get("limit", CELL_PAGE)), CELL_PAGE)
+    return _json(200, {"returned": len(rows[:cap]), "total": len(rows), "cells": list(rows[:cap])})
 
 
 def get_unchecked(req, params):
-    return _json(200, [])
+    """The panel. **This is the product** — and where the artifact cannot support it, it says so."""
+    try:
+        run = store.load(params.get("id", ""))
+    except store.RunNotFound as e:
+        return _err(404, "no_such_run", str(e))
+    total = store.unchecked_total(run)
+    try:
+        groups = store.unchecked_groups(run)
+    except store.BreakdownNotInArtifact as e:
+        # 200, not 500: the TOTAL is a real measurement and the client should have it. What is
+        # absent is the breakdown, and it is named as absent rather than served as an empty list --
+        # `[]` would read as "every unchecked cell has been accounted for and none has a reason".
+        return _json(200, {
+            "total": total,
+            "groups": None,
+            "breakdownUnavailable": str(e),
+        })
+    from cdfc.surface.unchecked import MissingRemedy, load_remedies
+
+    remedies, unremediable = load_remedies()
+    out = []
+    for g in groups:
+        code = g["reasonCode"]
+        rem = remedies.get(code)
+        text = rem.text if rem else unremediable.get(code)
+        if not text:
+            # The panel's own rule, on the wire: there is no fallback remedy string.
+            raise MissingRemedy(
+                f"{code} reached {g['count']} cells and has no remedy. A generic remedy makes a "
+                "panel of reasons into one sentence repeated, and it looks exactly like a panel "
+                "that thought about each group."
+            )
+        out.append({"reasonCode": code, "count": g["count"], "remedy": text})
+    return _json(200, {"total": total, "groups": out, "breakdownUnavailable": None})
 
 
 def get_report(req, params):
@@ -177,6 +261,21 @@ def get_portfolio(req, params):
     filings, how many entities -- because a count of filings has a denominator anybody can state.
     """
     rows: list[dict[str, Any]] = []
+    for rid in store.run_ids():
+        try:
+            run = store.load(rid)
+        except store.RunNotFound:
+            continue
+        f, m = store.fraction_of(run), run.header()
+        rows.append({
+            "entity": m.get("filing_sha256", "")[:12],
+            "template": m.get("template_sha256", "")[:12],
+            "runId": rid,
+            "settled": f["settled"],
+            "fieldSurface": f["cellsTotal"],
+            "notChecked": f["notChecked"],
+            "admissionState": ADMISSION_STATE,
+        })
     return _json(200, {"columns": list(PORTFOLIO_COLUMNS), "rows": rows,
                        "note": "rows only. A fraction across templates would divide one "
                                "workbook's mask by another's; counts are aggregable and "
