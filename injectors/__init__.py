@@ -3245,3 +3245,166 @@ class PlantLuxembourgThreshold(Injector):
 ALL_INJECTORS = ALL_INJECTORS + (GenericRemedyFallback, HideUnmeasuredResidue,
                                  PlantLuxembourgThreshold)
 BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+API_SCHEMAS = REPO_ROOT / "src" / "cdfc" / "api" / "schemas.py"
+API_ROUTES = REPO_ROOT / "src" / "cdfc" / "api" / "routes.py"
+API_HANDLERS = REPO_ROOT / "src" / "cdfc" / "api" / "handlers.py"
+
+
+class ApiBareFraction(Injector):
+    """**NC-A09** — an endpoint returns a bare settled fraction, or a boolean meaning `pass`.
+
+    One injection, three defects, because they are three faces of one belief: *that a number is
+    useful on its own*. It adds a `QuickOut` model carrying `fraction` with no counts and a
+    boolean named `clean`, and wires it to a route — so the schema walk, the boolean allowlist and
+    the route table all see it.
+
+    The bare `fraction` is NOT guarded by `SettledFractionOut.__post_init__` here, and that is the
+    point: the constructor rule protects one model, and a second model added beside it is exactly
+    how the rule gets bypassed without anyone editing the rule.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="api_bare_fraction", touches=[API_SCHEMAS, API_ROUTES, API_HANDLERS])
+
+    def apply(self) -> None:
+        _sub(
+            API_SCHEMAS,
+            "# Every model the document exposes.",
+            '@dataclass(frozen=True, slots=True)\n'
+            'class QuickOut:  # INJECTED\n'
+            '    fraction: float\n'
+            '    clean: bool\n\n\n'
+            "# Every model the document exposes.",
+        )
+        _sub(
+            API_SCHEMAS,
+            "    DenominatorOut, SettledFractionOut, TemplateOut, UncheckedGroupOut, RunOut, "
+            "RejectionOut,\n    ErrorOut,\n)",
+            "    DenominatorOut, SettledFractionOut, TemplateOut, UncheckedGroupOut, RunOut, "
+            "RejectionOut,\n    ErrorOut, QuickOut,  # INJECTED\n)",
+        )
+        _sub(
+            API_ROUTES,
+            '    Route("GET", "/v1/healthz", "get_healthz", False, "liveness"),',
+            '    Route("GET", "/v1/runs/{id}/quick", "get_quick", False, "INJECTED"),\n'
+            '    Route("GET", "/v1/healthz", "get_healthz", False, "liveness"),',
+        )
+        _sub(
+            API_HANDLERS,
+            "def get_healthz(req, params):",
+            "def get_quick(req, params):  # INJECTED\n"
+            '    return _json(200, {"fraction": 0.87, "clean": True})\n\n\n'
+            "def get_healthz(req, params):",
+        )
+
+
+class PortfolioTotalRow(Injector):
+    """**NC-A34** — the portfolio emits a cross-template average.
+
+    *"Our clients average 87% settled"* is the most saleable sentence this product could emit and
+    it divides one workbook's unlocked-cell mask by another workbook's. This is the injection that
+    proves the rule is enforced over the EMITTED JSON rather than asserted in a docstring.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="portfolio_total_row", touches=[API_HANDLERS])
+
+    def apply(self) -> None:
+        _sub(
+            API_HANDLERS,
+            '    return _json(200, {"columns": list(PORTFOLIO_COLUMNS), "rows": rows,',
+            '    return _json(200, {"columns": list(PORTFOLIO_COLUMNS), "rows": rows,\n'
+            '                       "total": {"average": 0.87},  # INJECTED',
+        )
+
+
+ALL_INJECTORS = ALL_INJECTORS + (ApiBareFraction, PortfolioTotalRow)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+SURFACE_HISTORY = REPO_ROOT / "src" / "cdfc" / "surface" / "history.py"
+SURFACE_LIBRARY = REPO_ROOT / "src" / "cdfc" / "surface" / "library.py"
+SURFACE_FUNNEL = REPO_ROOT / "src" / "cdfc" / "surface" / "funnel.py"
+
+
+class HistoryMonotone(Injector):
+    """**NC-A15** — the settled-fraction chart cannot step down.
+
+    `running_max` is ONE CALL and it makes every decrease invisible while the chart still looks
+    like data. A coverage number that can only rise is a marketing chart.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="history_monotone", touches=[SURFACE_HISTORY])
+
+    def apply(self) -> None:
+        _sub(
+            SURFACE_HISTORY,
+            "    for prev, cur in zip(points, points[1:], strict=False):",
+            "    running = 0  # INJECTED\n"
+            "    clamped = []\n"
+            "    for p in points:\n"
+            "        running = max(running, p.settled)\n"
+            "        clamped.append(HistoryPoint(p.at, running, p.field_surface, p.admission,\n"
+            "                                    p.cause))\n"
+            "    points = tuple(clamped)\n"
+            "    for prev, cur in zip(points, points[1:], strict=False):",
+        )
+
+
+class KrRendersClaimedOnly(Injector):
+    """**NC-A35** — a kill rate renders with a denominator the predicate chose for itself.
+
+    THREE defects in one injector because they are three faces of one belief: *that a kill rate is
+    a property of the predicate rather than of the apparatus that measured it.* It drops the
+    all-classes rate, drops `I` from the census, and returns `instrument_label=None`.
+
+    NOT `NC-A31`, which `plan/07` names: that id was allocated at B1 to a banned phrase arriving
+    through data. F27's shape, caught by `ci/catalogue-ids.sh`.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="kr_renders_claimed_only", touches=[SURFACE_LIBRARY])
+
+    def apply(self) -> None:
+        _sub(
+            SURFACE_LIBRARY,
+            "        if (self.kr_claimed is None) != (self.kr_all_classes is None):",
+            "        if False:  # INJECTED -- the pair is no longer required",
+        )
+        _sub(
+            SURFACE_LIBRARY,
+            "        if self.I > 0 and not self.indeterminate_cells:",
+            "        if False:  # INJECTED -- I no longer needs its cells",
+        )
+
+
+class FunnelSkippedCountsAsSurvived(Injector):
+    """**NC-A36** — a candidate a gate did not evaluate is rendered as a survivor.
+
+    This is how a `280 -> 280` first row gets printed and read as attrition. A gate that does not
+    apply to the population it is run over is reporting a pass it did not compute.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="funnel_skipped_counts_as_survived",
+                         touches=[SURFACE_FUNNEL])
+
+    def apply(self) -> None:
+        _sub(
+            SURFACE_FUNNEL,
+            "        total = self.skipped + self.survived + len(self.rejections)",
+            "        total = self.entered  # INJECTED -- skipped folded into survived",
+        )
+        _sub(
+            SURFACE_FUNNEL,
+            "        return self.entered > 0 and self.skipped == self.entered",
+            "        return False  # INJECTED",
+        )
+
+
+ALL_INJECTORS = ALL_INJECTORS + (HistoryMonotone, KrRendersClaimedOnly,
+                                 FunnelSkippedCountsAsSurvived)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}

@@ -319,3 +319,21 @@ this row was written so the next one cannot enter the same way.
 The row is checked against the DECLARED `PARTIES`, not against what happens to be installed — a
 gate that only fires when the tool is present passes on every clean CI image, which is exactly
 where a pinned instrument gets rebuilt.
+
+## Rows 117–122 added LIVE — 16 August 2026, at P14-B3 and P14-B4
+
+**117 · 118 · 119 — the API.** The two prohibitions are enforced over the GENERATED OpenAPI
+document, not over a hand-written list of models, so a model added without touching the gate is
+still scanned. Row 119 is the buyer decision made mechanical: an administrator's portfolio view is
+exactly where somebody averages the settled fraction across templates, and the denominators are
+different workbooks' unlocked-cell masks. Observed red under `ApiBareFraction` and
+`PortfolioTotalRow`; 2 entries caught, 3 guards flipped, contaminated 0.
+
+**120 · 121 · 122 — the library, the funnel, the chart.** Observed red under
+`KrRendersClaimedOnly`, `FunnelSkippedCountsAsSurvived` and `HistoryMonotone`; 3 entries caught,
+6 guards flipped, contaminated 0.
+
+Three ids in `plan/07` could not be used as written. `NC-A31` and `NC-A32` were allocated at B1
+(a banned phrase arriving through data, and a green entering the palette), so the B4 controls take
+`NC-A35` and `NC-A36`. That is F27's shape for the third time in this build, and
+`ci/catalogue-ids.sh` caught it each time.

@@ -217,6 +217,14 @@ SURFACES: Final[tuple[SurfaceSpec, ...]] = (
     SurfaceSpec("S05.report-openitems", "HTML", frozenset({"NONE"}),
                 "cdfc.surface.openitems.standing_open_items"),
     SurfaceSpec("S06.cli-version", "STDOUT", frozenset({"NONE"}), "cdfc.cli.main"),
+    # P14-B3, appended 16 Aug 2026. The registry GROWS here; nothing was edited or removed.
+    SurfaceSpec("S07.drop-screen", "HTML", frozenset({"NONE"}), "cdfc.surface.drop.drop_page"),
+    SurfaceSpec("S08.api-openapi", "JSON", frozenset({"NONE"}),
+                "cdfc.api.openapi.openapi_document"),
+    SurfaceSpec("S09.api-run", "JSON", frozenset({"SETTLED_COUNT", "STATE"}),
+                "cdfc.api.handlers.get_run"),
+    SurfaceSpec("S10.api-portfolio", "JSON", frozenset({"SETTLED_COUNT"}),
+                "cdfc.api.handlers.get_portfolio"),
 )
 
 # --- the number registry: THE DENOMINATOR OF "renders every number". APPEND-ONLY. ------

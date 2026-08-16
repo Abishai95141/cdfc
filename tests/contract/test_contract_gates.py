@@ -54,10 +54,14 @@ ADDED_LIVE_AT_P14 = set(range(108, 116))  # docs/GATE-CHANGES.md, 15 Aug 2026 (B
 # build-time tool, and the best-scoring PDF arm was AGPL-3.0 -- a denied licence entering through
 # a door the gate does not watch. Argument in docs/GATE-CHANGES.md.
 ADDED_LIVE_AT_P13 = {116}
+# P14-B3 and P14-B4, 16 Aug 2026. 117-119: the API cannot express a pass and the
+# portfolio cannot emit a cross-template average. 120-122: the two kill rates, the
+# funnel's three integers, and a chart that can step down.
+ADDED_LIVE_AT_P14B = {117, 118, 119, 120, 121, 122}
 LIVE_EXPECTED = (LIVE_AT_P0 | ADDED_LIVE_AT_P4 | ADDED_LIVE_AT_P5 | ADDED_LIVE_AT_P6
                  | ADDED_LIVE_AT_P7 | ADDED_LIVE_AT_P8 | ADDED_LIVE_AT_P9
                  | ADDED_LIVE_AT_P10 | ADDED_LIVE_AT_P11 | ADDED_LIVE_AT_P12
-                 | ADDED_LIVE_AT_P13 | ADDED_LIVE_AT_P14
+                 | ADDED_LIVE_AT_P13 | ADDED_LIVE_AT_P14 | ADDED_LIVE_AT_P14B
                  | PROMOTED_AT_P6)
 PENDING_AT_P0 = {14, 15, 16}
 # The PENDING set SHRINKS as subjects ship, and a row may only leave it into LIVE — never the

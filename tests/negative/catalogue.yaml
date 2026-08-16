@@ -2168,3 +2168,100 @@ entries:
       version went red on remedies.yaml's own comment explaining the ban -- the eleventh time in
       this build a check was defeated by prose describing the thing it checks for. A YAML comment
       is stripped by the loader and reaches no reader, so it is not a surface.
+
+  - id: NC-A09
+    component: surface
+    break: an endpoint returns a bare settled fraction, or a boolean whose name means pass
+    measured_instance: null
+    injector: ApiBareFraction
+    guard_tests:
+      - path: "tests/contract/test_contract__api_cannot_express_a_pass.py::test_contract__no_banned_property_at_any_depth"
+        flips: true
+      - path: "tests/contract/test_contract__api_cannot_express_a_pass.py::test_contract__every_boolean_is_on_the_permitted_list"
+        flips: true
+      - path: "tests/contract/test_contract__api_cannot_express_a_pass.py::test_contract__the_route_table_is_the_only_source_of_paths"
+        flips: false
+      - path: "tests/unit/test_api.py::test_api__every_route_has_a_handler"
+        flips: false
+    positive_control: "tests/contract/test_contract__api_cannot_express_a_pass.py::test_contract__the_six_counts_make_a_fraction_constructible -- the LAWFUL fraction still constructs, so the guard is about a fraction without its counts and not about a schema that refuses every number"
+    status: active
+    note: >
+      The injected model is a SECOND model beside SettledFractionOut, not an edit to it. The
+      constructor rule protects one class; adding a class beside it is exactly how such a rule is
+      bypassed without anyone editing the rule, which is why the gate walks the GENERATED document
+      rather than trusting the constructor.
+
+  - id: NC-A34
+    component: surface
+    break: the portfolio emits a cross-template average, so one workbook's mask is divided by another's
+    measured_instance: "the buyer decision of 15 Aug 2026: an administrator's portfolio view is exactly where somebody averages the settled fraction across templates"
+    injector: PortfolioTotalRow
+    guard_tests:
+      - path: "tests/unit/test_api.py::test_api__portfolio_has_no_total_row"
+        flips: true
+      - path: "tests/unit/test_api.py::test_api__every_route_has_a_handler"
+        flips: false
+    positive_control: "tests/unit/test_api.py::test_api__templates_ceiling_is_null_not_zero -- an unrelated wire-shape rule stays green, so the guard is about the aggregate and not about the endpoint failing to serialise"
+    status: active
+    note: >
+      NOT NC-A31 or NC-A32, which `plan/07` names for the B4 controls: both ids were already
+      allocated during B1 (a banned phrase arriving through data, and a green entering the
+      palette). F27's exact shape, caught by ci/catalogue-ids.sh. The surface block continues at
+      the next free id.
+
+  - id: NC-A15
+    component: surface
+    break: the settled-fraction chart cannot step down -- a decrease is dropped, smoothed or clamped
+    measured_instance: null
+    injector: HistoryMonotone
+    guard_tests:
+      - path: "tests/unit/test_library_funnel_history.py::test_history__can_step_down"
+        flips: true
+      - path: "tests/unit/test_library_funnel_history.py::test_history__step_down_without_a_cause_raises"
+        flips: true
+      - path: "tests/unit/test_library_funnel_history.py::test_history__monotone_series_renders_unchanged"
+        flips: false
+    positive_control: "tests/unit/test_library_funnel_history.py::test_history__monotone_series_renders_unchanged -- a RISING series is unaffected, so the guard is about the clamp and not about the chart refusing to render"
+    status: active
+    note: >
+      `running_max` is one call and it makes every decrease invisible while the chart still looks
+      like data. The step-downs are the most credible thing on this chart: they are the evidence
+      that the number is measured rather than accumulated.
+
+  - id: NC-A35
+    component: surface
+    break: a kill rate renders with a denominator the predicate chose for itself, or without the indeterminate-observability count
+    measured_instance: "M1 and M2 arriving at the surface that publishes them: G2's claimed-class denominator selected AFTER the campaign ran, and U inflated by cells the evaluator cannot compute"
+    injector: KrRendersClaimedOnly
+    guard_tests:
+      - path: "tests/unit/test_library_funnel_history.py::test_library__both_kill_rates_render_or_neither_does"
+        flips: true
+      - path: "tests/unit/test_library_funnel_history.py::test_library__indeterminate_cells_are_named"
+        flips: true
+      - path: "tests/unit/test_library_funnel_history.py::test_library__flag_everything_column_is_present_on_every_row"
+        flips: false
+    positive_control: "tests/unit/test_library_funnel_history.py::test_library__a_row_with_both_kill_rates_renders -- the LAWFUL row still builds, so the guard is about the missing pair and not about a dataclass that refuses everything"
+    status: active
+    note: >
+      NOT NC-A31, which `plan/07` names for this control: that id was allocated at B1 to a banned
+      phrase arriving through data. F27's exact shape, caught by ci/catalogue-ids.sh. Three
+      defects in one injector because they are three faces of one belief -- that a kill rate is a
+      property of the predicate rather than of the apparatus that measured it.
+
+  - id: NC-A36
+    component: surface
+    break: a candidate a gate did not evaluate is rendered as a survivor, so a stage that computed nothing reports a pass
+    measured_instance: "G0 over the 280 harvested FME candidates, every one of which carries clause: None"
+    injector: FunnelSkippedCountsAsSurvived
+    guard_tests:
+      - path: "tests/unit/test_library_funnel_history.py::test_funnel__stage_arithmetic_closes"
+        flips: true
+      - path: "tests/unit/test_library_funnel_history.py::test_funnel__a_wholly_skipped_stage_does_not_render_as_a_pass"
+        flips: true
+      - path: "tests/unit/test_library_funnel_history.py::test_funnel__stages_are_the_gate_order"
+        flips: false
+    positive_control: "tests/unit/test_library_funnel_history.py::test_funnel__a_real_stage_renders_its_three_integers -- a stage that DID evaluate still renders its three integers, so the guard is about the skip and not about the funnel refusing to build"
+    status: active
+    note: >
+      NOT NC-A32, which `plan/07` names: allocated at B1 to a green entering the palette. This is
+      how a `280 -> 280` first row gets printed and read as attrition.

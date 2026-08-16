@@ -405,3 +405,23 @@ project's own subject matter happening to this project; the arm was dropped and 
 | id | kind | gate | subject_exists_at | demonstrable_red_at | broken_build | liveness |
 |---:|---|---|---|---|---|---|
 | 116 | shell | `ci/no-denied-build-tool.sh` — no extraction party carries a denied licence | P13 | P13 | `PARTIES` naming `pymupdf`, observed red 16 Aug 2026 | LIVE |
+
+## P14-B3 — the drop screen and the API (rows 117–119)
+
+A JSON surface is still a surface. Scoping the copy gates to the pages we happen to render would
+be the same defect as scoping the licence gate to the runtime set: a rule that only watches the
+door it was written for. Row 119 is the one the buyer decision made load-bearing.
+
+| id | kind | gate | subject_exists_at | demonstrable_red_at | broken_build | liveness |
+|---:|---|---|---|---|---|---|
+| 117 | pytest | `test_contract__no_banned_property_at_any_depth` — no property meaning `pass` in the GENERATED OpenAPI | P14 | P14 | `ApiBareFraction` | LIVE |
+| 118 | pytest | `test_contract__fraction_never_travels_alone` — a settled fraction cannot be constructed without its six counts | P14 | P14 | `ApiBareFraction` | LIVE |
+| 119 | pytest | `test_api__portfolio_has_no_total_row` — no cross-template average at any depth | P14 | P14 | `PortfolioTotalRow` | LIVE |
+
+## P14-B4 — the library, the funnel, the history chart (rows 120–122)
+
+| id | kind | gate | subject_exists_at | demonstrable_red_at | broken_build | liveness |
+|---:|---|---|---|---|---|---|
+| 120 | pytest | `test_library__both_kill_rates_render_or_neither_does` — the gap between claimed and all-classes is the number a reviewer wants | P14 | P14 | `KrRendersClaimedOnly` | LIVE |
+| 121 | pytest | `test_funnel__stage_arithmetic_closes` — a skip cannot be laundered into a survival | P14 | P14 | `FunnelSkippedCountsAsSurvived` | LIVE |
+| 122 | pytest | `test_history__can_step_down` — the settled-fraction chart is never clamped or smoothed | P14 | P14 | `HistoryMonotone` | LIVE |

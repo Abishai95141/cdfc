@@ -134,3 +134,60 @@ conftest fixture — would make the warning surface at its own module and would 
 failing the build*, which is the wrong direction: the warning is true, a handle is leaking, and the
 build going red about it is the system working. What is wrong is only that it accuses the wrong
 line.
+
+---
+
+## P14-B3 and P14-B4 — 16 August 2026
+
+### Criterion 1 — `surfaces_passing_all_four_gates == len(SURFACES)`
+
+| | |
+|---|---|
+| `len(SURFACES)` | **10** |
+| `surfaces_passing_all_four_gates` | **10** |
+| `len(REQUIRED_NUMBERS)` | 8 |
+
+**The cardinality time series, which is this gate's own denominator.** `|SURFACES|` was 6 at
+P14-B2 and is 10 at P14-B3. **It has never decreased**, and no row has been retired.
+`test_surface__gate_floor_is_the_logged_cardinality` reads the floor from
+`docs/SURFACE-REGISTRY-LOG.md` rather than from a constant, because a gate whose denominator this
+build writes is not passed by shrinking the denominator — and until the floor existed it could be.
+
+The four appended rows are `S07.drop-screen`, `S08.api-openapi`, `S09.api-run`,
+`S10.api-portfolio`. **Three of them are JSON.** The temptation was to scope SG1–SG4 to HTML on
+the grounds that nobody reads JSON, and that is wrong in the way this project is about: an API
+response is read by an integration that renders it, and a `status: "ok"` on the wire becomes a
+green tick in somebody else's dashboard.
+
+### Criterion 4 — every new catalogue entry observed red under its injector
+
+| entry | injector | entries caught | guards flipped | contaminated |
+|---|---|---|---|---|
+| NC-A09 · NC-A34 | `ApiBareFraction` · `PortfolioTotalRow` | 2 / 2 | 3 / 3 | 0 |
+| NC-A15 · NC-A35 · NC-A36 | `HistoryMonotone` · `KrRendersClaimedOnly` · `FunnelSkippedCountsAsSurvived` | 3 / 3 | 6 / 6 | 0 |
+
+### Criterion 9 — the numbers that may not render alone
+
+* **No settled count without its denominator's generating rule.** `SettledFractionOut` cannot be
+  CONSTRUCTED with a `fraction` and an empty `denominatorWarning` or an empty `admissionState`.
+  It is a schema property, not a renderer check.
+* **No kill rate without its six-integer census, its two denominators and its instrument label.**
+  `KillRateCell` asserts `O == G − U − I`; `I > 0` with no named cells raises; `LibraryRow` raises
+  if one kill rate is present and the other is not; `instrument_label` is **read from
+  `ci/GATES.md`**.
+* **The funnel's stage arithmetic closes** and a wholly-skipped stage renders
+  `NOT APPLICABLE — 0 evaluated`.
+* **Both obligation-coverage numbers publish together** — `0 / 280` STATUTE beside `280 / 280`
+  TEMPLATE, with *no harvested predicate yet implements a statutory clause* rendered verbatim.
+  Publishing a zero is the honest case and is not special-cased into an empty state.
+
+**The STATUTE count's MEANING changed on 16 August 2026 and its value did not.** Until S1 it read
+`0 / 280` because **no statutory instrument was pinned at all**; it now reads `0 / 280` for the
+reason the plan originally expected — no harvested predicate cites a statute yet. Same digits,
+different fact. `docs/decisions/D-P7-01-no-statutory-instrument.md` records the change.
+
+### What is still NOT RUN
+
+`SG1-DOM` and `SG4-COMPUTED` remain **NOT RUN** — they need a headless browser that can be pinned
+across runner images. The structural arm runs in their place and the surfaces carry the weaker
+instrument. This is unchanged from B1 and is not retired by B3 or B4 shipping.
