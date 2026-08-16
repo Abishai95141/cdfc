@@ -114,6 +114,9 @@ def get_run(req, params):
             "admissionState": ADMISSION_STATE,
         },
         "livenessProof": m.get("livenessProof"),
+        # **The denominator's own exclusions.** `null` when the run predates the field or the
+        # census could not be derived — never zeros, which would say the surface excluded nothing.
+        "surfaceExclusions": m.get("surfaceExclusions"),
         "summaryIsNotSubstitute": True,
         "reportUrl": f"/v1/runs/{run.run_id}/report.html",
         "attestationUrl": f"/v1/runs/{run.run_id}/attestation.json",

@@ -92,6 +92,12 @@ class RunResult:
             # stream's byte order is what the attestation covers and what `cdfc verify` re-derives;
             # adding rows to it would change a file whose identity is the claim.
             "uncheckedByReason": self.unchecked_by_reason(),
+            # WHAT THE DENOMINATOR EXCLUDED, so a reader can answer *is the field surface the
+            # whole form?* The honest answer for FME is no — 505 cells the template computes and
+            # 2,505 a filer cannot write are removed before the count begins — and until this
+            # field existed nothing anywhere said so. A denominator that does not declare its own
+            # exclusions is the coverage lie this product is named for, aimed at itself.
+            "surfaceExclusions": _surface_exclusions(),
             "livenessProof": None if self.liveness is None else self.liveness.as_liveness_proof(),
             "livenessFailureKind": (
                 None if self.liveness_disposition is None
@@ -99,6 +105,23 @@ class RunResult:
             ),
             **serialise(self.fraction),
         }
+
+
+def _surface_exclusions() -> dict[str, Any] | None:
+    """The FME field surface's exclusion census, or `None` when it cannot be derived.
+
+    Read here rather than threaded through `execute()` because it is a property of the TEMPLATE,
+    not of the run: every run against the same blank excludes the same cells, and passing it as a
+    parameter would invite a caller to supply a different one.
+    """
+    try:
+        from cdfc.measure.p5_run import FME
+        from cdfc.schema.styles_mask import Rule, build
+
+        ex = build(FME, Rule.V3).exclusions
+    except Exception:  # noqa: BLE001 — an underivable census is a state, reported as absent
+        return None
+    return None if ex is None else ex.as_canonical_obj()
 
 
 def run_id_for(filing_sha256: str, registry_root: str, profile: RunProfile) -> str:

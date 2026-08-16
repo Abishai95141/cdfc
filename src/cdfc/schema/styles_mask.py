@@ -41,6 +41,47 @@ class StyleCensus:
 
 
 @dataclass(frozen=True)
+class ExclusionCensus:
+    """**What the denominator LEFT OUT, counted.** Three disjoint buckets that close.
+
+    `n_cells` is a number arrived at by removing things, and until this existed nothing recorded
+    what was removed. A reader of a report saw `3,747` and had no way to answer *is that the whole
+    form?* — which is precisely the question a coverage claim has to be able to answer, in the one
+    product whose differentiator is reporting what it did not check.
+
+    The partition is evaluated in this order and each cell lands in exactly one bucket:
+
+    | bucket | rule |
+    |---|---|
+    | `formula` | rule 5 — the template computes it, so it is not a filer field |
+    | `locked` | the protection mask says a filer cannot write it |
+    | `field_surface` | everything else; this is `n_cells` |
+
+    **`recorded` is cells the WORKBOOK RECORDS, not cells in the grid.** OOXML omits `<c>` for a
+    cell that is empty and unstyled, so a 1,048,576-row sheet does not contribute a million entries.
+    Naming it `recorded` rather than `total` keeps that limit on the number instead of in a comment
+    nobody reads beside it.
+    """
+
+    recorded: int
+    formula: int
+    locked: int
+    field_surface: int
+
+    def __post_init__(self) -> None:
+        if self.recorded != self.formula + self.locked + self.field_surface:
+            raise ValueError(
+                f"recorded={self.recorded} but formula+locked+field_surface="
+                f"{self.formula + self.locked + self.field_surface}. A census of exclusions that "
+                "does not close is a census that lost cells on the way to a denominator."
+            )
+
+    def as_canonical_obj(self) -> dict[str, int]:
+        return {"recorded": self.recorded, "formula": self.formula,
+                "locked": self.locked, "field_surface": self.field_surface}
+
+
+@dataclass(frozen=True)
 class FieldSurface:
     """The denominator. `None` when the template ships no protection mask at all."""
 
@@ -54,6 +95,9 @@ class FieldSurface:
     )
     census: StyleCensus | None = None
     sheets_in_scope: tuple[str, ...] = ()
+    # WHAT THE DENOMINATOR EXCLUDED. `None` only when no mask was derivable and there is
+    # therefore no denominator to have excluded anything from.
+    exclusions: ExclusionCensus | None = None
 
     def as_canonical_obj(self) -> dict[str, object]:
         return {
@@ -171,20 +215,27 @@ def build(blob_path: Path, rule: Rule = Rule.V3) -> FieldSurface:
 
         cells: list[tuple[str, str]] = []
         per_sheet: dict[str, int] = {}
+        # THE EXCLUSIONS, TALLIED ON THE SAME WALK. Counting them in a second pass would be a
+        # second traversal that could disagree with the first about which cells exist.
+        n_recorded = n_formula = n_locked = 0
         for name, _state, part in sheets:
             root = roots.get(name)
             if root is None:
                 continue
             here = 0
             for c in root.iter(f"{{{M}}}c"):
+                n_recorded += 1
                 has_formula = c.find(f"{{{M}}}f") is not None
                 if has_formula and rule is not Rule.V3_UW:
+                    n_formula += 1
                     continue                 # rule 5: a formula cell is not a filer field
                 s = c.get("s")
                 sid = int(s) if (s or "").isdigit() else 0
                 if not _resolve_locked(sid, cell_xfs, style_xfs, rule):
                     cells.append((name, c.get("r", "")))
                     here += 1
+                else:
+                    n_locked += 1
             per_sheet[name] = here
 
     return FieldSurface(
@@ -195,4 +246,9 @@ def build(blob_path: Path, rule: Rule = Rule.V3) -> FieldSurface:
         source="styles.xml cellXfs with xfId inheritance (path A)",
         census=census,
         sheets_in_scope=tuple(n for n, _, _ in sheets),
+        # `__post_init__` refuses a census that does not close, so a future edit that adds a
+        # `continue` without a tally fails here rather than shrinking the denominator quietly.
+        exclusions=ExclusionCensus(
+            recorded=n_recorded, formula=n_formula, locked=n_locked, field_surface=len(cells),
+        ),
     )

@@ -285,6 +285,7 @@ def run_screen(params: dict[str, str], _query: dict[str, str]) -> str:
 <p class="caveat">{esc(f["denominatorWarning"])}</p>
 {actions}
 <section><h2>Coverage</h2>{band}</section>
+<section><h2>Is the field surface the whole form?</h2>{_exclusions(run.get("surfaceExclusions"))}</section>
 <section><h2>The six counts</h2><div class="grid grid-2">{counts}</div></section>
 <section><h2>What was not checked</h2>{gap}
   <p class="page-lede">{esc(str(unchecked.get("total", 0)))} cells carry no predicate.
@@ -309,6 +310,38 @@ def run_screen(params: dict[str, str], _query: dict[str, str]) -> str:
                 lede="What was checked in this filing, and what was not.",
                 crumb=_link("/portfolio", "Filings") + " / " + esc(rid),
                 body=body, tallies=_tallies())
+
+
+def _exclusions(ex: dict[str, Any] | None) -> str:
+    """**No, and here is exactly what was removed.**
+
+    The field surface is a number arrived at by taking cells away, and for as long as nothing
+    recorded what was taken, a reader had no way to ask the question this section is named for.
+    That is the coverage lie this product exists to refuse, aimed at its own denominator.
+    """
+    if not ex:
+        return C.empty_state(
+            "The exclusion census is not on this run",
+            "It is not rendered as zeros. Zero excluded would say the field surface is the whole "
+            "workbook, and that is a claim this run did not make. Re-run the filing to produce it.",
+        )
+    rows = [
+        [f'<span class="figure">{ex["formula"]:,}</span>',
+         "formula cells — the template computes them, so they are not fields a filer writes"],
+        [f'<span class="figure">{ex["locked"]:,}</span>',
+         "locked cells — the protection mask says a filer cannot write them"],
+        [f'<span class="figure">{ex["field_surface"]:,}</span>',
+         "THE FIELD SURFACE — everything left, and the denominator of every count on this page"],
+    ]
+    return (
+        f'<p class="page-lede">No. The workbook records '
+        f'{C.fraction(ex["field_surface"], ex["recorded"], unit="cells as the field surface")}. '
+        "The rest were removed before the count began, and this is what they were.</p>"
+        + C.table([("cells", "n"), ("why it is not a field", "w")], rows,
+                  caption="The three buckets are disjoint and sum to the recorded total. "
+                          "`recorded` is cells the WORKBOOK RECORDS: OOXML omits an entry for a "
+                          "cell that is empty and unstyled, so this is not the size of the grid.")
+    )
 
 
 def _stat(label: str, value: str, sub: str) -> str:
