@@ -4,12 +4,12 @@
 
 ## The primary number
 
-**0 bytes differing of 1,568,185 bytes**, across every artifact a run produces.
+**0 bytes differing of 1,569,451 bytes**, across every artifact a run produces.
 
 | artifact | bytes | sha256 | across all four environments |
 |---|---:|---|---|
 | `attestation payload` | 4,015 | *not pinnable — embeds `code_git_sha`* | **identical** |
-| `oscal projection` | 1,227,393 | `28041b2a88948d1b…` | **identical** |
+| `oscal projection` | 1,228,659 | `e21f8f8ec4be2dbb…` | **identical** |
 | `ro-crate projection` | 954 | `7b8052b4cca1daec…` | **identical** |
 | `run.jsonl` | 335,823 | `d647047e3560e6b4…` | **identical** |
 

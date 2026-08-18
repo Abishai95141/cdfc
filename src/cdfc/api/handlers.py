@@ -5,15 +5,20 @@ The one that is stated HERE is `get_portfolio`, because there is nowhere else fo
 
 from __future__ import annotations
 
-import dataclasses
 import json
 from pathlib import Path
 from typing import Any, Final
 
 from cdfc.api import registry_store, store
-from cdfc.api.schemas import TemplateOut, json_schema
+from cdfc.measure.paths import PRESCRIBED_MANIFEST
 
 REPORTS: Final[Path] = Path("reports/runs")
+
+# The nine vendored blanks a filing may bind to, and the hash-verified manifest that pins them.
+# Absolute, derived from the package location rather than from the process's working directory,
+# because which nine workbooks exist is a fact about this repository and not about where a server
+# happened to be started.
+PRESCRIBED: Final[Path] = PRESCRIBED_MANIFEST.parent
 
 # At most this many cells in one response. The cap is VISIBLE -- `returned` beside `total` -- so a
 # truncated list cannot be read as a complete one.
@@ -27,12 +32,48 @@ DENOMINATOR_WARNING: Final[str] = (
 )
 ADMISSION_STATE: Final[str] = "PRE-GATE"
 
-# The two workbooks with no derivable protection mask. Their ceiling is `null`, NEVER 0 --
-# NC-D03b's API twin. A ceiling of zero says "nothing in this template can ever settle"; a null
-# says "this template has no mask, so no ceiling is derivable". A client that renders 0 for both
-# tells its user the first thing when the second is true.
-NO_MASK_TEMPLATES: Final[tuple[str, ...]] = (
-    "IFSCA_Annual_Reporting_Format", "Draft_ACAC_Format",
+# The two workbooks with no derivable protection mask, keyed by the digest the manifest pins them
+# under rather than by a display name -- a name is not an identity, and the manifest's filenames
+# carry a date stamp these two short labels did not. MEASURED, not asserted: `styles_mask.build`
+# under generator rule v3 returns an empty cell set for both, and a non-empty one for the other
+# seven.
+#
+# NC-D03b's API twin. A ceiling of zero says "nothing in this template can ever settle"; the
+# absence of a ceiling says "no ceiling was derived". These two are the case where the second is
+# true for a REASON IN THE WORKBOOK, and the other seven are the case where it is true because
+# this build computes no per-template ceiling at all. `_pinned_templates` says which is which
+# instead of collapsing them onto one value.
+NO_MASK_TEMPLATE_SHA256: Final[tuple[str, ...]] = (
+    # IFSCA_Annual_Reporting_Format_30April_2026_Approved_20260504_1247.xlsx
+    "4b2d4a2bb0416ae22048c7cf1fcbb5c581c19933ca85663ab69f311a8846395d",
+    # Draft_ACAC_Format_20260605_0631.xlsx
+    "74ba7b894b429bbe939a296cacf39196ad9f5b93ec238037f2c47c277dd79e5e",
+)
+
+# Why `settledFractionCeiling` is ABSENT from a template row rather than null or zero. The value
+# this endpoint used to emit was the literal 0.63, handed to every template that was not on the
+# no-mask list, and it was not derived from anything: no per-template settled-fraction ceiling is
+# computed in this build. The one published ceiling,
+# `docs/measurements/p9-template-diff-ceiling.json`, is TEMPLATE_DIFF's reach over ONE workbook,
+# which is a different quantity from the fraction of a template's field surface that any predicate
+# could ever settle -- so it cannot be substituted here either.
+# **THESE TWO SENTENCES MAY NOT CONTAIN A DIGIT, AND THAT IS A RENDERING CONTRACT, NOT A STYLE
+# NOTE.** `surface/web/components.count(None, absent_reason=…)` raises `UnnamedAbsence` on any
+# digit in an absence reason, because a digit in the not-measured state is read as the measurement
+# — which is precisely what has not been taken. The first draft of `NO_CEILING_MEASURED` quoted the
+# literal ceiling this endpoint used to return (nought point six three, handed to every template
+# outside the no-mask list and derived from no measurement) and the guard refused to render it. The
+# history belongs here, where a maintainer reads it; the sentence below is what a reader is shown.
+# Likewise the mask's generator rule is named in `schema/styles_mask.Rule` and not spelled here,
+# because its name carries a version digit.
+NO_CEILING_MEASURED: Final[str] = (
+    "no per-template settled-fraction ceiling is computed in this build; the figure this endpoint "
+    "used to return was a literal, not a measurement"
+)
+NO_MASK_AT_ALL: Final[str] = (
+    "this template's unlocked-cell mask under the pinned generator rule is empty, so it has no "
+    "field surface and no ceiling is derivable from it. That is NOT a ceiling of zero: zero would "
+    "say nothing in this template can ever settle"
 )
 
 # The administrator's portfolio table renders these columns and NO OTHERS.
@@ -63,35 +104,145 @@ def get_openapi(req, params):
     return _json(200, openapi_document())
 
 
+def _pinned_templates() -> list[dict[str, Any]]:
+    """The pinned blanks, read from `fixtures/prescribed/MANIFEST.json`. **Real digests.**
+
+    This listing used to be three hand-written names whose `templateSha256` was the f-string
+    `f"sha-{name}"` -- so a client copied `sha-FME_Quarterly` out of the API and pasted a value
+    that identifies no file anywhere -- and it emitted that same body from an empty directory. The
+    corpus has NINE workbooks and every one of them carries a sha256 in the vendored manifest that
+    `template_current()` already treats as the pinned set, so there was a real answer available the
+    whole time.
+
+    Sorted by filename so two responses are byte-identical, which
+    `test_api__responses_are_byte_stable` asserts over the wire.
+    """
+    rows = []
+    for f in sorted(_load(PRESCRIBED_MANIFEST)["files"], key=lambda f: f["filename"]):
+        sha = f["sha256"]
+        rows.append({
+            "templateSha256": sha,
+            "name": Path(f["filename"]).stem,
+            "settledFractionCeilingUnavailable": (
+                NO_MASK_AT_ALL if sha in NO_MASK_TEMPLATE_SHA256 else NO_CEILING_MEASURED
+            ),
+        })
+    return rows
+
+
 def get_templates(req, params):
-    rows = [
-        TemplateOut(templateSha256=f"sha-{name}", name=name,
-                    settledFractionCeiling=None if name in NO_MASK_TEMPLATES else 0.63)
-        for name in ("FME_Quarterly", *NO_MASK_TEMPLATES)
-    ]
-    return _json(200, [dataclasses.asdict(r) for r in rows])
+    """The nine pinned blanks. **No `settledFractionCeiling` field** -- see `_pinned_templates`."""
+    try:
+        return _json(200, _pinned_templates())
+    except FileNotFoundError as e:
+        # A refusal, not an empty list. `200 []` from a machine with no corpus reads as "no
+        # template has ever been pinned", which is a claim about the product rather than about
+        # this checkout.
+        return _err(503, "prescribed_corpus_not_on_disk", str(e),
+                    remedy=f"the vendored corpus is expected at {PRESCRIBED}")
 
 
 def get_template_schema(req, params):
-    return _json(200, {"templateSha256": params.get("sha", ""), "schema": json_schema()})
+    """**404 for a sha nobody pinned, 501 for one we did.** It never served a template's schema.
+
+    This handler ignored `{sha}` entirely and returned `json_schema()` -- the API's OWN response
+    DTOs, `DenominatorOut`, `RunOut`, `ErrorOut` -- so `deadbeef` and a real template digest got
+    byte-identical bodies, and a client asking what fields a template expects received a
+    description of this API's envelopes with nothing in it to reveal the substitution.
+
+    Inducing a template's schema is `cdfc.predicates.harvest`, which walks the workbook's formulas
+    and is minutes of work over a corpus; it is not wired to a request, so a known sha is answered
+    with 501 naming that, and an unknown one with 404. The two statuses differ because the two
+    facts differ.
+    """
+    sha = params.get("sha", "").strip().lower()
+    try:
+        pinned = {row["templateSha256"]: row["name"] for row in _pinned_templates()}
+    except FileNotFoundError as e:
+        return _err(503, "prescribed_corpus_not_on_disk", str(e),
+                    remedy=f"the vendored corpus is expected at {PRESCRIBED}")
+    if sha not in pinned:
+        return _err(404, "no_such_template",
+                    f"{sha[:16] or '(empty)'} is not one of the {len(pinned)} pinned template "
+                    "digests. GET /v1/templates lists them.")
+    return _err(501, "template_schema_not_served",
+                f"{pinned[sha]} is pinned, but this build does not serve an induced schema for it. "
+                "The schema is produced by cdfc.predicates.harvest walking the workbook's "
+                "formulas, and that is not wired to a request; returning this API's own response "
+                "DTOs under the name of a template schema is what this endpoint used to do.",
+                templateSha256=sha)
 
 
 def post_filings(req, params):
-    """`422` on an unbound template, **with the structural fingerprint in the body**.
+    """`422` on an unbound template, **with the fingerprint this upload actually computes to**.
 
-    A 422 that only says "unknown template" leaves an operator with nothing to act on. The
-    fingerprint is what they paste into `POST /v1/templates` to admit it, so the refusal carries
-    its own remedy -- the same rule the Unchecked panel applies to a reason code.
+    The fingerprint used to be the literal string `"sheet-shape:unknown"`, returned unconditionally
+    after two magic-byte checks. So `422 template_unbound` was the answer for every file on earth,
+    including the FME filing `cdfc run` binds without difficulty, and the value an operator was
+    invited to paste into admission was the same eighteen characters every time.
+
+    It now projects the upload through `cdfc.schema.fingerprint` and looks it up in the pinned
+    catalogue through `cdfc.evaluate.binding` -- the same two functions the command line uses. The
+    422 carries the computed digest and, from `Unbound.explain()`, what the filing was NEAREST to
+    and on how many of the four structural facets, because a refusal that cannot say what it nearly
+    matched sends the filer away to guess which form they filed.
+
+    **A filing that BINDS gets a 501, not a run.** Nothing in this build evaluates a filing over
+    HTTP: there is no queue and no worker, and `cdfc.api.store` is read-only by design -- "an API
+    that could WRITE a run would be an API that can change what a signed statement covers". Runs
+    are produced by `cdfc run <filing> --out reports/runs`. So a 200 from here would have to invent
+    a run id for a run that never happened.
+
+    The old docstring said the refusal "carries its own remedy". It does not, and the sentence is
+    gone with the constant: `POST /v1/templates` cannot admit a template either. The fingerprint is
+    evidence about this upload, and naming it as evidence is the whole of what this endpoint can
+    honestly do.
     """
     if not req.body:
         return _err(415, "not_a_zip", "the body is empty; an .xlsx is a zip container")
     if req.body[:2] != b"PK":
         return _err(415, "not_a_zip",
                     "the body does not begin with the zip local-file-header magic 'PK'")
+
+    import tempfile
+
+    from cdfc.evaluate.binding import Bound, TemplateCatalogue, bind_template
+
+    catalogue = TemplateCatalogue.from_corpus(PRESCRIBED)
+    if not catalogue.entries:
+        # `Unbound` against an empty catalogue is a refusal that compared the filing to nothing,
+        # and `binding.Unbound.explain()` says so in prose -- but the STATUS would still be 422
+        # `template_unbound`, which is a claim about the filing. This is a claim about the server.
+        return _err(503, "prescribed_corpus_not_on_disk",
+                    f"no pinned template was found under {PRESCRIBED}, so this upload would be "
+                    "compared against nothing. An 'unbound' answer from an empty catalogue says "
+                    "nothing whatever about the filing.")
+
+    with tempfile.TemporaryDirectory() as d:
+        blob = Path(d) / "upload.xlsx"
+        blob.write_bytes(req.body)
+        try:
+            outcome = bind_template(blob, catalogue)
+        except Exception as e:  # noqa: BLE001
+            # A malformed upload must be a NAMED refusal rather than a traceback: `zipfile` raises
+            # `BadZipFile` for a truncated container and `KeyError` for a zip with no
+            # `xl/workbook.xml`, and a 500 would tell the filer that this server broke rather than
+            # that their file did. The exception type is named so the two cases stay distinct.
+            return _err(415, "unreadable_xlsx",
+                        f"the body begins with 'PK' but could not be read as a spreadsheet "
+                        f"package: {type(e).__name__}: {e}")
+
+    if isinstance(outcome, Bound):
+        return _err(501, "run_not_available_over_http",
+                    "this filing binds to a pinned template, and this build cannot run it here. "
+                    "There is no queue, no worker and no run store behind this endpoint, so the "
+                    "check is available from the command line only: `cdfc run <filing.xlsx>`. A "
+                    "200 from here would have to name a run id for a run nobody performed.",
+                    structuralFingerprint=outcome.fingerprint,
+                    templateSha256=outcome.template_sha256)
     return _err(422, "template_unbound",
-                "this filing's template is not admitted. Send the fingerprint to POST /v1/templates "
-                "to begin admission; it stops at T7 awaiting a human signature.",
-                structuralFingerprint="sheet-shape:unknown")
+                "this filing's template is not one of the pinned blanks. " + outcome.explain(),
+                structuralFingerprint=outcome.fingerprint)
 
 
 def get_run(req, params):
@@ -218,14 +369,58 @@ def post_overrides(req, params):
 
 
 def post_templates(req, params):
-    """Runs T1–T6 and **stops at T7 awaiting a human signature.**"""
-    return _json(202, {"admitted": False, "stoppedAt": "T7",
-                       "detail": "T1-T6 ran. T7 is a human signature and this endpoint cannot "
-                                 "supply one; admission is incomplete until it is countersigned."})
+    """**501. Template admission is not implemented in this build.**
+
+    This returned a byte-identical `202 {"stoppedAt": "T7", "detail": "T1-T6 ran…"}` for an .xlsx,
+    for an empty body, for garbage bytes and for a PDF -- it never read `req.body` at all. The
+    T-series it named is the template-admission pipeline in `spec/03-stack.md`, T1 *Fetch* through
+    T7 *Register*, and no source file implements any of the seven. So "T1-T6 ran" described work
+    that no code performs, and `stoppedAt: "T7"` attributed the stop to the one step that was
+    supposed to need a person -- which made a missing implementation look like a waiting signature.
+
+    The nine workbooks in `fixtures/prescribed/MANIFEST.json` are the only templates a filing can
+    bind to, and they were pinned by vendoring them into the repository under a hash-verified
+    manifest -- not by this endpoint, which has never admitted anything.
+    """
+    try:
+        pinned = _pinned_templates()
+    except FileNotFoundError as e:
+        return _err(503, "prescribed_corpus_not_on_disk", str(e),
+                    remedy=f"the vendored corpus is expected at {PRESCRIBED}")
+    return _err(501, "template_admission_not_implemented",
+                f"admitting a template is not implemented here. The {len(pinned)} workbooks pinned "
+                f"in {PRESCRIBED_MANIFEST.name} are the only templates a filing can bind to; a new "
+                "one is admitted by vendoring it into that manifest, which is a change to the "
+                "repository and not a request. T1-T7 are specified in spec/03-stack.md and no "
+                "source file implements any of them.",
+                pinnedTemplates=[{"templateSha256": r["templateSha256"], "name": r["name"]}
+                                 for r in pinned])
 
 
 def post_verify(req, params):
-    return _json(200, {"reproduced": False, "diff": ["no published report to verify against"]})
+    """**501. Verification over HTTP is not implemented**; `cdfc verify` is where it lives.
+
+    This was two lines returning `200 {"reproduced": false, "diff": ["no published report to
+    verify against"]}`. It never read the request body, so a genuine attestation, a corrupted one
+    and an empty body produced the same answer -- and "no published report to verify against" was
+    said about a document nobody had looked at. It was also unauthenticated, which mattered less
+    than it looks only because there was nothing behind it to reach.
+
+    The real check is `cdfc.attest.verify.verify(artifact, blobs)`: it takes the signature against
+    the STORED bytes, re-runs the pipeline from the manifest's ten pins, and compares the payload
+    byte for byte, reporting `reproduced` and `signature_valid` separately because a third party
+    does not hold the filer's key. It needs the filing and template blobs resolvable by digest and
+    it is minutes of work per artifact. Wiring that to a request is a job this build has not done,
+    and answering `reproduced: false` without doing it is precisely the silent false negative the
+    tool exists to detect.
+    """
+    return _err(501, "verification_not_available_over_http",
+                "re-derivation is not implemented behind this endpoint. It is available from the "
+                "command line: `cdfc verify <artifact.json>` re-runs the pipeline from the "
+                "manifest's pins and compares the payload byte for byte, and reports the signature "
+                "check separately from the re-derivation. This endpoint previously answered "
+                "'reproduced: false' without reading the request body, which is a determination "
+                "made about nothing.")
 
 
 def _artifact_or_503():

@@ -43,7 +43,7 @@ reasoning holds here: a folded homoglyph is a homoglyph nothing can catch.
 
 ## Recall
 
-    g0_marker_recall = NOT MEASURED (0 / 0 labelled spans) — D-P7-01: no statutory instrument is pinned in this repository, so there is no normative text to label spans of. Fifty spans invented for the purpose would measure the detector against its own author's idea of what a proviso looks like, which is the recall figure being worth nothing while looking like a number. The consequence is enforced rather than noted: provisos.assert_measured_for_statute raises for any source==STATUTE candidate reaching G0, and there are none today.
+    g0_marker_recall = NOT MEASURED (0 / 0 labelled spans) — D-P7-01 is discharged — statute-fm-regulations-2025 IS pinned, 1,218 units read by two independent external extractors — and this field used to give that absence as the reason. What is missing now is the LABELLING: labeller is null, labelled_at is null and spans is empty, so recall is UNMEASURED rather than low, which is a fact about us and not about the detector. Fifty spans invented instead of read would measure the detector against its own author's idea of what a proviso looks like — a figure worth nothing that looks like a number. So provisos.assert_measured_for_statute raises ProvisoRecallUnmeasured for any source==STATUTE candidate at G0, and nothing is blocked today only because obligations.yaml is empty.
 
 **The number is the deliverable, not a threshold.** A detector whose recall is unmeasured
 is exactly the instrument this project refuses to ship, so while the labelled set is empty

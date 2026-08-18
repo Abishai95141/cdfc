@@ -87,8 +87,13 @@ def test_obligations__source_is_required_and_closed():
 
 
 def test_obligations__a_row_naming_an_absent_instrument_is_refused(tmp_path):
-    """D-P7-01. While the statutory corpus is empty a STATUTE row cannot enter the funnel by
-    resolving against nothing — it does not resolve at all."""
+    """D-P7-01. A row naming an instrument the store does not hold does not resolve against an
+    empty string — it does not resolve at all.
+
+    The instrument_id below is `fm-regulations-2025`, the PDF's file name, which is exactly the
+    near-miss this refusal exists to catch: the pinned instrument is `statute-fm-regulations-2025`,
+    so the row names nothing the corpus holds. This test used to read as "while the statutory
+    corpus is empty", which stopped being the reason when S1 pinned the regulation."""
     p = tmp_path / "obligations.yaml"
     p.write_text(
         "obligations:\n"
@@ -106,10 +111,28 @@ def test_obligations__a_row_naming_an_absent_instrument_is_refused(tmp_path):
 
 
 def test_obligations__the_committed_table_is_empty_and_says_why():
-    tbl = load(REPO / "obligations.yaml", store=InstrumentStore(REPO / CORPUS))
+    """The table is empty AND the file says why — keyed on the blocker that is true today.
+
+    This assertion used to require the literal string `statute_instruments: []` to appear in
+    obligations.yaml, which made a FALSE sentence a build requirement: S1 pinned
+    `statute-fm-regulations-2025`, so the manifest field is non-empty and correcting the header
+    would have turned the suite red. The blocker moved rather than lifted — a STATUTE row would now
+    be refused at G0 by `provisos.assert_measured_for_statute`, because the proviso detector's
+    recall is unmeasured — so the test now asserts the file names THAT, and it still fails if the
+    file stops explaining itself at all.
+    """
+    store = InstrumentStore(REPO / CORPUS)
+    tbl = load(REPO / "obligations.yaml", store=store)
     assert len(tbl) == 0
     text = (REPO / "obligations.yaml").read_text(encoding="utf-8")
-    assert "D-P7-01" in text and "statute_instruments: []" in text
+    # The current blocker, named: an unmeasured proviso detector and the file that would fix it.
+    assert "assert_measured_for_statute" in text
+    assert "fixtures/predicates/proviso-labels.json" in text
+    # And it names the instrument that IS pinned, so a reader is not sent looking for an absent
+    # corpus. (The header still quotes the old `statute_instruments: []` wording — as the claim it
+    # is correcting — so this is asserted positively rather than as the absence of that string.)
+    assert "statute-fm-regulations-2025" in text
+    assert store.statute_ids() == ("statute-fm-regulations-2025",)
 
 
 def test_obligations__a_span_that_disagrees_with_its_quote_fails_at_load(tmp_path):

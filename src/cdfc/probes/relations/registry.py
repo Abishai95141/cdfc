@@ -147,10 +147,21 @@ class RelationSpec:
 def resolve_builder(dotted: str) -> Mapping[str, str]:
     """`module:function` → `{precondition, expr, witness}`.
 
-    **Long CEL is GENERATED from the pinned blank, never typed into YAML.** R-02 addresses forty
-    cells and R-03 eleven; hand-typing them is how a relation comes to name a cell nobody meant,
-    and a review of 300 characters of dotted paths is not a review. The builder is deterministic
-    in the template, so `catalogue.yaml` stays readable and the expression stays checkable.
+    **Long CEL is GENERATED IN PYTHON, never typed into YAML.** R-02 addresses forty cells and
+    R-03 eleven; hand-typing them is how a relation comes to name a cell nobody meant, and a review
+    of 300 characters of dotted paths is not a review. A review of `for j in range(1, SCHEMES + 1)`
+    is. That much is real, and it is what keeps `catalogue.yaml` readable.
+
+    **It is NOT generated from the pinned blank, and this docstring used to say it was.** All three
+    builders in the catalogue — `partition:build`, `schemes:build`, `prior_period:build` — have the
+    signature `build() -> dict[str, str]`, which is why `fn()` below is called with no arguments.
+    They take no template, open no workbook, and return the same three strings on every call. The
+    row and column constants they expand were read off one blank BY A HUMAN and typed into the
+    builder module. So the builder is not "deterministic in the template"; it is a constant, and
+    the template is not one of its inputs. The addresses are hand-specified and only their
+    EXPANSION is mechanical. A builder written against a different template would emit a
+    well-formed expression addressing the wrong cells without complaining, and the thing that
+    notices a different template is the `template_sha256` pin in the run manifest, not this loader.
     """
     import importlib
 

@@ -155,14 +155,17 @@ def drop_post(_params: dict[str, str], form: dict[str, Any]) -> str:
         extra = (f'<p class="err-remedy"><span class="meta">this file is</span> '
                  f'<span class="figure">{len(blob):,}</span> bytes</p>')
     if body.get("structuralFingerprint"):
-        # A 422 that only says "unknown template" leaves an operator with nothing to act on. The
-        # fingerprint is what they paste into template admission, so the refusal carries its remedy.
+        # A 422 that only says "unknown template" leaves an operator with nothing to act on, so
+        # the refusal carries the server's fingerprint verbatim. It is NOT a remedy any more:
+        # template admission is not implemented in this build, so the link goes to the list of
+        # blank forms a filing CAN be bound to rather than to a control claiming to admit this one.
         extra += (
             f'<p class="err-remedy"><span class="meta">structural fingerprint</span> '
             f'<code data-copy="{esc(body["structuralFingerprint"])}">'
             f'{esc(body["structuralFingerprint"])}</code> '
             f'<button type="button" class="btn btn-quiet" data-copy-btn>copy</button></p>'
-            f'<p class="err-remedy">{_link("/templates", "Begin admission", cls="btn btn-quiet")}</p>'
+            f'<p class="err-remedy">'
+            f'{_link("/templates", "See which templates bind", cls="btn btn-quiet")}</p>'
         )
     title = _UPLOAD_TITLES.get(status, f"The server refused ({status})")
     return page(
@@ -176,7 +179,14 @@ def drop_post(_params: dict[str, str], form: dict[str, Any]) -> str:
 
 
 def templates_post(_params: dict[str, str], form: dict[str, Any]) -> str:
-    """`POST /templates` — admission runs T1–T6 and **stops at T7 awaiting a human signature.**"""
+    """`POST /templates` — **no screen posts here any more**; the route survives for a direct POST.
+
+    The docstring used to say admission runs T1–T6 and stops at T7. It does not: `POST
+    /v1/templates` is a constant that returns the same stopped-at-T7 body without reading the
+    request, so nothing runs and nothing is written. What this handler still does honestly is
+    surface the 503 an unset operator token produces — treating an absent secret as an open door
+    is how a check disappears in production while every test still passes.
+    """
     status, body = _post("/v1/templates", b"{}", content_type="application/json",
                          token=str(form.get("token") or ""))
     if status == 202:
@@ -198,7 +208,13 @@ def templates_post(_params: dict[str, str], form: dict[str, Any]) -> str:
 
 
 def verify_post(_params: dict[str, str], form: dict[str, Any]) -> str:
-    """`POST /verify` — re-derive and compare. **The comparison is over BYTES.**"""
+    """`POST /verify` — **no screen posts here any more**; the route survives for a direct POST.
+
+    It said "re-derive and compare" and did neither. `POST /v1/verify` reads no request body and
+    returns a fixed refusal, so the empty `{}` below is not a discarded payload — it is an
+    accurate statement that this request carries nothing the server would read. The comparison
+    over BYTES happens in `cdfc verify`, against an attestation on disk.
+    """
     status, body = _post("/v1/verify", b"{}", content_type="application/json")
     reproduced = bool(body.get("reproduced"))
     diff = body.get("diff") or []
@@ -213,7 +229,7 @@ def verify_post(_params: dict[str, str], form: dict[str, Any]) -> str:
         outcome = C.error_state(
             "The bytes do not match, or there is nothing to compare against",
             "; ".join(str(d) for d in diff) or str(body.get("detail", "")),
-            remedy="cdfc verify <run-id> --against <published.html>",
+            remedy="cdfc verify runs/<run-id>/attestation.json",
         )
     supplied = form.get("report")
     if isinstance(supplied, tuple) and supplied[1]:
@@ -993,35 +1009,39 @@ def templates_screen(_params: dict[str, str], _query: dict[str, str]) -> str:
     if status != 200:
         return page(title="Templates", active="/templates", heading="Templates",
                     body=C.error_state("Could not list templates", str(body)), tallies=_tallies())
+    # THE CEILING FIELD IS GONE FROM THE API AND THAT IS THE POINT. It used to be the literal
+    # `0.63`, handed to every template outside a two-workbook no-mask list and derived from no
+    # measurement. `/v1/templates` now OMITS the field entirely and carries
+    # `settledFractionCeilingUnavailable` — a REASON — in its place, with two distinct wordings so
+    # "this template has no protection mask" stays separable from "no ceiling is computed in this
+    # build". Rendering a reason where a figure cannot be produced is the same rule the Unchecked
+    # panel applies, and `C.count(None, absent_reason=…)` is the component that carries no digit.
     rows = [
         [f'<code>{esc(t["name"])}</code>',
          _digest(t["templateSha256"]),
-         (C.count(None, absent_reason="no protection mask — no ceiling is derivable")
-          if t["settledFractionCeiling"] is None
-          else f'<span class="figure">{esc(str(t["settledFractionCeiling"]))}</span>')]
+         (f'<span class="figure">{esc(str(t["settledFractionCeiling"]))}</span>'
+          if t.get("settledFractionCeiling") is not None
+          else C.count(None, absent_reason=t["settledFractionCeilingUnavailable"]))]
         for t in body
     ]
     table = C.table([("template", "m"), ("sha256", "m"), ("settled-fraction ceiling", "")], rows,
-                    caption="A null ceiling is NOT zero. Zero says nothing in this template can "
-                            "ever settle; null says the template has no mask, so no ceiling is "
-                            "derivable. A client that renders 0 for both tells its reader the "
-                            "first thing when the second is true.")
-    admission = """<section><h2>Admit a template</h2>
-  <form class="filters" method="post" action="/templates">
-    <div class="field"><label for="fp">structural fingerprint</label>
-      <input id="fp" type="text" name="fingerprint" placeholder="sheet-shape:…"></div>
-    <div class="field"><label for="tok">operator token</label>
-      <input id="tok" type="text" name="token" placeholder="required"></div>
-    <div class="field"><button type="submit" class="btn btn-primary">
-      <span class="idle">Begin admission</span>
-      <span class="pending"><span class="spinner"></span>running T1–T6</span></button></div>
-  </form>"""
-    admission += C.error_state(
-        "Admission cannot complete here",
-        "T1–T6 run automatically. T7 is a human signature and this endpoint cannot supply one, so "
-        "admission stops there and the template stays unadmitted until it is countersigned. An "
-        "unset operator token refuses with 503 rather than passing — treating an absent secret as "
-        "an open door is how a check disappears in production while every test still passes.",
+                    caption="An absent ceiling is NOT zero. Zero says nothing in this template can "
+                            "ever settle; absent says no ceiling was produced, and the cell carries "
+                            "which of the two reasons applies. A client that renders 0 for both "
+                            "tells its reader the first thing when the second is true.")
+    # The form that stood here took a structural fingerprint and an operator token and had NO
+    # FILE INPUT at all, so there was never a workbook for admission to read; behind it,
+    # `POST /v1/templates` is a constant that answers 202 stopped-at-T7 whatever it is sent and
+    # writes nothing. A control that accepts a fingerprint and drops it tells an operator that
+    # admission is one paste away, so the control is gone and the page names what is missing.
+    admission = "<section><h2>Admit a template</h2>" + C.empty_state(
+        "Template admission is not implemented in this build",
+        "Nothing here reads a workbook, derives its structure and admits it: the endpoint behind "
+        "this page returns the same stopped-at-T7 answer whatever it receives, and no template is "
+        "written. The templates listed above are the only blank forms this build can bind a filing "
+        "to. A workbook shaped like anything else is refused at upload with its structural "
+        "fingerprint, and admitting it is work that has not been done rather than a form to fill "
+        "in.",
     ) + "</section>"
     return page(title="Templates", active="/templates", heading="Templates",
                 lede="The blank forms this product can check a filing against.",
@@ -1035,22 +1055,25 @@ def templates_screen(_params: dict[str, str], _query: dict[str, str]) -> str:
 def verify_screen(_params: dict[str, str], _query: dict[str, str]) -> str:
     status, body = _get("/v1/registry/roots")
     roots = body if status == 200 else []
-    form = """<form class="filters" method="post" action="/verify" enctype="multipart/form-data">
-  <div class="field"><label for="v-run">run id</label>
-    <input id="v-run" type="text" name="runId" placeholder="f5eb385a8888c55b"></div>
-  <div class="field"><label for="v-file">the published report</label>
-    <input id="v-file" type="file" name="report" accept=".html,.json"></div>
-  <div class="field"><button type="submit" class="btn btn-primary">
-    <span class="idle">Re-derive and compare</span>
-    <span class="pending"><span class="spinner"></span>re-deriving</span></button></div>
-</form>"""
+    # The form that stood here took a run id and posted the literal `{}`, so the id a reader
+    # typed never left the browser — and `POST /v1/verify` reads no request body anyway, returning
+    # a fixed refusal. Re-derivation lives in the CLI, which loads the attestation off disk. An
+    # input that is read back to nobody is worse than no input, so it is gone and the command that
+    # does the comparison is named instead.
+    form = C.empty_state(
+        "Re-derivation does not run from this screen",
+        "Comparing a published report means re-deriving the statement from the run on disk and "
+        "checking it byte for byte, which needs the run directory and the blobs it pins. This "
+        "server does not do that: `POST /v1/verify` answers a fixed refusal without reading the "
+        "request. The command below is the one that performs the comparison.",
+    )
     explain = C.error_state(
         "Verification compares BYTES, not a summary",
         "`cdfc verify` re-derives the statement from the run on disk and compares it byte-for-byte "
         "with the published file. A report that renders the same numbers but differs in one byte "
         "is a report the attestation does not cover, and the comparison says so rather than "
         "reporting a match on the numbers.",
-        remedy="cdfc verify <run-id> --against <published.html>",
+        remedy="cdfc verify runs/<run-id>/attestation.json",
     )
     root_rows = [
         [_digest(r["root"]), f'<span class="badge">{esc(r["signer"])}</span>',
@@ -1066,7 +1089,7 @@ def verify_screen(_params: dict[str, str], _query: dict[str, str]) -> str:
         "There is no admitted batch to verify a report against yet.",
     )
     return page(title="Verify a report", active="/verify", heading="Verify a published report",
-                lede="Check that a report you were given is the one this system produced.",
+                lede="What the byte comparison is, where it runs, and the roots published so far.",
                 body=f"<section><h2>Compare</h2>{form}{explain}</section>"
                      f"<section><h2>Registry roots</h2>{table}</section>",
                 tallies=_tallies())

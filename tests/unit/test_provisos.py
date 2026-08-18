@@ -92,7 +92,20 @@ def test_provisos__recall_is_two_integers_and_a_provenance():
     line = r.render()
     assert "NOT MEASURED" in line
     assert "0 / 0" in line, "even an unmeasured recall renders both integers"
-    assert "no statutory instrument is pinned" in line.lower()
+    # **THIS ASSERTION USED TO REQUIRE A FALSE SENTENCE.** It pinned the words *"no statutory
+    # instrument is pinned"* — the D-P7-01 reason — long after S1 pinned the FM Regulations, so
+    # correcting the reason turned the suite red and the falsehood became a build requirement. It
+    # now pins the PROPERTY the render must carry: the recall is unmeasured, and the sentence says
+    # what would measure it. The specific blocker may move again; that it must be named may not.
+    low = line.lower()
+    assert "labelled span" in low or "labeller" in low, (
+        "an unmeasured recall must name what would measure it — labelled spans and who recorded "
+        "them — rather than merely reporting that it is unmeasured"
+    )
+    assert "no statutory instrument is pinned" not in low, (
+        "the stale D-P7-01 reason is back; corpus/instruments/MANIFEST.json carries "
+        "statute-fm-regulations-2025"
+    )
 
 
 def test_provisos__a_statute_candidate_is_refused_while_recall_is_unmeasured():

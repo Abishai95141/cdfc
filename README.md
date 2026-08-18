@@ -17,6 +17,16 @@ The video is recorded by driving the running server, not by capturing a screen. 
 is read live from the API, and `make demo-verify` fails the build if a caption quotes a number the
 product no longer produces.
 
+**Which half of it is the browser, and which half is the command line.** Every screen in the video
+is the running server, and every number on those screens is real. But the *run* those screens
+display was produced on the command line by `make history` — the walkthrough never uploads a file,
+because in this build `POST /v1/filings` refuses every filing it is given: `422 template_unbound`
+when the workbook does not bind a pinned blank, and `501 run_not_available_over_http` when it does,
+since there is no queue, no worker and no run store behind that endpoint. The drop screen appears
+in the video as a screen, not as a working intake. A viewer who assumes they can drop a workbook
+into the browser and get that report would be wrong, so it is said here rather than left to be
+discovered.
+
 ---
 
 ## What it does
@@ -30,6 +40,14 @@ formulas, data validations, protection mask and cross-sheet references the regul
 into the artifact. What it returns is a coverage declaration in which every field lands in exactly
 one state, and every unchecked field carries a reason from a closed thirty-code vocabulary plus the
 specific instrument that would make it checkable.
+
+**That is true of the induction engine, and it is not yet true of the shipped runner.** The
+induction is template-agnostic and has been run on workbooks outside this corpus. The runner is
+not: `cdfc run` resolves the pinned FME blank through parameterless cached globals and refuses
+`--template` rather than report a template it did not use, and `POST /v1/filings` refuses every
+filing it is given — including one that binds a pinned blank, which gets a `501` naming the missing
+queue and worker rather than a run id for a run nobody performed. Only the command line checks
+anything.
 
 On the reference filing:
 
@@ -53,7 +71,7 @@ And because a denominator that will not say what it excluded is itself a coverag
 
 ## THE SCOPE OF THIS PROTOTYPE — read this before drawing conclusions
 
-Three claims it would be easy to make from the video, all of them false.
+Four claims it would be easy to make from the video, all of them false.
 
 **It does not read the regulation.** The IFSCA (Fund Management) Regulations 2025 are pinned in the
 corpus — 1,218 text units, extracted by two independent parsers requiring unanimity — and **no
@@ -69,6 +87,14 @@ population running under `PRE-GATE`. No number here rests on a gate-admitted che
 surface as the coverage number collapsing; one is refused outright as `template_unbound`. Catching
 a problem as loss of coverage is a real signal and is not the same as catching it as *this is
 wrong*.
+
+**It checks one form.** Nine blanks are pinned and a filing binds by exact structural hash — but
+the checks, the field surface and the denominator all come from the FME blank whatever workbook is
+handed in. `cdfc run` on the pinned ALR return, whose own field surface is **1,599** cells, is
+scored over FME's **3,747** and still reports `state VALID`; every one of those 3,747 falls to
+`noPredicate`, so no coverage is fabricated, but the denominator is not the filing's. Threading a
+template through the runner's cached globals is later work, and until it exists this is one form's
+checker, not a form checker.
 
 Also absent: operational staleness policy, deployment packaging, and the instrument-stream watcher.
 `docs/OPEN-ITEMS.md` carries the standing list and the report renders it.
@@ -92,7 +118,7 @@ make verify       # every gate, the full suite, and the negative-control sweep
 make demo-video   # re-record the walkthrough (needs `make serve` in another shell)
 ```
 
-`make verify` runs 1,573 tests and a sweep of 141 negative-control entries against 230 guards under
+`make verify` runs 1,600 tests and a sweep of 141 negative-control entries against 230 guards under
 exact-set semantics: every guard expected to go red must go red, every guard expected to stay green
 must stay green. Not *at least one*.
 
@@ -112,9 +138,15 @@ must stay green. Not *at least one*.
 | `tests/negative/` | the injectors — each breaks one property on purpose to prove a guard sees it |
 
 Checks are written in a constrained expression language, walked by AST rather than matched by
-pattern. A check must demonstrate it can catch a seeded fault before it may contribute to coverage.
-Reports are deterministic and re-derivable, so a published claim can be verified by whoever
-receives it rather than trusted.
+pattern. A check must demonstrate it can catch a seeded fault before it may contribute to coverage —
+and on this corpus none has: all 348 candidates were refused at that gate and the admitted library
+holds 0 rows.
+
+The attestation payload is deterministic and re-derivable byte for byte — **0 bytes differing of
+1,569,451** across four environment variations. Read what that covers before relying on it: in this
+prototype it is a 4,015-byte summary statement, not the per-cell record and not the rendered report,
+and it is signed with a demo key published in this repository under the id
+`cdfc-demo-key-do-not-trust`. The mechanism is real; the trust root is not there yet.
 
 ---
 

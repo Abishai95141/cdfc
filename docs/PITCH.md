@@ -2,7 +2,14 @@
 
 **Written 16 Aug 2026.** Deliberately scoped to the GENERAL case, not to this prototype: the
 schema-free induction and the coverage declaration are the product, and one workbook family is the
-evidence base. Word limits are the submission's, and each section is inside them.
+evidence base. Word counts are the submission's.
+
+**Two sections have since grown past the length they were submitted at, and the word counts below
+say so.** The elevator pitch went out at 148 words and the proposed solution at 248; an audit on 18
+Aug 2026 found that four sentences claimed for the product what is only true of the engine, and
+qualifying them cost words. The counts in the headings are what these sections are now, not what
+was submitted, because a heading that keeps quoting the submitted figure while the text underneath
+it has changed is the same class of stale claim the qualifications were added to remove.
 
 ---
 
@@ -12,7 +19,7 @@ evidence base. Word limits are the submission's, and each section is inside them
 
 ---
 
-## Elevator pitch — 148 words
+## Elevator pitch — 171 words (submitted at 148)
 
 Regulated entities file structured returns continuously: fund reports, exposure data, capital
 adequacy, AML statements. Every tool that checks them reports what it found. None reports what it
@@ -21,7 +28,8 @@ correct.
 
 This system induces a form's rules from the form itself — the formulas, dropdowns, protection masks
 and cross-sheet references the regulator already wrote into the artifact. No rules project to
-commission, no schema to maintain, no lag when a version changes.
+commission, no schema to maintain, no lag when a version changes — shown for the induction engine
+on workbooks outside this corpus, not yet for the shipped runner, which is pinned to one blank.
 
 What it returns is a coverage declaration. Every field is accounted for: checked and settled,
 checked and failed, or not checked with a reason from a closed vocabulary and a statement of what
@@ -58,7 +66,7 @@ is most confident where it is least grounded.
 
 ---
 
-## Proposed solution — 248 words
+## Proposed solution — 292 words (submitted at 248)
 
 **The solution**
 A checker that derives its rules from the filing template rather than from a maintained schema, and
@@ -73,12 +81,14 @@ template changes, affected checks stop counting toward it, and the decrease is p
 cause. A number that can only rise is a marketing figure.
 
 **How technology enables it**
-Static analysis of the artifact — formula graph, data validations, protection mask, cross-sheet
-references — induces the constraints the form already encodes, so a new or revised form becomes
-checkable without an authoring project. Checks are expressed in a constrained, machine-checkable
-language. Each is put through seeded-fault testing before it may count: a check that cannot be shown
-to catch anything contributes nothing to coverage. Reports are deterministic and re-derivable byte
-for byte, so a published claim can be verified by whoever receives it.
+Static analysis of the artifact — data validations, protection mask, cross-sheet references, and a
+formula graph built but not yet on the path that checks a filing — induces the constraints the form
+already encodes, so a new or revised form becomes checkable without an authoring project. Checks
+are expressed in a constrained, machine-checkable language. Each is put through seeded-fault
+testing before it may count: a check that cannot be shown to catch anything contributes nothing to
+coverage, and here 348 of 348 candidates were refused at that gate, leaving 0 admitted. The
+attestation payload is deterministic and re-derivable byte for byte — over a 4,015-byte summary
+statement, not the per-cell record or the rendered report, signed with a demo key published here.
 
 **Expected impact on users**
 A reviewer can state what was checked and what was not. An auditor can verify that statement

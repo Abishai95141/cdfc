@@ -407,15 +407,40 @@ def test_web__the_drop_screen_works_with_scripting_off() -> None:
     assert b"{" not in body.split(b"<body")[0], "raw JSON reached the reader"
 
 
-def test_web__a_422_carries_the_structural_fingerprint_and_a_route_to_admission() -> None:
-    """A 422 that only says *unknown template* leaves an operator with nothing to act on."""
+def test_web__a_truncated_workbook_is_named_unreadable_not_given_a_fingerprint() -> None:
+    """**This test used to send a TRUNCATED file and assert a fingerprint came back.**
+
+    It passed because `post_filings` never opened the upload: it returned one hardcoded 422 whose
+    `structuralFingerprint` was the literal `sheet-shape:unknown` for every file on earth. Cutting a
+    workbook to its first two hundred thousand bytes and still being handed a fingerprint should
+    have been the tell. The handler now reads the container, so the truncated blob is what it
+    actually is — an unreadable package — and it is named as one, with the exception that proves
+    somebody tried.
+    """
     blob = Path("fixtures/synthetic/clean__independently-computed__fme-q1.xlsx").read_bytes()
     ct = "multipart/form-data; boundary=" + _BOUNDARY.decode()
     status, body = _post("/", _multipart("filing", "f.xlsx", blob[:200_000]), ct)
     assert status.startswith("200")
-    assert b"not been admitted" in body
-    assert b"structural fingerprint" in body
-    assert b'href="/templates"' in body
+    assert b"could not be read as a spreadsheet package" in body
+    assert b"BadZipFile" in body, "the refusal must name what failed, not merely that it failed"
+
+
+def test_web__an_unpinned_workbook_gets_its_REAL_structural_fingerprint() -> None:
+    """The 422 carries a computed digest, and says admission is unimplemented rather than routing.
+
+    The old page pointed the reader at `/templates` to paste the fingerprint into. That route is a
+    `501` — no source file implements any of the seven admission stages — so the direction was a
+    remedy that went nowhere. The fingerprint is now EVIDENCE, not a remedy, and the page says so.
+    """
+    from cdfc.schema.fingerprint import structural_fingerprint
+
+    p = Path("fixtures/synthetic/row-inserted__portfolio-r7.xlsx")
+    ct = "multipart/form-data; boundary=" + _BOUNDARY.decode()
+    status, body = _post("/", _multipart("filing", p.name, p.read_bytes()), ct)
+    assert status.startswith("200")
+    expected = structural_fingerprint(p).encode()
+    assert expected in body, "the page rendered a fingerprint that is not this workbook's"
+    assert b"sheet-shape:unknown" not in body, "the placeholder digest survived"
 
 
 def test_web__template_admission_refuses_without_an_operator_token() -> None:

@@ -29,7 +29,8 @@ class Route:
 
 ROUTES: Final[tuple[Route, ...]] = (
     Route("POST", "/v1/filings", "post_filings", False,
-          "submit a filing; 413 over cap, 415 non-zip, 422 template_unbound with the fingerprint"),
+          "submit a filing; 413 over cap, 415 non-zip, 422 template_unbound with the COMPUTED "
+          "fingerprint, 501 when it binds because no run happens over HTTP"),
     Route("GET", "/v1/runs/{id}", "get_run", False, "the full run record"),
     Route("GET", "/v1/runs/{id}/checks", "get_checks", False, "?state=&reason=&predicate_id="),
     Route("GET", "/v1/runs/{id}/cells", "get_cells", False, "the closure table"),
@@ -39,12 +40,15 @@ ROUTES: Final[tuple[Route, ...]] = (
     Route("GET", "/v1/runs/{id}/unchecked", "get_unchecked", False, "the panel, grouped"),
     Route("POST", "/v1/runs/{id}/overrides", "post_overrides", True,
           "operator token; BOTH states retained, counted separately"),
-    Route("POST", "/v1/verify", "post_verify", False, "{reproduced, diff[]}"),
+    Route("POST", "/v1/verify", "post_verify", False,
+          "501; re-derivation is a command-line tool and is not wired to a request"),
     Route("GET", "/v1/templates", "get_templates", False,
-          "settledFractionCeiling is null for the two workbooks with no protection mask"),
-    Route("GET", "/v1/templates/{sha}/schema", "get_template_schema", False, "the induced schema"),
+          "the nine pinned blanks and their real digests; NO settledFractionCeiling field, "
+          "because none is computed per template in this build"),
+    Route("GET", "/v1/templates/{sha}/schema", "get_template_schema", False,
+          "404 for an unpinned sha, 501 for a pinned one: no induced schema is served here"),
     Route("POST", "/v1/templates", "post_templates", True,
-          "operator token; runs T1-T6 and STOPS at T7 awaiting a human signature"),
+          "operator token; 501, template admission is not implemented in this build"),
     Route("GET", "/v1/predicates", "get_predicates", False,
           "the qualification block incl. g4_corpus_provenance. Public by design"),
     Route("GET", "/v1/predicates/{id}/versions/{v}", "get_predicate_version", False, "one version"),

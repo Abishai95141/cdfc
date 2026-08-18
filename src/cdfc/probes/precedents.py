@@ -64,9 +64,12 @@ CellKey = str
 Reading = Literal["lexical", "value", "transitive"]
 READINGS: Final[tuple[Reading, ...]] = ("lexical", "value", "transitive")
 
-# A closure that has not converged after this many rounds is a cycle, and a cycle in the
-# PRECEDENT graph is a defect in the template, not a reason to iterate forever. The bound is
-# generous: the FME graph is three levels deep.
+# The iteration bound, and it is NOT the cycle detector it was written as. Each round composes
+# the reachability relation with itself, so reach DOUBLES per round: a graph of depth d converges
+# in about log2(d) rounds, and a cycle saturates and converges rather than running out of rounds.
+# Sixty-four rounds is therefore not reachable by any graph that fits in memory. The bound stays
+# as a liveness stop against a future non-monotonic edit to `_close`, which is a smaller claim
+# than the one this comment used to make. See `_close`.
 MAX_ROUNDS: Final[int] = 64
 
 
@@ -239,10 +242,29 @@ def _close(
     — `by_formula_cell` is *all* precedents, and the intersection with the field surface drops it
     a moment later, because a formula cell is never in the field surface.
 
-    Iterated to a fixpoint rather than recursed, so a cyclic template produces a bounded refusal
-    instead of a stack overflow. **A cycle raises**: this project's evaluator already refuses to
-    iterate a circular reference to a value, and a precedent map that silently returned a partial
-    closure for one would hand `TEMPLATE_DIFF` a `cells_bound` nobody could re-derive.
+    Iterated to a fixpoint rather than recursed, so a cyclic template produces a bounded loop
+    instead of a stack overflow.
+
+    **A CYCLE DOES NOT RAISE HERE, and this docstring used to say it did.** MEASURED: `_close`
+    over the genuine two-cycle `{'S!A1': {'S!B1'}, 'S!B1': {'S!A1'}}` converges in two rounds and
+    returns the saturated closure — `S!A1 → {S!A1, S!B1}` and `S!B1 → {S!A1, S!B1}` — with no
+    exception and an empty `incomplete`. The `MAX_ROUNDS` refusal at the bottom of this function
+    cannot be the cycle detector it reads as, for the reason given at `MAX_ROUNDS`: reach doubles
+    each round, so a cycle SATURATES long before the rounds run out.
+
+    **The guarantee was borrowed from a different module.** `calc/evaluate.py` does genuinely
+    detect cycles: its topological visit (the `visit()` walk, around lines 480-516) carries a stack
+    and marks every cell it re-enters `NOT_RUN("cycle: circular reference")`, so a circular
+    reference there yields a named refusal and never a value. The two modules differ, and only
+    that one holds the claim.
+
+    Why the saturated closure is acceptable in THIS module. A precedent set answers a reachability
+    question, and reachability through a cycle is well defined — every member of a cycle reaches
+    every other, which is exactly what the saturated set says. It is a VALUE that cannot be
+    computed through a cycle, and this module computes no values; `evaluate.py`, which does, is
+    the module that has to refuse. So the closure returned for a cyclic template is a correct
+    answer to the question asked, not a partial one, and `cells_bound` derived from it is still
+    re-derivable by anyone who runs the same fixpoint.
     """
     closed = {k: set(v) for k, v in direct.items()}
     incomplete = {k for k, v in direct.items() if v & deferred}
@@ -263,7 +285,8 @@ def _close(
         if not changed:
             return {k: frozenset(v) for k, v in closed.items()}, frozenset(incomplete)
     raise PrecedentError(
-        f"the precedent closure did not converge in {MAX_ROUNDS} rounds. That is a cycle in the "
-        "template's formula graph, and a partial closure would be a `cells_bound` nobody can "
-        "re-derive."
+        f"the precedent closure did not converge in {MAX_ROUNDS} rounds. This is NOT the signature "
+        "of a cycle — a cycle saturates and converges, because reach doubles each round — so "
+        "reaching this line means the iteration stopped being monotonic, and a partial closure "
+        "would be a `cells_bound` nobody can re-derive."
     )

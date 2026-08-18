@@ -17,7 +17,7 @@ What *is* verified, and it is not nothing:
 
 | environment | result | catches |
 |---|---|---|
-| four environment variations on one machine — `TZ`, `PYTHONHASHSEED`, `LC_ALL`, working directory | **0 bytes differing of 1,568,185** | clock zone, hash seed, locale ordering, path resolution |
+| four environment variations on one machine — `TZ`, `PYTHONHASHSEED`, `LC_ALL`, working directory | **0 bytes differing of 1,569,451** | clock zone, hash seed, locale ordering, path resolution |
 | a **fresh clone** at the same commit | **green**, and it has caught four real defects across P9–P11 | dependence on the working tree, on uncommitted files, on gitignored output, on absolute paths |
 | a **second machine / runner image** | **NOT RUN** | interpreter build, library minor versions, filesystem ordering, CPU word size |
 

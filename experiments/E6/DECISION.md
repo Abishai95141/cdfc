@@ -20,6 +20,31 @@ because the alternative — no document until there is a number — is how a pub
 lapses quietly, and the failure mode this project is most alert to is not a wrong answer but a
 result that quietly never appears.
 
+> **CORRECTION, 18 Aug 2026 — the paragraph below is out of date and is left standing as written.**
+> This record was published on 15 Aug 2026. On 16 Aug 2026, S1 pinned the first STATUTE instrument:
+> `statute-fm-regulations-2025`, from `corpus/instruments/fm-regulations-2025.pdf`, 1,218
+> addressable units read by two INDEPENDENT external extractors (pdfplumber and pypdfium2), of
+> which 1,189 are AGREED, 28 DISPUTED and 1 SINGLE_PARTY. So two sentences below are now false:
+> `corpus/instruments/MANIFEST.json` carries TEN instruments, not nine, and `statute_instruments`
+> is `["statute-fm-regulations-2025"]`, not `[]`. *"There is no statutory instrument in this
+> repository, there never has been one in its git history"* was true when written and is false now
+> — the git history contains the pin.
+>
+> **The pool still cannot be built, and the reason has moved rather than lifted.** `make pool` now
+> reaches the instrument and exits **3**: the pre-registered chapter titles in
+> `PREREGISTRATION.md` do not match the headings the extraction actually produced (the text reads
+> `CHAPTER II REGISTRATION OF FUND MANAGEMENT ENTITY (FME) …`, and 25 heading units are
+> undeclared), so `enumerate_shall` raises `UndeclaredHeading` rather than matching loosely. The
+> chapter list is part of the HASHED pool construction and may not be relaxed to fit the text, so
+> either the list or the extraction is wrong, and which of the two is itself a finding. The
+> refusal chain below therefore still holds at every link — only its FIRST link has a new cause.
+> Two further things are unchanged: no statutory obligation has been authored, and
+> `provisos.assert_measured_for_statute` would refuse one at G0 anyway while
+> `fixtures/predicates/proviso-labels.json` carries `labeller: null` and zero spans.
+>
+> **`status:` stays `PENDING`.** No run has been taken, no money has been spent, and this
+> correction records a changed blocker rather than a result.
+
 ## Why the run has not been taken — the pool, not the permission
 
 **The pool cannot be built, and it is structural rather than configurational.**

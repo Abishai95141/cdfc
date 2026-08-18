@@ -201,9 +201,54 @@ def verify(artifact: Path, blobs: BlobStore, *, repo: Path | None = None) -> Ver
     # signature is a fact about the file on disk.
     signature_valid = dsse.verify(envelope)
 
-    stored = payload_of(envelope)
-    obj = json.loads(stored)
-    manifest = obj["predicate"]["manifest"]
+    # **A MALFORMED ENVELOPE IS A NAMED ANSWER TOO, and until this guard it was not.** The blob
+    # lookup below has carried that discipline since it was written; the payload read did not, and
+    # the promise the comment there makes was therefore only half kept. MEASURED: flipping one byte
+    # inside the base64 payload of a correctly signed attestation raised `JSONDecodeError:
+    # Expecting ':' delimiter` out of this function, which discarded a `signature_valid` that had
+    # already been established one line above and taught the reader that the tool broke rather than
+    # that the artifact did — the exact failure the blob branch exists to avoid.
+    #
+    # The three names below cover every way the payload can be unreadable, because
+    # `json.JSONDecodeError` and `binascii.Error` are both `ValueError`: not base64, not JSON, not
+    # an object, or missing any of the three `predicate` members this function goes on to read. All
+    # three members are resolved HERE rather than where they are used, so that a payload missing
+    # `counterEvidence` refuses before `run_filing` spends minutes re-running a pipeline whose
+    # result it could never compare against anything.
+    try:
+        stored = payload_of(envelope)
+        obj = json.loads(stored)
+        manifest = obj["predicate"]["manifest"]
+        residue = obj["predicate"]["residue"]
+        counter_evidence = obj["predicate"]["counterEvidence"]
+    except (KeyError, TypeError, ValueError) as e:
+        return VerifyResult(
+            reproduced=False,
+            diffs=(
+                Diff(
+                    artifact="attestation envelope",
+                    byte_offset=0,
+                    expected=(
+                        "a base64 DSSE payload carrying predicate.manifest, predicate.residue "
+                        "and predicate.counterEvidence"
+                    ),
+                    actual=f"{type(e).__name__}: {e}",
+                ),
+            ),
+            # The signature result SURVIVES an unreadable payload, and reporting it is the point of
+            # this branch. It was taken over the stored bytes before anything was parsed, so it is
+            # a fact about the file on disk that stays true when the file's contents make no sense.
+            signature_valid=signature_valid,
+            manifest_pins_checked=(),
+            tree_clean=tree_is_clean(repo),
+            detail=(
+                "this attestation's payload could not be read, so there is nothing to re-derive "
+                "against and no manifest pin could be checked. `signature_valid` above is still "
+                "the answer for the bytes on disk: a signature can be intact over a payload that "
+                "is not parseable, and those are different facts."
+            ),
+        )
+
     checked = tuple(p for p in (*MANIFEST_PINS, *MANIFEST_RUN_INPUTS) if p in manifest)
     missing = tuple(p for p in (*MANIFEST_PINS, *MANIFEST_RUN_INPUTS) if p not in manifest)
     if missing:
@@ -219,7 +264,9 @@ def verify(artifact: Path, blobs: BlobStore, *, repo: Path | None = None) -> Ver
     # **A MISSING BLOB IS A NAMED ANSWER, NOT A CRASH.** This is what a tampered filing looks
     # like from here: the attestation is about a document with a particular digest, and the store
     # does not contain it. Raising would make `cdfc verify` exit with a traceback, and a reader
-    # would learn that the tool broke rather than that the artifact did.
+    # would learn that the tool broke rather than that the artifact did. The envelope read above
+    # now carries the same discipline; it did not always, and the two are the only crash surfaces
+    # between here and the re-run.
     #
     # Resolved ONE AT A TIME so the result can name which one is missing. The first version wrapped
     # both in a single `try` and inferred the answer from the exception's text — and the text
@@ -272,8 +319,8 @@ def verify(artifact: Path, blobs: BlobStore, *, repo: Path | None = None) -> Ver
         # the line that makes `expires` re-derive, and it is the whole reason `expires` is a
         # function of it.
         time_verified=manifest["timeVerified"],
-        residue=obj["predicate"]["residue"],
-        counter_evidence=obj["predicate"]["counterEvidence"],
+        residue=residue,
+        counter_evidence=counter_evidence,
     )
     actual = rebuilt.canonical()
     diffs = first_diffs("attestation payload", stored, actual)

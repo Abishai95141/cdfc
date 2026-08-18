@@ -76,7 +76,9 @@ def build_parser() -> argparse.ArgumentParser:
     run = sub.add_parser("run", help="check a filing against its pinned blank and declare coverage (P5)")
     run.add_argument("filing", type=Path)
     run.add_argument("--template", type=Path, default=None,
-                     help="the pinned blank; defaults to the FME reference template")
+                     help="the pinned FME reference template, and nothing else: this build checks "
+                          "against that one blank, so naming any other workbook is REFUSED rather "
+                          "than silently ignored")
     run.add_argument("--out", type=Path, default=Path("runs"))
 
     closure = sub.add_parser("closure", help="explain a run's seven-term closure (P5)")
@@ -179,6 +181,15 @@ def _run(args: argparse.Namespace) -> int:
     **The output is a COVERAGE DECLARATION and it is structurally incapable of an all-clear.** It
     prints what was checked and what was not, in the same units and with equal weight, and the
     settled fraction never renders without `cellsTotal` and `inScope` beside it.
+
+    **`--template` is refused when it names anything but the pinned blank, and the refusal is the
+    honest answer.** It used to be accepted, printed as `template <whatever you passed>`, and then
+    discarded: `run_filing()` has no template parameter — its body reads the pinned FME workbook
+    through parameterless `lru_cache`d globals — so `cdfc run <FME filing> --template <ALR
+    workbook>` produced a run byte-identical to the default one, whose manifest recorded
+    `template_sha256` of the FME blank. The console line contradicted the artifact written beside
+    it. Threading a template through that caching layer is a later phase's work; until it exists,
+    the command refuses instead of reporting a template it did not use.
     """
     from cdfc.evaluate.run import write
     from cdfc.measure.p10_run import run_filing
@@ -188,7 +199,23 @@ def _run(args: argparse.Namespace) -> int:
         print(f"cdfc run: {args.filing} is not a file", file=sys.stderr)
         return EXIT_NOT_IMPLEMENTED
 
-    template = args.template or FME
+    if args.template is not None and not _is_pinned_template(args.template):
+        print(
+            f"cdfc run: refusing --template {args.template}. This build checks a filing against "
+            f"the pinned reference template only:\n"
+            f"    {FME}\n"
+            "  The check would have run against that blank whatever you passed here, because the "
+            "run path resolves the pinned workbook through cached globals and takes no template "
+            "argument. Reporting your template while checking against ours is the one thing this "
+            "command must not do, so it stops. Omit --template to check against the pinned blank.",
+            file=sys.stderr,
+        )
+        return EXIT_NOT_IMPLEMENTED
+
+    # The template ACTUALLY used, which is the pinned blank in every run this build can produce.
+    # It is read from `FME` rather than from `args` so the printed line cannot drift from the
+    # `template_sha256` the manifest records.
+    template = FME
     result = run_filing(args.filing)
     target = write(result, args.out)
 
@@ -229,6 +256,28 @@ def _run(args: argparse.Namespace) -> int:
     print(f"\n  wrote {target}")
     _render_report(result, target)
     return 0
+
+
+def _is_pinned_template(path: Path) -> bool:
+    """Is `path` the pinned FME blank — the same file, or the same bytes under another name?
+
+    Digest equality is checked as well as path identity because a byte-identical copy of the pinned
+    blank IS the pinned blank: checking against it is exactly what this build does anyway, so
+    refusing it would be a refusal with no fact behind it. The only thing that cannot be honoured
+    is a DIFFERENT workbook.
+    """
+    from cdfc.measure.p5_run import FME
+
+    try:
+        if path.resolve() == FME.resolve():
+            return True
+        if not path.is_file():
+            return False
+        return hashlib.sha256(path.read_bytes()).digest() == hashlib.sha256(
+            FME.read_bytes()
+        ).digest()
+    except OSError:
+        return False
 
 
 def _render_report(result: object, target: "Path") -> None:

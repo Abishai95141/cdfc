@@ -9,28 +9,44 @@
 # eId, quoted verbatim, at an exact character span into that instrument's normalised text.
 #
 # ---------------------------------------------------------------------------------------------
-# IT IS EMPTY, AND THE REASON IS D-P7-01, NOT AN OVERSIGHT.
+# IT IS EMPTY, AND THE REASON IS A MEASUREMENT THAT NOBODY HAS TAKEN, NOT AN OVERSIGHT.
 #
-# `plan/04-phases-qualification.md` E7.6 asserts as an entry criterion that the regulation PDF and
-# the 399-circular corpus are on disk and content-addressed. **Neither is in this repository.**
-# `corpus/instruments/MANIFEST.json` carries `statute_instruments: []` with that reason, and
-# `load()` refuses any row naming an instrument the store does not hold — so a STATUTE obligation
-# cannot enter the funnel by resolving against nothing.
+# THE BLOCKER MOVED, AND THIS HEADER USED TO STATE THE OLD ONE. It said the regulation PDF was not
+# in this repository and that `corpus/instruments/MANIFEST.json` carried `statute_instruments: []`.
+# Both were true when D-P7-01 was written and both are false now: S1 pinned
+# `statute-fm-regulations-2025` from `corpus/instruments/fm-regulations-2025.pdf`, 1,218 addressable
+# units read by two INDEPENDENT external extractors (pdfplumber and pypdfium2), 1,189 of the 1,218
+# AGREED, 28 DISPUTED and 1 SINGLE_PARTY. `MANIFEST.json` now carries
+# `statute_instruments: ["statute-fm-regulations-2025"]`, and a row naming it resolves.
 #
-# The consequence is published rather than absorbed: P7's obligation-coverage pair reads
+# The table is empty today for TWO reasons, and the second is the one that bites:
 #
-#     predicates_with_a_STATUTE_obligation  = 0 / 572
-#     predicates_with_a_TEMPLATE_obligation = 572 / 572
+#   1. Nobody has authored a statutory obligation. There is no harvested predicate whose construct
+#      has been traced to a `shall` in the pinned instrument and written down as a row here.
+#   2. **A row would be REFUSED at G0 even if it were written.** `qualify/g0_scope.py` calls
+#      `provisos.assert_measured_for_statute()` for every `source: STATUTE` candidate, and that
+#      raises `ProvisoRecallUnmeasured` because `fixtures/predicates/proviso-labels.json` carries
+#      `labeller: null` and zero spans. The proviso detector's recall is UNMEASURED, and a detector
+#      whose recall nobody has measured cannot tell *"this clause has no proviso"* from *"we did not
+#      see the proviso it has"* — which is the question G0 asks of a statutory quote.
+#
+# So the refusal is now about our own instrumentation rather than about the corpus. P7's
+# obligation-coverage pair still reads
+#
+#     predicates_with_a_STATUTE_obligation  = 0 / N
+#     predicates_with_a_TEMPLATE_obligation = N / N
 #     No harvested predicate yet implements a statutory clause.
 #
-# for a HARDER reason than the plan anticipated — not "no harvested predicate cites a statute yet"
-# but "no statute is pinned in this repository at all".
+# — N is whatever `tools/measure/p7_attrition.py` counts on the day it runs, and it is written as N
+# here because a denominator copied into a comment goes stale on the next harvest. What changed is
+# the sentence UNDER the pair: not "no statute is pinned in this repository at all", but "a statute
+# is pinned, no obligation has been traced into it, and the gate that would admit the first one is
+# held shut by an unmeasured detector".
 #
-# Adding the first row needs three things and nothing else: a pinned PDF under
-# `corpus/instruments/` with its sha256 in MANIFEST.json, TWO independent extractors for it (a
-# single extractor run twice is NC-Q50's mechanism with extra steps), and a `kind: STATUTE` row
-# from `tools/build_instruments.py`. `g0_scope.py` needs no change: it already resolves every
-# obligation against its OWN `instrument_id`.
+# Adding the first row now needs two things and nothing else: fifty labelled proviso spans in
+# `fixtures/predicates/proviso-labels.json` with a NAMED labeller and a date (that file carries the
+# procedure), and a row below citing `statute-fm-regulations-2025` at an exact span. `g0_scope.py`
+# needs no change: it already resolves every obligation against its OWN `instrument_id`.
 # ---------------------------------------------------------------------------------------------
 #
 # Row shape, for whoever writes the first one:
@@ -38,9 +54,14 @@
 #   obligations:
 #     - obligation_id: OBL-014
 #       source: STATUTE                 # required, closed to STATUTE | TEMPLATE (C2)
-#       instrument_id: fm-regulations-2025
+#       instrument_id: statute-fm-regulations-2025   # the id MANIFEST.json actually carries; a row
+#                                       # naming `fm-regulations-2025` — the PDF's file name, which
+#                                       # this example used to give — does not resolve and `load()`
+#                                       # refuses it as "not pinned"
 #       frbr_uri: null                  # until L1b ships at P13-B2
-#       eId: reg_51__subreg_1
+#       eId: reg_51__subreg_1           # YOUR citation for the clause; the instrument's own units
+#                                       # are keyed by page and sentence (`p0161.s0002`), and the
+#                                       # span below is what resolves against them
 #       quote: "…verbatim, exactly as the normalised instrument text carries it…"
 #       span: [12345, 12400]            # instrument_text[span[0]:span[1]] == quote, checked at load
 #       ingest_source: hand             # HOW THE ROW GOT HERE — a different question from `source`

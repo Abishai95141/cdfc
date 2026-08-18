@@ -41,9 +41,18 @@ from cdfc.predicates.harvest import cel_path
 
 SHEET: Final[str] = "4. Investors"
 
-# Measured from the blank's own table headings and formula rows. `SCHEMES` is the number of
-# per-scheme rows the two tables share; a template whose two tables disagreed in length would be
-# a different template and `build()` refuses it below.
+# Read off the blank's own table headings and formula rows BY A HUMAN, once. `SCHEMES` is the
+# number of per-scheme rows the two tables share.
+#
+# **NOTHING IN THIS MODULE CHECKS THAT AGAINST A WORKBOOK, and this comment used to claim
+# `build()` did.** `build()` takes no arguments, opens no file and reads no template — it returns
+# the three CEL strings composed from the constants above, the same strings on every call. It
+# cannot refuse a template it never sees. What this module honestly is: a HAND-SPECIFIED relation
+# whose cell addresses were typed in from one reading of one blank, valid only for the FME
+# template named in `EVIDENCE`. Against a template whose two tables disagreed in length it would
+# emit a well-formed expression addressing the wrong rows, silently. The thing in this build that
+# does notice a different template is the `template_sha256` pin recorded in the run manifest and
+# re-checked by `cdfc verify`, which is outside this module entirely.
 CATEGORY_FIRST_ROW: Final[int] = 21
 ACCREDITATION_FIRST_ROW: Final[int] = 42
 SCHEMES: Final[int] = 10
