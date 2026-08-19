@@ -1,5 +1,20 @@
 # docs/GATE-CHANGES.md
 
+## 20 Aug 2026 — row 126 added: only the LAST `!` delimits a cell string
+
+Found by the adversarial audit of the A1 diff. A cell string is `<sheet>!<ref>`. A reference can
+never contain `!`; **a sheet name can** — Excel permits it and openpyxl accepts it, both verified.
+
+`Anchor.parse` right-splits and was correct. **Eighteen call sites across `src/` and `tools/`
+left-split and were not**, so `Bad!Name!A1` gave sheet `Bad` and a reference addressing nothing.
+The anchor and the rest of the codebase disagreed about which character was the delimiter, on
+exactly the path A1 exists to serve: a buyer's own workbook, checkable without a code change.
+
+Demonstrated end to end rather than argued: a workbook with the sheet `Bad!Name` was built, run
+through the shipped `surface_for`, and produced refs whose two parsers disagree. 22 sites now
+right-split. `ci/no-left-split-on-cell.sh` keeps them that way and was observed red under a
+planted `partition("!")`.
+
 ## 19 Aug 2026 — row 118's evidence binding is wrong, and the gate is fine
 
 `ci/GATES.md` row 118 (`test_contract__fraction_never_travels_alone`) names `ApiBareFraction` as

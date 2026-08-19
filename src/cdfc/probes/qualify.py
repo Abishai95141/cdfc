@@ -218,7 +218,7 @@ def targeted_mutants(spec: RelationSpec, sites: Sequence[str], *, control_share:
 def _reads(spec: RelationSpec, cell: str) -> bool:
     from cdfc.predicates.harvest import cel_path
 
-    sheet, _, ref = cell.partition("!")
+    sheet, _, ref = cell.rpartition("!")
     if not ref:
         return False
     try:

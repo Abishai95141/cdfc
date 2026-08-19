@@ -84,3 +84,7 @@ citation, an unlogged artefact, and an empty trail are each planted and observed
 | 2026-08-19 | DECISION | the ANCHOR architecture phases are renamed P->A; both sequences had reached 4 while sharing a prefix | `docs/PLAN.md` |
 | 2026-08-20 | DECISION | the audit trail is checked in BOTH directions — every artefact logged, and every citation resolves | `tools/audit_trail.py` |
 | 2026-08-19 | MEASUREMENT | the evidence layer end to end on the real instrument and return: 5 of 5 planted errors caught, each by its own named gate | `docs/EVIDENCE-LAYER.md` |
+| 2026-08-20 | DEFECT | a cell string was split on its FIRST `!` at eighteen sites while `Anchor.parse` right-split; a sheet name may contain one and a reference may not | `docs/audit/AUDIT-A1-diff.md` |
+| 2026-08-20 | DECISION | `PHASE_RE` widened to admit the A-sequence, with a test pinning what it still refuses — a widened check that admits anything is not a check | `src/cdfc/gates.py` |
+| 2026-08-20 | MEASUREMENT | the A1 adversarial audit: six of seven claims survive attack, one real defect | `docs/audit/AUDIT-A1-diff.md` |
+| 2026-08-20 | DEFECT | an edit to the gate evidence map silently did nothing because its anchor was absent and unasserted — the drift shape the audit was hunting | `tools/gate_liveness.py` |

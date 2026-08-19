@@ -233,3 +233,74 @@ def test_evidence__no_refusal_reason_says_something_false_about_the_surface() ->
         assert Refusal.FIELD_NOT_IN_SURFACE not in adj.verdicts[0].reasons, (
             f"{ref} is in the surface, yet a gate said it is not"
         )
+
+
+def test_cell_string__only_the_last_bang_is_the_delimiter() -> None:
+    """A sheet name may contain `!`; a reference may not. Found by the A1 adversarial audit.
+
+    `Anchor.parse` right-split and was correct; eighteen call sites left-split and were not, so
+    the anchor and the rest of the codebase disagreed about which `!` was the delimiter — on
+    exactly the path A1 exists to serve, a buyer's own workbook. `ci/no-left-split-on-cell.sh`
+    keeps the call sites honest; this pins the behaviour they must agree on.
+    """
+    from cdfc.schema.anchor import Anchor
+
+    rendered = Anchor.cell("Bad!Name", "A1").render()
+    assert rendered == "Bad!Name!A1", "render must stay byte-identical to the old f-string"
+    assert Anchor.parse(rendered).table == "Bad!Name"
+    assert rendered.rsplit("!", 1)[0] == "Bad!Name", "right-split is the correct one"
+    assert rendered.split("!", 1)[0] == "Bad", "and left-split is the wrong one, demonstrably"
+
+
+def test_cell_string__a_bang_sheet_survives_the_real_field_surface(tmp_path) -> None:
+    """Not a string exercise: a workbook openpyxl accepts, through the shipped surface reader."""
+    from openpyxl import Workbook
+    from openpyxl.styles import Protection
+    from openpyxl.worksheet.protection import SheetProtection
+
+    from cdfc.measure.p5_run import surface_for
+    from cdfc.schema.anchor import Anchor
+
+    p = tmp_path / "bang.xlsx"
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Bad!Name"
+    ws["A1"] = "Label"
+    for row in ws.iter_rows(min_row=1, max_row=2, min_col=1, max_col=2):
+        for c in row:
+            c.protection = Protection(locked=False)
+    ws.protection = SheetProtection(sheet=True)
+    wb.save(p)
+
+    refs = surface_for(p)[1]
+    assert refs, "the fixture must yield a field surface or it tests nothing"
+    for r in refs:
+        assert Anchor.parse(r).table == "Bad!Name", f"{r} parsed to the wrong sheet"
+        assert r.rsplit("!", 1)[0] == Anchor.parse(r).table
+
+
+def test_cell_string__reads_resolves_a_bang_sheet_and_flips_when_split_wrongly() -> None:
+    """The guard NC-A37 expects to FLIP. Without one that flips, the control proves nothing.
+
+    `probes/qualify._reads` turns a cell string into a CEL path and asks whether a relation reads
+    it. Under the correct right-split `Bad!Name!A1` yields `bad_name.r1.ca`; under the left-split
+    the ref becomes `Name!A1`, `cel_path` raises `ValueError`, `_reads` swallows it and answers
+    **False** — a relation silently reported as not reading a cell it does read.
+    """
+    from cdfc.predicates.harvest import cel_path
+    from cdfc.probes.qualify import _reads
+    from cdfc.probes.relations.registry import RelationSpec
+
+    cell = "Bad!Name!A1"
+    path = cel_path(*cell.rsplit("!", 1))
+    spec = RelationSpec(
+        id="R-BANG", title="a relation over a sheet whose name contains a bang",
+        necessity="EXPECTED", inputs="FILING_ONLY",
+        precondition="true", expr=f"filing.{path}.v > 0", witness=f"[filing.{path}.__cell__]",
+        bases=frozenset(), evidence="the A1 adversarial audit", reviewed_by=("audit",),
+        reviewed_at="2026-08-20", claims_fault_classes=(),
+    )
+    assert _reads(spec, cell) is True, (
+        "the relation's expression literally contains this cell's path; answering False means "
+        "the cell string was split on the wrong `!`"
+    )

@@ -40,6 +40,7 @@ greps:
 	bash ci/no-openpyxl-writer.sh
 	bash ci/no-wallclock-z3.sh
 	bash ci/no-imported-prior.sh
+	bash ci/no-left-split-on-cell.sh
 	$(PY) tools/audit_trail.py
 
 contract:

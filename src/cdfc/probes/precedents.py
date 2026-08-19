@@ -119,12 +119,12 @@ class PrecedentMap:
         cell comes back absent, and the relation FAILS on all 456 evaluable cells of a clean
         filing. Confident, uniform and completely wrong.
         """
-        return {tuple(k.split("!", 1)): v for k, v in mapping.items()}  # type: ignore[misc]
+        return {tuple(k.rsplit("!", 1)): v for k, v in mapping.items()}  # type: ignore[misc]
 
     def per_sheet(self) -> dict[str, int]:
         counts: dict[str, int] = {}
         for key in self.reachable:
-            counts[key.split("!", 1)[0]] = counts.get(key.split("!", 1)[0], 0) + 1
+            counts[key.rsplit("!", 1)[0]] = counts.get(key.rsplit("!", 1)[0], 0) + 1
         return dict(sorted(counts.items()))
 
 
@@ -195,7 +195,7 @@ def build_precedent_map(
 
     direct: dict[CellKey, frozenset[CellKey]] = {}
     for key, src in text.items():
-        sheet = key.split("!", 1)[0]
+        sheet = key.rsplit("!", 1)[0]
         try:
             direct[key] = _direct(src, sheet, values_only=values_only)
         except (ParseError, RecursionError) as e:

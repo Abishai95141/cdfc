@@ -55,22 +55,22 @@ def precondition() -> str:
     """Both periods present AND at least one non-zero. The second clause is what stops an
     all-zero pair of filings scoring a clean sweep through continuity."""
     present = " && ".join(
-        f"has({_p(SHEET, r.split('!')[1])}.v) && has(prior.{cel_path(SHEET, r.split('!')[1])}.v)"
+        f"has({_p(SHEET, r.rsplit('!', 1)[1])}.v) && has(prior.{cel_path(SHEET, r.rsplit('!', 1)[1])}.v)"
         for r in cells()
     )
-    nonzero = " || ".join(f"{_p(SHEET, r.split('!')[1])}.v != 0" for r in cells())
+    nonzero = " || ".join(f"{_p(SHEET, r.rsplit('!', 1)[1])}.v != 0" for r in cells())
     return f"({present}) && ({nonzero})"
 
 
 def expr() -> str:
     return " && ".join(
-        f"{_p(SHEET, r.split('!')[1])}.v == prior.{cel_path(SHEET, r.split('!')[1])}.v"
+        f"{_p(SHEET, r.rsplit('!', 1)[1])}.v == prior.{cel_path(SHEET, r.rsplit('!', 1)[1])}.v"
         for r in cells()
     )
 
 
 def witness() -> str:
-    return "[" + ", ".join(f"{_p(SHEET, r.split('!')[1])}.__cell__" for r in cells()) + "]"
+    return "[" + ", ".join(f"{_p(SHEET, r.rsplit('!', 1)[1])}.__cell__" for r in cells()) + "]"
 
 
 def build() -> dict[str, str]:

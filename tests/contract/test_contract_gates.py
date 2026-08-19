@@ -62,11 +62,15 @@ ADDED_LIVE_AT_P14B = {117, 118, 119, 120, 121, 122}
 # model first enters the codebase, and 124 refuses a proposer that ships against its
 # own experiment's answer.
 ADDED_LIVE_AT_P13B0 = {123, 124, 125}
+# A1 adversarial audit, 20 Aug 2026. 126: a sheet name may contain `!` and a reference may
+# not, so only the LAST `!` delimits a cell string. `Anchor.parse` right-split and was right;
+# eighteen call sites left-split and were not. Argument in docs/GATE-CHANGES.md.
+ADDED_LIVE_AT_A1_AUDIT = {126}
 LIVE_EXPECTED = (LIVE_AT_P0 | ADDED_LIVE_AT_P4 | ADDED_LIVE_AT_P5 | ADDED_LIVE_AT_P6
                  | ADDED_LIVE_AT_P7 | ADDED_LIVE_AT_P8 | ADDED_LIVE_AT_P9
                  | ADDED_LIVE_AT_P10 | ADDED_LIVE_AT_P11 | ADDED_LIVE_AT_P12
                  | ADDED_LIVE_AT_P13 | ADDED_LIVE_AT_P14 | ADDED_LIVE_AT_P14B
-                 | ADDED_LIVE_AT_P13B0
+                 | ADDED_LIVE_AT_P13B0 | ADDED_LIVE_AT_A1_AUDIT
                  | PROMOTED_AT_P6)
 PENDING_AT_P0 = {14, 15, 16}
 # The PENDING set SHRINKS as subjects ship, and a row may only leave it into LIVE — never the
@@ -151,3 +155,14 @@ def test_contract__registry_ids_are_below_the_injector_sentinel() -> None:
         "control that guards one thing would go red for another — which is how this was found, "
         "twice."
     )
+
+
+def test_contract__registry_rejects_a_phase_outside_both_sequences(tmp_path: Path) -> None:
+    """`PHASE_RE` was widened for the A-sequence on 20 Aug 2026. A widened check that admits
+    anything is not a check, so this pins what it still refuses."""
+    from cdfc.gates import PHASE_RE
+
+    for good in ("P0", "P15", "A0", "A1", "A1c", "A5"):
+        assert PHASE_RE.match(good), f"{good} is a real phase and must be admitted"
+    for bad in ("P16", "A6", "A2c", "Q1", "", "P", "A", "P1x", "phase1", "A1C"):
+        assert not PHASE_RE.match(bad), f"{bad} is not a phase and must be refused"

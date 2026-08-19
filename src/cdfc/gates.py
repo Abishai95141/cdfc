@@ -20,7 +20,17 @@ GATES_MD = REPO_ROOT / "ci" / "GATES.md"
 
 VALID_KINDS = frozenset({"grep", "ast", "pytest", "schema", "shell", "contract"})
 VALID_LIVENESS = frozenset({"LIVE", "PENDING"})
-PHASE_RE = re.compile(r"^P(?:[0-9]|1[0-5])$")
+# TWO PHASE SEQUENCES, and the registry's grammar predated the second one.
+#
+# `P0`-`P15` are the BUILD phases. `A0`-`A5` (with `A1c`) are the ANCHOR architecture phases of
+# `docs/ARCHITECTURE-rules-and-evidence.md` §9 -- a different sequence, mapped in `docs/PLAN.md`
+# §14. A gate whose subject first exists in the A-sequence had no expressible phase, and the
+# alternative was to write the nearest P-number, which would be a false statement in the column
+# that decides whether a gate can ever be observed red.
+#
+# **The widening does not weaken it.** Anything outside these two closed sequences is still
+# refused, and `test_contract__registry_rejects_a_phase_outside_both_sequences` pins that.
+PHASE_RE = re.compile(r"^(?:P(?:[0-9]|1[0-5])|A(?:[0-5]|1c))$")
 
 
 class RegistryError(ValueError):

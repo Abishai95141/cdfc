@@ -2265,3 +2265,16 @@ entries:
     note: >
       NOT NC-A32, which `plan/07` names: allocated at B1 to a green entering the palette. This is
       how a `280 -> 280` first row gets printed and read as attrition.
+  - id: NC-A37
+    component: schema
+    break: "a cell string is split on its first `!`, so a sheet name containing one yields the wrong sheet and a reference that addresses nothing"
+    measured_instance: "eighteen call sites across src/ and tools/ at the A1 audit, while Anchor.parse right-split; demonstrated on a workbook openpyxl accepts with the sheet 'Bad!Name'"
+    injector: LeftSplitOnCell
+    guard_tests:
+      - path: "tests/unit/test_evidence_layer.py::test_cell_string__reads_resolves_a_bang_sheet_and_flips_when_split_wrongly"
+        flips: true
+      - path: "tests/unit/test_evidence_layer.py::test_cell_string__only_the_last_bang_is_the_delimiter"
+        flips: false
+      - path: "tests/unit/test_evidence_layer.py::test_cell_string__a_bang_sheet_survives_the_real_field_surface"
+        flips: false
+    positive_control: "tests/unit/test_evidence_layer.py::test_cell_string__only_the_last_bang_is_the_delimiter"

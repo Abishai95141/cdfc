@@ -3426,3 +3426,34 @@ class FunnelSkippedCountsAsSurvived(Injector):
 ALL_INJECTORS = ALL_INJECTORS + (HistoryMonotone, KrRendersClaimedOnly,
                                  FunnelSkippedCountsAsSurvived)
 BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+QUALIFY_PROBE = REPO_ROOT / "src" / "cdfc" / "probes" / "qualify.py"
+
+
+class LeftSplitOnCell(Injector):
+    """A cell string split on its FIRST `!` instead of its last.
+
+    A sheet name may contain `!` and a reference may not, so the last one is the delimiter. This
+    plants the wrong one back into a real call site. Found by the A1 adversarial audit, where
+    eighteen sites had it and `Anchor.parse` did not.
+    """
+
+    ANCHOR = 'cell.rpartition("!")'
+
+    def __init__(self) -> None:
+        super().__init__(name="left_split_on_cell", touches=[QUALIFY_PROBE])
+
+    def apply(self) -> None:
+        src = QUALIFY_PROBE.read_text(encoding="utf-8")
+        if self.ANCHOR not in src:
+            raise AssertionError(
+                f"{QUALIFY_PROBE}: anchor {self.ANCHOR!r} is gone, so this injector would plant "
+                "nothing and the control would pass having broken NOTHING — the drifted-anchor "
+                "shape this repository has already hit twice."
+            )
+        QUALIFY_PROBE.write_text(src.replace(self.ANCHOR, 'cell.partition("!")', 1),
+                                 encoding="utf-8")
+
+
+ALL_INJECTORS = ALL_INJECTORS + (LeftSplitOnCell,)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}

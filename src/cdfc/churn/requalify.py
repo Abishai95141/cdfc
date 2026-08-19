@@ -187,7 +187,7 @@ def _sha256_of(path: Path) -> str:
 
 
 def _sheet_of(stable_key: str) -> str:
-    return stable_key.split("!", 1)[0] if "!" in stable_key else ""
+    return stable_key.rsplit("!", 1)[0] if "!" in stable_key else ""
 
 
 def declared_vocabularies(candidates: Any) -> dict[str, frozenset[str]]:

@@ -67,7 +67,7 @@ def bases_of(cells: list[str]) -> frozenset[str]:
 
     out: set[str] = set()
     for cell in cells:
-        sheet, ref = cell.split("!", 1)
+        sheet, ref = cell.rsplit("!", 1)
         try:
             _col, row = split_ref(ref)
         except ValueError:

@@ -174,7 +174,7 @@ def applicable(
     if not bound:
         return "DECLARED_CHARACTERISTIC"
     for cell in bound:
-        sheet, ref = cell.split("!", 1)
+        sheet, ref = cell.rsplit("!", 1)
         v = filed.get((sheet, ref))
         if v is not None and v != "":
             return "IN_SCOPE"
@@ -281,7 +281,7 @@ def template_diff(
 
     out: list[DiffFinding] = []
     for cell in sorted(set(pm.formula_text) | set(pm.deferred), key=_cell_order):
-        sheet, ref = cell.split("!", 1)
+        sheet, ref = cell.rsplit("!", 1)
         bound = pm.in_field_surface.get(cell, frozenset())
         assignment = degrees.get(cell)
         degree = assignment.degree if assignment else 0
@@ -377,7 +377,7 @@ def template_diff(
 def _cell_order(cell: CellKey) -> tuple[str, int, int]:
     from cdfc.schema.stable_keys import col_to_index, split_ref
 
-    sheet, ref = cell.split("!", 1)
+    sheet, ref = cell.rsplit("!", 1)
     col, row = split_ref(ref)
     return sheet, row, col_to_index(col)
 

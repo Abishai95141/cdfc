@@ -94,7 +94,7 @@ def all_cells() -> list[str]:
 
 
 def _p(cell: str) -> str:
-    sheet, ref = cell.split("!", 1)
+    sheet, ref = cell.rsplit("!", 1)
     return f"filing.{cel_path(sheet, ref)}"
 
 

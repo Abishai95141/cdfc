@@ -209,7 +209,7 @@ def generate_template_obligations(result: object, instrument: InstrumentText) ->
     index: dict[tuple[str, str, str], object] = {}
     for u in instrument.units:
         _sheet_idx, _row, _col, kind, addr = u.key.split("|", 4)
-        sheet, _, ref = addr.partition("!")
+        sheet, _, ref = addr.rpartition("!")
         index[(kind, sheet, ref)] = u
 
     rows: dict[str, Obligation] = {}

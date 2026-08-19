@@ -338,7 +338,7 @@ def degree_map(blob: Path, cells: object = None) -> dict[CellKey, Assignment]:
     if cells is None:
         targets = sorted((f.sheet, f.ref) for f in wb.formulas)
     else:
-        targets = sorted(tuple(c.split("!", 1)) for c in cells)  # type: ignore[arg-type]
+        targets = sorted(tuple(c.rsplit("!", 1)) for c in cells)  # type: ignore[arg-type]
 
     out: dict[CellKey, Assignment] = {}
     for sheet, ref in targets:

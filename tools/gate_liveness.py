@@ -94,7 +94,11 @@ EVIDENCE: dict[int, str] = {
     # --- P12: the settling experiment. Each row guards the ORDERING rather than a verdict.
     # --- P14-B1: the surfaces. Row 112 guards the gate's own denominator.
     # --- P14-B2: the Unchecked panel. Row 114 keeps `None` and `()` apart.
-    113: "NC-A33",   # an imported prior may not become our threshold
+    113: "NC-A33",
+    # Gate 126, added by the A1 adversarial audit 20 Aug 2026. A SHELL row, so its evidence lives
+    # here and the shell arm below VERIFIES it by running the script under NC-A37's injector and
+    # requiring a non-zero exit. It is not taken on trust.
+    126: "NC-A37",   # an imported prior may not become our threshold
 }
 
 

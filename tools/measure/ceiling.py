@@ -182,7 +182,7 @@ def stage2() -> tuple[int, int, list[tuple[str, str]]]:
     print(f"    ATTESTATION-shaped              {len(att)} of {len(fields)}   <- a FLOOR, see below")
     by_sheet = {}
     for ref, _ in att:
-        by_sheet[ref.split("!")[0]] = by_sheet.get(ref.split("!")[0], 0) + 1
+        by_sheet[ref.rsplit("!", 1)[0]] = by_sheet.get(ref.rsplit("!", 1)[0], 0) + 1
     print(f"    attestations by sheet           {dict(sorted(by_sheet.items()))}")
     print("\n  five attestation labels, verbatim, so the classifier can be argued with:")
     for ref, lab in att[:5]:

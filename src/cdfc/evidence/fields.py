@@ -208,7 +208,7 @@ def _validation_lists(blob: Path, by_ref: Mapping[tuple[str, str], object]
 def _values_at(by_ref: Mapping[tuple[str, str], object], ref: str) -> tuple[str, ...]:
     if "!" not in ref:
         return ()
-    sheet, rng = ref.split("!", 1)
+    sheet, rng = ref.rsplit("!", 1)
     sheet = sheet.strip("'").replace("$", "")
     vals = [t for cell in _expand(rng.replace("$", ""))
             if (c := by_ref.get((sheet, cell))) is not None
