@@ -16,6 +16,7 @@ import pytest
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "src"))
 
+from cdfc.schema.anchor import Anchor
 from cdfc.measure.p5_run import (  # noqa: E402
     INDEPENDENT,
     INDEPENDENT_LABEL,
@@ -101,7 +102,7 @@ def test_golden__closure__fme_template_computed_is_smoke_only() -> None:
 
     h = fme_harvest()
     ctx = _load_context(FME)
-    computed = {f"{s}!{f.ref}" for s, fs in ctx.formulas_by_sheet.items() for f in fs}
+    computed = {Anchor.cell(s, f.ref).render() for s, fs in ctx.formulas_by_sheet.items() for f in fs}
     arithmetic = [
         c for c in h.candidates
         if "carried across sheets" in c.rationale or "arithmetic identity" in c.rationale

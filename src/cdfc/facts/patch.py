@@ -38,6 +38,8 @@ exactly as designed, on a fact tree that should never have existed.
 
 from __future__ import annotations
 
+from cdfc.schema.anchor import Anchor
+
 from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any, Final
@@ -93,7 +95,7 @@ class CellIndex:
     def of(ctx: Any) -> "CellIndex":
         from cdfc.predicates.harvest import cel_path, expand, range_path
 
-        scalar = {f"{s}!{r}": cel_path(s, r) for (s, r) in ctx.key_of}
+        scalar = {Anchor.cell(s, r).render(): cel_path(s, r) for (s, r) in ctx.key_of}
         ranges: dict[str, list[str]] = {}
         for sheet, dvs in ctx.validations_by_sheet.items():
             for dv in dvs:
@@ -102,7 +104,7 @@ class CellIndex:
                 path = range_path(sheet, dv.sqref)
                 for part in dv.sqref.split():
                     for ref in expand(part.replace("$", "")):
-                        ranges.setdefault(f"{sheet}!{ref}", []).append(path)
+                        ranges.setdefault(Anchor.cell(sheet, ref).render(), []).append(path)
         return CellIndex(scalar=scalar, ranges={k: tuple(v) for k, v in ranges.items()})
 
 

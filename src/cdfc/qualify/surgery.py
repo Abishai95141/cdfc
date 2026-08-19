@@ -39,6 +39,7 @@ from typing import Any, Final
 
 from lxml import etree
 
+from cdfc.schema.anchor import Anchor
 from cdfc.ingest.reader_lxml import _sheet_parts
 from cdfc.ingest.xmlsafe import fromstring
 from cdfc.qualify.fault_model import FAULT_MODEL_VERSION, HARNESS_VERSION, REMOVE
@@ -93,7 +94,7 @@ class MutantRecord:
 
     @property
     def sites(self) -> tuple[str, ...]:
-        return tuple(f"{e.sheet_name}!{e.ref}" for e in self.edits)
+        return tuple(Anchor.cell(e.sheet_name, e.ref).render() for e in self.edits)
 
     def as_row(self) -> dict[str, Any]:
         return {

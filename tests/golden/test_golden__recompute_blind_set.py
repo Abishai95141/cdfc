@@ -19,6 +19,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "src"))
 
+from cdfc.schema.anchor import Anchor
 from cdfc.measure.p5_run import FME  # noqa: E402
 from cdfc.probes.precedents import build_precedent_map  # noqa: E402
 from cdfc.schema.styles_mask import Rule, build  # noqa: E402
@@ -55,7 +56,7 @@ OUTSIDE = "3. Portfolio!C7"
 
 def _sets() -> tuple[frozenset[str], frozenset[str], frozenset[str]]:
     fs = build(FME, Rule.V3)
-    surface = frozenset(f"{s}!{r}" for s, r in fs.cells)
+    surface = frozenset(Anchor.cell(s, r).render() for s, r in fs.cells)
     pm = build_precedent_map(FME, reading="transitive")
     return surface, pm.reachable, recompute_blind(pm, surface)
 
@@ -107,7 +108,7 @@ def test_golden__the_blind_set_is_what_e2_lands_in() -> None:
     _surface, _reachable, blind = _sets()
     ctx = _load_context(FME)
     enum_cells = {
-        f"{sheet}!{ref}"
+        Anchor.cell(sheet, ref).render()
         for sheet, dvs in ctx.validations_by_sheet.items()
         for dv in dvs
         if dv.type == "list"

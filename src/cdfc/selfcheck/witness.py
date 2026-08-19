@@ -55,6 +55,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Final
 
+from cdfc.schema.anchor import Anchor
 from cdfc.calc.evaluate import ValueGrid, recalculate
 from cdfc.canon import canonical_json, sha256_hex
 from cdfc.facts.patch import CellIndex
@@ -189,11 +190,6 @@ class FilingImage:
 
     def resolve(self, target: StableKey) -> CellRef:
         cell = self.cell_of.get(target)
-        if cell is not None:  # INJECTED: off by one row
-            import re as _re
-            _m = _re.match(r'^([A-Z]{1,3})([0-9]+)$', cell[1])
-            if _m:
-                cell = (cell[0], f'{_m.group(1)}{int(_m.group(2)) + 1}')
         if cell is None:
             raise WitnessKeyUnresolved(
                 f"{target!r} is not in this filing's induced key set. The witness is not applied "
@@ -334,15 +330,15 @@ def observability(w: FaultWitness, image: FilingImage) -> tuple[Observability, t
     moved_literal = str(image.literals.get(cell)) != str(w.new_value)
     keys = set(clean.values) | set(mutant.values)
     distinguishing = sorted(
-        f"{s}!{r}" for (s, r) in keys if clean.values.get((s, r)) != mutant.values.get((s, r))
+        Anchor.cell(s, r).render() for (s, r) in keys if clean.values.get((s, r)) != mutant.values.get((s, r))
     )
     if moved_literal:
-        distinguishing = sorted({f"{cell[0]}!{cell[1]}", *distinguishing})
+        distinguishing = sorted({Anchor.cell(cell[0], cell[1]).render(), *distinguishing})
     if distinguishing:
         return Observability.OBSERVABLE, tuple(distinguishing)
 
     blocked = sorted(
-        f"{s}!{r}" for (s, r) in (set(clean.not_run) | set(mutant.not_run))
+        Anchor.cell(s, r).render() for (s, r) in (set(clean.not_run) | set(mutant.not_run))
     )
     if blocked:
         return Observability.INDETERMINATE_OBSERVABILITY, tuple(blocked)
@@ -368,13 +364,13 @@ def apply(w: FaultWitness, image: FilingImage) -> Any:
 
     cell, clean, mutant = _grids(w, image)
     patches: dict[str, Any] = {
-        f"{k[0]}!{k[1]}": value_for(mutant.values.get(k))
+        Anchor.cell(k[0], k[1]).render(): value_for(mutant.values.get(k))
         for k in set(clean.values) | set(mutant.values)
         if clean.values.get(k) != mutant.values.get(k)
     }
     # The edited cell itself, last and unconditionally: `w.new_value` is what the fault WRITES,
     # and for a blank-out operator that is nothing at all.
-    patches[f"{cell[0]}!{cell[1]}"] = value_for(
+    patches[Anchor.cell(cell[0], cell[1]).render()] = value_for(
         ABSENT if w.new_value is None else w.new_value
     )
     return FactSet(
@@ -446,7 +442,7 @@ def witnesses_from_campaign(
         cell: CellRef = (str(edit.get("sheet_name", "")), str(edit.get("ref", "")))
         key = key_of.get(cell)
         if key is None:
-            no_key.add(f"{cell[0]}!{cell[1]}")
+            no_key.add(Anchor.cell(cell[0], cell[1]).render())
             continue
         new_value, removes_formula = _value_of(str(edit.get("new_xml", "")), str(edit.get("old_xml", "")))
         fault_class = str(row.get("fault_class", ""))
@@ -462,7 +458,7 @@ def witnesses_from_campaign(
                     predicate_id=str(pid), target=key, new_value=new_value,
                     fault_class=fault_class, mutant_sha256=mutant,
                     operator_id=str(edit.get("operator_id", "")),
-                    recorded_at_cell=f"{cell[0]}!{cell[1]}",
+                    recorded_at_cell=Anchor.cell(cell[0], cell[1]).render(),
                     removes_formula=removes_formula,
                 )
             )

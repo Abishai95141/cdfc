@@ -5,7 +5,7 @@
      cannot be marked done by editing this file, and one that regresses reverts on the next
      run whether or not anybody expected it to. -->
 
-Observed at `014cb72`.
+Observed at `03ba629`.
 
 ## standing — 1 of 1 observed
 
@@ -20,7 +20,7 @@ Observed at `014cb72`.
 | | checkpoint | evidence |
 |---|---|---|
 | **DONE** | `P1-1` the Anchor type exists and carries table/rows/cols | Anchor fields ['axes', 'cols', 'dialect', 'rows', 'table'] |
-| **DONE** | `P1-2` the Anchor is imported by shipped modules | 3 modules in src/ import the anchor |
+| **DONE** | `P1-2` the Anchor is imported by shipped modules | 22 modules in src/ import the anchor |
 | **DONE** | `P1-3` run_filing takes a template | run_filing(filing: 'Path', *, template: 'Path \| None' = None, predicates: 'Sequence[Any] \| None' = None, max_witnesses: 'int' = 3) -> 'RunResult' |
 | **DONE** | `P1-4` a foreign workbook is no longer reported VALID | wrong-template=INVALID/['invalid.denominator_disagreement'], own-template=VALID over 1599 cells (FME is 3747) |
 | **DONE** | `P1-5` invalid.denominator_disagreement is reachable | 1 modules outside invalid.py reference the code |

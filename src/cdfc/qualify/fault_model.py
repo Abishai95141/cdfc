@@ -28,6 +28,7 @@ from decimal import Decimal
 from enum import StrEnum
 from typing import Any, Final, Literal
 
+from cdfc.schema.anchor import Anchor
 from cdfc.canon import canonical_json, sha256_hex
 
 FAULT_MODEL_VERSION: Final[str] = "v3"
@@ -68,7 +69,7 @@ class Site:
 
     @property
     def cell(self) -> str:
-        return f"{self.sheet}!{self.ref}"
+        return Anchor.cell(self.sheet, self.ref).render()
 
 
 @dataclass(frozen=True, slots=True)

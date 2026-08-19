@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import Iterator
 from typing import Any
 
+from cdfc.schema.anchor import Anchor
 from cdfc.predicates.harvest_classes import Draft, obligation_id
 from cdfc.predicates.harvest_classes._shared import cell_node, iter_formulas, order_key, parse_ref
 
@@ -47,7 +48,7 @@ def emit(ctx: Any) -> Iterator[tuple[tuple, Draft]]:
             witness=f"[{tgt_node}.__cell__, {src_node}.__cell__]",
             reason_if_inapplicable=(
                 f"one end of the carry is absent from this filing: {sheet}!{ref} or "
-                f"{src[0]}!{src[1]}"
+                + Anchor.cell(src[0], src[1]).render()
             ),
             rationale=(
                 f"The pinned blank declares {sheet}!{ref} as `={body}` — the two cells are one "

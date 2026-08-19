@@ -24,6 +24,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "src"))
 
+from cdfc.schema.anchor import Anchor
 from cdfc.predicates.harvest import _load_context  # noqa: E402
 
 
@@ -35,7 +36,7 @@ def populated_cells(filing: Path) -> tuple[str, ...]:
     _n, surface, _state = fme_surface()
     ctx = _load_context(filing)
     present = {
-        f"{sheet}!{ref}"
+        Anchor.cell(sheet, ref).render()
         for sheet, values in ctx.cell_values.items()
         for ref in values
     }

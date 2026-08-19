@@ -27,6 +27,7 @@ REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO))
 sys.path.insert(0, str(REPO / "src"))
 
+from cdfc.schema.anchor import Anchor
 from cdfc.measure.p5_run import FME, TEMPLATE_COMPUTED  # noqa: E402
 from cdfc.predicates.harvest import _load_context, expand  # noqa: E402
 from cdfc.probes.precedents import build_precedent_map  # noqa: E402
@@ -51,7 +52,7 @@ def _blind_enum_cell() -> tuple[str, str, str, list[str]]:
     test is not quietly choosing a different cell on each run.
     """
     fs = build(FME, Rule.V3)
-    surface = frozenset(f"{s}!{r}" for s, r in fs.cells)
+    surface = frozenset(Anchor.cell(s, r).render() for s, r in fs.cells)
     blind = recompute_blind(build_precedent_map(FME, reading="transitive"), surface)
     ctx = _load_context(FME)
     filed = extract(TEMPLATE_COMPUTED).literals
@@ -67,7 +68,7 @@ def _blind_enum_cell() -> tuple[str, str, str, list[str]]:
                 continue
             for part in sorted(dv.sqref.split()):
                 for ref in expand(part.replace("$", "")):
-                    key = f"{sheet}!{ref}"
+                    key = Anchor.cell(sheet, ref).render()
                     current = filed.get((sheet, ref))
                     if key in blind and current is not None and str(current) in members:
                         return sheet, ref, str(current), list(members)
@@ -120,10 +121,10 @@ def test_e2__the_survivor_is_in_the_recompute_blind_set() -> None:
     is the reading that BINDS — it follows references through intermediate formula cells."""
     sheet, ref, _current, _members = _blind_enum_cell()
     fs = build(FME, Rule.V3)
-    surface = frozenset(f"{s}!{r}" for s, r in fs.cells)
+    surface = frozenset(Anchor.cell(s, r).render() for s, r in fs.cells)
     pm = build_precedent_map(FME, reading="transitive")
-    assert f"{sheet}!{ref}" in recompute_blind(pm, surface)
-    assert f"{sheet}!{ref}" not in pm.reachable
+    assert Anchor.cell(sheet, ref).render() in recompute_blind(pm, surface)
+    assert Anchor.cell(sheet, ref).render() not in pm.reachable
 
 
 def test_residue_not_inflatable() -> None:
@@ -140,7 +141,7 @@ def test_residue_not_inflatable() -> None:
     pm = build_precedent_map(FME, reading="transitive")
     every_recompute_binds = pm.reachable
     assert len(every_recompute_binds) == 957, "the ceiling moved; the argument below needs re-checking"
-    assert f"{sheet}!{ref}" not in every_recompute_binds, (
+    assert Anchor.cell(sheet, ref).render() not in every_recompute_binds, (
         "the exhibit's cell is bound by a recompute predicate, so adding recompute predicates "
         "WOULD shrink the residue and the spec's claim is false on this template"
     )

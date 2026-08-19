@@ -19,6 +19,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from cdfc.schema.anchor import Anchor
 from cdfc.qualify.campaign import Campaign, ClassTally, tally
 from cdfc.qualify.fault_model import (
     FAULT_CLASSES,
@@ -163,8 +164,8 @@ class CampaignRunner:
             obs = Observability.OBSERVABLE
             blocked = frozenset()
         cells = seen
-        distinguishing = tuple(sorted(f"{s}!{r}" for s, r in cells))
-        blocked_cells = tuple(sorted(f"{s}!{r}" for s, r in blocked))
+        distinguishing = tuple(sorted(Anchor.cell(s, r).render() for s, r in cells))
+        blocked_cells = tuple(sorted(Anchor.cell(s, r).render() for s, r in blocked))
 
         reachable = bool(set(distinguishing) & self.read_cells) if self.read_cells else True
         # --- THE CONTROL ARM, AND WHY IT IS EVALUATED AT ALL --------------------------------

@@ -21,6 +21,7 @@ from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any
 
+from cdfc.schema.anchor import Anchor
 from cdfc.facts.fact_table import FactError
 from cdfc.ingest.reader_lxml import _sheet_parts
 from cdfc.ingest.xmlsafe import fromstring
@@ -95,7 +96,7 @@ def filing_tree(blob: Path, *, ctx: Any = None) -> dict[str, Any]:
         values = filed.get(sheet, {})
         if ref not in values:
             continue                       # absent, and absence is a fact pre-flight can see
-        _insert(tree, cel_path(sheet, ref), _coerce(values[ref]), f"{sheet}!{ref}")
+        _insert(tree, cel_path(sheet, ref), _coerce(values[ref]), Anchor.cell(sheet, ref).render())
 
     # The range nodes the data-validation classes emit against.
     for sheet, records in ctx.validations_by_sheet.items():
@@ -106,7 +107,7 @@ def filing_tree(blob: Path, *, ctx: Any = None) -> dict[str, Any]:
 
             refs = [c for part in dv.sqref.split() for c in expand(part.replace("$", ""))]
             cells = [
-                {"v": _coerce(filed.get(sheet, {})[r]), "__cell__": f"{sheet}!{r}"}
+                {"v": _coerce(filed.get(sheet, {})[r]), "__cell__": Anchor.cell(sheet, r).render()}
                 for r in refs
                 if r in filed.get(sheet, {}) and (sheet, r) in ctx.key_of
             ]

@@ -25,6 +25,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "src"))
 
+from cdfc.schema.anchor import Anchor
 from cdfc.predicates.harvest import _load_context  # noqa: E402
 
 FME = (
@@ -98,7 +99,7 @@ def main() -> int:
     unmatched = [v for v in vocabulary if not any(_matches(p, v) for p in patterns)]
 
     result = {
-        "cell": f"{SHEET}!{TOTAL_CELL}",
+        "cell": Anchor.cell(SHEET, TOTAL_CELL).render(),
         "total_formula": formulas.get((SHEET, TOTAL_CELL), ""),
         "vocabulary_range": f"{sheet}!{col}{r1}:{col}{r2}",
         "vocabulary": vocabulary,

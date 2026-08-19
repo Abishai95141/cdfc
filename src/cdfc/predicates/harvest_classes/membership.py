@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import Iterator
 from typing import Any
 
+from cdfc.schema.anchor import Anchor
 from cdfc.predicates.harvest_classes import Draft, obligation_id
 from cdfc.predicates.harvest_classes._shared import cell_node, order_key
 
@@ -45,9 +46,9 @@ def emit(ctx: Any) -> Iterator[tuple[tuple, Draft]]:
             base = f"filing.{range_path(sheet, dv.sqref)}"
             vocab_key = f"template.vocab.{cel_segment(sheet)}_{cel_segment(first)}"
             keys: dict[str, set[str]] = {
-                f"{base}.cells": {f"{sheet}!{c}" for c in cells},
-                f"{base}.cells[*].v": {f"{sheet}!{c}" for c in cells},
-                f"{base}.cells[*].__cell__": {f"{sheet}!{c}" for c in cells},
+                f"{base}.cells": {Anchor.cell(sheet, c).render() for c in cells},
+                f"{base}.cells[*].v": {Anchor.cell(sheet, c).render() for c in cells},
+                f"{base}.cells[*].__cell__": {Anchor.cell(sheet, c).render() for c in cells},
                 vocab_key: set(),
             }
             yield order_key(ctx, sheet, first, NAME), Draft(

@@ -37,6 +37,7 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any, Final
 
+from cdfc.schema.anchor import Anchor
 from cdfc.ingest.reader_lxml import RawWorkbook, read
 from cdfc.qualify.textsource import Extraction, InstrumentText, TextSourceError, Unit, build, normalise
 from cdfc.schema.stable_keys import col_to_index, split_ref
@@ -159,7 +160,7 @@ def _party_a(wb: RawWorkbook) -> tuple[dict[str, Unit], dict[str, str], dict[str
             units[k] = Unit(key=k, text=formula_unit_text(sheet, f.ref, body),
                             page=order.get(sheet, 10**6) + 1)
             if f.encoding == "ARRAY":
-                array_keys[k] = f"{sheet}!{f.ref}"
+                array_keys[k] = Anchor.cell(sheet, f.ref).render()
 
     x14_keys: dict[str, str] = {}
     for d in wb.validations:

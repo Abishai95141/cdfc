@@ -42,6 +42,7 @@ from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any, Final, Literal
 
+from cdfc.schema.anchor import Anchor
 from cdfc.calc.evaluate import Value, recalculate
 from cdfc.calc.errors import is_error
 from cdfc.facts.units import UNITS_PER_USD_MILLION
@@ -273,7 +274,7 @@ def template_diff(
 
     grid = recalculate(
         pm.as_pairs(pm.formula_text),
-        {k: v for k, v in filed.items() if f"{k[0]}!{k[1]}" not in pm.formula_text},
+        {k: v for k, v in filed.items() if Anchor.cell(k[0], k[1]).render() not in pm.formula_text},
         formula_source="TEMPLATE",
         deferred=pm.as_pairs(pm.deferred),
     )

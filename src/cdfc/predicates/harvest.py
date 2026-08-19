@@ -36,6 +36,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Literal
 
+from cdfc.schema.anchor import Anchor
 from cdfc.ingest.reader_lxml import FormulaRecord, RawWorkbook, ValidationRecord, _sheet_parts, read
 from cdfc.ingest.xmlsafe import fromstring
 from cdfc.predicates.ast_walker import TemplateSchema
@@ -280,7 +281,7 @@ def _load_context(blob: Path) -> HarvestContext:
         )
         by_ref = {f.resolved_ref: f.stable_key for f in fields.values() if f.resolved_ref}
         for ref in induced:
-            key_of[(s.name, ref)] = by_ref.get(ref, f"{s.name}!{ref}")
+            key_of[(s.name, ref)] = by_ref.get(ref, Anchor.cell(s.name, ref).render())
 
     return HarvestContext(
         blob=blob,

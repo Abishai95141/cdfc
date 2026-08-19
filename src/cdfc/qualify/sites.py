@@ -23,6 +23,7 @@ from fractions import Fraction
 from math import ceil
 from typing import Any
 
+from cdfc.schema.anchor import Anchor
 from cdfc.canon import canonical_json
 
 CellKey = str  # "Sheet!REF"
@@ -64,7 +65,7 @@ def site_universe(
     signature, because the defect this guards is a universe drawn from the thing it is meant to
     measure.
     """
-    cells = {c if isinstance(c, str) else f"{c[0]}!{c[1]}" for c in field_surface}
+    cells = {c if isinstance(c, str) else Anchor.cell(c[0], c[1]).render() for c in field_surface}
     return frozenset(cells - set(excluded))
 
 
@@ -118,9 +119,9 @@ def upstream_index(downstream: Mapping[Any, frozenset[Any]]) -> dict[CellKey, fr
     """Invert the observability module's downstream index into `cell -> everything feeding it`."""
     out: dict[CellKey, set[CellKey]] = {}
     for source, targets in downstream.items():
-        s = source if isinstance(source, str) else f"{source[0]}!{source[1]}"
+        s = source if isinstance(source, str) else Anchor.cell(source[0], source[1]).render()
         for t in targets:
-            key = t if isinstance(t, str) else f"{t[0]}!{t[1]}"
+            key = t if isinstance(t, str) else Anchor.cell(t[0], t[1]).render()
             out.setdefault(key, set()).add(s)
     return {k: frozenset(v) for k, v in out.items()}
 

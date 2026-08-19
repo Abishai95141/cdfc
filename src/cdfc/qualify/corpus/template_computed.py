@@ -42,6 +42,7 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Final
 
+from cdfc.schema.anchor import Anchor
 from cdfc.importgraph import import_closure
 from cdfc.qualify.corpus._derive_foreign import ForeignEngineUnavailable
 from cdfc.qualify.corpus.provenance import CorpusProvenance
@@ -333,7 +334,7 @@ def _derive(
             f"{overlap[:3]}. `computed_cells` would then claim a cell nobody computed."
         )
     write_values(blank, target, table)
-    return frozenset(f"{s}!{r}" for (s, r) in table)
+    return frozenset(Anchor.cell(s, r).render() for (s, r) in table)
 
 
 def corpus_digest(filings: Sequence[CleanFiling]) -> str:

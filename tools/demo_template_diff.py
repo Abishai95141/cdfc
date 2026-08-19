@@ -46,6 +46,7 @@ sys.path.insert(0, str(REPO / "tools" / "measure"))
 
 from evaluator_arm1 import load  # noqa: E402
 
+from cdfc.schema.anchor import Anchor
 from cdfc.calc.evaluate import recalculate  # noqa: E402
 from cdfc.ingest.reader_lxml import read  # noqa: E402
 from cdfc.schema.fingerprint import structural_fingerprint  # noqa: E402
@@ -93,7 +94,7 @@ def run(filing: Path, template: Path = TEMPLATE) -> int:
             expected.normalize() if isinstance(expected, Decimal) else expected
         )
         act_s = "blank" if actual is None else str(actual)
-        findings.append((f"{sheet}!{ref}", exp_s, act_s, t_formulas.get((sheet, ref), "")))
+        findings.append((Anchor.cell(sheet, ref).render(), exp_s, act_s, t_formulas.get((sheet, ref), "")))
 
     # --- 4. THE DECLARATION ------------------------------------------------------
     checked = len(template_formula_cells) - len(grid.not_run)

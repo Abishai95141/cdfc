@@ -25,6 +25,7 @@ from dataclasses import dataclass
 from decimal import Decimal
 from typing import Any
 
+from cdfc.schema.anchor import Anchor as CellAnchor
 from cdfc.facts.anchor import Anchor, Warrant, compose
 from cdfc.facts.units import Unit, to_units
 
@@ -125,8 +126,8 @@ def build(
             out[key] = Leaf(
                 value=value,
                 unit=unit,
-                cell=f"{sheet}!{ref}",
-                anchor=Anchor(warrant, source=source, cell=f"{sheet}!{ref}"),
+                cell=CellAnchor.cell(sheet, ref).render(),
+                anchor=Anchor(warrant, source=source, cell=CellAnchor.cell(sheet, ref).render()),
             )
         return out
 

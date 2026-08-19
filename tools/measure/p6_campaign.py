@@ -15,6 +15,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "src"))
 
+from cdfc.schema.anchor import Anchor
 from cdfc.measure.p5_run import FME, INDEPENDENT, fme_harvest, fme_surface, promote  # noqa: E402
 from cdfc.predicates.ast_walker import bound_cells  # noqa: E402
 from cdfc.qualify.campaign import restate_v0  # noqa: E402
@@ -70,7 +71,7 @@ def build_sites() -> tuple[list[Site], str, frozenset[str]]:
     # possible where the blank declares a formula, and those cells are LOCKED, so they are not in
     # the field surface. Naming them here rather than widening the surface keeps the denominator
     # of the settled fraction untouched.
-    universe = site_universe(surface) | frozenset(f"{s}!{r}" for s, r in formula_cells)
+    universe = site_universe(surface) | frozenset(Anchor.cell(s, r).render() for s, r in formula_cells)
 
     # The value one row up, for F08. Read from the CLEAN filing once.
     import re as _re
@@ -108,7 +109,7 @@ def build_sites() -> tuple[list[Site], str, frozenset[str]]:
 
     blocked = set(grid_of(INDEPENDENT).not_run)
     upstream_of_blocked = {
-        f"{src[0]}!{src[1]}"
+        Anchor.cell(src[0], src[1]).render()
         for src, targets in downstream_index(str(INDEPENDENT)).items()
         if targets & blocked
     }
@@ -131,9 +132,9 @@ class _PartnerCtx:
         self.sites = sites
         self.upstream: dict[str, list[str]] = {}
         for src, targets in downstream.items():
-            s = f"{src[0]}!{src[1]}"
+            s = Anchor.cell(src[0], src[1]).render()
             for t in targets:
-                self.upstream.setdefault(f"{t[0]}!{t[1]}", []).append(s)
+                self.upstream.setdefault(Anchor.cell(t[0], t[1]).render(), []).append(s)
 
     def inputs_of(self, site: Site):
         return [self.sites[c] for c in sorted(self.upstream.get(site.cell, ())) if c in self.sites]

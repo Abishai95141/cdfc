@@ -18,6 +18,7 @@ REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO))
 sys.path.insert(0, str(REPO / "src"))
 
+from cdfc.schema.anchor import Anchor
 from cdfc.measure.p10_run import population, run_filing  # noqa: E402
 from cdfc.measure.p5_run import INDEPENDENT, SEEDED, TEMPLATE_COMPUTED  # noqa: E402
 from cdfc.selfcheck.thresholds import CANARY_INAPPLICABLE_CEILING  # noqa: E402
@@ -80,7 +81,7 @@ def test_canary__a_real_fault_still_FAILs_and_the_run_stays_VALID() -> None:
     from cdfc.measure.p5_run import predicates_reading
     from cdfc.qualify.observability import literal_differences
 
-    seeded = sorted(f"{s}!{r}" for s, r in literal_differences(TEMPLATE_COMPUTED, SEEDED))
+    seeded = sorted(Anchor.cell(s, r).render() for s, r in literal_differences(TEMPLATE_COMPUTED, SEEDED))
     assert seeded == ["1. Introduction!C54"], f"the fixture moved: it now seeds {seeded}"
     readers = set().union(*(set(predicates_reading(c)) for c in seeded))
     assert set(fails) <= readers, (

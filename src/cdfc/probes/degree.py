@@ -38,6 +38,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Final, Literal
 
+from cdfc.schema.anchor import Anchor
 from cdfc.schema.stable_keys import col_to_index, split_ref
 
 CellKey = str
@@ -263,7 +264,7 @@ def assign(
     3. **the table's unit declaration** — the nearest *parenthesised* unit at or above the cell,
        anywhere in the table, bounded below by the table's own title row. Parentheses only.
     """
-    cell = f"{sheet}!{ref}"
+    cell = Anchor.cell(sheet, ref).render()
     col, row = split_ref(ref)
     rows = _by_row(sheet_text)
 
@@ -272,7 +273,7 @@ def assign(
             cell=cell,
             degree=1 if basis == "MONEY_MARKER" else 0,
             basis=basis,
-            evidence_cell=f"{sheet}!{evidence_cell}",
+            evidence_cell=Anchor.cell(sheet, evidence_cell).render(),
             evidence_text=text.strip()[:120],
         )
 
@@ -368,5 +369,5 @@ def degree_map(blob: Path, cells: object = None) -> dict[CellKey, Assignment]:
                         evidence_cell=a.evidence_cell,
                         evidence_text=f"the blank caches {v.strip()[:24]!r} here, so it is not an amount",
                     )
-        out[f"{sheet}!{ref}"] = a
+        out[Anchor.cell(sheet, ref).render()] = a
     return out

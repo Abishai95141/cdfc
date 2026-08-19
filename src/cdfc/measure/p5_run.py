@@ -16,6 +16,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
+from cdfc.schema.anchor import Anchor
 from cdfc.evaluate.binding import TemplateCatalogue
 from cdfc.evaluate.celrt import CelRuntime
 from cdfc.evaluate.run import RunResult, execute
@@ -99,7 +100,7 @@ def harvest_for(template: Path) -> HarvestResult:
 @lru_cache(maxsize=16)
 def surface_for(template: Path) -> tuple[int, tuple[str, ...], str]:
     fs = build(template, Rule.V3)
-    return fs.n_cells, tuple(sorted(f"{s}!{r}" for s, r in fs.cells)), fs.validation_state
+    return fs.n_cells, tuple(sorted(Anchor.cell(s, r).render() for s, r in fs.cells)), fs.validation_state
 
 
 def fme_harvest() -> HarvestResult:

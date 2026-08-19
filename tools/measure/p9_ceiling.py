@@ -21,6 +21,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "src"))
 
+from cdfc.schema.anchor import Anchor
 from cdfc.ingest.reader_lxml import read  # noqa: E402
 from cdfc.measure.geval import ARM2, gate_status, label  # noqa: E402
 from cdfc.probes.degree import degree_map  # noqa: E402
@@ -82,7 +83,7 @@ def harvested_tolerance_audit() -> dict[str, object]:
         if cell is None:
             continue
         _kind, _parts, sheet, ref = cell
-        a = dm.get(f"{sheet}!{ref}")
+        a = dm.get(Anchor.cell(sheet, ref).render())
         if a is not None and a.degree == 0:
             on_counts.append(f"{c.id} at '{sheet}'!{ref} ({a.basis})")
         for token in c.expr.replace("(", " ").replace(")", " ").split():
@@ -104,7 +105,7 @@ def main() -> int:
 
     style_unlocked = style_only_unlocked(FME)
     formula_cells = {(f.sheet, f.ref) for f in read(FME).formulas}
-    unbinding = sorted(f"{s}!{r}" for s, r in (style_unlocked & formula_cells))
+    unbinding = sorted(Anchor.cell(s, r).render() for s, r in (style_unlocked & formula_cells))
 
     reach_binding: set[str] = set()
     for cell, cells in pm.in_field_surface.items():

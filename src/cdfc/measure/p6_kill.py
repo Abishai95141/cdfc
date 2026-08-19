@@ -19,6 +19,7 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
+from cdfc.schema.anchor import Anchor
 from cdfc.evaluate.celrt import CelRuntime
 from cdfc.evaluate.runner import evaluate_one
 from cdfc.facts.build import filing_tree, template_tree
@@ -61,13 +62,13 @@ def killer(predicates: Sequence[Any], schema: Any, *, restrict: bool = True) -> 
         # the clean filing in the coercion as well as in the fault, and the campaign would be
         # measuring both — which is exactly what `"None"` was.
         patches = {
-            f"{s}!{r}": value_for(v) for (s, r), v in mutant_grid.values.items()
+            Anchor.cell(s, r).render(): value_for(v) for (s, r), v in mutant_grid.values.items()
         }
         for sheet, ref in edited:
-            patches[f"{sheet}!{ref}"] = value_for(literals.get((sheet, ref), ABSENT))
+            patches[Anchor.cell(sheet, ref).render()] = value_for(literals.get((sheet, ref), ABSENT))
         facts = FactSet(patch(base_tree, patches, index=cell_index), template)
-        changed = {f"{s}!{r}" for s, r in edited} | {
-            f"{s}!{r}" for (s, r) in mutant_grid.values
+        changed = {Anchor.cell(s, r).render() for s, r in edited} | {
+            Anchor.cell(s, r).render() for (s, r) in mutant_grid.values
         }
         candidates = (
             [p for p in predicates if cells_of[p.id] & changed] if restrict else list(predicates)

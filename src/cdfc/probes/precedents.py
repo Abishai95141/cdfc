@@ -154,7 +154,7 @@ def materialised_formulas(blob: Path) -> tuple[dict[CellKey, str], dict[CellKey,
     out: dict[CellKey, str] = {}
     deferred: dict[CellKey, str] = {}
     for f in wb.formulas:
-        key = f"{f.sheet}!{f.ref}"
+        key = Anchor.cell(f.sheet, f.ref).render()
         if f.text:
             out[key] = f.text
         elif f.encoding == "SHARED_DEPENDENT":
@@ -173,7 +173,7 @@ def _direct(text: str, sheet: str, *, values_only: bool) -> frozenset[CellKey]:
     out: set[CellKey] = set()
     for ref in refs_of(ast, values_only=values_only):
         for s, r in expand(ref, sheet):
-            out.add(f"{s}!{r}")
+            out.add(Anchor.cell(s, r).render())
     return frozenset(out)
 
 

@@ -25,6 +25,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 
+from cdfc.schema.anchor import Anchor
 from cdfc.evaluate.celrt import CelRuntime, Outcome  # noqa: E402
 from cdfc.facts.view import FactView  # noqa: E402
 from cdfc.predicates.harvest import _load_context, cel_path, harvest  # noqa: E402
@@ -58,7 +59,7 @@ def fact_tree(blob: Path, *, perturb: dict[tuple[str, str], object] | None = Non
             for seg in cel_path(sheet, ref).split("."):
                 node = node.setdefault(seg, {})
             node["v"] = value
-            node["__cell__"] = f"{sheet}!{ref}"
+            node["__cell__"] = Anchor.cell(sheet, ref).render()
     return tree
 
 
