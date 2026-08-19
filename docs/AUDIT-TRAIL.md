@@ -97,3 +97,6 @@ citation, an unlogged artefact, and an empty trail are each planted and observed
 | 2026-08-20 | DEFECT | the Path M parser reported 810 published rules as UNPARSEABLE that parse — a parenthesised row list (696) and a third axis (114), both of which E2 had already specified | `docs/measurements/A2-rule-coverage.md` |
 | 2026-08-20 | DECISION | an axis RANGE gets its own typed reason rather than being expanded: expanding would invent axis members the table may not have | `src/cdfc/pathm/statement.py` |
 | 2026-08-20 | DECISION | cdfc.pathm and cdfc.evidence added to VERDICT_ROOTS, so 'zero model calls' is a property of the import graph | `tests/negative/importgraph.py` |
+| 2026-08-20 | MEASUREMENT | A3: three states over 3,747 filed values against 98 re-verifying observations; exact matching only, per W0-C | `src/cdfc/evidence/contradict.py` |
+| 2026-08-20 | DEFECT | A3's first run produced a headline CONTRADICTION out of a category error — a money threshold bound to an attestation cell holding 'Yes' | `src/cdfc/evidence/contradict.py` |
+| 2026-08-20 | DECISION | a contradiction REQUIRES a rule: two different numbers in two documents are two different numbers until something says they are about the same quantity | `src/cdfc/evidence/contradict.py` |
