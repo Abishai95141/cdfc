@@ -40,6 +40,7 @@ greps:
 	bash ci/no-openpyxl-writer.sh
 	bash ci/no-wallclock-z3.sh
 	bash ci/no-imported-prior.sh
+	$(PY) tools/audit_trail.py
 
 contract:
 	$(PY) -m pytest tests/contract -q
@@ -99,6 +100,10 @@ nightly: all
 # --- P4 ------------------------------------------------------------------------------
 predicate-schema:
 	$(PY) tools/gen_predicate_schema.py
+
+audit:
+	$(PY) tools/audit_trail.py
+	$(PY) tools/audit_trail.py --selftest
 
 progress:
 	$(PY) tools/progress.py
