@@ -55,10 +55,39 @@ The distinction that matters: an unseen CONSTRUCT costs coverage and says so
 (`no_predicate.not_yet_synthesised`); an unseen STRUCTURE rejects the filing entirely. Only the
 second is rigidity, and it is fixable without weakening determinism.
 
-WHAT WOULD CLOSE IT. Graded binding: bind what matches, publish the structural delta as a first-class
-part of the declaration (`structure_changed: +1 row at Portfolio!r7`), and score coverage over the
-intersection with the difference named. `invalid.template_unbound` then means *nothing matched*,
-which is what it should always have meant.
+WHAT WOULD CLOSE IT — AND A FIRST ATTEMPT THAT WAS BUILT, MEASURED UNSAFE, AND REVERTED.
+
+The obvious design is: treat `sheets` as the identity facet, admit a `PartiallyBound` when the sheet
+set matches exactly, and score coverage over the template's field surface with the differing facets
+named. It was implemented and it worked in the sense that both previously-refused fixtures came
+back checked — `formula-overwritten__investors-N5` went from a refusal to VALID with 1,557 settled.
+
+**It is wrong, and the measurement that shows it is short.** A ROW INSERTION RENUMBERS EVERY CELL
+BELOW IT:
+
+    pinned blank unlocked cells   3,747
+    row-inserted filing           3,747
+      addresses common to both    3,544
+      in blank only                 203
+      in filing only                203
+
+`3. Portfolio!A104` is present in BOTH — and in the filing it holds what `A103` held in the blank.
+Scoring those against each other compares two different fields that happen to share a name. The
+`952 settled` such a run reported is not partial coverage; it is data matched to the wrong labels,
+which is the exact wrong-form failure strict binding exists to prevent. Reverted rather than shipped.
+
+WHAT THE CORRECT DESIGN NEEDS, and it is more than a looser facet rule:
+
+1. **A correspondence, not an intersection of names.** Partial binding must establish which field in
+   the filing IS which field in the blank — an alignment that survives insertion, deletion and
+   reordering — not merely which addresses appear in both.
+2. **Coverage scored over the CORRESPONDENCE**, with unaligned fields on both sides declared: cells
+   the blank has that the filing lost, and cells the filing has that the blank never declared.
+3. **A refusal when the correspondence is ambiguous.** Two candidate alignments of similar quality
+   is the same hazard as two pinned blanks sharing a sheet set, and must stay `Unbound`.
+
+Until (1) exists, an exact match is the only safe bind, and `row-inserted__portfolio-r7.xlsx`
+staying `Unbound` is CORRECT rather than rigid.
 
 ## The sweep report is BOTH an input to the tests and an output of the target they gate
 
