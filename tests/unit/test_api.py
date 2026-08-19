@@ -14,6 +14,7 @@ from cdfc.api.routes import MUTATING, ROUTES
 from cdfc.schema.fingerprint import structural_fingerprint
 
 SYNTHETIC = Path("fixtures/synthetic")
+PRESCRIBED = Path("fixtures/prescribed")
 # Binds: a filing prepared on the pinned FME blank. Structure is unchanged by writing values in.
 BINDS = SYNTHETIC / "clean__independently-computed__fme-q1.xlsx"
 # Does not bind: a row inserted moves the dimension and the unlocked mask, which are two of the
@@ -74,22 +75,64 @@ def test_api__422_carries_the_fingerprint_the_upload_actually_computes_to() -> N
     assert "Nearest is" in body["detail"]
 
 
-def test_api__a_filing_that_binds_is_501_not_a_fabricated_run() -> None:
-    """No queue, no worker, no run store: a 200 here would name a run id for a run nobody made."""
+def test_api__a_filing_that_binds_is_CHECKED_and_the_run_is_not_stored() -> None:
+    """**This asserted a `501` until the runner learned to take a template, and that was right.**
+
+    While every run scored against the pinned FME blank, a `200` from here would have published a
+    coverage declaration over the wrong denominator for eight of the nine pinned templates — so the
+    endpoint refused, and the refusal named `cdfc run` as the place the check was available.
+
+    The refusal's REASON is gone, so the refusal is. What has not changed is the property the old
+    test was really defending: **no run id is named for a run nobody performed.** It is now
+    satisfied the other way round — the run IS performed, and the id is a digest of its inputs
+    rather than an invention, so `persisted: false` costs the reader nothing.
+    """
     r = dispatch(Request("POST", "/v1/filings", body=BINDS.read_bytes()))
-    assert r.status == 501, r.json()
+    assert r.status == 201, r.json()
     body = r.json()
-    assert body["error"] == "run_not_available_over_http"
-    assert body["structuralFingerprint"] == structural_fingerprint(BINDS)
     assert SHA256_HEX.match(body["templateSha256"])
-    assert "cdfc run" in body["detail"], "a refusal names where the check IS available"
+    assert body["runState"] in {"VALID", "INVALID"}
+    assert body["persisted"] is False, "the run store is read-only; this endpoint may not write"
+
+    sf = body["settledFraction"]
+    assert sf is not None and sf["fieldSurface"] > 0
+    # THE COUNTS TRAVEL WITH THE FRACTION. A settled figure without its denominator and its
+    # unchecked split is the number this product exists to refuse.
+    assert sf["settled"] <= sf["fieldSurface"]
+    assert {"notRun", "noPredicate", "indeterminate", "error"} <= set(sf)
+
+    # The id is REPRODUCIBLE, which is what makes not storing it sound rather than lossy.
+    again = dispatch(Request("POST", "/v1/filings", body=BINDS.read_bytes())).json()
+    assert again["runId"] == body["runId"]
 
 
-def test_api__two_different_workbooks_do_not_share_a_fingerprint() -> None:
-    """The value varies with the upload. A constant passes every single-file assertion above."""
-    a = dispatch(Request("POST", "/v1/filings", body=BINDS.read_bytes())).json()
-    b = dispatch(Request("POST", "/v1/filings", body=DOES_NOT_BIND.read_bytes())).json()
-    assert a["structuralFingerprint"] != b["structuralFingerprint"]
+def test_api__the_answer_varies_with_the_upload() -> None:
+    """**The anti-constant guard, and it must outlive the endpoint it was written against.**
+
+    `post_filings` once returned one hardcoded body — `structuralFingerprint` was the literal
+    `"sheet-shape:unknown"` for every file on earth — and every single-file assertion in this module
+    passed against it. So the property is not *"the fingerprint is well formed"*, it is *"two
+    different uploads do not receive the same answer"*, and it is checked on BOTH paths because the
+    endpoint now has two.
+    """
+    unbound_a = dispatch(Request("POST", "/v1/filings", body=DOES_NOT_BIND.read_bytes())).json()
+    unbound_b = dispatch(
+        Request("POST", "/v1/filings",
+                body=(SYNTHETIC / "formula-overwritten__investors-N5.xlsx").read_bytes())
+    ).json()
+    assert unbound_a["structuralFingerprint"] != unbound_b["structuralFingerprint"], (
+        "two unbound workbooks were handed the same fingerprint"
+    )
+
+    fme = dispatch(Request("POST", "/v1/filings", body=BINDS.read_bytes())).json()
+    alr = dispatch(
+        Request("POST", "/v1/filings",
+                body=(PRESCRIBED / "ALR_V2_3_20250808_1024.xlsx").read_bytes())
+    ).json()
+    assert fme["templateSha256"] != alr["templateSha256"]
+    # AND THE DENOMINATOR MOVES WITH THE TEMPLATE. Equal field surfaces would mean one of them was
+    # scored over the other's mask, which is the defect this whole phase exists to kill.
+    assert fme["settledFraction"]["fieldSurface"] != alr["settledFraction"]["fieldSurface"]
 
 
 def test_api__a_pk_prefixed_body_that_is_not_a_workbook_is_named_not_a_traceback() -> None:

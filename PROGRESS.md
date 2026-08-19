@@ -5,7 +5,7 @@
      cannot be marked done by editing this file, and one that regresses reverts on the next
      run whether or not anybody expected it to. -->
 
-Observed at `d7fe6ab`.
+Observed at `1436b23`.
 
 ## standing — 1 of 1 observed
 
@@ -15,7 +15,7 @@ Observed at `d7fe6ab`.
 
 * `SUITE` — a collection error aborts before any assertion; this repo shipped that way once
 
-## Phase 1 — 3 of 7 observed
+## Phase 1 — 4 of 7 observed
 
 | | checkpoint | evidence |
 |---|---|---|
@@ -24,7 +24,7 @@ Observed at `d7fe6ab`.
 | **DONE** | `P1-3` run_filing takes a template | run_filing(filing: 'Path', *, template: 'Path \| None' = None, predicates: 'Sequence[Any] \| None' = None, max_witnesses: 'int' = 3) -> 'RunResult' |
 | **DONE** | `P1-4` a foreign workbook is no longer reported VALID | wrong-template=INVALID/['invalid.denominator_disagreement'], own-template=VALID over 1599 cells (FME is 3747) |
 | **DONE** | `P1-5` invalid.denominator_disagreement is reachable | 1 modules outside invalid.py reference the code |
-| **TODO** | `P1-6` POST /v1/filings creates a run | status=501 body={"detail":"this filing binds to a pinned template, and this build cannot run it here. There is no queue, no wo |
+| **DONE** | `P1-6` POST /v1/filings creates a run | status=201 body={"filingSha256":"7d9a1960085785eefbe166fb5e04e94689780c490235fe55d8f3e8b620ceea39","invalidCauses":[],"note":" |
 | **TODO** | `P1-7` the anchor-hazard instrument runs green | tools/anchor_hazard.py does not exist |
 
 * `P1-1` — E2 measured that rows and cols may be LISTS, and that a cell is the degenerate case

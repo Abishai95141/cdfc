@@ -30,7 +30,8 @@ class Route:
 ROUTES: Final[tuple[Route, ...]] = (
     Route("POST", "/v1/filings", "post_filings", False,
           "submit a filing; 413 over cap, 415 non-zip, 422 template_unbound with the COMPUTED "
-          "fingerprint, 501 when it binds because no run happens over HTTP"),
+          "fingerprint, 201 with the coverage declaration when it binds — checked against the "
+          "template it bound to, over that template's own field surface, and NOT persisted"),
     Route("GET", "/v1/runs/{id}", "get_run", False, "the full run record"),
     Route("GET", "/v1/runs/{id}/checks", "get_checks", False, "?state=&reason=&predicate_id="),
     Route("GET", "/v1/runs/{id}/cells", "get_cells", False, "the closure table"),

@@ -5,6 +5,7 @@ The one that is stated HERE is `get_portfolio`, because there is nowhere else fo
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 from typing import Any, Final
@@ -232,17 +233,65 @@ def post_filings(req, params):
                         f"the body begins with 'PK' but could not be read as a spreadsheet "
                         f"package: {type(e).__name__}: {e}")
 
-    if isinstance(outcome, Bound):
-        return _err(501, "run_not_available_over_http",
-                    "this filing binds to a pinned template, and this build cannot run it here. "
-                    "There is no queue, no worker and no run store behind this endpoint, so the "
-                    "check is available from the command line only: `cdfc run <filing.xlsx>`. A "
-                    "200 from here would have to name a run id for a run nobody performed.",
-                    structuralFingerprint=outcome.fingerprint,
-                    templateSha256=outcome.template_sha256)
-    return _err(422, "template_unbound",
-                "this filing's template is not one of the pinned blanks. " + outcome.explain(),
-                structuralFingerprint=outcome.fingerprint)
+        if not isinstance(outcome, Bound):
+            return _err(422, "template_unbound",
+                        "this filing's template is not one of the pinned blanks. "
+                        + outcome.explain(),
+                        structuralFingerprint=outcome.fingerprint)
+
+        # --- THE FILING BINDS, SO IT IS CHECKED — AND NOTHING IS WRITTEN --------------------------
+        #
+        # This returned 501 until the runner learned to take a template, and the refusal was honest
+        # while it stood: every run scored against the pinned FME blank, so a 200 here would have
+        # published a coverage declaration over the wrong denominator for eight of the nine blanks.
+        #
+        # **THE READ-ONLY INVARIANT IS KEPT, NOT TRADED AWAY.** `cdfc.api.store` stays read-only —
+        # "an API that could WRITE a run would be an API that can change what a signed statement
+        # covers" — so this computes the declaration and RETURNS it, persisting nothing. That is
+        # sound rather than a compromise because `run_id_for` digests the inputs: the same upload
+        # against the same template yields the same id whether it is computed here, on the command
+        # line, or by a reader checking the work a year from now. Nothing is lost by not storing it.
+        #
+        # It is SYNCHRONOUS and it is not free — roughly six seconds for the FME workbook's 3,747
+        # cells and 33 predicates. There is no queue in this build, so the cost is named here rather
+        # than discovered by whoever first uploads at a quarter-end.
+        tmpl = next(
+            (p for p in sorted(PRESCRIBED.glob("*.xlsx"))
+             if hashlib.sha256(p.read_bytes()).hexdigest() == outcome.template_sha256),
+            None,
+        )
+        if tmpl is None:
+            # The catalogue was built FROM this directory, so a bound digest with no file behind it
+            # means the corpus changed under the process. That is a claim about the server.
+            return _err(503, "pinned_template_vanished",
+                        f"the filing bound to {outcome.template_sha256[:16]}… but no workbook under "
+                        f"{PRESCRIBED} now has that digest; the corpus changed while the server ran.")
+
+        from cdfc.measure.p10_run import run_filing
+
+        result = run_filing(blob, template=tmpl)
+
+    frac = result.fraction
+    part = result.partition
+    return _json(201, {
+        "runId": result.run_id,
+        "filingSha256": result.filing_sha256,
+        "templateSha256": result.template_sha256,
+        "templateName": tmpl.name,
+        "runState": result.run_state,
+        "invalidCauses": [str(c) for c in (result.invalid_causes or ())],
+        # THE COUNTS TRAVEL WITH THE FRACTION, ALWAYS. A settled figure without its denominator and
+        # its unchecked split is the number this product exists to refuse.
+        "settledFraction": None if part is None else {
+            "settled": part.settled, "fieldSurface": part.cellsTotal,
+            "notRun": part.notRun, "noPredicate": part.noPredicate,
+            "indeterminate": part.indeterminate, "error": part.error,
+            "outOfScope": part.outOfScope, "informational": part.informational,
+        },
+        "persisted": False,
+        "note": ("computed and returned; NOT stored. The run id is a digest of the inputs, so this "
+                 "declaration is reproducible with `cdfc run` and needs no server-side record."),
+    })
 
 
 def get_run(req, params):
