@@ -389,7 +389,7 @@ filing-plus-source-pack pairs **and on A1c**: you cannot fill a form you cannot 
 
 ---
 
-## 10. The open architectural question — and it is the biggest one
+## 10. The architectural question that WAS open — decided 20 Aug 2026
 
 **The architecture made the evidence graph a PROJECTION of a run — emitted, never stored** — because
 a critique showed a graph-native rewrite bought nothing a buyer could see.
@@ -397,9 +397,28 @@ a critique showed a graph-native rewrite bought nothing a buyer could see.
 **The user flow in §2 needs the opposite:** a graph that persists across uploads and is queried by a
 later prompt. Upload rules today, upload financials next week, ask for a filing the week after.
 
-This is a genuine divergence and **it changes what A3 IS, not how well it works.** Decide it before
-any A1c or A3 code is written. Cognee is the candidate worth a real evaluation; the rule that
-governs the decision is that no LLM-extracted edge enters unadjudicated.
+**RESOLVED by `N5`. See `docs/decisions/D-A3-01-the-graph-is-re-derived-not-stored.md`.**
+
+**What persists is the ARTEFACT SET; the graph is re-derived, never stored.** The measurement
+dissolves the dilemma: re-deriving the whole graph from pinned artefacts takes **0.41 s** (1,722
+nodes), and nine pinned blanks plus the 1,218-unit instrument take **0.63 s** (3,550 nodes). The
+projection is a deterministic fold — the sorted triple set digests identically under
+`PYTHONHASHSEED` 0/1/2 — and the control holds, because the digest moves when the template changes
+or a proposal is added.
+
+So every upload pins an artefact and a run names which artefacts it used. Rules uploaded today and
+financials uploaded next week are two pinned artefacts; the filing run names both. **The evidence
+survives across uploads; a derived index of it does not need to.**
+
+A mutable store is not merely unnecessary but unsafe: `run_id_for` is a digest of the inputs, so
+accumulated state would give two runs over identical inputs one id with different answers, and
+`store.write()` overwrites in place. **Cognee is REJECTED for this path** — its value is
+LLM-extracted edges, which cannot enter unadjudicated, and the problem it solves is measured at
+0.63 s. The build task this creates is an **artefact registry**, not a graph database.
+
+**What it does NOT establish:** that re-derivation stays cheap at every scale. A corpus of thousands
+of source PDFs is a different population, and re-measuring the fold is now a named `A3` entry
+criterion rather than an assumption.
 
 **Also unresolved, and smaller:** the coverage vocabulary needs more than governed/ungoverned. In
 the spike, two fields were *read as conditions* without being *governed*, and the query reported
@@ -437,7 +456,7 @@ number it was written against was wrong. `(141, 141)` entries and `(230, 230)` g
 | **N2 · the labelling rule, then the split** | pin what "this field has a label" means BEFORE measuring FACT vs ATTESTATION over it — the denominator moved sixfold | 2 d |
 | **N3 · the negation negative control** | every engine we adopt must PROVE it honours negation and comparison before it adjudicates | 0.5 d, reusable |
 | **N4 · correspondence vs Valentine** | does A1c beat the published baselines, judged by somebody who did not write it? | 3 d, inside A1c |
-| **N5 · the persistent-graph decision** | evaluate Cognee against the per-run projection on the §2 flow | 3 d, **gates A3** |
+| **N5 · the persistent-graph decision** | **RUN 20 Aug 2026 — `D-A3-01`.** Re-derivation measured at 0.41 s / 0.63 s and proven a deterministic fold; artefacts persist, the graph does not; Cognee rejected | ~0.5 d |
 
 ---
 
@@ -455,9 +474,9 @@ number it was written against was wrong. `(141, 141)` entries and `(230, 230)` g
 
 ## 13. What is next
 
-1. **The persistent-graph decision (`N5`) — 3 days.** It gates A1c and A3 both, it changes what the
-   evidence layer *is* rather than how well it works, and it is not a detail you retrofit. §2's flow
-   needs a store; the architecture chose a projection. Decide before writing either.
+1. ~~The persistent-graph decision (`N5`)~~ — **DONE 20 Aug 2026**, `D-A3-01`. Artefacts persist,
+   the graph is re-derived. A1c and A3 are both unblocked, and A3's shape is settled: a projection
+   layer over pinned source artefacts, plus an artefact registry.
 2. **The adversarial audit of the A1 diff — 1–2 days.** Already a declared A2 entry criterion, needs
    nothing we lack, and A1 has been verified by probes but never attacked.
 3. **`N1`, the re-pinning blast radius — 2 days.** Gates the single largest saving in the plan.
