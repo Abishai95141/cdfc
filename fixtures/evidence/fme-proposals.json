@@ -1,0 +1,89 @@
+[
+ {
+  "eid": "p0146.s0013",
+  "quote": "The applicant shall be set up in IFSC in the form of a company or LLP or branch thereof",
+  "kind": "enumeration",
+  "field": "1. Introduction!D12",
+  "terms": [
+   "Company",
+   "Limited Liability Partnership",
+   "Branch of a Company"
+  ],
+  "note": "legal structure is a closed list and the template declares the same one"
+ },
+ {
+  "eid": "p0145.s0004",
+  "quote": "Registered FME (Non-Retail) or Registered FME (Retail)",
+  "kind": "enumeration",
+  "field": "1. Introduction!D10",
+  "terms": [
+   "Registered FME (Retail)",
+   "Registered FME (Non-Retail)"
+  ]
+ },
+ {
+  "eid": "p0148.s0008",
+  "quote": "shall at all times comply with the net worth requirements",
+  "kind": "disclosure",
+  "field": "8. Compliance Status!C6",
+  "note": "ATTESTATION-shaped: checkable against the corpus, never against this filing"
+ },
+ {
+  "eid": "p0193.s0010",
+  "quote": "within fifteen days of the receipt of the valuation report",
+  "kind": "deadline",
+  "field": "1. Introduction!D41"
+ },
+ {
+  "eid": "p0143.s0011",
+  "quote": "hold twenty per cent",
+  "kind": "threshold",
+  "field": "3. Portfolio!C103"
+ },
+ {
+  "eid": "p0144.s0016",
+  "quote": "“offer document” means any document",
+  "kind": "definition"
+ },
+ {
+  "eid": "p0146.s0013",
+  "quote": "shall be set up in IFSC in the form of a partnership firm",
+  "kind": "enumeration",
+  "field": "1. Introduction!D12",
+  "planted": "G-QUOTE: not the text"
+ },
+ {
+  "eid": "p0146.s0013",
+  "quote": "The applicant shall be set up in IFSC",
+  "kind": "enumeration",
+  "field": "1. Introduction!ZZ999",
+  "planted": "G-FIELD: no such cell"
+ },
+ {
+  "eid": "p0193.s0010",
+  "quote": "within fifteen days",
+  "kind": "deadline",
+  "field": "1. Introduction!D12",
+  "planted": "G-TYPE: a deadline on an enum"
+ },
+ {
+  "eid": "p0146.s0013",
+  "quote": "The applicant shall be set up in IFSC",
+  "kind": "enumeration",
+  "field": "1. Introduction!D12",
+  "terms": [
+   "Sole Proprietorship"
+  ],
+  "planted": "G-VOCAB: term absent from the validation list"
+ },
+ {
+  "eid": "p0146.s0013",
+  "quote": "The applicant shall be set up in IFSC",
+  "kind": "enumeration",
+  "field": "1. Introduction!D12",
+  "refers_to": [
+   "p9999.s0001"
+  ],
+  "planted": "G-XREF: dangling reference"
+ }
+]

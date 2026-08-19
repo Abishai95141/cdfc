@@ -1,5 +1,18 @@
 # docs/GATE-CHANGES.md
 
+## 19 Aug 2026 — row 118's evidence binding is wrong, and the gate is fine
+
+`ci/GATES.md` row 118 (`test_contract__fraction_never_travels_alone`) names `ApiBareFraction` as
+its `broken_build`. Under the registry's own column definition — *"the named injector or condition
+that makes it red"* — that is false: the injector leaves 118 green while turning row 117 red. Both
+rows were bound to the same break because they live in the same file.
+
+**The gate itself works.** Neutralising `SettledFractionOut.__post_init__` turns it red. So this is
+a wrong binding, not a dead control, and it is one of the reasons `tools/gate_liveness.py` stopped
+consulting a hand-maintained map for pytest rows and now derives the binding from the sweep's own
+per-guard record. Row 118 has no control that declares it a flipping guard, and it is counted among
+the 21 named in `docs/OPEN-ITEMS.md`. The registry is append-only, so the row is not edited.
+
 **Not yet written.** Its subject does not exist at P0; it is created by the phase that first needs it.
 This file exists so a reference to it is never dangling, and its emptiness is visible rather than silent.
 

@@ -4,11 +4,21 @@ Run 19 Aug 2026 at `6d3582e` by `tools/measure/ceiling.py`, against the pinned i
 (`corpus/instruments/statute-fm-regulations-2025.text.json`, 197,767 characters, 1,218 units) and
 the pinned FME return over **the repository's own field surface**, not a second reader.
 
-**Why it was run.** `docs/spike/README.md` records that regulation 8(1) is inside the ~176-of-531
-"testable content" estimate by pattern and is still not checkable against this filing, and says the
-true ceiling *"is lower than the text-level count suggests, and I'd want that measured properly
-before Phase 5 is scoped."* This is that measurement. Two other published numbers were re-run at the
-same time because they were cheap, and **two of the three do not reproduce.**
+**Why it was run.** `docs/spike/README.md` establishes that regulation 8(1) has a comparator and
+is still not checkable against this filing, because its threshold sits in a Schedule and its only
+field is an attestation. The inference drawn from that -- that a pattern-level count of "testable"
+clauses overstates the real ceiling -- is what this measures.
+
+> **CORRECTED 19 Aug 2026 by an adversarial audit of this file.** The paragraph above previously
+> attributed a "~176 of 531" estimate AND a verbatim quotation to `docs/spike/README.md`. **That
+> file contains the string "176" zero times**, in its current form and at `6d3582e`, the commit
+> this measurement pins itself to, and it contains no such sentence. The estimate came from the
+> module docstring of `tools/measure/ceiling.py` -- written for this measurement, by its author.
+> **A citation to one's own prose, presented as an external source, is the sharpest form of the
+> defect this repository keeps catching**, and it is recorded here rather than quietly deleted.
+
+Two other published numbers were re-run at the same time because they were cheap, and **two of the
+three do not reproduce.**
 
 ---
 
@@ -50,8 +60,13 @@ delegation and definitions are exactly the two ways a clause can look testable a
 
 ### Two classifier defects, found by reading the examples rather than the totals
 
-1. **`Rs\.?` under `re.I` matched the "rs" inside `forms`, `advertisers`, `matters`.** The first run
-   put **228 of 532** in the quantified bucket, headed by a pure definition of *"advertisement"*.
+1. **`Rs\.?` under `re.I` matched the "rs" inside ordinary words**, pulling **174 of 532**
+   shall-clauses into the quantified bucket on nothing but a substring: `investors` (86 clauses),
+   `person` (25), `years` (19), `directors` (16), `partners` (14), `holders` (13), `circulars`
+   (11), `persons` (10). The first run therefore put **228 of 532** in that bucket, headed by a
+   pure definition of *"advertisement"*. (`forms` was named here originally and is WRONG -- it has
+   no adjacent "rs". Corrected by the same audit, and it is the reason a named example beats an
+   adjective: the wrong one is checkable.)
    Every alternative is now word-bounded. A currency abbreviation that matches inside ordinary
    words is a classifier that has measured nothing.
 2. **Definitions carry quantities.** *"'control' shall include the right to appoint a majority …

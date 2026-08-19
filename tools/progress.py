@@ -11,9 +11,13 @@ So every checkpoint below is a PREDICATE THAT RUNS. `DONE` means the probe obser
 just now, in this working tree. Nobody can mark a checkpoint done by editing a file, and a
 checkpoint that regresses goes back to `TODO` on the next run without anybody noticing it should.
 
-**A PROBE MAY NOT ASSERT ITS OWN SUBJECT.** Each one exercises the shipped path — imports the real
-module, calls the real function, dispatches a real request — and never greps for a symbol it expects
-to find. `grep -q "class Anchor"` would pass against a class with no callers, which is the shallow
+**A PROBE MAY NOT ASSERT ITS OWN SUBJECT.** NINE of the eleven exercise the shipped path — import
+the real module, call the real function, dispatch a real request. **TWO decide by scanning source
+text and are weaker for it**, and saying so here is cheaper than a reader assuming otherwise: `A1-2`
+counts files matching an import regex, and `A1-5` counts modules referencing the code rather than
+observing it raised. `A1-4` DOES observe `denominator_disagreement` firing, so the pair is not
+load-bearing alone. The rule they are held to is that `grep -q "class Anchor"` would pass against a
+class with no callers, which is the shallow
 proxy this file exists to refuse.
 
 Read by: any agent or session, `make progress`. Written to `PROGRESS.md`, which is committed so the
@@ -226,7 +230,7 @@ def _p_statute_obligations() -> tuple[bool, str]:
 # sequence. `docs/PLAN.md` is the map between them.
 
 PROBES: list[Probe] = [
-    Probe("SUITE", "standing", "the suite collects and runs", _p_suite_collects,
+    Probe("SUITE", "standing", "the suite collects", _p_suite_collects,
           "a collection error aborts before any assertion; this repo shipped that way once"),
     Probe("A1-1", "Phase A1", "the Anchor type exists and carries table/rows/cols", _p_anchor_type,
           "E2 measured that rows and cols may be LISTS, and that a cell is the degenerate case"),

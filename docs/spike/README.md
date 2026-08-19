@@ -6,8 +6,10 @@ its blind spots. Kept in the repository because it is the only end-to-end eviden
 layer the plan calls Phase 4/5, and because two of its findings resize phases.
 
 The scripts live in **`tools/spike/`**, not beside this file: `ci/no-bare-absence.sh` scans
-`src`, `tests` and `docs`, and it correctly refused `layer3_gates.py` for claiming *"provision does
-not exist"* without citing a validation-ledger row. That gate is right — an absence claim in this
+`src`, `tests` and `docs`, and it correctly refused `layer3_gates.py` for claiming *"quote does not
+occur in the cited provision"* without citing a validation-ledger row. (The refusal was first
+attributed here to a different line reading *"provision does not exist"*; that string does not match
+the gate's pattern and was not what fired.) That gate is right — an absence claim in this
 repository owes a positive control — and throwaway spike code should not be the thing that earns an
 exemption. The measurement record stays here; the code moved to where it belongs.
 
@@ -44,19 +46,34 @@ DOCUMENTS rather than in the reasoning. Zero false refusals.
     graph 1,005 nodes / 20 edges / 2,483 RDF triples
     fields governed 9 of 724        provisions cited 9 of 271
 
-All 3 planted errors caught. **And 2 of my 12 GENUINE proposals were refused** — I cited
-`4. Investors!C6` and `3. Portfolio!C6` without checking they exist, and `G-FIELD` refused both.
+All 3 planted errors caught. **And 2 of my 12 GENUINE proposals were refused** — `G-FIELD`
+refused `4. Investors!C6` and `3. Portfolio!C6`.
 
-**That 2-of-12 is the most useful number in this document.** It is a real error rate for an LLM
-binding rules to fields on real artifacts, and the deterministic layer caught all of it. The
-architecture's claim is not that the model is accurate; it is that the model's errors are
-CATCHABLE without a human reading every one.
+> **CORRECTED 19 Aug 2026, and the correction matters more than the original.** This document said
+> those cells do not exist. **They do.** Both are present in the sheet XML and both are in the
+> 3,747-cell field surface. `G-FIELD` was testing membership of the 724-cell LABELLED subset while
+> its refusal string said *"field surface"* — so **a defect in OUR reader was published as the
+> proposer's error rate.** The 2-of-12 is not a measurement of the model. The gate now separates
+> `field_not_in_surface` (a bad citation) from `field_not_labelled` (a gap in what we can read),
+> because the two have different remedies. Found by an adversarial audit of this file.
+
+**That 2-of-12 was called the most useful number in this document, and it measured the wrong
+thing** — see the correction above. Both cells exist and are in the field surface, so the refusals
+were our reader's, not the model's. **This document therefore reports NO genuine error rate for an
+LLM binding rules to fields**, and the honest statement of what it does show is narrower: 3 of 3
+planted errors were caught, by gates that decide without consulting the model.
+
+The architecture's claim is unchanged and was never a claim about accuracy: the model's errors are
+meant to be CATCHABLE without a human reading every one. What this correction costs is the
+evidence that they *were* caught on real artifacts — that evidence has to be re-earned, and
+`docs/EVIDENCE-LAYER.md` is where the rebuilt gate is measured.
 
 ---
 
 ## THE FINDING THAT RESIZES A PHASE: the segmenter is a re-extraction problem
 
-`docs/EXPERIMENT-PROGRAMME.md` carries the provision segmenter as **NOT PLANNED, 6–10 weeks**, on
+`docs/ARCHITECTURE-rules-and-evidence.md` §9 Phase 4 carries the provision segmenter as a hard
+prerequisite costed at **6–10 weeks including the labelling to measure it**, on
 the assumption that recovering `reg_8__subreg_1` from a Gazette PDF is a parsing problem.
 
 **It is not. The numbers are absent from our pinned corpus entirely.** A line-anchored pattern finds
@@ -109,7 +126,9 @@ was labelled FACT — so treat 22 as a floor.
 
 It chains correctly — applicability → obligation → breach was verified. But it
 
-* **accepts an inline comparison** (`N < T`) **and derives nothing**, and
+* **accepts an inline comparison** (`N < T`) **and silently DROPS it**, deriving the head as though
+  the comparison had never been written — a false BREACH against a filing that meets the threshold,
+  which is worse than the vacuous non-derivation this document first reported; and
 * **accepts `not` / `!` / `NOT` and ignores them**, deriving a breach the exception displaces.
 
 Both are wrong answers wearing the shape of right ones, and provisos are not a corner case.

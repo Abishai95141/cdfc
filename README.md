@@ -13,9 +13,18 @@
 ▶ **[Watch the walkthrough (2:33)](https://github.com/Abishai95141/cdfc/raw/main/docs/demo/cdfc-walkthrough.mp4)**
  · [subtitles](docs/demo/cdfc-walkthrough.srt) · [shooting script](docs/DEMO-SCRIPT.md)
 
-The video is recorded by driving the running server, not by capturing a screen. Every figure in it
-is read live from the API, and `make demo-verify` fails the build if a caption quotes a number the
-product no longer produces.
+The video is recorded by driving the running server, not by capturing a screen. **Every figure on
+a product screen is read live from the API**, and `make demo-verify` fails the build if a caption
+quotes a number the product no longer produces.
+
+**Two beats are title graphics, not product screens, and one of them is a real gap.** Both are
+static HTML authored in `tools/demo/record.mjs` and make no API call. The *denominator* card's
+figures are typed but every one is asserted against `/v1/runs/{id}.surfaceExclusions` by
+`tools/demo/verify.mjs`, so a moved number still fails the build. The *detection* card is the gap:
+of its four values only `1,898` is covered, and the other three are read from no endpoint, asserted
+by no claim, and served by no `/v1` route — **they would survive unchanged in the video if the
+product stopped producing them.** Found by an adversarial audit of this file; the sentence above
+said "every figure in it".
 
 **Which half of it is the browser, and which half is the command line.** Every screen in the video
 is the running server, and every number on those screens is real. The video predates the intake:
@@ -44,13 +53,18 @@ into the artifact. What it returns is a coverage declaration in which every fiel
 one state, and every unchecked field carries a reason from a closed thirty-code vocabulary plus the
 specific instrument that would make it checkable.
 
-**That is true of the induction engine, and it is not yet true of the shipped runner.** The
-induction is template-agnostic and has been run on workbooks outside this corpus. The runner is
-not: `cdfc run` resolves the pinned FME blank through parameterless cached globals and refuses
-`--template` rather than report a template it did not use, and `POST /v1/filings` refuses every
-filing it is given — including one that binds a pinned blank, which gets a `501` naming the missing
-queue and worker rather than a run id for a run nobody performed. Only the command line checks
-anything.
+**The induction engine and the shipped runner are no longer in the same position.** The induction
+is template-agnostic and has been run on workbooks outside this corpus. `POST /v1/filings` now
+binds an upload against the pinned catalogue, checks it over the blank it bound to, and returns
+`201` with the coverage declaration — measured on two real files: the reference FME filing settles
+**1,898 of 3,747**, and the ALR return settles **848 of its own 1,599**. A filing whose template is
+not pinned still gets `422 template_unbound` carrying its computed fingerprint.
+
+What is still true is narrower and it is the part worth keeping: **nothing is stored.** There is no
+queue, no worker and no run store, so the declaration is returned and discarded, and the report
+screens are still reached through a command-line run. `cdfc run` also still resolves the pinned FME
+blank through parameterless cached globals and refuses a `--template` outside the pinned set rather
+than report a template it did not use.
 
 On the reference filing:
 
@@ -100,8 +114,9 @@ than a VALID verdict over somebody else's denominator.
 The limit that remains is the **exactness** of that bind. A filer who inserts a row has the whole
 filing refused as `invalid.template_unbound` — not partially checked, refused. A graded bind was
 built to soften that and **reverted after it was measured**: a row insertion renumbers every cell
-below it, so of 3,747 addresses 3,544 appear in both files while holding different fields, and
-scoring those against each other is the wrong-form failure that strict binding exists to prevent.
+below it, so of 3,747 addresses 3,544 appear in both files and **1,451 of those hold a different
+field**, and scoring those against each other is the wrong-form failure that strict binding exists
+to prevent.
 Until a real field *correspondence* exists, exact-or-refuse is the only safe bind, and
 `docs/OPEN-ITEMS.md` carries what the correct design needs.
 
@@ -127,7 +142,7 @@ make verify       # every gate, the full suite, and the negative-control sweep
 make demo-video   # re-record the walkthrough (needs `make serve` in another shell)
 ```
 
-`make verify` runs 1,600 tests and a sweep of 141 negative-control entries against 230 guards under
+`make verify` runs the full suite and a sweep of 141 negative-control entries against 230 guards under
 exact-set semantics: every guard expected to go red must go red, every guard expected to stay green
 must stay green. Not *at least one*.
 

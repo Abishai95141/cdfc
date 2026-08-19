@@ -267,8 +267,10 @@ one without the other.
 
 **The single failure is a data defect in the publication, not a parser limit.** `v3695_s` is an
 **Inactive** rule whose `Tables` cell holds the literal four-character string `NULL` — not an empty
-cell — while its expression reads `with {tC_05.02, c0010, …}`. **Excluding inactive rules the
-resolution is 18,826 of 18,826.** A concrete parser requirement falls out: the literal `NULL` means
+cell — while its expression reads `with {tC_05.02, c0010, …}`. **Excluding that one inactive rule the
+resolution is 18,826 of 18,826**; excluding all 1,869 Inactive rules it is **16,243 of 16,243**.
+The original phrasing said *"excluding inactive rules"* against the first number, which is the
+second number's exclusion applied to the first number's total. A concrete parser requirement falls out: the literal `NULL` means
 absent and must never be read as a table name.
 
 ### EIOPA arm — a different syntax over the same shape

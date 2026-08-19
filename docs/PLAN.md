@@ -78,18 +78,18 @@ to identity.
 
 | # | step | mechanism | where |
 |---:|---|---|---|
-| 1 | template in → `Field` nodes with declared type, unit, vocabulary | our lxml reader (protection mask, formulas, validations) | **EXISTS** |
+| 1 | template in → `Field` nodes with declared type, unit, vocabulary | our lxml reader (protection mask, formulas, validations) | **BUILT** — `evidence/fields.py` |
 | 2 | rules in, **published as data** → `Rule` nodes carrying their own field address | DPM-XL parser + CEL compiler | **A2** |
 | 3 | rules in, **as prose** → text with page/bbox provenance | Docling | A3 ingest |
-| 4 | prose → `Provision` nodes with stable eIds and spans | **Docling `ListItem.marker`** + segmenter | **A4**, and much cheaper than planned (§8 F4) |
-| 5 | `Provision` → `Rule` proposals | LangExtract strict, gated | A4 |
-| 6 | `Rule --governed_by--> Field` | **free on Path M** (address is in the rule); type-gated on Path Q | A2 / A4 |
+| 4 | prose → `Provision` nodes with stable eIds and spans | **Docling `ListItem.marker`** + segmenter | **BUILT, coordinate-addressed** — `evidence/provisions.py`; durable eIds need the re-pin (`N1`) |
+| 5 | `Provision` → `Rule` proposals | LangExtract strict, gated | **SEAM BUILT** — proposals load as DATA; LangExtract not wired |
+| 6 | `Rule --governed_by--> Field` | **free on Path M**; type-gated on Path Q | **BUILT for Path Q** — the five gates, `evidence/gates.py` |
 | 7 | `Rule --applies_when--> Rule`, conditional obligations | **Datalog chaining, ours** (§8 F5) | **A2** |
 | 8 | financial records in → `Document`, `Span`, `Observation` | Docling + CSV/xlsx readers | A3 |
 | 9 | source column → template `Field` | composed template-anchored schema matcher | **A1c** |
 | 10 | record ↔ record across sources | **Splink** | **A1c** |
 | 11 | *"which filing do I want"* | resolution against declared inputs — **collapses into step 6** | not a component |
-| 12 | for each `Field`: which rules govern it, which observations could fill it | graph traversal | A1c / A3 |
+| 12 | for each `Field`: which rules govern it, which observations could fill it | graph traversal | **BUILT for rules** — `evidence/graph.py`, `query.py`; observations are A3 |
 | 13 | is 250,000 below 500,000 | **CEL** | **EXISTS** |
 | 14 | does the obligation apply, is it breached | **Datalog** | A2 |
 | 15 | value = sum of these three observations | derivation | A3, partially designed |
@@ -100,6 +100,11 @@ template, *"which filing"* is answered by the artifact; if they name it, that is
 a declared input; and a bare filing already binds by structural fingerprint against the pinned
 catalogue. The real question was always *"which of the uploaded rules govern this template's
 fields"* — which is step 6.
+
+**Five of the sixteen now run in `src/`** via `cdfc evidence`, on the real instrument and the real
+return, with every gate observed refusing its own planted error. `docs/EVIDENCE-LAYER.md` records
+what it measured and the three defects it had first. What it does NOT cover is listed there and in
+the rows above.
 
 ---
 
@@ -187,9 +192,14 @@ Composed with the older set: `G0`–`G4` qualify a predicate; `BANNED_IN_VERDICT
 append-only registry where every row names the injector that makes it red.
 
 **Measured, on real artefacts:** of 15 proposals, 10 admitted, 5 refused — all **3 of 3** planted
-errors, **and 2 of 12 genuine ones**, cells cited without checking they exist. The architecture
-never claimed the model is accurate; it claims the model's errors are catchable without a human
-reading every one.
+errors. The architecture never claimed the model is accurate; it claims the model's errors are
+catchable without a human reading every one.
+
+**The other 2 refusals were the GATE's defect, not the model's**, and an adversarial audit of this
+plan found it. Those two cells exist and are in the field surface; `G-FIELD` was testing the
+LABELLED subset while its reason said *"field surface"*. **So there is no measured genuine error
+rate for the proposer** — the number that was quoted as one measured our reader. The rebuilt gate
+in `src/cdfc/evidence/gates.py` separates the two reasons.
 
 ### THE TRIGGER MUST BE MECHANICAL, NEVER THE MODEL'S OWN CONFIDENCE
 
@@ -305,8 +315,12 @@ regulation the corpus lacks, so the gate found a hole in the DOCUMENTS. Real: 15
 admitted, 5 refused — 3 of 3 planted plus **2 of 12 genuine**. Recall stays unbounded.
 
 ### F8 · Graded binding is unsafe, and correspondence is one component with entity resolution
-A row insertion renumbers every cell below it: of 3,747 addresses **3,544 are common to both files
-while holding different fields**. **ADDS A1c** — and the component is bigger than form-alignment.
+A row insertion renumbers every cell below it: of 3,747 addresses 3,544 are common to both
+files, and **1,451 of those hold a DIFFERENT field** — the `3. Portfolio` cells at or below the
+inserted row. The other 2,093 hold the same field (44 above the insertion, 2,049 on the seven
+sheets whose worksheet XML is byte-identical). *This document first said all 3,544 held different
+fields, a 2.4x overstatement corrected by audit; 1,451 silently mislabelled cells is still the
+wrong-form failure strict binding exists to prevent.* **ADDS A1c** — and the component is bigger than form-alignment.
 *Aligning two versions of a form* and *aligning a cap-table row to a custodian record* are the same
 operation: establish which thing here **is** which thing there, refuse when ambiguous, declare what
 did not align. **Build it once, and build it before the evidence graph** — a graph is worth little
@@ -406,6 +420,14 @@ Pre-registered criteria stand as written; what changed is which experiments are 
 | `W3-3` adjudicator campaign | **PARTIALLY PRE-PAID by F7** | the live arm has real data; the synthetic arm still needs drawing |
 | `W2-*` evidence half | **NARROWED by F3** | similarity arms dead, exact-match arms stand |
 | `C5-X1`, `C5-X2` | **DELETED** | the G2 repair produces 0 admissions |
+
+**Two figures `W1-4` pre-registered have moved, and the pre-registration is NOT edited.**
+`EXPERIMENT-PROGRAMME` requires `make verify` to return *"the same integers, not merely green"* —
+`(1,600, 1,600)` tests and `(115, 125)` gates observed red. Neither holds now. The test count has
+drifted twice with nothing asserting it, so the README no longer quotes one. The gate figure is
+**104 of 125**, and it moved because the evidence stopped being asserted by a hand-maintained map
+and started being derived from the sweep's own per-guard record — the criterion did not fail, the
+number it was written against was wrong. `(141, 141)` entries and `(230, 230)` guards still hold.
 
 **Five experiments the spike and M-CEIL created:**
 

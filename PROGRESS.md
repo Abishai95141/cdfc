@@ -5,13 +5,13 @@
      cannot be marked done by editing this file, and one that regresses reverts on the next
      run whether or not anybody expected it to. -->
 
-Observed at `d69dcfc`.
+Observed at `8980edc`.
 
 ## standing — 1 of 1 observed
 
 | | checkpoint | evidence |
 |---|---|---|
-| **DONE** | `SUITE` the suite collects and runs | 1625 tests collected, exit=0 |
+| **DONE** | `SUITE` the suite collects | 1647 tests collected, exit=0 |
 
 * `SUITE` — a collection error aborts before any assertion; this repo shipped that way once
 

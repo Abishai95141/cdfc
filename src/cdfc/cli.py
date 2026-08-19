@@ -35,6 +35,7 @@ EXIT_NOT_IMPLEMENTED = 2
 # exits 2 naming its owner. `PHASE` is computed from that rather than written down, because a
 # literal phase string is exactly what sat at `"P0"` through five phases of shipped work.
 OWNER = {
+    "evidence": "A4",
     "init": "P1",
     "ingest": "P1",
     "induce": "P2",
@@ -105,6 +106,18 @@ def build_parser() -> argparse.ArgumentParser:
                        help="binds loopback by default; a public bind is an explicit argument")
     serve.add_argument("--port", type=int, default=8765)
 
+    evid = sub.add_parser(
+        "evidence",
+        help="rules corpus + template + proposals -> gates -> graph -> coverage declaration")
+    evid.add_argument("--instrument", default="statute-fm-regulations-2025",
+                      help="a pinned instrument id from the corpus")
+    evid.add_argument("--template", type=Path, required=True, help="the blank being governed")
+    evid.add_argument("--proposals", type=Path, required=True,
+                      help="a model's rule->field bindings, AS DATA. Nothing here calls a model.")
+    evid.add_argument("--only-with", default=None,
+                      help="restrict provisions to units containing this substring, e.g. shall")
+    evid.add_argument("--triples", action="store_true", help="also print the RDF projection size")
+
     for name in ("ingest", "induce", "qualify"):
         sub.add_parser(name, help=f"{name} (not implemented; built in {OWNER.get(name, '?')})")
     return p
@@ -133,6 +146,23 @@ def main(argv: list[str] | None = None) -> int:
         file=sys.stderr,
     )
     return EXIT_NOT_IMPLEMENTED
+
+
+def _evidence(args: argparse.Namespace) -> int:
+    """`cdfc evidence`. **Exits non-zero when a proposal was refused**, because a run whose
+    refusals nobody looked at is a run whose refusals nobody looked at."""
+    from cdfc.evidence.run import run as evidence_run
+
+    r = evidence_run(
+        instrument_id=args.instrument,
+        template=args.template,
+        proposals=args.proposals,
+        only_with=args.only_with,
+    )
+    print(r.report())
+    if args.triples:
+        print(f"\nRDF triples  {sum(1 for _ in r.graph.triples())}")
+    return 0 if not r.adjudication.refused else 1
 
 
 def _harvest(args: argparse.Namespace) -> int:
@@ -487,7 +517,7 @@ def _serve(args) -> int:
 
 
 HANDLERS = {"harvest": _harvest, "run": _run, "closure": _closure, "serve": _serve,
-            "attest": _attest, "verify": _verify}
+            "attest": _attest, "verify": _verify, "evidence": _evidence}
 
 
 if __name__ == "__main__":
