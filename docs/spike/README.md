@@ -93,6 +93,13 @@ the filing. It is checkable only against the SOURCE CORPUS, which is CONTRADICT.
       FACT-shaped                  702
       ATTESTATION-shaped            22     (14 on Compliance Status, 4 on AML-CFT, 3 Introduction, 1 Complaints)
 
+> **CORRECTED 19 Aug 2026 by `M-CEIL`.** These three numbers depend on a labelling rule this
+> document did not record, and **724 is not reproducible**. Over the same 3,747-cell surface,
+> "nearest text anywhere to the left" gives 3,104 fields sharing only 154 distinct labels — it
+> labels ROWS — and "immediately adjacent cell is text" gives 498 fields with 481 FACT and 17
+> ATTESTATION. The SHAPE holds under every rule tried: the return is overwhelmingly factual and the
+> attestations are a small minority on four sheets. The RATIO must not be quoted as 702 of 724.
+
 So the return is overwhelmingly DATA and the attestations are a small, localised minority. Both
 halves matter: most fields are fillable-with-evidence, and a few require a signature no system
 should forge. Note the classifier is crude — `8. Compliance Status!C7` reads as an attestation and
@@ -105,8 +112,12 @@ It chains correctly — applicability → obligation → breach was verified. Bu
 * **accepts an inline comparison** (`N < T`) **and derives nothing**, and
 * **accepts `not` / `!` / `NOT` and ignores them**, deriving a breach the exception displaces.
 
-Both are wrong answers wearing the shape of right ones, and provisos are not a corner case: **106 of
-531** clauses in this instrument carry one. It also writes `\r` progress bars to **stdout** and
+Both are wrong answers wearing the shape of right ones, and provisos are not a corner case.
+
+> **CORRECTED 19 Aug 2026 by `M-CEIL`.** This paragraph published **106 of 531**. Re-run against the
+> pinned text it is **83 of 532** shall-bearing units, over **94** `Provided that` occurrences in the
+> instrument. The argument is unchanged — roughly one shall-clause in six carries a proviso — but
+> 106 is not reproducible and should not be quoted. See `docs/measurements/M-CEIL-results.md`. It also writes `\r` progress bars to **stdout** and
 deleted a row of results from a three-row table.
 
 **The repair is not a better rule.** Resolve precedence BEFORE the engine so it never needs
