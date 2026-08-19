@@ -2,8 +2,11 @@
 
 Run them in order with the probe venv; each writes the JSON the next one reads.
 **No derived JSON is committed, deliberately.** `ci/no-bare-rate.sh` scans `tools/` and went red on
-`real_provisions.json` — not on anything this project claims, but on the REGULATOR'S OWN WORDS
-quoted verbatim: *"at least 80 per cent. (80%) of the corpus"*, *"at least one per cent. (1%)"*.
+`real_provisions.json` — not on anything this project claims, but on the REGULATOR'S OWN WORDS,
+where a corpus-investment floor and a sponsor-contribution floor are each written twice, in words
+and again in figures. **The percentages are deliberately not reproduced in this sentence:** the
+first draft quoted them to explain the failure and the gate went red on the explanation, which is
+this repository's oldest recurring defect and the reason the rule exists.
 The gate cannot tell a quotation from an assertion, and it should not have to: the fix is to stop
 committing extracted corpus text, which is regenerable in seconds from the pinned instrument, rather
 than to teach a gate an exemption that would later hide a real bare rate.
