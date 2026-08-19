@@ -41,6 +41,13 @@ def test_contract__corpus_manifest_shape():
     assert doc["person_a_kind"], "person_a_kind renders wherever the FFR renders; it is never empty"
 
 
+# The corpora a verdict path MAY name. `corpus/blind-fill` is the one this firewall
+# quarantines -- it is the withheld ground truth. `corpus/instruments` is P7's pinned
+# statute and `corpus/rules` is A2's pinned REGULATOR-PUBLISHED rule set: both are public
+# artefacts with published digests, and naming them is the opposite of contamination.
+PUBLIC_CORPORA = ("corpus/instruments", "corpus/rules")
+
+
 def test_corpus_is_not_importable():
     """**RULE 1.** Nothing under `src/` or `tests/` reads the corpus except through
     `fixtures/corpus_manifest.json`. Asserted by AST over every module, not by convention.
@@ -78,7 +85,7 @@ def test_corpus_is_not_importable():
                 if not isinstance(node, ast.Constant) or not isinstance(node.value, str):
                     continue
                 v = node.value
-                if v.startswith("corpus/") and not v.startswith("corpus/instruments"):
+                if v.startswith("corpus/") and not v.startswith(PUBLIC_CORPORA):
                     offenders.append(f"{rel}: {v!r}")
     assert not offenders, (
         "a module reaches the blind-fill corpus directly rather than through "
@@ -94,7 +101,7 @@ def test_corpus__rule_one_can_actually_fail():
     allowed = "corpus/instruments/x.json"
 
     def flags(value: str) -> bool:
-        return value.startswith("corpus/") and not value.startswith("corpus/instruments")
+        return value.startswith("corpus/") and not value.startswith(PUBLIC_CORPORA)
 
     assert flags(forbidden), "a src module naming the blind-fill corpus must be an offender"
     assert not flags(allowed), "the instrument store is a different corpus and stays out of scope"

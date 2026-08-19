@@ -5,13 +5,13 @@
      cannot be marked done by editing this file, and one that regresses reverts on the next
      run whether or not anybody expected it to. -->
 
-Observed at `8980edc`.
+Observed at `e1c74c8`.
 
 ## standing — 1 of 1 observed
 
 | | checkpoint | evidence |
 |---|---|---|
-| **DONE** | `SUITE` the suite collects | 1647 tests collected, exit=0 |
+| **DONE** | `SUITE` the suite collects | 1674 tests collected, exit=0 |
 
 * `SUITE` — a collection error aborts before any assertion; this repo shipped that way once
 
@@ -20,7 +20,7 @@ Observed at `8980edc`.
 | | checkpoint | evidence |
 |---|---|---|
 | **DONE** | `A1-1` the Anchor type exists and carries table/rows/cols | Anchor fields ['axes', 'cols', 'dialect', 'rows', 'table'] |
-| **DONE** | `A1-2` the Anchor is imported by shipped modules | 22 modules in src/ import the anchor |
+| **DONE** | `A1-2` the Anchor is imported by shipped modules | 24 modules in src/ import the anchor |
 | **DONE** | `A1-3` run_filing takes a template | run_filing(filing: 'Path', *, template: 'Path \| None' = None, predicates: 'Sequence[Any] \| None' = None, max_witnesses: 'int' = 3) -> 'RunResult' |
 | **DONE** | `A1-4` a foreign workbook is no longer reported VALID | wrong-template=INVALID/['invalid.denominator_disagreement'], own-template=VALID over 1599 cells (FME is 3747) |
 | **DONE** | `A1-5` invalid.denominator_disagreement is reachable | 1 modules outside invalid.py reference the code |
