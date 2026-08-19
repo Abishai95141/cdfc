@@ -88,3 +88,5 @@ citation, an unlogged artefact, and an empty trail are each planted and observed
 | 2026-08-20 | DECISION | `PHASE_RE` widened to admit the A-sequence, with a test pinning what it still refuses — a widened check that admits anything is not a check | `src/cdfc/gates.py` |
 | 2026-08-20 | MEASUREMENT | the A1 adversarial audit: six of seven claims survive attack, one real defect | `docs/audit/AUDIT-A1-diff.md` |
 | 2026-08-20 | DEFECT | an edit to the gate evidence map silently did nothing because its anchor was absent and unasserted — the drift shape the audit was hunting | `tools/gate_liveness.py` |
+| 2026-08-20 | MEASUREMENT | N1: a byte shift costs 0 of 11 citations; a resegmentation costs 11 of 11. A re-pin invalidates every citation against the current corpus | `docs/measurements/N1-repin-blast-radius.md` |
+| 2026-08-20 | DECISION | re-pin BEFORE A4: the blast radius is near-zero today and widens with every provision-citing artefact | `docs/measurements/N1-repin-blast-radius.md` |
