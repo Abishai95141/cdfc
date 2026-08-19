@@ -93,3 +93,7 @@ citation, an unlogged artefact, and an empty trail are each planted and observed
 | 2026-08-20 | MEASUREMENT | N2: the labelling rule pinned by fields-per-label (1.2 vs 4.8); reading all 125 labels found 351 placeholders, 12 instruction texts and a wrong attestation rubric | `docs/measurements/N2-labelling-rule.md` |
 | 2026-08-20 | CORRECTION | the labelled population is 132, not 498 or 724; the split is 124 FACT / 8 ATTESTATION, not 481/17 or 702/22 | `docs/measurements/N2-labelling-rule.md` |
 | 2026-08-20 | DECISION | an ATTESTATION is a claim NO OBSERVATION CAN SETTLE — a principle, replacing a word list that called evidenceable questions attestations | `src/cdfc/evidence/fields.py` |
+| 2026-08-20 | MEASUREMENT | A2: of 12,925 rules published 2026-06-23 we execute 10,453, with a typed reason for each of the other 2,472; zero model calls proven by import closure | `docs/measurements/A2-rule-coverage.md` |
+| 2026-08-20 | DEFECT | the Path M parser reported 810 published rules as UNPARSEABLE that parse — a parenthesised row list (696) and a third axis (114), both of which E2 had already specified | `docs/measurements/A2-rule-coverage.md` |
+| 2026-08-20 | DECISION | an axis RANGE gets its own typed reason rather than being expanded: expanding would invent axis members the table may not have | `src/cdfc/pathm/statement.py` |
+| 2026-08-20 | DECISION | cdfc.pathm and cdfc.evidence added to VERDICT_ROOTS, so 'zero model calls' is a property of the import graph | `tests/negative/importgraph.py` |

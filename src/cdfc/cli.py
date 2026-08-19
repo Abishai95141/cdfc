@@ -36,6 +36,7 @@ EXIT_NOT_IMPLEMENTED = 2
 # literal phase string is exactly what sat at `"P0"` through five phases of shipped work.
 OWNER = {
     "evidence": "A4",
+    "rules": "A2",
     "init": "P1",
     "ingest": "P1",
     "induce": "P2",
@@ -118,6 +119,13 @@ def build_parser() -> argparse.ArgumentParser:
                       help="restrict provisions to units containing this substring, e.g. shall")
     evid.add_argument("--triples", action="store_true", help="also print the RDF projection size")
 
+    rules = sub.add_parser(
+        "rules",
+        help="execute a regulator's PUBLISHED rules and declare coverage over them (A2)")
+    rules.add_argument("--source", type=Path,
+                       default=Path("corpus/rules/eba_validation_rules_4.3_2026_06_23.xlsx"),
+                       help="a pinned published rule set")
+
     for name in ("ingest", "induce", "qualify"):
         sub.add_parser(name, help=f"{name} (not implemented; built in {OWNER.get(name, '?')})")
     return p
@@ -146,6 +154,22 @@ def main(argv: list[str] | None = None) -> int:
         file=sys.stderr,
     )
     return EXIT_NOT_IMPLEMENTED
+
+
+def _rules(args: argparse.Namespace) -> int:
+    """`cdfc rules`. Of N published at date D, how many we executed, and why not the rest.
+
+    **Exits non-zero when the declaration does not close.** `RuleCoverage` raises on it, and a
+    coverage table whose stages do not sum is the one failure this command must never print.
+    """
+    from cdfc.pathm.coverage import declare
+
+    if not args.source.is_file():
+        print(f"cdfc rules: {args.source} is not a file. The rule set is a pinned corpus "
+              f"artefact; it is not downloaded at run time.", file=sys.stderr)
+        return EXIT_NOT_IMPLEMENTED
+    print("\n".join(declare(args.source).lines()))
+    return 0
 
 
 def _evidence(args: argparse.Namespace) -> int:
@@ -517,7 +541,8 @@ def _serve(args) -> int:
 
 
 HANDLERS = {"harvest": _harvest, "run": _run, "closure": _closure, "serve": _serve,
-            "attest": _attest, "verify": _verify, "evidence": _evidence}
+            "attest": _attest, "verify": _verify, "evidence": _evidence,
+            "rules": _rules}
 
 
 if __name__ == "__main__":

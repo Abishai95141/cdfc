@@ -46,6 +46,11 @@ from typing import Final
 VERDICT_ROOTS: Final[tuple[str, ...]] = (
     "cdfc.evaluate", "cdfc.verdict", "cdfc.probes", "cdfc.selfcheck", "cdfc.attest",
     "cdfc.qualify", "cdfc.surface",
+    # A2 adds two. `cdfc.pathm` executes rules a REGULATOR wrote and publishes a coverage
+    # declaration over them, and the headline claim on it is "zero model calls" -- which is a
+    # property of this graph or it is a promise. `cdfc.evidence` adjudicates a model's proposals
+    # and must not be able to consult the model it is adjudicating.
+    "cdfc.pathm", "cdfc.evidence",
 )
 
 # ONE RULE, no per-vendor enumeration. `cdfc.model` is banned as a package rather than by naming
