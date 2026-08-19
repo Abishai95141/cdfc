@@ -38,68 +38,25 @@ SWEEP = REPO / "reports" / "negative-control-sweep.json"
 EVIDENCE: dict[int, str] = {
     1: "NC-CI03",   # no-green-tick
     2: "NC-CI04",   # no-bare-except
-    4: "NC-CI02",   # openpyxl warning is an error  (PROVISIONAL)
-    5: "NC-CI10",   # lockfile hash pinning
     6: "NC-CI06",   # registry schema / duplicate id
     7: "NC-CI08",   # no permanently-pending gate
     8: "NC-CI07",   # the LIVE set is pre-registered
-    9: "NC-CI05",   # a stub that exits 0
-    10: "NC-CI12",  # --version reads the registry
     11: "NC-CI13",  # licence denylist
     12: "NC-CI14",  # encoding / NUL byte
-    13: "NC-CI01",  # a grep over a missing root
     17: "NC-CI15",  # no timing in a hashed payload
-    18: "NC-CI16",  # a total equals the sum of its rows
     19: "NC-CI17",  # no machine-local absolute path in the build
     20: "NC-E13",   # no float in the deterministic numeric core
     # P4
     21: "NC-Q44",   # key extraction is structural, not lexical
-    22: "NC-Q41",   # the digest covers every field of the record
-    23: "NC-Q42",   # the two key mismatches stay distinguishable
-    24: "NC-Q46",   # the weak pile is counted
-    25: "NC-Q48",   # the G2 denominator is declared per class
-    26: "NC-Q49",   # a host function never resolves live
     27: "NC-Q02",   # the predicate schema and the loader invariant
     # P5
-    29: "NC-E30",   # the vacuous pass is unreachable
-    30: "NC-E31",   # the cell table is the denominator
-    31: "NC-E32",   # null is not zero and not omitted
-    32: "NC-E33",   # two vocabularies, disjoint
-    33: "NC-E34",   # no value-derived removal
-    34: "NC-E35",   # an INFORMATIONAL-only cell stays counted
-    35: "NC-E36",   # the contract is generated
-    36: "NC-E37",   # pre-flight blocks expr
     # P6
     37: "NC-Q64",   # no bare rate
     38: "NC-Q30",   # no openpyxl writer
-    39: "NC-Q33",   # the digest covers the operator table
-    40: "NC-Q31",   # the filter recalculates
-    41: "NC-Q60",   # F18
-    42: "NC-Q61",   # F19
-    43: "NC-Q37",   # unobservable mutants are retained
-    44: "NC-Q32",   # the control arm excludes the cone
-    45: "NC-Q63",   # the universe cannot see the predicates
-    46: "NC-Q62",   # counts get zero tolerance
     47: "NC-Q33",   # the taxonomy document is generated
     # P7
-    49: "NC-Q50",   # the disputed-region exclusion
-    50: "NC-Q51",   # G0 computes a disposition, never a skip
-    51: "NC-Q51",   # C2's two numbers — the same funnel-integrity entry
-    52: "NC-Q34",   # the free gate runs before the expensive one
-    53: "NC-Q38",   # Merkle domain separation
-    54: "NC-Q55",   # admission requires a human
-    55: "NC-Q07",   # UNPROVEN is never PROVED
-    56: "NC-Q36",   # a removal is never silent
     # P8
-    57: "NC-Q58",   # F2 — a corpus we generated cannot license an arithmetic FFR
-    58: "NC-Q59",   # F5 — independence is a RESULT, not a string
-    59: "NC-Q56",   # the interval re-derives on another machine
-    60: "NC-Q10",   # set-FFR is `at least one`, never the mean
-    61: "NC-Q09",   # the tier is keyed on the upper bound
-    62: "NC-Q60b",  # F2's second half — the non-synthetic floor
-    63: "NC-Q65",   # a heterogeneous column never reaches the runtime
     14: "NC-E33",   # no model client in the verdict path (promoted at P6)
-    16: "NC-E30",   # the seven-term closure invariant (promoted at P6)
     # --- P9, rows 64-75 -----------------------------------------------------------------
     # Rows 64 and 65 guard the P9 ENTRY criteria, whose subjects shipped at P3. They are bound
     # to the NC entries whose injectors break the same rule: NC-R03 breaks the envelope
@@ -111,18 +68,6 @@ EVIDENCE: dict[int, str] = {
     3:  "NC-CI18",  # a missing scan root, planted by the injector that names it
     28: "NC-CI19",  # a pattern over an OOXML cell element
     48: "NC-CI20",  # a wall clock on the solver
-    64: "NC-R03",   # `recalculate`'s source is explicit at every call site
-    65: "NC-R12",   # G-EVAL's label is computed from the oracle's author
-    66: "NC-R01",   # a relation never PASSes an empty filing
-    67: "NC-R02",   # a finding binds inside the field surface
-    68: "NC-R03",   # the spike is a demonstration, not an admission
-    69: "NC-R04",   # a defective oracle never fails a filer
-    70: "NC-R05",   # no relation spans two accounting bases
-    71: "NC-R06",   # the probe seed is an input, not entropy
-    72: "NC-R07",   # a rename does not inflate the delta
-    73: "NC-R09",   # filling in less never scores better
-    74: "NC-R10",   # declaring a defect never raises the headline
-    75: "NC-R12",   # a half repair of the unit defect cannot land quietly
     # Rows 76 and 77: two gates that had run in `make greps` since P0 with NO registry row, so they
     # were outside this measurement's denominator entirely — never LIVE, never PENDING, never
     # observed red. Registering `no-clock-in-core` found a second defect in it: its pattern listed
@@ -135,20 +80,9 @@ EVIDENCE: dict[int, str] = {
     # resolver is the case where every other layer stays green and only the canary layer knows.
     78: "NC-C10",   # no duration field inside a hashed object (F23)
     79: "NC-C10",   # no clock reachable from the selfcheck package — the same ruling's other half
-    80: "NC-C04",   # under an apparatus break the cause set is exactly {canary_silent}
-    81: "NC-C04c",  # a healthy run is VALID with digits — the admission-side positive control
-    82: "NC-C05c",  # liveness is proved on the in-memory fact table (D6)
-    83: "NC-C09",   # the expected-silent set is a constant, never derived from the registry
-    84: "NC-C01b",  # a threshold moves only with its dated row
-    85: "NC-C07",   # the residue never prints without the rejector set it was computed against
-    86: "NC-C07",   # an adjudication with no argument is refused — the same renderer's refusal
-    87: "NC-C13",   # the recompute-blind set, with its paired value assertion
-    88: "NC-C01b",  # every published liveness count is len() of a row set (D5)
-    89: "NC-C12",   # a cell with no value is ABSENT, never the string "None"
     # NC-C03 carries `injector: NONE`, so the sweep can never report it CAUGHT — an entry that
     # injects nothing catches nothing. Its GENERAL form is what row 90 guards, and NC-C03b
     # injects that: deleting `layer_exists_assertion` from the catalogue.
-    90: "NC-C03b",  # an absence claim proves, in the same breath, that the layer exists (F6)
     # --- P11, rows 91-98, and row 15 -----------------------------------------------------
     # Row 15 waited eleven phases for a schema to walk. Its evidence is NC-A17's injector,
     # because the substring/exact substitution is the shape that makes the walk wrong in a way
@@ -157,31 +91,10 @@ EVIDENCE: dict[int, str] = {
     91: "NC-A17",   # the same walk, and the same break
     92: "NC-A17",   # the three-part rule, both halves
     93: "NC-A16",   # no JSON float token in the canonicalised bytes
-    94: "NC-A18",   # expires is a function of timeVerified, not of the clock
-    95: "NC-A19",   # verify checks the stored signature, never a fresh one
-    96: "NC-A18",   # E2E-VERIFY catches the clock read three layers away
-    97: "NC-A20",   # an INVALID run projects to nothing
-    98: "NC-A16",   # the non-determinism enumeration is complete and states its boundary
     # --- P12: the settling experiment. Each row guards the ORDERING rather than a verdict.
-    99: "NC-M02",   # the pre-registration's h0 cannot move
-    100: "NC-M03",  # the Stratum-B cap never truncates the denominator
-    101: "NC-M04",  # inverse sampling is corrected and labelled, not assumed away
-    102: "NC-M10",  # retry is impossible, not merely banned
-    103: "NC-M11",  # the discard pile is stage 0 of the funnel
-    104: "NC-M13",  # no model client on the qualification or verdict path
-    105: "NC-M16",  # decide() takes a result and a lock, and nothing else
-    106: "NC-M14",  # one extension; there is no third stage
-    107: "NC-M34",  # the pool is fixed before the draw
     # --- P14-B1: the surfaces. Row 112 guards the gate's own denominator.
-    108: "NC-A31",   # a banned token reaching the surface THROUGH DATA
-    109: "NC-A30",   # SG2 -- an FFR refuses a digit in all three uninformative cases
-    110: "NC-A30",   # SG3 -- a settled count cannot render without its admission state
-    111: "NC-A32",   # SG4 -- a success green in the palette
-    112: "NC-A30",   # the surface registry is append-only
     # --- P14-B2: the Unchecked panel. Row 114 keeps `None` and `()` apart.
     113: "NC-A33",   # an imported prior may not become our threshold
-    114: "NC-A14",   # unmeasured residue is not measured-empty
-    115: "NC-A13",   # there is no fallback remedy string
 }
 
 
@@ -190,6 +103,51 @@ def _catalogue_entries() -> list[dict]:
 
     raw = yaml.safe_load((REPO / "tests" / "negative" / "catalogue.yaml").read_text(encoding="utf-8"))
     return list(raw.get("entries") or []) if isinstance(raw, dict) else list(raw or [])
+
+
+def _test_of(g) -> str | None:
+    """The pytest node id a `pytest` row names, DISCOVERED rather than hard-coded.
+
+    The row names its test in backticks; the file is found by searching `tests/`. A hard-coded
+    path table would be a second list, and this module already carries the scar of one.
+    """
+    m = re.search(r"`(test_[A-Za-z0-9_]+)`", g.gate)
+    if not m:
+        return None
+    name = m.group(1)
+    for f in sorted((REPO / "tests").rglob("test_*.py")):
+        if re.search(rf"^def {re.escape(name)}\b", f.read_text(encoding="utf-8"), re.M):
+            return f"{f.relative_to(REPO)}::{name}"
+    return None
+
+
+def _derive_pytest_evidence(rep: dict) -> dict[str, tuple[str, bool]]:
+    """test node id -> (NC entry that demonstrated it, provisional).
+
+    **THIS REPLACES A HAND-MAINTAINED MAP FOR THE LARGER GATE POPULATION, AND THAT IS THE POINT.**
+    `EVIDENCE` below is exactly the kind of hand-kept list this module's own docstring argues
+    should not exist -- and it behaved like one twice. It drifted (rows 28 and 48 pointed at
+    injectors touching neither gate's subject) and then it fell BEHIND: it stops at gate 115 while
+    the registry reached 125, so ten LIVE gates reported `NO CATALOGUE ENTRY` and the published
+    figure read `115 of 125` when the controls for those gates were green in the sweep all along.
+
+    The sweep already records, per NC entry, every guard's `node_id`, whether it was EXPECTED to
+    flip, and whether it was OBSERVED red. That is the evidence itself. A `pytest` gate IS a named
+    test, so the binding is a lookup rather than an assertion: the gate is observed red exactly
+    when some non-provisional entry made THAT test go red while expecting it to. Nobody maintains
+    it, so nobody can forget to.
+    """
+    out: dict[str, tuple[str, bool]] = {}
+    for row in rep.get("rows", []):
+        for g in row.get("guards", []):
+            if not g.get("flips_expected") or not g.get("observed_red"):
+                continue
+            node = g.get("node_id") or g.get("path") or ""
+            # A non-provisional demonstration beats a provisional one; otherwise first wins.
+            prov = bool(row.get("provisional"))
+            if node not in out or (out[node][1] and not prov):
+                out[node] = (row["id"], prov)
+    return out
 
 
 def _script_of(g) -> str | None:
@@ -211,8 +169,37 @@ def main() -> int:
     rep = json.loads(SWEEP.read_text())
     by_id = {r["id"]: r for r in rep["rows"]}
 
+    derived = _derive_pytest_evidence(rep)
+
+    # --- EVIDENCE IS NOW A SHELL-ROW MAP, AND THAT IS ENFORCED RATHER THAN ASKED FOR ---------
+    #
+    # Every `pytest` row derives its evidence from the sweep. A hand row for a pytest gate is
+    # therefore UNREAD, and an unread hand row is the thing that drifts silently -- a future
+    # editor would add one, see the gate reported green, and conclude the row did it. So a
+    # pytest id left in `EVIDENCE` is a hard failure with the reason on the face of it.
+    kind_of = {g.id: g.kind for g in gates}
+    stray = sorted(i for i in EVIDENCE if kind_of.get(i) == "pytest")
+    if stray:
+        print(f"GATE-LIVENESS FAIL: EVIDENCE carries pytest rows {stray}. Pytest evidence is "
+              f"DERIVED from the sweep's own per-guard record; a hand row for one is never read "
+              f"and would drift unnoticed. Delete them.", file=sys.stderr)
+        return 1
+
     observed: dict[int, str] = {}
     for g in live:
+        # `pytest` rows derive their evidence from the sweep and never consult EVIDENCE. A row
+        # whose named test is nobody's flipping guard is reported as such -- that is a REAL gap
+        # in the controls, and it is now visible instead of being papered over by a map entry.
+        if g.kind == "pytest":
+            node = _test_of(g)
+            if node is None:
+                observed[g.id] = "GATE ROW NAMES NO TEST"
+            elif node not in derived:
+                observed[g.id] = f"{node.split('::')[-1]}: NO CONTROL FLIPS IT"
+            else:
+                nc, prov = derived[node]
+                observed[g.id] = f"{nc}: PROVISIONAL" if prov else f"{nc}: OBSERVED RED"
+            continue
         nc = EVIDENCE.get(g.id)
         if nc is None:
             observed[g.id] = "NO CATALOGUE ENTRY"
