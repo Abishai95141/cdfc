@@ -34,6 +34,16 @@
 
 # cdfc — Architecture Decision: **ANCHOR**
 
+> **SUPERSEDED IN PART — read `docs/PLAN.md` for the current plan.** This is a dated decision record
+> (18 Aug 2026) and it is deliberately NOT edited to match later results. Five things in it have
+> since been measured and changed: the §9 Phase-4 segmenter is a re-extraction problem rather than a
+> parsing one and no longer costs 6–10 weeks; §4.3's flagship net-worth example is checkable against
+> the source corpus but NOT against the filing; §5.5(b)'s adjudicator campaign now has real data;
+> the §9 phases are numbered `A0`–`A5` to stop colliding with the build phases `P0`–`P15`; and a
+> field-correspondence component (`A1c`) has been added that no phase here contained. Line 500's
+> note that `invalid.denominator_disagreement` is *raised by no code* was true when written and is
+> false now — probe `A1-5` observes it firing.
+
 *A format-neutral front end and a two-path rule ingress onto an adjudicator that does not change.*
 
 Written 18 Aug 2026. Grounded in `docs/audit/ASSESS-vision-gap.md`, the three candidate architectures and their nine critiques, and measurements I re-ran in this session against `/Users/abishaikc/Gift`. Where a critique and the research brief disagreed, I ran the code; four such disagreements are corrected below and each correction changes the plan.

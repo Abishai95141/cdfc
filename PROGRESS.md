@@ -5,7 +5,7 @@
      cannot be marked done by editing this file, and one that regresses reverts on the next
      run whether or not anybody expected it to. -->
 
-Observed at `03ba629`.
+Observed at `d69dcfc`.
 
 ## standing — 1 of 1 observed
 
@@ -15,42 +15,42 @@ Observed at `03ba629`.
 
 * `SUITE` — a collection error aborts before any assertion; this repo shipped that way once
 
-## Phase 1 — 7 of 7 observed
+## Phase A1 — 7 of 7 observed
 
 | | checkpoint | evidence |
 |---|---|---|
-| **DONE** | `P1-1` the Anchor type exists and carries table/rows/cols | Anchor fields ['axes', 'cols', 'dialect', 'rows', 'table'] |
-| **DONE** | `P1-2` the Anchor is imported by shipped modules | 22 modules in src/ import the anchor |
-| **DONE** | `P1-3` run_filing takes a template | run_filing(filing: 'Path', *, template: 'Path \| None' = None, predicates: 'Sequence[Any] \| None' = None, max_witnesses: 'int' = 3) -> 'RunResult' |
-| **DONE** | `P1-4` a foreign workbook is no longer reported VALID | wrong-template=INVALID/['invalid.denominator_disagreement'], own-template=VALID over 1599 cells (FME is 3747) |
-| **DONE** | `P1-5` invalid.denominator_disagreement is reachable | 1 modules outside invalid.py reference the code |
-| **DONE** | `P1-6` POST /v1/filings creates a run | status=201 body={"filingSha256":"7d9a1960085785eefbe166fb5e04e94689780c490235fe55d8f3e8b620ceea39","invalidCauses":[],"note":" |
-| **DONE** | `P1-7` the anchor-hazard instrument runs green | anchor-hazard: 0 problem(s) |
+| **DONE** | `A1-1` the Anchor type exists and carries table/rows/cols | Anchor fields ['axes', 'cols', 'dialect', 'rows', 'table'] |
+| **DONE** | `A1-2` the Anchor is imported by shipped modules | 22 modules in src/ import the anchor |
+| **DONE** | `A1-3` run_filing takes a template | run_filing(filing: 'Path', *, template: 'Path \| None' = None, predicates: 'Sequence[Any] \| None' = None, max_witnesses: 'int' = 3) -> 'RunResult' |
+| **DONE** | `A1-4` a foreign workbook is no longer reported VALID | wrong-template=INVALID/['invalid.denominator_disagreement'], own-template=VALID over 1599 cells (FME is 3747) |
+| **DONE** | `A1-5` invalid.denominator_disagreement is reachable | 1 modules outside invalid.py reference the code |
+| **DONE** | `A1-6` POST /v1/filings creates a run | status=201 body={"filingSha256":"7d9a1960085785eefbe166fb5e04e94689780c490235fe55d8f3e8b620ceea39","invalidCauses":[],"note":" |
+| **DONE** | `A1-7` the anchor-hazard instrument runs green | anchor-hazard: 0 problem(s) |
 
-* `P1-1` — E2 measured that rows and cols may be LISTS, and that a cell is the degenerate case
-* `P1-2` — a type nobody constructs is not a migration
-* `P1-4` — the worst defect in the audit: ALR scored over FME's 3,747 and called VALID
-* `P1-5` — declared in P5 and raised by nothing since
-* `P1-6` — the drop screen's 201 branch is already written and unreachable
-* `P1-7` — W0-E: the envelope-diff proxy is blind; only order-sensitive projections see the hazard
+* `A1-1` — E2 measured that rows and cols may be LISTS, and that a cell is the degenerate case
+* `A1-2` — a type nobody constructs is not a migration
+* `A1-4` — the worst defect in the audit: ALR scored over FME's 3,747 and called VALID
+* `A1-5` — declared in P5 and raised by nothing since
+* `A1-6` — the drop screen's 201 branch is already written and unreachable
+* `A1-7` — W0-E: the envelope-diff proxy is blind; only order-sensitive projections see the hazard
 
-## Phase 2 — 0 of 2 observed
-
-| | checkpoint | evidence |
-|---|---|---|
-| **TODO** | `P2-1` the four Path M host functions are admitted | 0 of 4 admitted: none |
-| **TODO** | `P2-2` the predicate library is non-empty | 0 admitted predicates, 348 rejected |
-
-* `P2-1` — E1: unlocks 964 of 12,925 EBA rules without weakening a ban
-* `P2-2` — 0 of 348 admitted today, and repairing observable() cannot change that
-
-## Phase 4 — 0 of 1 observed
+## Phase A2 — 0 of 2 observed
 
 | | checkpoint | evidence |
 |---|---|---|
-| **TODO** | `P4-1` a statutory obligation exists | 0 statutory obligations |
+| **TODO** | `A2-1` the four Path M host functions are admitted | 0 of 4 admitted: none |
+| **TODO** | `A2-2` the predicate library is non-empty | 0 admitted predicates, 348 rejected |
 
-* `P4-1` — gated on 50 labelled proviso spans that nobody has started
+* `A2-1` — E1: unlocks 964 of 12,925 EBA rules without weakening a ban
+* `A2-2` — 0 of 348 admitted today, and repairing observable() cannot change that
+
+## Phase A4 — 0 of 1 observed
+
+| | checkpoint | evidence |
+|---|---|---|
+| **TODO** | `A4-1` a statutory obligation exists | 0 statutory obligations |
+
+* `A4-1` — gated on 50 labelled proviso spans that nobody has started
 
 ## The blockers that are people, not code
 

@@ -18,14 +18,17 @@ is read live from the API, and `make demo-verify` fails the build if a caption q
 product no longer produces.
 
 **Which half of it is the browser, and which half is the command line.** Every screen in the video
-is the running server, and every number on those screens is real. But the *run* those screens
-display was produced on the command line by `make history` — the walkthrough never uploads a file,
-because in this build `POST /v1/filings` refuses every filing it is given: `422 template_unbound`
-when the workbook does not bind a pinned blank, and `501 run_not_available_over_http` when it does,
-since there is no queue, no worker and no run store behind that endpoint. The drop screen appears
-in the video as a screen, not as a working intake. A viewer who assumes they can drop a workbook
-into the browser and get that report would be wrong, so it is said here rather than left to be
-discovered.
+is the running server, and every number on those screens is real. The video predates the intake:
+the *run* those screens display was produced on the command line by `make history`, and the
+walkthrough never uploads a file.
+
+`POST /v1/filings` now binds the workbook and checks it — `201` with the coverage declaration,
+the counts travelling with the fraction — but **the run is not stored** (`"persisted": false`).
+The run id is a digest of the inputs, so the declaration is reproducible with `cdfc run` and needs
+no server-side record; what follows from that is that the *report screens* are still reached
+through a command-line run, because there is no queue, no worker and no run store behind the
+endpoint. A viewer who assumes they can drop a workbook into the browser and land on that report
+would be wrong about the second half, so it is said here rather than left to be discovered.
 
 ---
 
@@ -88,13 +91,19 @@ surface as the coverage number collapsing; one is refused outright as `template_
 a problem as loss of coverage is a real signal and is not the same as catching it as *this is
 wrong*.
 
-**It checks one form.** Nine blanks are pinned and a filing binds by exact structural hash — but
-the checks, the field surface and the denominator all come from the FME blank whatever workbook is
-handed in. `cdfc run` on the pinned ALR return, whose own field surface is **1,599** cells, is
-scored over FME's **3,747** and still reports `state VALID`; every one of those 3,747 falls to
-`noPredicate`, so no coverage is fabricated, but the denominator is not the filing's. Threading a
-template through the runner's cached globals is later work, and until it exists this is one form's
-checker, not a form checker.
+**It checks the form it is handed, and it refuses the ones it cannot recognise exactly.** A filing
+binds by exact structural hash to one of nine pinned blanks, and the checks, the field surface and
+the denominator then come from *that* blank: the pinned ALR return is scored over its own **1,599**
+cells, and handing it the wrong blank is `INVALID` with `invalid.denominator_disagreement` rather
+than a VALID verdict over somebody else's denominator.
+
+The limit that remains is the **exactness** of that bind. A filer who inserts a row has the whole
+filing refused as `invalid.template_unbound` — not partially checked, refused. A graded bind was
+built to soften that and **reverted after it was measured**: a row insertion renumbers every cell
+below it, so of 3,747 addresses 3,544 appear in both files while holding different fields, and
+scoring those against each other is the wrong-form failure that strict binding exists to prevent.
+Until a real field *correspondence* exists, exact-or-refuse is the only safe bind, and
+`docs/OPEN-ITEMS.md` carries what the correct design needs.
 
 Also absent: operational staleness policy, deployment packaging, and the instrument-stream watcher.
 `docs/OPEN-ITEMS.md` carries the standing list and the report renders it.

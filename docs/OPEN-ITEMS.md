@@ -13,8 +13,26 @@ nobody answered gets louder as it ages.
 - [OPEN] There is no staleness policy for a running deployment. Nothing expires: a pinned instrument, a qualification artifact and a published run are all served the same way at one day old and at one year old, and no surface states an age past which a coverage declaration should stop being relied on. The README names this as absent and this is the list it names.
 - [OPEN] There is no deployment packaging. `make serve` binds loopback on a developer machine and that is the only way this runs; there is no image, no service unit, no configuration surface for a bind address or a data root, and no documented upgrade path for a deployment that already holds runs. Nothing has been operated by anyone who did not build it.
 - [OPEN] The instrument-stream watcher (P13-B4) is not built. A pinned instrument that is amended upstream stays pinned silently — nothing watches the source, nothing raises the amendment, and the staleness that results would be invisible for exactly as long as nobody looked.
-- [OPEN] `POST /v1/filings` refuses every filing — 422 when the workbook binds no pinned blank, 501 when it does, because there is no queue, no worker and no run store behind that endpoint. So the browser cannot check anything and only `cdfc run` on the command line produces a run. The refusals are honest, but the intake a viewer of the walkthrough would reach for does not work.
-- [OPEN] The runner checks one form. `run_filing()` takes no template parameter and resolves the pinned FME blank through parameterless `lru_cache`d globals, so the ALR return (own field surface 1,599 cells) is scored over FME's 3,747 and reported VALID. `DENOMINATOR_DISAGREEMENT` exists in the invalid-cause vocabulary and is raised by no code.
+
+## Closed, with the probe that observed the closure
+
+An item leaves the list above only when a probe in `tools/progress.py` OBSERVES the new behaviour —
+never because somebody believed it was done. `make progress` re-runs all of them; a regression puts
+the checkpoint back to TODO whether or not anybody expected it to. `cdfc.surface.openitems` matches
+only `- [ASKED` and `- [OPEN`, so nothing below renders into the report.
+
+- [CLOSED 2026-08-19] `POST /v1/filings` no longer refuses a filing it can bind. It runs the
+  check and returns **201** with the coverage declaration, the counts travelling with the fraction.
+  Observed by probe `A1-6`. Two limits stay, and they are stated on the endpoint itself: the run is
+  **not persisted** (`"persisted": false` — the run id is a digest of the inputs, so the declaration
+  is reproducible with `cdfc run` and needs no server-side record), and `POST /v1/verify` is still
+  501 because re-derivation is a command-line tool.
+- [CLOSED 2026-08-19] The runner takes the form it is checking.
+  `run_filing(filing, *, template=None, ...)` threads a template through what used to be four
+  parameterless `lru_cache`d FME globals. Observed by probe `A1-3`; probe `A1-4` runs both arms —
+  the ALR return against its own blank is VALID over its own **1,599** cells, and against the wrong
+  blank it is INVALID with `invalid.denominator_disagreement`, which probe `A1-5` confirms is
+  reachable from outside the module that declares it.
 
 ## The negative-control sweep report is an INPUT, and nothing forces it to be current
 

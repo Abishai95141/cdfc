@@ -28,6 +28,14 @@
 
 # The cdfc experiment programme
 
+> **THE PRE-REGISTERED CRITERIA BELOW ARE NEVER EDITED.** Changing a criterion after seeing its
+> result is the exact failure this document exists to prevent, so amendments live in
+> `docs/PLAN.md §6`, which records for each experiment whether it was RUN, RECLASSIFIED, SUPERSEDED,
+> NARROWED or DELETED, and why. In short: Wave 0 and `E1`/`E2`/`E3` have run
+> (`docs/measurements/W0-results.md`); `W1-3` became build work; `W3-1` is superseded by a
+> measurement that killed its baseline; `W2`'s similarity arms are dead by `W0-C`; and four
+> experiments the graph spike created (`N1`–`N4`) are pre-registered in `PLAN.md §6`.
+
 *Written 18 Aug 2026 against `/Users/abishaikc/Gift` @ `3f723fb`. Every number marked **MEASURED** was computed in this session by running the repo's own code; every URL was HTTP-probed in this session and its status, size and content-type are recorded. Where one of the five adversarial attacks landed, the attack wins: the experiment is cut, fixed, or replaced.*
 
 ---

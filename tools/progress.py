@@ -217,27 +217,35 @@ def _p_statute_obligations() -> tuple[bool, str]:
     return len(t) > 0, f"{len(t)} statutory obligations"
 
 
+# --- WHY THE IDS ARE `A<n>`, NOT `P<n>` -----------------------------------------------------
+#
+# These are the ANCHOR architecture phases of `docs/ARCHITECTURE-rules-and-evidence.md` §9. The
+# `P<n>` prefix was already taken, fifteen deep, by the BUILD phases: `docs/measurements/P4-*.md`
+# is the CEL envelope work and `P4-B1` is the predicate loader. Both sequences reached 4, and a
+# reader who greps `P4-1` should not have to guess which sequence answered. One prefix, one
+# sequence. `docs/PLAN.md` is the map between them.
+
 PROBES: list[Probe] = [
     Probe("SUITE", "standing", "the suite collects and runs", _p_suite_collects,
           "a collection error aborts before any assertion; this repo shipped that way once"),
-    Probe("P1-1", "Phase 1", "the Anchor type exists and carries table/rows/cols", _p_anchor_type,
+    Probe("A1-1", "Phase A1", "the Anchor type exists and carries table/rows/cols", _p_anchor_type,
           "E2 measured that rows and cols may be LISTS, and that a cell is the degenerate case"),
-    Probe("P1-2", "Phase 1", "the Anchor is imported by shipped modules", _p_anchor_is_used,
+    Probe("A1-2", "Phase A1", "the Anchor is imported by shipped modules", _p_anchor_is_used,
           "a type nobody constructs is not a migration"),
-    Probe("P1-3", "Phase 1", "run_filing takes a template", _p_run_filing_takes_template),
-    Probe("P1-4", "Phase 1", "a foreign workbook is no longer reported VALID", _p_cross_template_refused,
+    Probe("A1-3", "Phase A1", "run_filing takes a template", _p_run_filing_takes_template),
+    Probe("A1-4", "Phase A1", "a foreign workbook is no longer reported VALID", _p_cross_template_refused,
           "the worst defect in the audit: ALR scored over FME's 3,747 and called VALID"),
-    Probe("P1-5", "Phase 1", "invalid.denominator_disagreement is reachable", _p_denominator_disagreement_fires,
+    Probe("A1-5", "Phase A1", "invalid.denominator_disagreement is reachable", _p_denominator_disagreement_fires,
           "declared in P5 and raised by nothing since"),
-    Probe("P1-6", "Phase 1", "POST /v1/filings creates a run", _p_upload_creates_a_run,
+    Probe("A1-6", "Phase A1", "POST /v1/filings creates a run", _p_upload_creates_a_run,
           "the drop screen's 201 branch is already written and unreachable"),
-    Probe("P1-7", "Phase 1", "the anchor-hazard instrument runs green", _p_determinism_instrument,
+    Probe("A1-7", "Phase A1", "the anchor-hazard instrument runs green", _p_determinism_instrument,
           "W0-E: the envelope-diff proxy is blind; only order-sensitive projections see the hazard"),
-    Probe("P2-1", "Phase 2", "the four Path M host functions are admitted", _p_host_fns_registered,
+    Probe("A2-1", "Phase A2", "the four Path M host functions are admitted", _p_host_fns_registered,
           "E1: unlocks 964 of 12,925 EBA rules without weakening a ban"),
-    Probe("P2-2", "Phase 2", "the predicate library is non-empty", _p_library_rows,
+    Probe("A2-2", "Phase A2", "the predicate library is non-empty", _p_library_rows,
           "0 of 348 admitted today, and repairing observable() cannot change that"),
-    Probe("P4-1", "Phase 4", "a statutory obligation exists", _p_statute_obligations,
+    Probe("A4-1", "Phase A4", "a statutory obligation exists", _p_statute_obligations,
           "gated on 50 labelled proviso spans that nobody has started"),
 ]
 
