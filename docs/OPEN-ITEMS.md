@@ -29,3 +29,41 @@ one level up — and this build has now hit the injector version twice.
 
 What would close it: pin the report to the tree it measured (a digest of `src/` and `injectors/`
 recorded inside it, checked on load) so a stale report is a REFUSAL rather than a pass.
+
+## Binding is all-or-nothing, and that — not the closed vocabulary — is where flexibility dies
+
+Asked directly whether a deterministic, closed-vocabulary engine would reject valid-but-unseen
+constructs, the answer measured out the opposite way from the intuition.
+
+**The vocabulary is not the constraint.** E1 put 12,925 published EBA expressions through a CEL
+subset designed for spreadsheets and never for DPM-XL: **11,886 compile today**, **12,850** with four
+bounded host functions, **75** refused by deliberate bans (62 clock, 13 regex), and **zero** unknown
+constructs. A closed vocabulary met a foreign rule language and covered nearly all of it.
+
+**Binding is the constraint, and it is a cliff rather than a slope.** MEASURED over
+`fixtures/synthetic/`:
+
+    REFUSED   row-inserted__portfolio-r7.xlsx
+    REFUSED   formula-overwritten__investors-N5.xlsx
+
+A filer who INSERTS A ROW — an ordinary act — has the whole filing refused as
+`invalid.template_unbound`. Not partially checked, not scored over the cells that still match:
+nothing. And the second file is a defect this product exists to CATCH, which instead returns as an
+apparatus failure about us.
+
+The distinction that matters: an unseen CONSTRUCT costs coverage and says so
+(`no_predicate.not_yet_synthesised`); an unseen STRUCTURE rejects the filing entirely. Only the
+second is rigidity, and it is fixable without weakening determinism.
+
+WHAT WOULD CLOSE IT. Graded binding: bind what matches, publish the structural delta as a first-class
+part of the declaration (`structure_changed: +1 row at Portfolio!r7`), and score coverage over the
+intersection with the difference named. `invalid.template_unbound` then means *nothing matched*,
+which is what it should always have meant.
+
+## The sweep report is BOTH an input to the tests and an output of the target they gate
+
+Recorded above as a staleness risk; observed here as something worse. A contaminated run writes a bad
+report, `test_nc_sweep.py` reads it and fails, and `make` halts BEFORE `nc_sweep.py` can refresh it.
+The build cannot then recover without running the sweep by hand — a deadlock, not merely a stale
+number. Pin the report to a digest of `src/` and `injectors/` so a report that does not describe the
+tree is a NAMED REFUSAL rather than a pass or an unrecoverable red.
