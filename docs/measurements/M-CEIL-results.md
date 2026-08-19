@@ -96,6 +96,13 @@ used as a denominator. Reported over Rule B:
 
     FACT-shaped          481 of 498
     ATTESTATION-shaped    17 of 498      <- a FLOOR
+
+> **SUPERSEDED 20 Aug 2026 by `N2`.** Pinning the rule was necessary and not sufficient. Reading
+> all 125 labels found that **351 of these 498 "labels" are the literal string `NA`**, this form's
+> filler, plus twelve numbered instructions and table captions. The rubric was also keying on the
+> word *whether* and calling evidenceable questions attestations. Over genuinely labelled fields
+> the population is **132**, and the split is **124 FACT / 8 ATTESTATION**. See
+> `docs/measurements/N2-labelling-rule.md`.
       1. Introduction  3    6. Complaints  1    7. AML-CFT  5    8. Compliance Status  8
 
 **The shape of the finding survives; the numbers do not.** The return is overwhelmingly factual and

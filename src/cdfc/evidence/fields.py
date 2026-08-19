@@ -15,9 +15,12 @@ wants another one has to add it here where the count that depends on it is visib
 
 from __future__ import annotations
 
+import re
+
 from collections.abc import Mapping
 from dataclasses import dataclass
 from enum import StrEnum
+from typing import Final
 from pathlib import Path
 
 from cdfc.evidence.vocabulary import Asks, FieldType
@@ -31,6 +34,47 @@ class LabelRule(StrEnum):
 
 
 PINNED_RULE: LabelRule = LabelRule.ADJACENT_LEFT
+
+# --- A PLACEHOLDER IS NOT A LABEL, AND ON THIS RETURN MOST OF THEM WERE -----------------------
+#
+# `N2` measured the labelled population under the pinned rule at 498 and then read the labels:
+# **351 of them are the literal string `NA`**, which this form uses as filler in the column to the
+# left of a field. Verified against the workbook's own cells, not inferred. Counting those as
+# labelled fields inflated the population fourfold and made the FACT/ATTESTATION split read
+# 481/17 when over genuinely-labelled fields it is 130/17 — attestations are about one field in
+# nine, not one in twenty-nine.
+#
+# The list is CLOSED and short because it was derived by enumerating every label of four
+# characters or fewer on the pinned return rather than by guessing what a placeholder looks like.
+# A field whose neighbour is a placeholder is UNLABELLED, which is the honest state: we could not
+# read its meaning, and `G-FIELD` reports that as `field_not_labelled` rather than as absent.
+PLACEHOLDER: frozenset[str] = frozenset({
+    "na", "n/a", "n.a.", "nil", "none", "-", "--", "---", ".", "..", "x",
+})
+
+
+def _is_placeholder(text: str) -> bool:
+    return text.strip().strip(":").lower() in PLACEHOLDER
+
+
+# --- NOR IS INSTRUCTION TEXT, OR A TABLE CAPTION ----------------------------------------------
+#
+# Reading all 125 distinct labels (N2) turned up two more classes that sit to the left of a field
+# and are not that field's name:
+#
+#   numbered instructions   "1. Additional rows may be inserted to add more countries."
+#   table captions          "Table 4.1: Details of investors in Investment Fund"
+#   a bare lead-in          "Note:"
+#
+# Nine instructions, two captions and one lead-in on this return. They are excluded because a
+# field whose "label" is a footnote has not been labelled — and calling it labelled is how a
+# denominator comes to contain things nobody could name.
+_NON_LABEL: Final[re.Pattern[str]] = re.compile(
+    r"^\s*(?:\d+\.\s|Table\s+\d+\.\d+\s*:|Note\s*:\s*$)", re.I)
+
+
+def _is_non_label(text: str) -> bool:
+    return bool(_NON_LABEL.match(text.strip()))
 
 
 @dataclass(frozen=True, slots=True)
@@ -90,22 +134,38 @@ def _type_of(number_format: str, builtin: str, has_list: bool) -> FieldType:
     return FieldType.TEXT
 
 
-# --- ASKS: report a value, or certify a statement --------------------------------------------
+# --- ASKS: can a grounded observation settle it? ---------------------------------------------
 #
-# A crude classifier, and it is published as a FLOOR rather than a count. `M-CEIL` found one cell
-# reading as an attestation that an earlier version labelled FACT. The FACTUAL test runs FIRST:
-# a label asking for a number, a name or a date is a fact even when it also carries certification
-# wording, because the filer is being asked to REPORT it.
+# The boundary is NOT a word list, and N2 is where that was settled by reading all 125 distinct
+# labels on the pinned return. A first attempt keyed on "whether" and produced 17 attestations,
+# among them *"Whether the sanction screening is manual or automated?"* and *"Whether FME has paid
+# the applicable recurring fees"* — both of which a source document can answer. Calling those
+# attestations would refuse to fill fields the system can evidence.
+#
+# THE PRINCIPLE: an ATTESTATION is a claim NO OBSERVATION CAN SETTLE. *"The FME is in compliance
+# with the IFSCA (Fund Management) Regulations"* is a legal representation about a whole body of
+# obligations; no span in any document makes it true, and a system that ticked it would be signing
+# on the filer's behalf. *"Was there a true match against the UNSC list?"* is a question about an
+# event, and an event leaves evidence.
+#
+# So the test is the CERTIFICATION SHAPE: a declarative in which the filer asserts compliance,
+# adequacy or conformity, rather than an interrogative asking what happened. `_FACTUAL` runs
+# first because a label asking for a number, a name or a date is a report whatever else it says.
 _FACTUAL = ("number", "amount", "value", "total", "name", "date", "aum", "nav",
-            "count", "isin", "lei", "address", "email", "pan")
-_CERTIFY = ("has been complied", "is in compliance", "are in compliance", "has complied",
-            "has the necessary", "has put in place", "confirm", "certif", "undertak",
-            "declare", "whether", "complied with", "in place", "yes/no")
+            "count", "isin", "lei", "address", "email", "pan", "url", "contact")
+# Declarative certifications only. Every one of these asserts a state the filer VOUCHES for.
+_CERTIFY = ("is in compliance", "are in compliance", "has been complied", "has complied",
+            "has the necessary", "has put in place", "is in place", "in compliance with",
+            "has been done", "has been maintained", "has been adhered")
 
 
 def _asks(label: str) -> Asks:
     low = label.lower()
     if any(t in low for t in _FACTUAL):
+        return Asks.FACT
+    # An interrogative asks what happened; a declarative asserts a state. Only the second is a
+    # thing a human must sign, and the `?` is the cheapest reliable signal of the first.
+    if low.rstrip().endswith("?"):
         return Asks.FACT
     return Asks.ATTESTATION if any(t in low for t in _CERTIFY) else Asks.FACT
 
@@ -142,7 +202,7 @@ def from_template(blob: Path, *, rule: LabelRule = PINNED_RULE) -> FieldSet:
         for ref in wanted:
             col, row = _split(ref)
             label = _label(texts.get((sheet, row), {}), col, rule)
-            if label is None:
+            if label is None or _is_placeholder(label) or _is_non_label(label):
                 continue
             key = f"{sheet}!{ref}"
             vocab = listed.get(key, ())

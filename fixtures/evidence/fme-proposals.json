@@ -38,7 +38,8 @@
   "eid": "p0143.s0011",
   "quote": "hold twenty per cent",
   "kind": "threshold",
-  "field": "3. Portfolio!C103"
+  "field": "3. Portfolio!C156",
+  "note": "rebound by N2: C103's neighbour is the placeholder 'NA', so it is unlabelled and G-TYPE has nothing to adjudicate against"
  },
  {
   "eid": "p0144.s0016",

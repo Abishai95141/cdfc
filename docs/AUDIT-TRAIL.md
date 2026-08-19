@@ -90,3 +90,6 @@ citation, an unlogged artefact, and an empty trail are each planted and observed
 | 2026-08-20 | DEFECT | an edit to the gate evidence map silently did nothing because its anchor was absent and unasserted — the drift shape the audit was hunting | `tools/gate_liveness.py` |
 | 2026-08-20 | MEASUREMENT | N1: a byte shift costs 0 of 11 citations; a resegmentation costs 11 of 11. A re-pin invalidates every citation against the current corpus | `docs/measurements/N1-repin-blast-radius.md` |
 | 2026-08-20 | DECISION | re-pin BEFORE A4: the blast radius is near-zero today and widens with every provision-citing artefact | `docs/measurements/N1-repin-blast-radius.md` |
+| 2026-08-20 | MEASUREMENT | N2: the labelling rule pinned by fields-per-label (1.2 vs 4.8); reading all 125 labels found 351 placeholders, 12 instruction texts and a wrong attestation rubric | `docs/measurements/N2-labelling-rule.md` |
+| 2026-08-20 | CORRECTION | the labelled population is 132, not 498 or 724; the split is 124 FACT / 8 ATTESTATION, not 481/17 or 702/22 | `docs/measurements/N2-labelling-rule.md` |
+| 2026-08-20 | DECISION | an ATTESTATION is a claim NO OBSERVATION CAN SETTLE — a principle, replacing a word list that called evidenceable questions attestations | `src/cdfc/evidence/fields.py` |

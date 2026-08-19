@@ -340,10 +340,14 @@ if its nodes cannot be identified across sources.
   The argument survives — roughly one shall-clause in six — the number does not;
 * the labelled field population **moves sixfold with an unwritten convention**: 3,104 fields (154
   distinct labels — it labels *rows*), or 498 (127 distinct), or the spike's unreproducible 724.
-  The FACT/ATTESTATION *shape* holds under every rule; **the ratio 702 of 724 must not be quoted.**
+  **`N2` has since settled this** — see below — and none of those three numbers is the population.
 
-**CHANGES A5's scoping and adds `N2` with a prerequisite:** pin the labelling rule before measuring
-anything over it. This is the count-vs-contents defect again, on the denominator of the semantic
+**CHANGED A5's scoping and produced `N2`, now RUN.** Pinning the rule was necessary and not
+sufficient: reading all 125 distinct labels found **351 of the 498 are the literal string `NA`**,
+this form's filler, plus twelve numbered instructions and table captions. The genuine population is
+**132 labelled fields, 124 FACT and 8 ATTESTATION**, and the rubric is now a principle rather than
+a word list — *an attestation is a claim no observation can settle*. **Quote 8 of 132; not 702 of
+724, not 481 of 498.** This is the count-vs-contents defect again, on the denominator of the semantic
 half.
 
 ---
@@ -453,7 +457,7 @@ number it was written against was wrong. `(141, 141)` entries and `(230, 230)` g
 | new | question | cost |
 |---|---|---|
 | **N1 · re-pinning blast radius** | when the instrument is re-extracted with layout, how many offsets, spans, `text_hash`es and committed envelopes move, and is there a window where nothing reproduces? | 2 d, **gates A4** |
-| **N2 · the labelling rule, then the split** | pin what "this field has a label" means BEFORE measuring FACT vs ATTESTATION over it — the denominator moved sixfold | 2 d |
+| **N2 · the labelling rule, then the split** | **RUN 20 Aug 2026.** Pinned by fields-per-label (1.2 vs 4.8); reading all 125 labels found 351 placeholders and 12 instruction texts. **132 labelled, 124 / 8** | done |
 | **N3 · the negation negative control** | every engine we adopt must PROVE it honours negation and comparison before it adjudicates | 0.5 d, reusable |
 | **N4 · correspondence vs Valentine** | does A1c beat the published baselines, judged by somebody who did not write it? | 3 d, inside A1c |
 | **N5 · the persistent-graph decision** | **RUN 20 Aug 2026 — `D-A3-01`.** Re-derivation measured at 0.41 s / 0.63 s and proven a deterministic fold; artefacts persist, the graph does not; Cognee rejected | ~0.5 d |
@@ -477,9 +481,12 @@ number it was written against was wrong. `(141, 141)` entries and `(230, 230)` g
 1. ~~The persistent-graph decision (`N5`)~~ — **DONE 20 Aug 2026**, `D-A3-01`. Artefacts persist,
    the graph is re-derived. A1c and A3 are both unblocked, and A3's shape is settled: a projection
    layer over pinned source artefacts, plus an artefact registry.
-2. **The adversarial audit of the A1 diff — 1–2 days.** Already a declared A2 entry criterion, needs
-   nothing we lack, and A1 has been verified by probes but never attacked.
-3. **`N1`, the re-pinning blast radius — 2 days.** Gates the single largest saving in the plan.
+2. ~~The adversarial audit of the A1 diff~~ — **DONE 20 Aug 2026**, `docs/audit/AUDIT-A1-diff.md`.
+   Six of seven claims survived attack; one real defect — a cell string split on its first `!` —
+   fixed at 22 sites and held by gate 126. **A2's audit entry criterion is met.**
+3. ~~`N1`, the re-pinning blast radius~~ — **DONE 20 Aug 2026.** A byte shift costs 0 of 11
+   citations; a resegmentation costs 11 of 11. **Re-pin BEFORE A4** — the radius is near-zero today
+   and widens with every provision-citing artefact.
 4. **A1c.** The longest, and the one that makes schema-free true for real filer behaviour.
 
 **A2 stays blocked** on a filed instance — a sourcing problem to start in parallel, not to discover

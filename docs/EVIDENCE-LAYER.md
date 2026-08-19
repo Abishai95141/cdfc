@@ -30,7 +30,7 @@ prove no model reaches a verdict.
 
 ## Measured, on the real IFSCA instrument and the real FME return
 
-    provisions 1218   labelled fields 498 of 3747   (rule: adjacent_left)
+    provisions 1218   labelled fields 132 of 3747   (rule: adjacent_left, placeholders excluded)
     proposals 11   ADMITTED 6   REFUSED 5
     planted errors caught      5 of 5
     genuine proposals refused  0 of 6
@@ -70,8 +70,15 @@ labels** — it labels rows, not fields, and must never be a denominator. Both a
 count says which produced it.
 
 **Cross-validation worth stating:** these numbers were produced by a reader that shares no code
-with `tools/measure/ceiling.py`, and they agree with `M-CEIL` exactly — 498 labelled, 481 FACT,
+with `tools/measure/ceiling.py`, and they agreed with `M-CEIL` exactly — 498 labelled, 481 FACT,
 17 ATTESTATION, and 3,104 / 154 under the loose rule.
+
+> **AND AGREEING WAS NOT THE SAME AS BEING RIGHT.** `N2` then read the labels rather than counting
+> them: **351 of the 498 are the literal `NA`**, this form's filler. Two independent readers agreed
+> because they implemented the same rule, and the rule admitted placeholders. The population is
+> **132**, the split **124 / 8**, and `docs/measurements/N2-labelling-rule.md` carries the
+> derivation. Cross-validation checks that two readers agree; it does not check that what they
+> agree on is a label.
 
 ## What is honest about the eId, and it limits everything above
 

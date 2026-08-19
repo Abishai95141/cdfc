@@ -2278,3 +2278,4 @@ entries:
       - path: "tests/unit/test_evidence_layer.py::test_cell_string__a_bang_sheet_survives_the_real_field_surface"
         flips: false
     positive_control: "tests/unit/test_evidence_layer.py::test_cell_string__only_the_last_bang_is_the_delimiter"
+    status: ACTIVE
