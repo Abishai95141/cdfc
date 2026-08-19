@@ -5,6 +5,12 @@ Datalog + Docling, with a reasoning LLM in the loop — so that nothing here inh
 its blind spots. Kept in the repository because it is the only end-to-end evidence we have for the
 layer the plan calls Phase 4/5, and because two of its findings resize phases.
 
+The scripts live in **`tools/spike/`**, not beside this file: `ci/no-bare-absence.sh` scans
+`src`, `tests` and `docs`, and it correctly refused `layer3_gates.py` for claiming *"provision does
+not exist"* without citing a validation-ledger row. That gate is right — an absence claim in this
+repository owes a positive control — and throwaway spike code should not be the thing that earns an
+exemption. The measurement record stays here; the code moved to where it belongs.
+
 Reproduce with the probe venv at `/tmp/arch-scratch/.venv-probe` (langextract, docling,
 docling-graph, semantica). `docling_markers.json` is omitted — 3,328 items, regenerable in 93 s.
 
