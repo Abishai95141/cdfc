@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import Iterator
 from typing import Any
 
+from cdfc.schema.anchor import Anchor
 from cdfc.schema.stable_keys import col_to_index, split_ref
 
 
@@ -35,8 +36,8 @@ def cell_node(ctx: Any, sheet: str, ref: str) -> tuple[str, dict[str, set[str]]]
         return None
     path = f"filing.{cel_path(sheet, ref)}"
     return path, {
-        f"{path}.v": {f"{sheet}!{ref}"},
-        f"{path}.__cell__": {f"{sheet}!{ref}"},
+        f"{path}.v": {Anchor.cell(sheet, ref).render()},
+        f"{path}.__cell__": {Anchor.cell(sheet, ref).render()},
     }
 
 

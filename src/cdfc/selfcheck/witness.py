@@ -189,6 +189,11 @@ class FilingImage:
 
     def resolve(self, target: StableKey) -> CellRef:
         cell = self.cell_of.get(target)
+        if cell is not None:  # INJECTED: off by one row
+            import re as _re
+            _m = _re.match(r'^([A-Z]{1,3})([0-9]+)$', cell[1])
+            if _m:
+                cell = (cell[0], f'{_m.group(1)}{int(_m.group(2)) + 1}')
         if cell is None:
             raise WitnessKeyUnresolved(
                 f"{target!r} is not in this filing's induced key set. The witness is not applied "

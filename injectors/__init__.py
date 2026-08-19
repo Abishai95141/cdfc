@@ -878,16 +878,34 @@ class FingerprintIncludesFormulas(Injector):
     def __init__(self) -> None:
         super().__init__(name="fingerprint_includes_formulas", touches=[FP_PY])
 
+    # **THE ANCHOR IS THE KEY, NOT THE WHOLE LINE, AND THAT IS THE LESSON.** This injector patched
+    # by matching `sorted(f"{s}!{r}" for s, r in fs.cells)` verbatim. When the cell string moved
+    # behind `Anchor.cell(s, r).render()` the match stopped landing, `apply()` rewrote the file with
+    # its own contents, and the control silently proved nothing —
+    # `test_nc_meta__every_injector_actually_changes_something` caught it, which is precisely why
+    # that meta-test exists. Anchoring on the STABLE part of the line, the `"unlocked_mask":` key,
+    # survives a change to how the value is produced; anchoring on the value did not.
+    ANCHOR = '        "unlocked_mask":'
+
     def apply(self) -> None:
+        src = FP_PY.read_text()
+        line = next((ln for ln in src.splitlines() if ln.startswith(self.ANCHOR)), None)
+        if line is None:
+            raise AssertionError(
+                f"{FP_PY} no longer contains a line starting {self.ANCHOR!r}, so this injector "
+                "cannot place its fault. A control that cannot find its site must SAY SO rather "
+                "than write the file back unchanged and report itself applied."
+            )
         FP_PY.write_text(
-            FP_PY.read_text().replace(
-                '        "unlocked_mask": sorted(f"{s}!{r}" for s, r in fs.cells),',
-                '        "unlocked_mask": sorted(f"{s}!{r}" for s, r in fs.cells),\n'
+            src.replace(
+                line,
+                line + "\n"
                 '        "formulas": sorted(\n'
                 '            f"{f.sheet}!{f.ref}={f.text}"\n'
                 '            for f in __import__("cdfc.ingest.reader_lxml", fromlist=["read"])\n'
                 '            .read(blob_path).formulas\n'
                 '        ),',
+                1,
             )
         )
 

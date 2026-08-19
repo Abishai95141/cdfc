@@ -51,6 +51,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Final, Literal
 
+from cdfc.schema.anchor import Anchor
 from cdfc.calc.evaluate import ParseError, expand, parse_formula, refs_of
 from cdfc.calc.shift import materialise
 from cdfc.ingest.reader_lxml import read
@@ -187,7 +188,7 @@ def build_precedent_map(
 
     template_sha256 = hashlib.sha256(blob.read_bytes()).hexdigest()
     fs = build_field_surface(blob, rule)
-    field_surface = frozenset(f"{s}!{r}" for s, r in fs.cells)
+    field_surface = frozenset(Anchor.cell(s, r).render() for s, r in fs.cells)
 
     text, deferred = materialised_formulas(blob)
     values_only = reading != "lexical"

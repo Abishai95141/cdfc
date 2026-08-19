@@ -19,6 +19,7 @@ from __future__ import annotations
 import zipfile
 from pathlib import Path
 
+from cdfc.schema.anchor import Anchor
 from cdfc.canon import canonical_json, sha256_hex
 from cdfc.ingest.xmlsafe import fromstring
 from cdfc.schema.styles_mask import Rule, build
@@ -61,7 +62,7 @@ def structural_projection(blob_path: Path) -> dict[str, object]:
         "sheets": sheets,
         "merged_ranges": sorted(merged),
         "defined_names": dnames,
-        "unlocked_mask": sorted(f"{s}!{r}" for s, r in fs.cells),
+        "unlocked_mask": sorted(Anchor.cell(s, r).render() for s, r in fs.cells),
         # NOTE: no formula content, by design. See the module docstring.
     }
 
