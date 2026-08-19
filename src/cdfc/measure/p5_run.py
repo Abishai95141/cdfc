@@ -76,15 +76,40 @@ def promote(c: Candidate) -> Predicate:
     )
 
 
-@lru_cache(maxsize=4)
-def fme_harvest() -> HarvestResult:
-    return harvest(FME)
+# --- THE TEMPLATE-KEYED CACHES, AND WHY THEY REPLACED PARAMETERLESS ONES ----------------------
+#
+# `fme_harvest()` and `fme_surface()` took no arguments and closed over `FME`. `run_filing` called
+# them, so EVERY filing was checked against the pinned blank whatever it actually bound to — an ALR
+# return was scored over FME's 3,747-cell surface and reported VALID. The binding layer had already
+# computed the right template and the runner threw it away.
+#
+# The repair is a parameter and a cache key, not a rewrite: `harvest_for(t)` and `surface_for(t)`
+# take the template, `lru_cache` keys on it, and the two `fme_*` names survive as one-line wrappers
+# so the measurement tools that legitimately mean *the reference template* keep saying so.
+#
+# `maxsize` is 16, not unbounded: nine blanks are pinned and a cache that grows without limit over
+# uploaded templates is a memory leak wearing a performance optimisation.
 
 
-@lru_cache(maxsize=1)
-def fme_surface() -> tuple[int, tuple[str, ...], str]:
-    fs = build(FME, Rule.V3)
+@lru_cache(maxsize=16)
+def harvest_for(template: Path) -> HarvestResult:
+    return harvest(template)
+
+
+@lru_cache(maxsize=16)
+def surface_for(template: Path) -> tuple[int, tuple[str, ...], str]:
+    fs = build(template, Rule.V3)
     return fs.n_cells, tuple(sorted(f"{s}!{r}" for s, r in fs.cells)), fs.validation_state
+
+
+def fme_harvest() -> HarvestResult:
+    """The reference template's harvest. Kept for the tools that mean FME specifically."""
+    return harvest_for(FME)
+
+
+def fme_surface() -> tuple[int, tuple[str, ...], str]:
+    """The reference template's field surface. Kept for the tools that mean FME specifically."""
+    return surface_for(FME)
 
 
 @lru_cache(maxsize=1)
@@ -92,7 +117,25 @@ def catalogue() -> TemplateCatalogue:
     return TemplateCatalogue.from_corpus(PRESCRIBED)
 
 
+def denominator_for(template: Path) -> Denominator:
+    """The declared denominator OF A NAMED TEMPLATE.
+
+    A denominator that does not know which blank it came from is the mechanism by which one return
+    gets scored over another's field surface. The template is now an argument, so a caller cannot
+    obtain a denominator without saying what it is a denominator OF.
+    """
+    n, _cells, state = surface_for(template)
+    return Denominator(
+        source="styles.xml unlocked mask, computed twice and agreed (P2)",
+        generatorRule="v3",
+        fieldSurface=n,
+        computedTwiceAgreed=True,
+        validationState=state,
+    )
+
+
 def denominator() -> Denominator:
+    """The reference template's denominator. Kept for the tools that mean FME specifically."""
     n, _cells, state = fme_surface()
     return Denominator(
         source="styles.xml unlocked mask, computed twice and agreed (P2)",

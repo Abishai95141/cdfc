@@ -100,6 +100,9 @@ nightly: all
 predicate-schema:
 	$(PY) tools/gen_predicate_schema.py
 
+progress:
+	$(PY) tools/progress.py
+
 harvest:
 	$(PY) -m cdfc.cli harvest --all --out predicates/harvested \
 		--report docs/measurements/P4-harvest-distribution.md

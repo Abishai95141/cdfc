@@ -9,9 +9,9 @@
 | artifact | bytes | sha256 | across all four environments |
 |---|---:|---|---|
 | `attestation payload` | 4,015 | *not pinnable — embeds `code_git_sha`* | **identical** |
-| `oscal projection` | 1,228,659 | `e21f8f8ec4be2dbb…` | **identical** |
-| `ro-crate projection` | 954 | `7b8052b4cca1daec…` | **identical** |
-| `run.jsonl` | 335,823 | `d647047e3560e6b4…` | **identical** |
+| `oscal projection` | 1,228,659 | `11a55872647e7f63…` | **identical** |
+| `ro-crate projection` | 954 | `f3a425031beac7f2…` | **identical** |
+| `run.jsonl` | 335,823 | `8fce8e7ca920c825…` | **identical** |
 
 **One digest is deliberately absent from that table.** The attestation payload embeds
 `code_git_sha`, so its digest is a function of the commit — and this document lives inside that

@@ -124,12 +124,34 @@ def _surface_exclusions() -> dict[str, Any] | None:
     return None if ex is None else ex.as_canonical_obj()
 
 
-def run_id_for(filing_sha256: str, registry_root: str, profile: RunProfile) -> str:
-    """A digest of the inputs, not a timestamp. Two identical runs share an id, which is the point."""
+def run_id_for(
+    filing_sha256: str,
+    registry_root: str,
+    profile: RunProfile,
+    template_sha256: str | None = None,
+) -> str:
+    """A digest of the inputs, not a timestamp. Two identical runs share an id, which is the point.
+
+    **`template_sha256` JOINED THIS DIGEST WHEN THE RUNNER LEARNED TO TAKE A TEMPLATE, AND IT HAD
+    TO.** The id previously covered the filing, the registry root and the profile. That was sound
+    only while exactly one template could ever be scored against: the moment `run_filing` accepted a
+    template, one filing checked against two different blanks produced two different coverage
+    declarations carrying ONE id, and `store.write()` overwrites in place. The second run would have
+    silently replaced the first, and an attestation over either would verify.
+
+    **This moved every previously published run id, deliberately and once.** The FME reference run
+    was `9e6c7cc491f4e0a8` before this change. The byte-identity artifact set moves with it and is
+    re-measured rather than quoted — a figure no tool reproduces is the defect this project has
+    already caught itself committing twice.
+
+    `None` is admitted and is not the same as absent: a filing whose template does not bind has no
+    template digest to key on, and inventing one would give an unbound run the id of a bound one.
+    """
     return sha256_hex(
         canonical_json(
             {
                 "filing": filing_sha256,
+                "template": template_sha256,
                 "registry_root": registry_root,
                 "profile": profile.name,
                 "profile_digest": profile.digest,
@@ -158,11 +180,16 @@ def execute(
     # caller knows which candidates were harvested and which of them a gate refused; this module
     # sees the admitted set and would otherwise have to say `not_yet_synthesised` for every one.
     unchecked_reasons: Mapping[str, ReasonCode] | None = None,
+    # The template the caller SCORED AGAINST — the blank whose field surface produced
+    # `field_surface`, `surface_cells` and `denominator`. It is not the same question as which
+    # template the filing BINDS to, and the whole point of naming it is that the two can disagree.
+    template: Path | None = None,
 ) -> RunResult:
     import hashlib
 
     filing_sha = hashlib.sha256(filing.read_bytes()).hexdigest()
-    rid = run_id_for(filing_sha, registry_root, profile)
+    scored_sha = hashlib.sha256(template.read_bytes()).hexdigest() if template is not None else None
+    rid = run_id_for(filing_sha, registry_root, profile, scored_sha)
     rt = rt or CelRuntime(profile_version="P5", host_fns=default_registry())
 
     binding = bind_template(filing, catalogue)
@@ -183,6 +210,34 @@ def execute(
         )
 
     assert isinstance(binding, Bound)
+
+    # --- THE DENOMINATOR MUST BELONG TO THE TEMPLATE THE FILING BOUND TO ------------------------
+    #
+    # This is the defect the audit called the worst one carried: an ALR return bound CORRECTLY to
+    # ALR's own blank — the manifest recorded `template_sha256 = a414d8d3…` — and was then scored
+    # over FME's 3,747-cell field surface and published `VALID`. Binding computed the right answer
+    # and the runner discarded it, so the artifact asserted a template the number had not come from.
+    #
+    # `invalid.denominator_disagreement` was declared in P5 and raised by nothing for ten phases.
+    # It fires here, and it is INVALID rather than a warning for the same reason `template_unbound`
+    # is: a coverage fraction over the wrong denominator is not a worse number, it is a number about
+    # a different document.
+    if scored_sha is not None and binding.template_sha256 != scored_sha:
+        cells = tuple(
+            RunCell(
+                stable_key=k, state=ItemState.NOT_RUN,
+                reason=ReasonCode.NR_TEMPLATE_UNBOUND, settled_by=None,
+            )
+            for k in sorted(surface_cells)
+        )
+        return RunResult(
+            run_id=rid, filing_sha256=filing_sha,
+            template_sha256=binding.template_sha256, run_state="INVALID",
+            invalid_causes=(InvalidCause.DENOMINATOR_DISAGREEMENT,),
+            checks=unbound_checks([p.id for p in predicates]), cells=cells,
+            partition=None, fraction=None,
+        )
+
     sel = select(registry_root, binding.template_sha256, profile, predicates=predicates)
     outcome = evaluate_all(sel, facts=facts, schema=schema, rt=rt)
 

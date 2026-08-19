@@ -46,9 +46,12 @@ from cdfc.measure.p5_run import (
     TEMPLATE_COMPUTED,
     catalogue,
     denominator,
+    denominator_for,
     fme_harvest,
     fme_surface,
+    harvest_for,
     promote,
+    surface_for,
 )
 from cdfc.predicates.host_fns import default_registry
 from cdfc.qualify.campaign_store import CAMPAIGNS
@@ -92,12 +95,14 @@ def kill_stage_ids(campaign_id: str = CAMPAIGN_ID) -> frozenset[str]:
     return frozenset(out)
 
 
-@lru_cache(maxsize=1)
-def all_predicates() -> tuple[Any, ...]:
-    return tuple(promote(c) for c in fme_harvest().candidates)
+@lru_cache(maxsize=16)
+def all_predicates(template: Path = FME) -> tuple[Any, ...]:
+    return tuple(promote(c) for c in harvest_for(template).candidates)
 
 
-def population(*, restrict_to_kill_stage: bool = True) -> tuple[Any, ...]:
+def population(
+    *, template: Path | None = None, restrict_to_kill_stage: bool = True
+) -> tuple[Any, ...]:
     """The predicates a run evaluates. **33 of 348, and the restriction is the KILL STAGE.**
 
     A predicate outside `kill_stage_ids()` never killed a mutant in the pinned campaign — it is
@@ -109,15 +114,25 @@ def population(*, restrict_to_kill_stage: bool = True) -> tuple[Any, ...]:
     bind 735 field-surface cells, and those cells were reported as
     `no_predicate.not_yet_synthesised` — *nobody has written a check for this cell* — when a check
     exists and was refused. `unchecked_reasons()` below supplies the true code.
+
+    **A TEMPLATE OTHER THAN THE PINNED BLANK HAS NO CAMPAIGN, SO IT HAS NO KILL STAGE.**
+    `kill_stage_ids()` reads `CAMPAIGN_ID = "fme-v3-seed20260810"`, whose 773 mutants were seeded
+    into the FME workbook and nowhere else. Applying that id set to another template would filter
+    its candidates by whether an FME predicate of the same name once killed an FME mutant — a
+    restriction with no meaning, silently producing a smaller population and a smaller settled
+    count. So the restriction is applied ONLY to the template the campaign was run against, and for
+    any other template every harvested candidate runs under `PRE-GATE`, which is what the reference
+    template's own numbers are labelled anyway.
     """
-    if not restrict_to_kill_stage:
-        return all_predicates()
+    tmpl = template if template is not None else FME
+    if not restrict_to_kill_stage or tmpl != FME:
+        return all_predicates(tmpl)
     ids = kill_stage_ids()
-    return tuple(p for p in all_predicates() if p.id in ids)
+    return tuple(p for p in all_predicates(tmpl) if p.id in ids)
 
 
 def unchecked_reasons(
-    predicates: Sequence[Any], schema: Any, cells: Sequence[str]
+    predicates: Sequence[Any], schema: Any, cells: Sequence[str], *, template: Path | None = None
 ) -> dict[str, Any]:
     """cell -> `no_predicate.failed_qualification`, for cells a REFUSED candidate binds.
 
@@ -135,7 +150,7 @@ def unchecked_reasons(
     running = {p.id for p in predicates}
     surface = set(cells)
     out: dict[str, Any] = {}
-    for cand in fme_harvest().candidates:
+    for cand in harvest_for(template if template is not None else FME).candidates:
         if cand.id in running:
             continue
         try:
@@ -175,26 +190,61 @@ def liveness_for(
 def run_filing(
     filing: Path,
     *,
+    template: Path | None = None,
     predicates: Sequence[Any] | None = None,
     max_witnesses: int = MAX_WITNESSES,
 ) -> RunResult:
-    """One filing, checked, with its liveness proof taken on the same execution."""
-    preds = list(predicates if predicates is not None else population())
-    res = fme_harvest()
-    n, cells, _state = fme_surface()
+    """One filing, checked AGAINST A NAMED TEMPLATE, with its liveness proof taken on the same run.
+
+    **`template` is the repair for the worst defect this build carried.** Until it existed, every
+    call resolved the pinned FME blank through parameterless cached globals, so a filing of a
+    different return was scored over FME's 3,747-cell field surface and reported `VALID` — the
+    binding layer computed the correct template, recorded it in the manifest, and the runner ignored
+    it. The manifest therefore asserted a template that the number had not come from.
+
+    `None` still means the reference template, because the measurement tools and the campaign mean
+    exactly that and should not have to say so. What is no longer possible is checking one return
+    against another's denominator WITHOUT SAYING SO: the template reaches `execute`, so it reaches
+    `run_id_for`, and two templates can no longer produce one run id.
+    """
+    tmpl = template if template is not None else FME
+    preds = list(predicates if predicates is not None else population(template=tmpl))
+    res = harvest_for(tmpl)
+    n, cells, _state = surface_for(tmpl)
     rt = runtime()
+
+    # --- LIVENESS IS NOT ATTEMPTED FOR A TEMPLATE THAT HAS NO CAMPAIGN, AND SAYS SO --------------
+    #
+    # The canary loop proves the checks were working when they were applied, by replaying a stored
+    # kill case per predicate. Every one of those cases comes from `CAMPAIGN_ID`, whose mutants were
+    # seeded into the FME workbook — and `liveness_for` additionally pins FME's schema and an
+    # FME-derived pass-case. Run against another template the loop demonstrates nothing and returns
+    # silent, and `execute` correctly turns that into `INVALID(canary_silent)`.
+    #
+    # **That is honest and it is the wrong answer.** `canary_silent` means *the loop ran and proved
+    # nothing*; the truth for a foreign template is *there was no loop to run*, which is this
+    # project's founding distinction — absent is not empty. So liveness is not attempted, the run
+    # carries no liveness proof, and `NO_LIVENESS` states the absence in words. A coverage
+    # declaration whose checks were never demonstrated is still a coverage declaration, provided it
+    # never pretends otherwise.
+    campaigned = tmpl == FME
+    liveness = (
+        liveness_for(filing, predicates=preds, max_witnesses=max_witnesses)
+        if campaigned else None
+    )
     return execute(
         filing,
         catalogue=catalogue(),
         predicates=preds,
         schema=res.schema,
         field_surface=n,
-        denominator=denominator(),
+        denominator=denominator_for(tmpl),
         registry_root=REGISTRY_ROOT,
         profile=RunProfile(name="default", digest="p10"),
-        facts=fact_set_for(filing, FME),
+        facts=fact_set_for(filing, tmpl),
         surface_cells=list(cells),
         rt=rt,
-        liveness=liveness_for(filing, predicates=preds, max_witnesses=max_witnesses),
-        unchecked_reasons=unchecked_reasons(preds, res.schema, list(cells)),
+        liveness=liveness,
+        unchecked_reasons=unchecked_reasons(preds, res.schema, list(cells), template=tmpl),
+        template=tmpl,
     )
