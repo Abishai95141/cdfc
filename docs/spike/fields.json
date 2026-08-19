@@ -1,0 +1,86 @@
+[
+ {
+  "field": "B2",
+  "label": "Entity name",
+  "format": "",
+  "kind": "text",
+  "vocabulary": [],
+  "filer_writable": true
+ },
+ {
+  "field": "B3",
+  "label": "Registration category",
+  "format": "",
+  "kind": "text",
+  "vocabulary": [
+   "Authorised",
+   "Registered (Non-Retail)",
+   "Registered (Retail)"
+  ],
+  "filer_writable": true
+ },
+ {
+  "field": "B4",
+  "label": "Net worth (USD)",
+  "format": "\"$\"#,##0",
+  "kind": "money",
+  "vocabulary": [],
+  "filer_writable": true
+ },
+ {
+  "field": "B5",
+  "label": "Quarter end date",
+  "format": "yyyy-mm-dd",
+  "kind": "date",
+  "vocabulary": [],
+  "filer_writable": true
+ },
+ {
+  "field": "B6",
+  "label": "Date of filing",
+  "format": "yyyy-mm-dd",
+  "kind": "date",
+  "vocabulary": [],
+  "filer_writable": true
+ },
+ {
+  "field": "B7",
+  "label": "Total assets under management",
+  "format": "\"$\"#,##0",
+  "kind": "money",
+  "vocabulary": [],
+  "filer_writable": true
+ },
+ {
+  "field": "B8",
+  "label": "Minimum single contribution",
+  "format": "\"$\"#,##0",
+  "kind": "money",
+  "vocabulary": [],
+  "filer_writable": true
+ },
+ {
+  "field": "B9",
+  "label": "Manages only Restricted Schemes",
+  "format": "",
+  "kind": "text",
+  "vocabulary": [],
+  "filer_writable": true
+ },
+ {
+  "field": "B10",
+  "label": "Net worth shortfall reported",
+  "format": "",
+  "kind": "text",
+  "vocabulary": [],
+  "filer_writable": true
+ },
+ {
+  "field": "B11",
+  "label": "Number of schemes",
+  "format": "",
+  "kind": "text",
+  "vocabulary": [],
+  "filer_writable": true
+ }
+]

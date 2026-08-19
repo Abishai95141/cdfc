@@ -1,0 +1,291 @@
+[
+ {
+  "eId": "reg_3__subreg_1",
+  "kind": "APPLICABILITY",
+  "field": "B3",
+  "quote": "Authorised, Registered (Non-Retail) or Registered (Retail)",
+  "deontic": "SHALL",
+  "requires": {
+   "vocabulary": [
+    "Authorised",
+    "Registered (Non-Retail)",
+    "Registered (Retail)"
+   ]
+  },
+  "refers_to": [],
+  "_verdicts": {
+   "G-QUOTE": [
+    true,
+    "verbatim at +142"
+   ],
+   "G-TYPE": [
+    true,
+    "B3 declared text"
+   ],
+   "G-VOCAB": [
+    true,
+    "covered by the template's validation list"
+   ],
+   "G-XREF": [
+    true,
+    "all targets resolve"
+   ]
+  }
+ },
+ {
+  "eId": "reg_8__subreg_1",
+  "kind": "THRESHOLD",
+  "field": "B4",
+  "quote": "maintain a net worth of not less than USD 500,000",
+  "deontic": "SHALL",
+  "requires": {
+   "unit": "USD",
+   "comparator": ">=",
+   "value": 500000
+  },
+  "applies_when": {
+   "B3": "Registered (Non-Retail)"
+  },
+  "refers_to": [],
+  "_verdicts": {
+   "G-QUOTE": [
+    true,
+    "verbatim at +89"
+   ],
+   "G-TYPE": [
+    true,
+    "B4 declared money"
+   ],
+   "G-VOCAB": [
+    true,
+    "no vocabulary claimed"
+   ],
+   "G-XREF": [
+    true,
+    "all targets resolve"
+   ]
+  }
+ },
+ {
+  "eId": "reg_8__subreg_1__proviso_1",
+  "kind": "EXCEPTION",
+  "field": "B4",
+  "quote": "shall maintain a net worth of not less than USD 250,000",
+  "deontic": "SHALL",
+  "requires": {
+   "unit": "USD",
+   "comparator": ">=",
+   "value": 250000
+  },
+  "applies_when": {
+   "B9": "yes"
+  },
+  "refers_to": [],
+  "_verdicts": {
+   "G-QUOTE": [
+    true,
+    "verbatim at +77"
+   ],
+   "G-TYPE": [
+    true,
+    "B4 declared money"
+   ],
+   "G-VOCAB": [
+    true,
+    "no vocabulary claimed"
+   ],
+   "G-XREF": [
+    true,
+    "all targets resolve"
+   ]
+  }
+ },
+ {
+  "eId": "reg_9__subreg_1",
+  "kind": "THRESHOLD",
+  "field": "B4",
+  "quote": "maintain a net worth of not less than USD 75,000",
+  "deontic": "SHALL",
+  "requires": {
+   "unit": "USD",
+   "comparator": ">=",
+   "value": 75000
+  },
+  "applies_when": {
+   "B3": "Authorised"
+  },
+  "refers_to": [],
+  "_verdicts": {
+   "G-QUOTE": [
+    true,
+    "verbatim at +76"
+   ],
+   "G-TYPE": [
+    true,
+    "B4 declared money"
+   ],
+   "G-VOCAB": [
+    true,
+    "no vocabulary claimed"
+   ],
+   "G-XREF": [
+    true,
+    "all targets resolve"
+   ]
+  }
+ },
+ {
+  "eId": "reg_12__subreg_1",
+  "kind": "DEADLINE",
+  "field": "B6",
+  "quote": "within 30 days of the end of each quarter",
+  "deontic": "SHALL",
+  "requires": {
+   "temporal": "days",
+   "comparator": "<=",
+   "value": 30,
+   "relative_to": "B5"
+  },
+  "refers_to": [],
+  "_verdicts": {
+   "G-QUOTE": [
+    true,
+    "verbatim at +86"
+   ],
+   "G-TYPE": [
+    true,
+    "B6 declared date"
+   ],
+   "G-VOCAB": [
+    true,
+    "no vocabulary claimed"
+   ],
+   "G-XREF": [
+    true,
+    "all targets resolve"
+   ]
+  }
+ },
+ {
+  "eId": "reg_13__subreg_1",
+  "kind": "DISCLOSURE",
+  "field": "B7",
+  "quote": "total assets under management of the entity",
+  "deontic": "SHALL",
+  "requires": {
+   "present": true
+  },
+  "refers_to": [
+   "reg_12__subreg_1"
+  ],
+  "_verdicts": {
+   "G-QUOTE": [
+    true,
+    "verbatim at +77"
+   ],
+   "G-TYPE": [
+    true,
+    "B7 declared money"
+   ],
+   "G-VOCAB": [
+    true,
+    "no vocabulary claimed"
+   ],
+   "G-XREF": [
+    true,
+    "all targets resolve"
+   ]
+  }
+ },
+ {
+  "eId": "reg_14__subreg_1",
+  "kind": "THRESHOLD",
+  "field": "B8",
+  "quote": "less than USD 150,000",
+  "deontic": "SHALL_NOT",
+  "requires": {
+   "unit": "USD",
+   "comparator": ">=",
+   "value": 150000
+  },
+  "refers_to": [
+   "reg_2__subreg_1"
+  ],
+  "_verdicts": {
+   "G-QUOTE": [
+    true,
+    "verbatim at +93"
+   ],
+   "G-TYPE": [
+    true,
+    "B8 declared money"
+   ],
+   "G-VOCAB": [
+    true,
+    "no vocabulary claimed"
+   ],
+   "G-XREF": [
+    true,
+    "all targets resolve"
+   ]
+  }
+ },
+ {
+  "eId": "reg_15__subreg_1",
+  "kind": "CONDITIONAL_DISCLOSURE",
+  "field": "B10",
+  "quote": "it shall report that fact in the quarterly return",
+  "deontic": "SHALL",
+  "requires": {
+   "present": true
+  },
+  "refers_to": [
+   "reg_8__subreg_1"
+  ],
+  "_verdicts": {
+   "G-QUOTE": [
+    true,
+    "verbatim at +98"
+   ],
+   "G-TYPE": [
+    true,
+    "B10 declared text"
+   ],
+   "G-VOCAB": [
+    true,
+    "no vocabulary claimed"
+   ],
+   "G-XREF": [
+    true,
+    "all targets resolve"
+   ]
+  }
+ },
+ {
+  "eId": "reg_16__subreg_1",
+  "kind": "DISCRETIONARY",
+  "field": null,
+  "quote": "The Authority may, having regard to the interests of investors",
+  "deontic": "MAY",
+  "refers_to": [],
+  "note": "discretionary; nothing a filing can be tested against",
+  "_verdicts": {
+   "G-QUOTE": [
+    true,
+    "verbatim at +8"
+   ],
+   "G-TYPE": [
+    true,
+    "no field claimed"
+   ],
+   "G-VOCAB": [
+    true,
+    "no vocabulary claimed"
+   ],
+   "G-XREF": [
+    true,
+    "all targets resolve"
+   ]
+  }
+ }
+]
