@@ -1,5 +1,11 @@
 # D-A3-01 — what persists is the ARTIFACT SET; the graph is re-derived, never stored
 
+> **AMENDED 20 Aug 2026 by `docs/decisions/D-A3-01a-amendment-re-derivation-at-scale.md`.**
+> The decision below STANDS and is not edited — it is a dated record. The amendment runs the
+> re-measurement this document names as an `A3` entry criterion, gives the read index a numeric
+> trigger (~50 documents per ENTITY), and records that the ARTEFACT REGISTRY this document closes
+> by mandating **was never built**.
+
 *Decided 20 Aug 2026. Experiment `N5` in `docs/PLAN.md §11`. Gates `A1c` and `A3`.*
 
 ## The question, and why it looked like a hard one
