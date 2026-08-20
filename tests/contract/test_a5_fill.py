@@ -51,7 +51,11 @@ def _fields(*fields: Field, surface: frozenset[str] | None = None) -> FieldSet:
                     fields=fields, surface=refs)
 
 
-def _obs(value: str, text: str, *, doc: str = "src.pdf") -> Observation:
+# The document name must MATCH the source's instrument_id. It did not before — the fixtures said
+# "src.pdf" while `_source` built an instrument called "t" — and nothing noticed, because
+# re-verification ignored which document a span belonged to. It no longer does: a run may read
+# several sources, and a span from one re-read in another could match by coincidence.
+def _obs(value: str, text: str, *, doc: str = "t") -> Observation:
     lo = text.index(value)
     return Observation(value=value, document=doc, span=(lo, lo + len(value)), page=1,
                        context=text[:60])
@@ -94,7 +98,7 @@ def test_a5__REVERIFIES_refuses_evidence_whose_span_does_not_reproduce():
     no score, no threshold.
     """
     text = "The net worth of the entity is 5,00,000."
-    lying = Observation(value="9,99,999", document="src.pdf", span=(31, 39), page=1, context="")
+    lying = Observation(value="9,99,999", document="t", span=(31, 39), page=1, context="")
     f = Field(ref="S!A1", label="Net worth", type=FieldType.MONEY, asks=Asks.FACT)
     d = propose(_fields(f), {"S!A1": (lying,)}, _source(text), binding_provenance=PROV)
     assert d.refused[0].reason is FillRefusal.REVERIFICATION_FAILED

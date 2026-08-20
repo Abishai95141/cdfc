@@ -296,14 +296,15 @@ def _type_admits(value: str, ftype: FieldType) -> tuple[bool, str]:
         return bool(_DATEISH.match(v)), f"{v!r} is not a date this reader admits"
     if ftype in (FieldType.TEXT, FieldType.ENUM):
         return True, ""
-    # UNDECLARED. The template said nothing, so nothing can be admitted against it.
+    # UNDECLARED. The template declares nothing, so nothing can be TYPE-CHECKED against it — but
+    # that is a fact about the workbook, not about the value. See `_undeclared` below.
     return False, "the template declares no type for this field, so no value can be type-checked"
 
 
 def propose(
     fields: FieldSet,
     binding: Mapping[str, Sequence[Observation]],
-    source: InstrumentText,
+    source: InstrumentText | Mapping[str, InstrumentText],
     *,
     binding_provenance: str,
 ) -> FillDeclaration:
@@ -319,10 +320,27 @@ def propose(
             "say whose proposal was refused."
         )
 
+    # EVERY OBSERVATION RE-VERIFIES AGAINST ITS OWN DOCUMENT, and a run may name several.
+    #
+    # The first version took ONE `InstrumentText` and re-read every span in it. With a custodian
+    # feed AND an officers register bound in one run, every observation from the second document
+    # failed `REVERIFIES` — not because the span was wrong, but because it was re-read in the
+    # wrong file. Five correctly-bound fields were refused as unverifiable evidence.
+    #
+    # Worse than losing them: a span from document A re-read in document B could COINCIDENTALLY
+    # match, and would then pass. Re-verification against the wrong document is not a weaker check,
+    # it is a check of something else.
+    by_doc: Mapping[str, InstrumentText] = (
+        {source.instrument_id: source} if isinstance(source, InstrumentText) else dict(source)
+    )
+    if not by_doc:
+        raise ValueError("no source document was supplied, so no span could be re-verified.")
+
     by_ref = fields.by_ref()
     proposed: list[FillProposal] = []
     refused: list[Refusal] = []
     attestations: list[Attestation] = []
+    derived: list[Derived] = []
 
     for ref in sorted(fields.surface or {f.ref for f in fields.fields}):
         field = by_ref.get(ref)
@@ -346,8 +364,36 @@ def propose(
             ))
             continue
 
-        conds, value, chosen = _evaluate(field, obs, source)
+        conds, value, chosen = _evaluate(field, obs, by_doc)
         first = next((c for c in conds if not c.holds), None)
+
+        # AN UNDECLARED FIELD IS PLACED, NOT REFUSED — and it lands in `Derived`, labelled.
+        #
+        # `TYPE_ADMITS` refuses a field whose type the template never declared, and on the FME
+        # return that is **92 of 124** FACT-shaped labelled fields. Refusing them outright caps
+        # the whole product at 32 fillable cells because the WORKBOOK is sloppy, which is a cost
+        # borne by the filer for somebody else's omission.
+        #
+        # So: when the ONLY failing condition is `TYPE_ADMITS`, and it failed because the template
+        # declared no type at all, the value is placed in the derived lane. Every other condition
+        # still had to hold — it is grounded, it re-verified byte-exact, the sources agree, and it
+        # is not an attestation. What is missing is the template's own type declaration, and the
+        # lane says so rather than the coverage count silently absorbing it.
+        # `first` being TYPE_ADMITS already proves GROUNDED, REVERIFIES and UNIQUE held — they
+        # are evaluated before it and a failure short-circuits. The first version of this branch
+        # also required `all(c.holds for c in conds if c.name != "TYPE_ADMITS")`, which is never
+        # true: the conditions AFTER the failure are recorded as `not reached` with holds=False,
+        # so the guard excluded every case it existed to admit.
+        if (first is not None and first.name == "TYPE_ADMITS"
+                and field.type is FieldType.UNDECLARED and chosen is not None):
+            derived.append(Derived(
+                ref=ref, label=field.label, value=value,
+                basis=("evidenced at a re-verified span, but the template declares no type for "
+                       "this field so no value can be type-checked against it"),
+                supported_by=(chosen.document,), model=binding_provenance,
+            ))
+            continue
+
         if first is None and chosen is not None:
             proposed.append(FillProposal(
                 ref=ref, label=field.label, value=value, document=chosen.document,
@@ -360,6 +406,7 @@ def propose(
         template_sha256=fields.template_sha256,
         surface_total=len(fields.surface) or len(fields.fields),
         proposed=tuple(proposed), refused=tuple(refused), attestations=tuple(attestations),
+        derived=tuple(derived),
     )
 
 
@@ -374,7 +421,7 @@ _REASON_FOR: Final[Mapping[str, FillRefusal]] = {
 
 
 def _evaluate(
-    field, obs: tuple[Observation, ...], source: InstrumentText
+    field, obs: tuple[Observation, ...], by_doc: Mapping[str, InstrumentText]
 ) -> tuple[tuple[Condition, ...], str, Observation | None]:
     """The six, in order, short-circuiting the DETAIL but never the REPORT.
 
@@ -390,13 +437,19 @@ def _evaluate(
     if not grounded:
         return tuple(out + [Condition(n, False, "not reached") for n in CONDITIONS[1:]]), "", None
 
-    # THE TRIGGER. Only observations that re-read byte-exact may support a fill.
-    verified = tuple(o for o in obs if o.reverify(source))
+    # THE TRIGGER. Only observations that re-read byte-exact IN THEIR OWN DOCUMENT may support a
+    # fill. An observation naming a document this run did not read is refused rather than
+    # re-verified somewhere else, which would be a check of a different file.
+    verified = tuple(o for o in obs
+                     if o.document in by_doc and o.reverify(by_doc[o.document]))
+    unknown = sorted({o.document for o in obs if o.document not in by_doc})
     out.append(Condition(
         "REVERIFIES", bool(verified),
         "" if verified else (
-            f"none of {len(obs)} bound observation(s) re-reads byte-exact at the span it cites; "
-            "a locator that cannot reproduce its own find is not evidence"),
+            f"none of {len(obs)} bound observation(s) re-reads byte-exact at the span it cites"
+            + (f"; {len(unknown)} name a document this run did not read, e.g. {unknown[:2]}"
+               if unknown else "")
+            + ". A locator that cannot reproduce its own find is not evidence"),
     ))
     if not verified:
         return tuple(out + [Condition(n, False, "not reached") for n in CONDITIONS[2:]]), "", None
@@ -415,7 +468,13 @@ def _evaluate(
     ok, why = _type_admits(value, field.type)
     out.append(Condition("TYPE_ADMITS", ok, why))
     if not ok:
-        return tuple(out + [Condition(n, False, "not reached") for n in CONDITIONS[4:]]), value, None
+        # THE OBSERVATION IS STILL RETURNED. It is grounded, it re-verified byte-exact and the
+        # sources agree — only the TEMPLATE's type declaration is missing. Returning `None` here
+        # discarded a perfectly good observation because of a fact about the workbook, and it made
+        # the UNDECLARED-to-derived route in `propose` unreachable: that branch requires a chosen
+        # observation and never got one.
+        return (tuple(out + [Condition(n, False, "not reached") for n in CONDITIONS[4:]]),
+                value, chosen)
 
     in_vocab = (not field.vocabulary) or value in field.vocabulary
     out.append(Condition(

@@ -306,3 +306,7 @@ e2e:  ## run the product path across all three ingress formats and three regulat
 .PHONY: demo-fill
 demo-fill:  ## B1 — fill the regulator's blank and prove nothing else changed
 	$(PY) tools/demo_fill.py
+
+.PHONY: demo-fuse
+demo-fuse:  ## B2 — two documents, one run, one return
+	$(PY) tools/demo_fuse.py

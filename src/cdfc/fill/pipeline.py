@@ -53,16 +53,18 @@ class FillRun:
     """One end-to-end fill: what it used, what it matched, what it proposed."""
 
     template_digest: str
-    source_digest: str
+    source_digest: str            # the FIRST source; `source_digests` carries them all
     merkle_root: str
     schema_match: SchemaMatch
     declaration: FillDeclaration
     unlocatable: tuple[tuple[str, str], ...]     # (field ref, the value that was not in the source)
+    source_digests: tuple[str, ...] = ()
 
     def lines(self) -> tuple[str, ...]:
         return (
             f"template   {self.template_digest[:16]}…",
-            f"source     {self.source_digest[:16]}…",
+            f"sources    {len(self.source_digests) or 1}  "
+            f"{[d[:12] + '…' for d in (self.source_digests or (self.source_digest,))]}",
             f"inputs     merkle {self.merkle_root[:16]}…",
             "",
             *self.schema_match.lines(),
@@ -99,7 +101,7 @@ def run(
     registry: Registry,
     *,
     template_digest: str,
-    source_digest: str,
+    source_digest: str | Sequence[str],
     template_path: Path | None = None,
     delimiter: str = ",",
 ) -> FillRun:
@@ -108,25 +110,37 @@ def run(
     `template_path` exists because the field-surface reader wants a workbook on disk and the
     registry stores bytes; the digest is still the identity and is what the run records.
     """
-    inputs = registry.inputs([template_digest, source_digest])
+    # ONE OR MANY SOURCES. A filing is assembled from a custodian feed AND a trial balance AND a
+    # cap table; binding one at a time and taking the last would silently drop the others.
+    digests = [source_digest] if isinstance(source_digest, str) else list(source_digest)
+    if not digests:
+        raise ValueError("a fill run names no source; there would be nothing to bind evidence from.")
+    inputs = registry.inputs([template_digest, *digests])
 
-    meta = registry.meta(source_digest)
-    if meta.kind is not ArtefactKind.SOURCE:
-        raise ValueError(
-            f"artefact {source_digest[:12]}… is declared {meta.kind.value!r}, not 'source'. Kind "
-            "is declared by the uploader and this pipeline reads a SOURCE; binding a filing or a "
-            "rules corpus as evidence would be a different operation wearing this one's name."
-        )
+    for d in digests:
+        meta = registry.meta(d)
+        if meta.kind is not ArtefactKind.SOURCE:
+            raise ValueError(
+                f"artefact {d[:12]}… is declared {meta.kind.value!r}, not 'source'. Kind is "
+                "declared by the uploader and this pipeline reads a SOURCE; binding a filing or a "
+                "rules corpus as evidence would be a different operation wearing this one's name."
+            )
 
-    raw = registry.get(source_digest)
-    source = read_delimited(raw, instrument_id=f"source:{source_digest[:12]}",
-                            delimiter=delimiter)
+    raws = {d: registry.get(d) for d in digests}
+    sources = {d: read_delimited(raws[d], instrument_id=f"source:{d[:12]}", delimiter=delimiter)
+               for d in digests}
+    # The FIRST source is the one A5 adjudicates spans against. Every observation records the
+    # document it came from, so a caller can tell them apart; what must not happen is a span from
+    # one document being re-verified against another, which would pass on a coincidence.
+    source = sources[digests[0]]
 
     blank = template_path or Path(registry.meta(template_digest).filename)
     fields: FieldSet = from_template(blank)
 
-    header, rows = header_and_rows(raw, delimiter=delimiter)
-    columns = columns_from_rows(header, rows)
+    columns = []
+    for d in digests:
+        header, rows = header_and_rows(raws[d], delimiter=delimiter)
+        columns.extend(columns_from_rows(header, rows))
     m = match(columns, fields)
 
     # A1c gives column -> field. Turn each matched column's VALUES into observations LOCATED in
@@ -139,7 +153,10 @@ def run(
         if col is None:
             continue
         for v in col.values:
-            o = _locate(source, v)
+            # Locate in WHICHEVER source actually contains it, and record which one. A value found
+            # in the trial balance must not be recorded as coming from the custodian feed.
+            o = next((x for x in (_locate(src, v) for src in sources.values()) if x is not None),
+                     None)
             if o is None:
                 if str(v).strip():
                     unlocatable.append((field_ref, str(v)[:40]))
@@ -147,14 +164,16 @@ def run(
             binding.setdefault(field_ref, []).append(o)
 
     decl = propose(
-        fields, {k: tuple(v) for k, v in binding.items()}, source,
+        fields, {k: tuple(v) for k, v in binding.items()},
+        {src.instrument_id: src for src in sources.values()},
         binding_provenance=(
-            f"cdfc.correspond.schema.match over {len(columns)} source column(s) from artefact "
-            f"{source_digest[:12]}…, EM-weighted"
+            f"cdfc.correspond.schema.match over {len(columns)} source column(s) from "
+            f"{len(digests)} artefact(s), EM-weighted"
         ),
     )
     return FillRun(
-        template_digest=template_digest, source_digest=source_digest,
+        template_digest=template_digest, source_digest=digests[0],
+        source_digests=tuple(digests),
         merkle_root=inputs.merkle_root, schema_match=m, declaration=decl,
         unlocatable=tuple(sorted(set(unlocatable))),
     )

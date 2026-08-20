@@ -140,3 +140,109 @@ def test_pipeline__carries_the_binding_provenance_into_the_declaration(reg):
 
         propose(from_template(TPL), {}, read_delimited(CSV, instrument_id="s"),
                 binding_provenance="")
+
+
+# --- B2: multiple sources in one run ----------------------------------------------------------
+
+BLANK = Path(
+    "fixtures/prescribed/Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx"
+)
+ENTITY = (b"Category of Registration of FME,Legal Structure of FME,Date of Registration of FME,"
+          b"PAN of FME,Address of FME\n"
+          b"Registered FME (Retail),Company,2025-04-01,AABCF1234K,Unit 402 GIFT City\n")
+OFFICERS = (b"Name of the Principal Officer,Email address of the Principal Officer,"
+            b"Contact no. of the Principal Officer\n"
+            b"Asha Rao,asha.rao@example.com,+91 79 4000 1234\n")
+
+
+@pytest.fixture
+def two_sources(reg):
+    if not BLANK.is_file():
+        pytest.skip("the vendored FME blank is not in this checkout")
+    t = reg.put_file(BLANK, kind=ArtefactKind.TEMPLATE)
+    a = reg.put(ENTITY, kind=ArtefactKind.SOURCE, filename="entity-master.csv")
+    b = reg.put(OFFICERS, kind=ArtefactKind.SOURCE, filename="officers.csv")
+    return reg, t, a, b
+
+
+def test_b2__two_documents_are_bound_in_ONE_run(two_sources):
+    reg, t, a, b = two_sources
+    r = run(reg, template_digest=t.digest, source_digest=[a.digest, b.digest],
+            template_path=BLANK)
+    assert r.source_digests == (a.digest, b.digest)
+    assert r.schema_match.columns == 8          # 5 + 3, from both documents
+    # values from BOTH documents reach the return
+    docs = {p.document for p in r.declaration.admitted()} | {
+        d.supported_by[0] for d in r.declaration.derived if d.supported_by}
+    assert len(docs) == 2, f"only {docs} contributed; a source was silently dropped"
+
+
+def test_b2__an_observation_re_verifies_against_ITS_OWN_document(two_sources):
+    """THE MULTI-SOURCE DEFECT THIS FIXES.
+
+    A5 took one `InstrumentText` and re-read every span in it, so every observation from the
+    SECOND document failed REVERIFIES — not because the span was wrong but because it was re-read
+    in the wrong file. Five correctly-bound fields were refused as unverifiable.
+
+    Worse than losing them: a span from document A re-read in document B could match by
+    coincidence and would then PASS. Re-verifying against the wrong document is not a weaker
+    check, it is a check of something else.
+    """
+    reg, t, a, b = two_sources
+    r = run(reg, template_digest=t.digest, source_digest=[a.digest, b.digest],
+            template_path=BLANK)
+    from cdfc.ingest.tabular import read_delimited
+
+    texts = {f"source:{a.digest[:12]}": read_delimited(ENTITY, instrument_id=f"source:{a.digest[:12]}"),
+             f"source:{b.digest[:12]}": read_delimited(OFFICERS, instrument_id=f"source:{b.digest[:12]}")}
+    for p in r.declaration.admitted():
+        src = texts[p.document]
+        assert src.text[p.span[0]:p.span[1]] == p.value
+
+
+def test_b2__an_observation_naming_an_unread_document_is_REFUSED(reg):
+    """A span this run cannot re-read is refused, not re-verified somewhere else."""
+    from cdfc.evidence.fields import Field, FieldSet, LabelRule
+    from cdfc.evidence.observe import Observation
+    from cdfc.evidence.vocabulary import Asks, FieldType
+    from cdfc.fill.propose import FillRefusal, propose
+    from cdfc.ingest.tabular import read_delimited
+
+    src = read_delimited(b"a,b\nx,1\n", instrument_id="known")
+    f = Field(ref="S!A1", label="L", type=FieldType.TEXT, asks=Asks.FACT)
+    fs = FieldSet(template_sha256="t" * 64, surface_total=1, label_rule=list(LabelRule)[0],
+                  fields=(f,), surface=frozenset({"S!A1"}))
+    ghost = Observation(value="x", document="a-document-this-run-never-read", span=(0, 1),
+                        page=1, context="")
+    d = propose(fs, {"S!A1": (ghost,)}, {src.instrument_id: src}, binding_provenance="p")
+    assert d.refused[0].reason is FillRefusal.REVERIFICATION_FAILED
+    assert "did not read" in d.refused[0].detail
+
+
+def test_b2__the_binder_ignores_stopwords(two_sources):
+    """`of` occurs in 73 of 132 FME labels and `the` in 45. As a binary evidence bit, a match on
+    `of` was indistinguishable from a match on `investors`, and the binder scored 1 of 3."""
+    from cdfc.correspond.schema import STOPWORDS, _tokens
+
+    assert "of" in STOPWORDS and "the" in STOPWORDS
+    assert _tokens("Number of investors") & _tokens("Category of Registration of FME") == frozenset()
+    reg, t, a, b = two_sources
+    r = run(reg, template_digest=t.digest, source_digest=[a.digest, b.digest],
+            template_path=BLANK)
+    assert len(r.schema_match.pairs) == r.schema_match.columns   # all 8 bind
+
+
+def test_b2__an_undeclared_type_is_DERIVED_not_refused(two_sources):
+    """92 of 124 FACT fields on this return declare no type. Refusing them capped the product at
+    32 fillable cells because the WORKBOOK is sloppy. They are placed, and labelled derived."""
+    reg, t, a, b = two_sources
+    r = run(reg, template_digest=t.digest, source_digest=[a.digest, b.digest],
+            template_path=BLANK)
+    assert r.declaration.counts()["derived"] > 0
+    # every derived cell still had a real, located observation behind it
+    for d in r.declaration.derived:
+        assert d.supported_by and d.supported_by[0].startswith("source:")
+        assert "no type" in d.basis
+    # and none of them is counted as checked
+    assert set(x.ref for x in r.declaration.derived).isdisjoint(
+        x.ref for x in r.declaration.admitted())

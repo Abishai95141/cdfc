@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
+from typing import Final
 from pathlib import Path
 
 from cdfc.correspond.link import Comparison, estimate
@@ -54,8 +55,24 @@ class SourceColumn:
         return FieldType.TEXT
 
 
+# Tokens that appear in so many labels that their presence is not evidence. MEASURED over the FME
+# return's 132 labelled fields, not chosen from a list: `of` occurs in **73 of 132** and `the` in
+# **45**, so `header_token_overlap` fired on more than half the surface for any label containing
+# one — and as a BINARY bit, a match on `of` was indistinguishable from a match on `investors`.
+# That is why `Number of investors` scored a hit against `Category of Registration of FME`.
+#
+# The list is closed and short on purpose. A longer stopword list would start removing words that
+# ARE evidence in a regulatory label (`fee`, `date`, `name`), and the fix for a weak signal is to
+# stop counting the uninformative one, not to guess which words matter.
+STOPWORDS: Final[frozenset[str]] = frozenset({
+    "of", "the", "a", "an", "and", "or", "to", "in", "for", "on", "at", "by", "with", "as",
+    "is", "are", "be", "if", "any", "all", "its", "it", "this", "that", "from", "under",
+})
+
+
 def _tokens(s: str) -> frozenset[str]:
-    return frozenset(_WORD.findall(s.casefold()))
+    """Informative tokens of a label. Stopwords removed — see `STOPWORDS`."""
+    return frozenset(_WORD.findall(s.casefold())) - STOPWORDS
 
 
 @dataclass(frozen=True, slots=True)
