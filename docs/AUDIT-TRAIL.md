@@ -100,3 +100,6 @@ citation, an unlogged artefact, and an empty trail are each planted and observed
 | 2026-08-20 | MEASUREMENT | A3: three states over 3,747 filed values against 98 re-verifying observations; exact matching only, per W0-C | `src/cdfc/evidence/contradict.py` |
 | 2026-08-20 | DEFECT | A3's first run produced a headline CONTRADICTION out of a category error — a money threshold bound to an attestation cell holding 'Yes' | `src/cdfc/evidence/contradict.py` |
 | 2026-08-20 | DECISION | a contradiction REQUIRES a rule: two different numbers in two documents are two different numbers until something says they are about the same quantity | `src/cdfc/evidence/contradict.py` |
+| 2026-08-20 | DEFECT | the labelling rule was pinned globally and was NOT schema-free: it named rows on AL_monthly and was chosen on one blank | `src/cdfc/evidence/fields.py` |
+| 2026-08-20 | DECISION | the labelling rule is selected PER DOCUMENT by a threshold-free signature — does the rule give one label to two cells on the same line — and the choice is declared on every FieldSet | `src/cdfc/evidence/fields.py` |
+| 2026-08-20 | CORRECTION | AL_monthly was called row-labelling on a fields-per-label ratio of 21.6; the within-line signature is 0.00 — 30 questions asked of ~21 rows each, which is a field population | `src/cdfc/evidence/fields.py` |

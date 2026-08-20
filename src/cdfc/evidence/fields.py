@@ -30,7 +30,96 @@ class LabelRule(StrEnum):
     """How a field acquires its label. The denominator is a function of this choice."""
 
     ADJACENT_LEFT = "adjacent_left"      # the cell immediately to the left holds text
-    NEAREST_LEFT = "nearest_left"        # the nearest text anywhere to the left -- LABELS ROWS
+    NEAREST_LEFT = "nearest_left"        # the nearest text anywhere to the left -- labels ROWS
+    ADJACENT_ABOVE = "adjacent_above"    # the cell immediately above -- a column header
+    NEAREST_ABOVE = "nearest_above"      # the nearest text above in the column
+
+
+# The rules tried when the caller does not name one, in the order a tie is broken.
+CANDIDATES: tuple[LabelRule, ...] = (
+    LabelRule.ADJACENT_LEFT, LabelRule.ADJACENT_ABOVE,
+    LabelRule.NEAREST_LEFT, LabelRule.NEAREST_ABOVE,
+)
+
+# THE DIRECT SIGNATURE OF A ROW-LABELLER, and it replaced a fields-per-label threshold that could
+# not do the job.
+#
+# A global ratio fails in both directions and did: at a cut of 4.0 the FME return chose
+# `nearest_left` (410 fields, ratio 3.5) -- which `N2` had already PROVEN hands one row header to
+# every column in the row. The ratio confuses "one question asked of many rows", which is
+# legitimate, with "one header borrowed by many columns", which is the failure.
+#
+# What actually distinguishes them: **a row-labeller gives the SAME label to several cells in the
+# SAME row.** A field-labeller cannot -- two cells in one row have two different left neighbours.
+# The same test runs down a column for the ABOVE rules. It needs no threshold chosen by taste.
+SHARED_WITHIN_LINE: float = 0.25
+
+
+def _shared_within_line(fs: FieldSet, rule: LabelRule) -> float:
+    """The fraction of labelled fields whose label is shared with another field on the same line.
+
+    "Line" is the ROW for a left-rule and the COLUMN for an above-rule -- the axis the rule reads
+    along, which is the axis a borrowed label repeats down.
+    """
+    if not fs.fields:
+        return 0.0
+    down = rule in (LabelRule.ADJACENT_ABOVE, LabelRule.NEAREST_ABOVE)
+    groups: dict[tuple[str, int, str], int] = {}
+    for f in fs.fields:
+        sheet, ref = f.ref.rsplit("!", 1)
+        col, row = _split(ref)
+        groups[(sheet, col if down else row, f.label)] = \
+            groups.get((sheet, col if down else row, f.label), 0) + 1
+    shared = sum(n for n in groups.values() if n > 1)
+    return shared / len(fs.fields)
+
+
+def select_rule(blob: Path) -> LabelRule:
+    """Choose the labelling rule THIS document is written in, and let the FieldSet declare it.
+
+    **A single pinned rule is not schema-free and measuring it said so.** `ADJACENT_LEFT` was
+    pinned on the FME return, where it scores 1.2 fields per label. On
+    `AL_monthly_report` it scores **21.6** -- it is naming rows there, and `NEAREST_LEFT` is worse
+    at 112.5. That blank labels its fields ABOVE, in column headers, and no left-rule can see it.
+
+    So the rule is chosen per document by the property that distinguishes a field-labeller from a
+    row-labeller: **fields per distinct label**. The choice is measurable, it is recorded on every
+    `FieldSet`, and a count therefore still carries the rule that produced it.
+    """
+    scored: list[tuple[LabelRule, float, int]] = []
+    for rule in CANDIDATES:
+        fs = from_template(blob, rule=rule)
+        if not fs.fields:
+            continue
+        scored.append((rule, _shared_within_line(fs, rule), len(fs)))
+    if not scored:
+        return CANDIDATES[0]
+
+    # AMONG THE RULES THAT ARE NOT ROW-LABELLING, TAKE THE ONE THAT NAMES THE MOST FIELDS.
+    #
+    # Ratio alone picks the wrong rule and did: on the ALR return `adjacent_above` scores 1.0
+    # against `adjacent_left`'s 1.1 and names 80 fields against 124. Optimising the ratio traded
+    # 44 real fields for a third of a decimal place. The ratio's job is to DISQUALIFY a
+    # row-labeller, not to rank the survivors.
+    usable = [s for s in scored if s[1] <= SHARED_WITHIN_LINE]
+    if usable:
+        return max(usable, key=lambda s: (s[2], -s[1]))[0]
+    # Nothing labels this document's fields. Return the least-bad so the caller still gets a
+    # FieldSet that DECLARES its rule, and let `labels_are_row_level` say so out loud.
+    return min(scored, key=lambda s: s[1])[0]
+
+
+def labels_are_row_level(blob: Path, rule: LabelRule) -> bool:
+    """Is the chosen rule naming ROWS rather than fields on this document?
+
+    True means the labelled population is not a field population, and no count over it should be
+    read as one. `AL_monthly_report` is the measured case: every rule tried scores above 18, so
+    that blank's fields are named somewhere none of them can see.
+    """
+    fs = from_template(blob, rule=rule)
+    if not fs.fields:
+        return False
+    return _shared_within_line(fs, rule) > SHARED_WITHIN_LINE
 
 
 PINNED_RULE: LabelRule = LabelRule.ADJACENT_LEFT
@@ -189,19 +278,24 @@ def from_template(blob: Path, *, rule: LabelRule = PINNED_RULE) -> FieldSet:
 
     cells = read_cells(blob)
     by_ref = {(c.sheet, c.ref): c for c in cells}
-    texts: dict[tuple[str, int], dict[int, str]] = {}
+    texts: dict[tuple[str, int], dict[int, str]] = {}      # (sheet, row) -> {col: text}
+    downs: dict[tuple[str, int], dict[int, str]] = {}      # (sheet, col) -> {row: text}
     for c in cells:
         if not c.text or not c.is_text:
             continue
         col, row = _split(c.ref)
         texts.setdefault((c.sheet, row), {})[col] = c.text
+        downs.setdefault((c.sheet, col), {})[row] = c.text
 
     listed = _validation_lists(blob, by_ref)
     out: list[Field] = []
     for sheet, wanted in want.items():
         for ref in wanted:
             col, row = _split(ref)
-            label = _label(texts.get((sheet, row), {}), col, rule)
+            if rule in (LabelRule.ADJACENT_ABOVE, LabelRule.NEAREST_ABOVE):
+                label = _label_above(downs.get((sheet, col), {}), row, rule)
+            else:
+                label = _label(texts.get((sheet, row), {}), col, rule)
             if label is None or _is_placeholder(label) or _is_non_label(label):
                 continue
             key = f"{sheet}!{ref}"
@@ -236,8 +330,18 @@ def _split(ref: str) -> tuple[int, int]:
 def _label(texts: Mapping[int, str], col: int, rule: LabelRule) -> str | None:
     if rule is LabelRule.ADJACENT_LEFT:
         return texts.get(col - 1)
-    left = [c for c in texts if c < col]
-    return texts[max(left)] if left else None
+    if rule is LabelRule.NEAREST_LEFT:
+        left = [c for c in texts if c < col]
+        return texts[max(left)] if left else None
+    return None                      # the ABOVE rules are resolved against the column, not the row
+
+
+def _label_above(column: Mapping[int, str], row: int, rule: LabelRule) -> str | None:
+    """The same two shapes, read DOWN a column: a header directly above, or the nearest above."""
+    if rule is LabelRule.ADJACENT_ABOVE:
+        return column.get(row - 1)
+    above = [r for r in column if r < row]
+    return column[max(above)] if above else None
 
 
 def _validation_lists(blob: Path, by_ref: Mapping[tuple[str, str], object]

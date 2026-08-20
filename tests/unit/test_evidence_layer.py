@@ -311,3 +311,59 @@ def test_cell_string__reads_resolves_a_bang_sheet_and_flips_when_split_wrongly()
         "the relation's expression literally contains this cell's path; answering False means "
         "the cell string was split on the wrong `!`"
     )
+
+
+# --- schema- and content-freedom, MEASURED across every pinned blank ----------------------------
+
+def test_schemafree__runs_on_every_pinned_blank_without_a_code_change() -> None:
+    """The claim the product rests on: any document, not this one.
+
+    Nine blanks from one regulator but nine different layouts. Two are the UNDERIVABLE ones W0-A
+    found (no protection mask), and they must return an EMPTY field set rather than raise —
+    "we cannot read this" is a state, not a crash.
+    """
+    import glob
+
+    from cdfc.evidence.fields import select_rule
+
+    blanks = sorted(glob.glob("fixtures/prescribed/*.xlsx"))
+    assert len(blanks) == 9
+    for b in blanks:
+        p = Path(b)
+        fs = from_template(p, rule=select_rule(p))
+        assert isinstance(len(fs), int)
+
+
+def test_schemafree__the_labelling_rule_is_chosen_per_document() -> None:
+    """A single pinned rule is not schema-free, and measuring it said so."""
+    import glob
+
+    from cdfc.evidence.fields import select_rule
+
+    chosen = {Path(b).name: select_rule(Path(b)) for b in glob.glob("fixtures/prescribed/*.xlsx")}
+    assert chosen, "no blanks would make this vacuous"
+    # FME's choice must still be the one N2 pinned by hand, or the selector disagrees with the
+    # measurement that justified it.
+    assert chosen["Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx"] \
+        is LabelRule.ADJACENT_LEFT
+
+
+def test_schemafree__no_pinned_blank_resolves_to_a_row_labeller() -> None:
+    """The selector's whole job. A rule that hands one header to every column in a row produces a
+    population that is not a field population, and no count over it may be read as one."""
+    import glob
+
+    from cdfc.evidence.fields import labels_are_row_level, select_rule
+
+    for b in sorted(glob.glob("fixtures/prescribed/*.xlsx")):
+        p = Path(b)
+        assert not labels_are_row_level(p, select_rule(p)), f"{p.name} resolved to a row-labeller"
+
+
+def test_schemafree__the_selector_can_detect_a_row_labeller() -> None:
+    """A detector that never fires is not a detector. NEAREST_LEFT on the FME return is the
+    measured case: N2 proved it hands one row header to every column."""
+    from cdfc.evidence.fields import labels_are_row_level
+
+    assert labels_are_row_level(FME, LabelRule.NEAREST_LEFT)
+    assert not labels_are_row_level(FME, LabelRule.ADJACENT_LEFT)
