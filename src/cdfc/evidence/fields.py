@@ -182,6 +182,9 @@ class FieldSet:
     label_rule: LabelRule
     fields: tuple[Field, ...]
     surface: frozenset[str] = frozenset()   # EVERY unlocked ref, labelled or not
+    # WHY the surface is empty, when it is. `None` means it was derived and is genuinely this
+    # size; a value means it could not be derived at all and the zero is not a measurement.
+    refusal: SurfaceRefusal | None = None
 
     def by_ref(self) -> Mapping[str, Field]:
         return {f.ref: f for f in self.fields}
@@ -259,6 +262,39 @@ def _asks(label: str) -> Asks:
     return Asks.ATTESTATION if any(t in low for t in _CERTIFY) else Asks.FACT
 
 
+class SurfaceRefusal(StrEnum):
+    """Why a template yielded no field surface. CLOSED, because a refusal needs a reason."""
+
+    NO_PROTECTION_MASK = "no_protection_mask"      # rule 6: the workbook ships no unlocked mask
+
+
+class TemplateNotInducible(RuntimeError):
+    """Raised ONLY by a caller that opts in. The default is a declared STATE — see `FieldSet.refusal`.
+
+    C1, 20 Aug 2026. `cdfc.schema.styles_mask` correctly returns `n_cells=None` for a workbook that
+    ships no protection mask — its RULE 6, and the honest answer, because the surface is read from
+    the unlocked-cell mask and there is no mask to read. `from_template` then constructed a
+    `FieldSet` with `surface_total=None` and ZERO fields, and every downstream count read that as
+    *"this template has no fields"*.
+
+    **2 of the 9 real regulator workbooks in `fixtures/prescribed` hit this** —
+    `Draft_ACAC_Format` (13 sheets, 3,793 cells) and `IFSCA_Annual_Reporting_Format` (9 sheets,
+    1,708 cells) — and both also ship ZERO `dataValidation` elements, so neither explicit signal
+    is present. The surface is genuinely unknown for them, and `absent != empty != zero`: a
+    template we cannot read must not be reported as a template with nothing in it.
+
+    `FieldSet.surface_total` is declared `int`. It was receiving `None`.
+    """
+
+    def __init__(self, blob: Path, reason: SurfaceRefusal, detail: str) -> None:
+        self.blob, self.reason, self.detail = blob, reason, detail
+        super().__init__(
+            f"{blob.name}: the field surface is not derivable ({reason.value}) — {detail}. "
+            "Returning an empty field surface here would report a template we cannot read as a "
+            "template with no fields in it."
+        )
+
+
 def from_template(blob: Path, *, rule: LabelRule = PINNED_RULE) -> FieldSet:
     """Field nodes over THE RUN'S OWN field surface -- never a private re-derivation of it.
 
@@ -270,7 +306,23 @@ def from_template(blob: Path, *, rule: LabelRule = PINNED_RULE) -> FieldSet:
     from cdfc.evidence.workbook import read_cells
     from cdfc.measure.p5_run import surface_for
 
-    total, refs = surface_for(blob)[0], surface_for(blob)[1]
+    total, refs, _state = surface_for(blob)
+    # C1, 20 Aug 2026. `styles_mask` RULE 6 returns `n_cells=None` for a workbook that ships no
+    # protection mask, which is the honest answer: the surface is read from the unlocked-cell mask
+    # and there is no mask to read. 2 of the 9 pinned blanks hit it, and both also ship ZERO
+    # `dataValidation` elements, so neither explicit signal is present.
+    #
+    # `test_schemafree__runs_on_every_pinned_blank_without_a_code_change` decided this must be a
+    # STATE and not a crash, and that decision stands — a caller iterating nine blanks should not
+    # have to catch. What it left open is that the state was INDISTINGUISHABLE: `surface_total`
+    # took the `None` into a field declared `int`, `len(fs)` was 0, and nothing told a reader
+    # whether the template had no fields or could not be read. `absent != empty != zero`.
+    #
+    # So the refusal is CARRIED. `surface_total` is 0 because zero cells were derived, and
+    # `refusal` says why that zero is not a measurement.
+    refusal = None if total is not None else SurfaceRefusal.NO_PROTECTION_MASK
+    if total is None:
+        total, refs = 0, ()
     want: dict[str, set[str]] = {}
     for r in refs:
         sheet, cell = r.rsplit("!", 1)
@@ -311,6 +363,7 @@ def from_template(blob: Path, *, rule: LabelRule = PINNED_RULE) -> FieldSet:
     return FieldSet(
         template_sha256=hashlib.sha256(blob.read_bytes()).hexdigest(),
         surface_total=total,
+        refusal=refusal,
         label_rule=rule,
         fields=tuple(sorted(out, key=lambda f: f.ref)),
         surface=frozenset(refs),

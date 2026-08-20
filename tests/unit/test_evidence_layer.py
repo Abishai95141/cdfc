@@ -367,3 +367,40 @@ def test_schemafree__the_selector_can_detect_a_row_labeller() -> None:
 
     assert labels_are_row_level(FME, LabelRule.NEAREST_LEFT)
     assert not labels_are_row_level(FME, LabelRule.ADJACENT_LEFT)
+
+
+def test_schemafree__an_UNREADABLE_template_is_DISTINGUISHABLE_from_an_empty_one() -> None:
+    """C1, 20 Aug 2026. The gap the test above left open.
+
+    That test decided — rightly — that an underivable blank must return a state and not raise. What
+    it asserted was `isinstance(len(fs), int)`, which an empty FieldSet satisfies whether the
+    template has no fields or could not be read at all. `surface_total` is declared `int` and was
+    receiving `styles_mask`'s honest `None`.
+
+    **2 of the 9 pinned blanks are underivable** — no `sheetProtection`, and both also ship ZERO
+    `dataValidation` elements, so neither explicit signal is present. `absent != empty != zero`.
+    """
+    import glob
+
+    from cdfc.evidence.fields import SurfaceRefusal, select_rule
+
+    derived, refused = [], []
+    for b in sorted(glob.glob("fixtures/prescribed/*.xlsx")):
+        p = Path(b)
+        fs = from_template(p, rule=select_rule(p))
+        assert isinstance(fs.surface_total, int), (
+            f"{p.name}: surface_total is {fs.surface_total!r}, and the field is declared int")
+        (refused if fs.refusal is not None else derived).append(p.name)
+
+    assert len(derived) + len(refused) == 9, "every blank must yield a FieldSet, none may crash"
+    assert refused, "if nothing refuses, this assertion is vacuous and the state is untested"
+    for name in refused:
+        fs = from_template(Path("fixtures/prescribed") / name)
+        assert fs.refusal is SurfaceRefusal.NO_PROTECTION_MASK
+        assert fs.surface_total == 0
+        assert len(fs.fields) == 0
+    # AND THE POSITIVE HALF: a derived surface must NOT carry a refusal, or the flag would be
+    # decoration rather than a discriminator.
+    for name in derived:
+        fs = from_template(Path("fixtures/prescribed") / name)
+        assert fs.refusal is None and fs.surface_total > 0
