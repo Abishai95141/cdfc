@@ -146,6 +146,19 @@ def test_golden__the_manifest_declares_the_statutory_corpus():
     m = json.loads((REPO / CORPUS / "MANIFEST.json").read_text(encoding="utf-8"))
     assert m["statute_instruments"] == ["statute-fm-regulations-2025"]
     assert m["statute_absent_reason"] == ""
-    assert {i["kind"] for i in m["instruments"]} == {"TEMPLATE", "STATUTE"}
-    assert len(m["instruments"]) == 10
+    # B3, 20 Aug 2026: a third KIND appears. `source-fincen-boir-instructions` is the first PDF
+    # pinned as a SOURCE -- an uploaded document that evidence is read FROM, as against a STATUTE
+    # whose rules are read from it or a TEMPLATE whose fields are read from it.
+    #
+    # The pin is EXTENDED, not loosened. Each kind carries its own count, so a fourth kind
+    # appearing, or a template quietly becoming a source, still goes red -- a set membership
+    # assertion alone would admit nine templates turning into nine sources without a word.
+    kinds = {i["kind"] for i in m["instruments"]}
+    assert kinds == {"TEMPLATE", "STATUTE", "SOURCE"}, (
+        f"the corpus holds kinds {sorted(kinds)}. A new kind is a corpus decision and belongs in "
+        f"docs/AUDIT-TRAIL.md before it belongs here."
+    )
+    assert len(m["instruments"]) == 11
     assert sum(1 for i in m["instruments"] if i["kind"] == "TEMPLATE") == 9
+    assert sum(1 for i in m["instruments"] if i["kind"] == "STATUTE") == 1
+    assert sum(1 for i in m["instruments"] if i["kind"] == "SOURCE") == 1

@@ -37,17 +37,43 @@ BUILD_TOOL_LICENCES = {
     "pypdfium2":  "BSD-3-Clause, Apache-2.0, dependency licenses",
     "pymupdf":    "Dual Licensed - GNU AFFERO GPL 3.0 or Artifex commercial",
     "pypdf":      "BSD-3-Clause",   # from the wheel LICENSE file; its metadata declares none
+    # B3, 20 Aug 2026. docling reads a SOURCE pack at build time. It declares MIT in PEP 639
+    # `License-Expression` and leaves the legacy `License` field EMPTY -- see the reader below,
+    # which had to learn that field or it would have called a clearly-licensed package unreadable.
+    "docling":    "MIT",
 }
 
-src = pathlib.Path("tools/pin_statute.py").read_text(encoding="utf-8")
-m = re.search(r"^PARTIES\s*=\s*\(([^)]*)\)", src, re.M)
-if not m:
-    print("GATE FAIL: tools/pin_statute.py declares no PARTIES tuple", file=sys.stderr)
+# EVERY file under tools/ that declares parties, not one file by name.
+#
+# WIDENED AT B3, 20 Aug 2026, and the reason is this gate's own reason one level up. The gate was
+# written because a denylisted licence entered through a door the RUNTIME gate does not watch.
+# B3 adds `tools/pdf_ingest.py`, a SECOND file declaring its own extraction parties -- and a gate
+# hard-coded to one filename would have watched the first door while the second stood open.
+#
+# A file that declares no PARTIES is not an error; a tree where NOTHING declares any is, because
+# that is what a renamed constant or a moved file looks like from here.
+declared: dict[str, tuple[str, ...]] = {}
+for src_path in sorted(pathlib.Path("tools").rglob("*.py")):
+    # `[^=\n]*` and not `[^=]*`: a negated character class MATCHES NEWLINES, so the loose form
+    # ran past the real PARTIES line and captured a LATER tuple in the same file -- it read
+    # pin_statute.py's parties as ("pymupdf", "pypdf") and this gate went red on an AGPL arm that
+    # the file explicitly excludes. The annotation of an assignment does not span lines.
+    m = re.search(r"^PARTIES\s*(?::[^=\n]*)?=\s*\(([^)]*)\)",
+                  src_path.read_text(encoding="utf-8"), re.M)
+    if m:
+        got = tuple(re.findall(r'"([^"]+)"', m.group(1)))
+        if not got:
+            print(f"GATE FAIL: {src_path} declares an EMPTY PARTIES tuple", file=sys.stderr)
+            raise SystemExit(1)
+        declared[str(src_path)] = got
+
+if not declared:
+    print("GATE FAIL: no file under tools/ declares a PARTIES tuple. Either the constant was "
+          "renamed or the declaring file moved; either way this gate is now checking nothing.",
+          file=sys.stderr)
     raise SystemExit(1)
-parties = tuple(re.findall(r'"([^"]+)"', m.group(1)))
-if not parties:
-    print("GATE FAIL: PARTIES is empty", file=sys.stderr)
-    raise SystemExit(1)
+
+parties = tuple(sorted({p for ps in declared.values() for p in ps}))
 
 fail = []
 for p in parties:
@@ -111,7 +137,12 @@ for name, recorded in sorted(BUILD_TOOL_LICENCES.items()):
         d = metadata.distribution(name)
     except metadata.PackageNotFoundError:
         continue
-    live = (d.metadata.get("License") or "").strip()
+    # PEP 639. Modern wheels leave the legacy `License` field empty and declare
+    # `License-Expression` instead -- docling is the live instance. Reading only the legacy field
+    # would report "declares no licence" about a package that declares MIT unambiguously, and a
+    # gate that fails for the wrong reason gets switched off.
+    live = ((d.metadata.get("License-Expression") or "").strip()
+            or (d.metadata.get("License") or "").strip())
     classifiers = [c.split("::")[-1].strip()
                    for c in d.metadata.get_all("Classifier") or [] if c.startswith("License ::")]
     shown = live or "; ".join(classifiers)
@@ -136,5 +167,6 @@ if fail:
         print(f"  - {f}", file=sys.stderr)
     raise SystemExit(1)
 
-print(f"ok: {len(parties)} extraction part(y/ies) — {', '.join(parties)} — carry no denied licence")
+print(f"ok: {len(parties)} extraction part(y/ies) — {', '.join(parties)} — carry no denied "
+      f"licence, declared across {len(declared)} file(s): {', '.join(sorted(declared))}")
 PYEOF

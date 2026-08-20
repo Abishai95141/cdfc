@@ -230,6 +230,47 @@ entries:
       declared flips:true for that reason, and the gate exit code inside the guard is
       the evidence that the gate itself rejects.
 
+  - id: NC-A04c
+    component: importgraph
+    break: an undeclared third-party package enters the verdict closure
+    measured_instance: "B3 added docling as a build-time PDF reader; the natural home for a PDF
+      reader is cdfc/qualify/textsource.py, which IS a verdict root. BANNED_IN_VERDICT would not
+      have caught it -- a denylist refuses only what somebody wrote down."
+    injector: UndeclaredThirdPartyInVerdictRoot
+    guard_tests:
+      - path: "tests/negative/test_nc_model_free.py::test_nc__A04c_no_undeclared_third_party_in_the_verdict_closure"
+        flips: true
+      - path: "tests/negative/test_nc_model_free.py::test_nc__A04c_the_allowlist_is_not_vacuous"
+        flips: false
+    positive_control: "the six real runtime packages -- celpy, lark, lxml, openpyxl, yaml, z3 --
+      are each reached by a verdict root and none is reported undeclared"
+    status: active
+    note: >
+      The allowlist was MEASURED, not copied from CLAUDE.md, which named three of the six.
+      z3 (SMT, via cdfc.qualify.g3_degeneracy) and yaml (the predicate format) had been
+      load-bearing and undescribed. The second guard is flips:false on purpose: it checks the
+      table is not vacuous, and planting an EXTRA import does not empty it.
+
+  - id: NC-A04d
+    component: importgraph
+    break: the runtime allowlist grows a row for a package nothing imports
+    measured_instance: "an allowlist of ghosts refuses nothing. A row nobody reaches could name
+      anything and the SUBSET check stays green, so the table needs its own control -- the same
+      `a count is not a reading` rule turned on a gate's own table."
+    injector: AllowlistGhostRow
+    guard_tests:
+      - path: "tests/negative/test_nc_model_free.py::test_nc__A04c_the_allowlist_is_not_vacuous"
+        flips: true
+      - path: "tests/negative/test_nc_model_free.py::test_nc__A04c_no_undeclared_third_party_in_the_verdict_closure"
+        flips: false
+    positive_control: "all six declared packages are reached by a verdict root, so the real table
+      is not vacuous and the check is green on a correct tree"
+    status: active
+    note: >
+      The pair is deliberately crossed. Planting an IMPORT flips the subset check and not this
+      one; planting a PERMISSION flips this one and not the subset check. Either injector alone
+      would leave half the table unguarded.
+
   - id: NC-CI14
     component: ci
     break: a raw NUL byte makes grep skip an entire document

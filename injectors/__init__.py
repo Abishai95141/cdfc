@@ -558,6 +558,68 @@ class DenylistedRuntimeDep(Injector):
         p.write_text(t)
 
 
+TEXTSOURCE_PY = REPO_ROOT / "src" / "cdfc" / "qualify" / "textsource.py"
+IMPORTGRAPH_PY = REPO_ROOT / "tests" / "negative" / "importgraph.py"
+
+
+class UndeclaredThirdPartyInVerdictRoot(Injector):
+    """A PDF library enters a VERDICT ROOT — the exact move B3 was one edit away from making.
+
+    B3 adds `docling` as a build-time reader. The natural home for a PDF reader is
+    `cdfc/qualify/textsource.py`, which is where the two-party corroboration lives and which is a
+    verdict root. `BANNED_IN_VERDICT` would not have caught it: a denylist refuses only what
+    somebody wrote down, and nobody had written `docling`.
+
+    The import is planted at module top level and guarded so the module still imports in an
+    environment where docling is absent — otherwise the injection would be caught by every test
+    that imports the module, rather than by the allowlist that is supposed to catch it. The AST
+    walker reads the source, so the guard does not hide it from the gate.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="undeclared_third_party_in_verdict_root",
+                         touches=[TEXTSOURCE_PY])
+
+    def apply(self) -> None:
+        p = TEXTSOURCE_PY
+        t = p.read_text()
+        marker = "from __future__ import annotations"
+        assert marker in t, (
+            "UndeclaredThirdPartyInVerdictRoot could not find its anchor in textsource.py. "
+            "An edit whose anchor moved silently does nothing, and this injector would then "
+            "certify a gate it never exercised."
+        )
+        t = t.replace(marker, marker + "\n\ntry:\n    import docling\nexcept ImportError:\n"
+                      "    docling = None\n", 1)
+        p.write_text(t)
+
+
+class AllowlistGhostRow(Injector):
+    """A row is added to `RUNTIME_THIRD_PARTY` for a package NOTHING imports.
+
+    Distinct from `UndeclaredThirdPartyInVerdictRoot`, and deliberately so. That one plants an
+    import and flips the SUBSET check; this one plants a permission and flips the VACUITY check.
+    An allowlist of ghosts refuses nothing — a row nobody reaches could name anything at all and
+    the subset check would still be green, which is the `a count is not a reading` rule applied to
+    a gate's own table.
+
+    `torch` is the right ghost: it is what an unexamined `docling` row would really have dragged in.
+    """
+
+    def __init__(self) -> None:
+        super().__init__(name="allowlist_ghost_row", touches=[IMPORTGRAPH_PY])
+
+    def apply(self) -> None:
+        p = IMPORTGRAPH_PY
+        t = p.read_text()
+        marker = '    "z3",'
+        assert marker in t, (
+            "AllowlistGhostRow could not find its anchor in importgraph.py. An edit whose anchor "
+            "moved silently does nothing, and this injector would certify a gate it never ran."
+        )
+        p.write_text(t.replace(marker, '    "torch",  # reached by NOTHING\n' + marker, 1))
+
+
 class NulByteInPlanDoc(Injector):
     """A raw NUL makes grep skip an entire document.
 
@@ -600,6 +662,8 @@ class ElapsedUsField(Injector):
 ALL_INJECTORS = ALL_INJECTORS + (
     HardcodeGateCount,
     DenylistedRuntimeDep,
+    UndeclaredThirdPartyInVerdictRoot,
+    AllowlistGhostRow,
     NulByteInPlanDoc,
     ElapsedUsField,
 )

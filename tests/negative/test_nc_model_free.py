@@ -143,3 +143,70 @@ def test_nc__A04_the_ban_is_one_rule_not_a_vendor_list() -> None:
         "ship. This control deliberately does NOT re-answer it — two gates owning one decision is "
         "how a rule comes to be enforced by whichever happens to run."
     )
+
+
+# --- B3: the POSITIVE form. Added 20 Aug 2026 -------------------------------------------------
+#
+# B3 adds `docling` as a build-time PDF reader. The obvious place for a PDF reader is
+# `cdfc.qualify`, which is a VERDICT ROOT, and nothing in `BANNED_IN_VERDICT` would have caught it
+# -- a denylist only refuses what somebody remembered to write down. These three tests are the
+# allowlist: undeclared is refused, the list is not vacuous, and the guard flips.
+
+
+def test_nc__A04c_no_undeclared_third_party_in_the_verdict_closure() -> None:
+    """The verdict closure's third-party imports ARE the declared runtime set."""
+    from negative.importgraph import third_party_in
+
+    closure: set[str] = set()
+    for root in VERDICT_ROOTS:
+        closure |= set(import_closure(root, src=SRC))
+    undeclared = third_party_in(frozenset(closure))
+    assert not undeclared, (
+        f"{len(undeclared)} undeclared third-party package(s) in the verdict closure: "
+        f"{list(undeclared)}. The runtime closure is deliberately tiny and widening it is an "
+        f"architecture decision, not a pip install. Add a row to RUNTIME_THIRD_PARTY -- with the "
+        f"reason -- or take the import out."
+    )
+
+
+def test_nc__A04c_the_allowlist_is_not_vacuous() -> None:
+    """Every allowed package is ACTUALLY reachable. An allowlist of ghosts refuses nothing.
+
+    This is the `count is not a reading` rule applied to a gate's own table: a row nobody reaches
+    is a row that could name anything, and the gate would still be green.
+    """
+    from negative.importgraph import RUNTIME_THIRD_PARTY
+
+    closure: set[str] = set()
+    for root in VERDICT_ROOTS:
+        closure |= set(import_closure(root, src=SRC))
+    tops = {m.split(".")[0] for m in closure}
+    unreached = sorted(RUNTIME_THIRD_PARTY - tops)
+    assert not unreached, (
+        f"RUNTIME_THIRD_PARTY allows {unreached}, which no verdict root actually imports. "
+        f"Remove the row: an allowlist entry that nothing reaches is not a permission, it is an "
+        f"unexamined claim."
+    )
+
+
+def test_nc__A04c_a_planted_pdf_import_is_caught(tmp_path: Path) -> None:
+    """THE GUARD. Plant `import docling` in a verdict root and the allowlist must go red.
+
+    Written because B3 is exactly the change that would have planted it for real.
+    """
+    from negative.importgraph import third_party_in
+
+    src = tmp_path / "src"
+    pkg = src / "cdfc" / "qualify"
+    pkg.mkdir(parents=True)
+    (src / "cdfc" / "__init__.py").write_text("")
+    (pkg / "__init__.py").write_text("from cdfc.qualify import textsource\n")
+    (pkg / "textsource.py").write_text("import docling\nimport lxml.etree\n")
+
+    closure = import_closure("cdfc.qualify", src=src)
+    undeclared = third_party_in(closure)
+    assert "docling" in undeclared, (
+        "a planted `import docling` in a verdict root was NOT reported undeclared; the allowlist "
+        "does not bite and every green run of it means nothing."
+    )
+    assert "lxml" not in undeclared, "lxml is declared and must not be reported"

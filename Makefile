@@ -307,6 +307,19 @@ e2e:  ## run the product path across all three ingress formats and three regulat
 demo-fill:  ## B1 — fill the regulator's blank and prove nothing else changed
 	$(PY) tools/demo_fill.py
 
+# The BUILD-TIME interpreter. Deliberately not $(PY): docling must not be in the runtime venv.
+PDF_PY ?= /tmp/arch-scratch/.venv-probe/bin/python
+
+.PHONY: demo-pdf
+demo-pdf:  ## B3 — a PDF is addressable, and its disputed regions refuse
+	$(PY) tools/demo_pdf.py
+
+.PHONY: pin-pdf
+pin-pdf:  ## B3 — BUILD TIME ONLY. Needs docling+pdfplumber; not in the runtime venv.
+	$(PDF_PY) tools/pdf_ingest.py corpus/regulators/fincen_boir_instructions.pdf \
+	  corpus/instruments/source-fincen-boir-instructions.text.json \
+	  --id source-fincen-boir-instructions --kind SOURCE --pin
+
 .PHONY: demo-fuse
 demo-fuse:  ## B2 — two documents, one run, one return
 	$(PY) tools/demo_fuse.py

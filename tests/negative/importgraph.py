@@ -36,6 +36,7 @@ from __future__ import annotations
 
 import ast
 from pathlib import Path
+import sys
 from typing import Final
 
 # The verdict roots. `cdfc.api` is DELIBERATELY ABSENT and that is a decision, not an oversight:
@@ -66,6 +67,42 @@ BANNED_IN_VERDICT: Final[frozenset[str]] = frozenset({
     "httpx", "requests", "aiohttp", "urllib.request", "urllib3", "http.client", "socket",
     "cdfc.model",
 })
+
+
+# THE POSITIVE FORM OF THE SAME RULE, added at B3 on 20 Aug 2026.
+#
+# `BANNED_IN_VERDICT` above is a DENYLIST, and its own comment says why that shape is weak: an
+# enumeration is a list somebody has to remember to extend, and this project has been bitten by
+# exactly that four times. B3 walked into the fifth instance. It adds `docling` as a build-time PDF
+# reader, and the natural place to put a PDF reader is `cdfc.qualify` -- which is a VERDICT ROOT.
+# Nothing in the denylist would have stopped it, because nobody had written "docling" down.
+#
+# So the rule is inverted. `CLAUDE.md` already asserts *"the runtime closure is deliberately
+# tiny"*; this makes that a gate instead of a sentence. Anything not on this list -- docling,
+# torch, pdfplumber, a package that does not exist yet -- is refused BY DEFAULT.
+#
+# THE LIST WAS MEASURED, NOT COPIED FROM THE PROSE. `CLAUDE.md` named three; the closure holds
+# six. `z3` and `yaml` are load-bearing and were simply missing from the description, which is the
+# defect this file exists to make impossible: a claim about the import graph that the import graph
+# does not support. The alignment file was corrected to match the tree, not the other way round.
+RUNTIME_THIRD_PARTY: Final[frozenset[str]] = frozenset({
+    "celpy",     # cel-python. THE predicate evaluator; a regulator's rule is CEL or it is nothing
+    "lark",      # celpy's parser generator, transitive and unavoidable
+    "lxml",      # XML that is parsed rather than pattern-matched; the whole xmlsafe discipline
+    "openpyxl",  # READER only -- ci/no-openpyxl-writer.sh is the gate on the other half
+    "yaml",      # the predicate/obligation authoring format, read by cdfc.predicates.loader
+    "z3",        # SMT. cdfc.qualify.g3_degeneracy decides degeneracy by PROOF, not by sampling
+})
+
+
+def third_party_in(closure: frozenset[str]) -> tuple[str, ...]:
+    """Top-level distributions in `closure` that are neither stdlib, nor `cdfc`, nor allowed.
+
+    Returned sorted. A non-empty result means somebody widened the runtime closure, which
+    `CLAUDE.md` calls an architecture decision rather than a `pip install`.
+    """
+    tops = {m.split(".")[0] for m in closure}
+    return tuple(sorted(tops - sys.stdlib_module_names - {"cdfc"} - RUNTIME_THIRD_PARTY))
 
 
 class DynamicImportUnresolvable(RuntimeError):

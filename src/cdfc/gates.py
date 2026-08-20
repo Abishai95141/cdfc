@@ -37,7 +37,15 @@ VALID_LIVENESS = frozenset({"LIVE", "PENDING"})
 # that measurement produced. Labelling them `A4` would date them to a phase that has not started;
 # labelling them `A3` would backdate them to one that had already closed. Argument in
 # docs/GATE-CHANGES.md, 20 Aug 2026.
-PHASE_RE = re.compile(r"^(?:P(?:[0-9]|1[0-5])|A(?:[0-5]|1c)|N[1-9])$")
+# THREE sequences now, not two. `P0`-`P15` are the build phases, `A0`-`A5` plus `A1c` the ANCHOR
+# architecture phases, and `B1`-`B4` the BUILD-B sequence in `docs/BUILD-B.md`. B3 was the first
+# BUILD-B phase to register a gate and found this refusing its own phase name.
+#
+# BOUNDED TO FOUR, deliberately. `B[0-9]` would admit a phase that does not exist, and a widened
+# check that admits anything is not a check --
+# `test_contract__registry_rejects_a_phase_outside_both_sequences` pins what each widening still
+# refuses, and it was extended rather than relaxed.
+PHASE_RE = re.compile(r"^(?:P(?:[0-9]|1[0-5])|A(?:[0-5]|1c)|N[1-9]|B[1-4])$")
 
 
 class RegistryError(ValueError):

@@ -447,3 +447,5 @@ because a thirty-second failure gets fixed and a twenty-minute one gets skipped.
 | 129 | pytest | `NC-DIV02` — a trailing-marker division is anchored at its LINE, not at the number | N1 | N1 | `AnchorAtMarkerNotLine`: `div1_0008` heading came out `'8'`, observed red 20 Aug 2026 | LIVE |
 | 130 | pytest | `NC-DIV03` — an unstable chain position is refused, never resolved by coin-toss | N1 | N1 | `AcceptUnstableChain`: both maximum chains admitted, observed red 20 Aug 2026 | LIVE |
 | 131 | pytest | `NC-DIV04` — doubled letter markers are a drafting sequence, not a base-26 numeral | N1 | N1 | `DoubledLetterAsBase26`: 336 false `ordinal_skipped` rows, observed red 20 Aug 2026 | LIVE |
+| 132 | pytest | `test_nc__A04c_no_undeclared_third_party_in_the_verdict_closure` — the verdict closure's third-party imports ARE the declared runtime set | B3 | B3 | `UndeclaredThirdPartyInVerdictRoot`: a planted `import docling` in `qualify/textsource.py` | LIVE |
+| 133 | pytest | `test_nc__A04c_the_allowlist_is_not_vacuous` — an allowlist of ghosts refuses nothing | B3 | B3 | `AllowlistGhostRow`: `torch` added to RUNTIME_THIRD_PARTY, reached by nothing | LIVE |

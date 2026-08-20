@@ -491,3 +491,65 @@ the check working on a broken pattern rather than on a broken record, and both w
 
 **What does NOT change:** `cdfc.model` stays in `BANNED_IN_VERDICT`; `test_nc__A04a` still walks
 the closure; a proposal is data and the five gates still decide.
+
+---
+
+## B3, 20 Aug 2026 — the import rule gets its POSITIVE form, and the licence gate gets a second door
+
+**What changed.** Two gates, for one reason: B3 introduces `docling`, and both existing gates
+would have watched the wrong door.
+
+### 1. `RUNTIME_THIRD_PARTY` — an allowlist, beside the denylist
+
+`BANNED_IN_VERDICT` refuses `anthropic`, `openai`, `httpx`, `cdfc.model` and eleven others. Its own
+comment says why that shape is weak: *an enumeration is a list somebody has to remember to extend,
+and this project has been bitten by exactly that four times.*
+
+**B3 walked into the fifth.** It adds a PDF reader. The obvious home for a PDF reader is
+`src/cdfc/qualify/textsource.py` — that is where the two-party corroboration lives, it is the file
+that already knows what an extraction is, and it is a **VERDICT ROOT**. Nothing on the denylist
+says `docling`, so the import would have been admitted and the "tiny runtime closure" claim would
+have become false silently, in the same commit that published a measurement resting on it.
+
+So the rule is inverted: the verdict closure's third-party imports must be a **subset** of a
+declared set. `docling`, `torch`, `pdfplumber` and every package nobody has thought of yet are
+refused **by default**.
+
+**The list was MEASURED, and the measurement corrected the alignment file.** `CLAUDE.md` named
+three packages — `lxml`, `cel-python`, `openpyxl`. Walking the graph found **six**: `celpy`,
+`lark`, `lxml`, `openpyxl`, `yaml`, `z3`. `z3` is an SMT solver reached through
+`cdfc.qualify.g3_degeneracy`, which decides degeneracy by proof rather than by sampling, and
+`yaml` is the predicate authoring format. Both were load-bearing and undescribed. **`CLAUDE.md`
+was corrected to match the tree; the allowlist was not trimmed to match `CLAUDE.md`.**
+
+The second gate exists because an allowlist of ghosts refuses nothing: every allowed package must
+be **actually reachable** from a verdict root, or the row comes out.
+
+### 2. `ci/no-denied-build-tool.sh` — every declaring file, not one filename
+
+The gate read `tools/pin_statute.py` **by name**. B3 adds `tools/pdf_ingest.py`, which declares its
+own `PARTIES`. A gate hard-coded to one filename would have watched the first door with the second
+standing open — which is, exactly, the failure this gate was written for: *a denylisted licence
+entering through a door the gate does not watch.* It now scans every `PARTIES` tuple under
+`tools/`, and a tree where **nothing** declares any is itself a failure, because that is what a
+renamed constant looks like from here.
+
+It also learned **PEP 639**: modern wheels leave the legacy `License` field empty and declare
+`License-Expression`. `docling` is the live instance — it declares `MIT` there and nothing in the
+old field. Reading only the legacy field would have reported *"declares no licence"* about an
+unambiguously MIT package, and a gate that fails for the wrong reason is a gate somebody switches
+off.
+
+**The widened gate went red on its first run, and the defect was mine.** Supporting
+`PARTIES: Final[...] = (...)` needed a regex over the annotation, and `[^=]*` **matches newlines**
+— so it ran past the real declaration and captured a later tuple in the same file, reading
+`pin_statute.py`'s parties as `("pymupdf", "pypdf")` and refusing an AGPL arm that file explicitly
+excludes. Constrained to `[^=\n]*`.
+
+**What does NOT change.** `unify_quotes` stays in `REFUSED_TRANSFORMATIONS`. B3 measured that
+**102 of 115** disputed units on the FinCEN instrument are docling folding `'` to `'`, and folding
+them back would raise the addressable fraction from 286/401 to roughly 388/401 — at the cost of
+making a homoglyph substitution unlocatable by `test_g0__verbatim_quote_required`, the gate that
+exists to catch it. That is the trade this repository refused for dashes at P7. It is refused
+again, the cause is attributed in `docs/measurements/B3-pdf-ingress.md`, and the units stay
+DISPUTED.

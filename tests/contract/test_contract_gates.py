@@ -77,11 +77,13 @@ ADDED_LIVE_AT_STALE_CLAIM = {127}
 # breaks was written twice and `_select` consulted the other copy; the second copy is gone.
 # Argument in docs/GATE-CHANGES.md.
 ADDED_LIVE_AT_N1_REPIN = {128, 129, 130, 131}
+ADDED_LIVE_AT_B3 = {132, 133}   # docs/GATE-CHANGES.md, 20 Aug 2026
+
 LIVE_EXPECTED = (LIVE_AT_P0 | ADDED_LIVE_AT_P4 | ADDED_LIVE_AT_P5 | ADDED_LIVE_AT_P6
                  | ADDED_LIVE_AT_P7 | ADDED_LIVE_AT_P8 | ADDED_LIVE_AT_P9
                  | ADDED_LIVE_AT_P10 | ADDED_LIVE_AT_P11 | ADDED_LIVE_AT_P12
                  | ADDED_LIVE_AT_P13 | ADDED_LIVE_AT_P14 | ADDED_LIVE_AT_P14B
-                 | ADDED_LIVE_AT_P13B0 | ADDED_LIVE_AT_A1_AUDIT
+                 | ADDED_LIVE_AT_P13B0 | ADDED_LIVE_AT_A1_AUDIT | ADDED_LIVE_AT_B3
                  | ADDED_LIVE_AT_STALE_CLAIM | ADDED_LIVE_AT_N1_REPIN
                  | PROMOTED_AT_P6)
 PENDING_AT_P0 = {14, 15, 16}
@@ -174,7 +176,10 @@ def test_contract__registry_rejects_a_phase_outside_both_sequences(tmp_path: Pat
     anything is not a check, so this pins what it still refuses."""
     from cdfc.gates import PHASE_RE
 
-    for good in ("P0", "P15", "A0", "A1", "A1c", "A5"):
+    for good in ("P0", "P15", "A0", "A1", "A1c", "A5", "B1", "B4"):
         assert PHASE_RE.match(good), f"{good} is a real phase and must be admitted"
-    for bad in ("P16", "A6", "A2c", "Q1", "", "P", "A", "P1x", "phase1", "A1C"):
+    # B0 and B5 are refused ON PURPOSE: docs/BUILD-B.md declares exactly four phases, and an
+    # admitted phase that does not exist is how a gate comes to name a subject nobody built.
+    for bad in ("P16", "A6", "A2c", "Q1", "", "P", "A", "P1x", "phase1", "A1C",
+                "B0", "B5", "B10", "B", "b1"):
         assert not PHASE_RE.match(bad), f"{bad} is not a phase and must be refused"

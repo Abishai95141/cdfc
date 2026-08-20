@@ -65,10 +65,17 @@ LAYER 5  MIXED          precedence in PYTHON before any engine; then chaining
 **Zero model calls is a property of the import graph**, not a promise: `cdfc.pathm` and
 `cdfc.evidence` are `VERDICT_ROOTS` in `tests/negative/importgraph.py`.
 
-**The runtime closure is deliberately tiny** — `lxml`, `cel-python`, `openpyxl` (reader only).
+**The runtime closure is deliberately tiny, and it is now MEASURED rather than described** —
+`celpy`, `lark`, `lxml`, `openpyxl`, `yaml`, `z3`. That list is
+`tests/negative/importgraph.RUNTIME_THIRD_PARTY` and anything absent from it is refused by
+default. It says six because the closure holds six: this paragraph said three until B3 walked the
+graph, and `z3` (SMT, via `cdfc.qualify.g3_degeneracy`) and `yaml` (the predicate format) had
+been load-bearing and undescribed the whole time.
+
 Docling, LangExtract, networkx, rdflib and **splink** are build- or measurement-time; they produce
 pinned artefacts and never join the closure of code that issues a verdict. Changing that is an
-architecture decision, not a `pip install`.
+architecture decision, not a `pip install` — and now it is a decision you cannot take by accident,
+because the allowlist goes red first.
 
 ## 5. The claim, and what it is not
 
