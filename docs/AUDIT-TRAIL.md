@@ -108,3 +108,4 @@ citation, an unlogged artefact, and an empty trail are each planted and observed
 | 2026-08-20 | MEASUREMENT | A1c: structural correspondence aligns 3,747 of 3,747 CORRECTLY across a row insertion, where a name-based align is wrong on 1,451 of 3,544 | `src/cdfc/correspond/align.py` |
 | 2026-08-20 | DEFECT | the aligner failed to align the blank to ITSELF — rows carrying no text had no signature and never entered the alignment; caught by the positive control | `src/cdfc/correspond/align.py` |
 | 2026-08-20 | DECISION | correspondence is STRUCTURAL, not name-based: rows align as sequences by content signature and cells follow, because only 132 of 3,747 fields carry a label | `src/cdfc/correspond/align.py` |
+| 2026-08-20 | CORRECTION | I reported A1c complete; it was scoped as THREE uses and one is built. Uses 2-3 are where Splink and Valentine belong, and N4 has not been run | `docs/PLAN.md` |

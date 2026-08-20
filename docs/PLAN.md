@@ -366,6 +366,21 @@ is trusted. **Scored against Valentine** so the number is not self-graded. **Exi
 `row-inserted__portfolio-r7.xlsx` is checked rather than refused, and a negative control proves a
 mis-aligned pair is REFUSED rather than scored.
 
+> **STATUS 20 Aug 2026 — USE 1 OF 3 IS BUILT, and calling A1c "complete" was wrong.**
+>
+> `src/cdfc/correspond/align.py` does **filing ↔ blank**: 3,747 of 3,747 aligned and 3,747 of 3,747
+> CORRECT across a row insertion, where a name-based align is wrong on 1,451 of 3,544. Ambiguity is
+> refused with its reason. It uses a longest-common-subsequence over row signatures and **no
+> Splink**, which is the right tool for THAT use — two revisions of the same form sharing one
+> address space is a sequence-edit problem, not a probabilistic linkage one.
+>
+> **Uses 2 and 3 are NOT built, and they are where the planned stack belongs.** Aligning a source
+> column to a template field is schema matching (Valentine's benchmark). Aligning a record to a
+> record across documents with no shared address space is Fellegi-Sunter (Splink). Neither is
+> written, and **`N4` — score the correspondence against Valentine, judged by someone who did not
+> write it — has not been run**, so the one number that exists is self-graded against a
+> transformation whose ground truth I constructed.
+
 ### A2 — PATH M AND RULE COVERAGE
 The `with {…}` context compiler, four host functions, rules `ADMITTED_BY_PUBLISHER`, our own
 Datalog chaining for conditional obligations, and a rule-coverage declaration.
@@ -459,7 +474,7 @@ number it was written against was wrong. `(141, 141)` entries and `(230, 230)` g
 | **N1 · re-pinning blast radius** | when the instrument is re-extracted with layout, how many offsets, spans, `text_hash`es and committed envelopes move, and is there a window where nothing reproduces? | 2 d, **gates A4** |
 | **N2 · the labelling rule, then the split** | **RUN 20 Aug 2026.** Pinned by fields-per-label (1.2 vs 4.8); reading all 125 labels found 351 placeholders and 12 instruction texts. **132 labelled, 124 / 8** | done |
 | **N3 · the negation negative control** | every engine we adopt must PROVE it honours negation and comparison before it adjudicates | 0.5 d, reusable |
-| **N4 · correspondence vs Valentine** | does A1c beat the published baselines, judged by somebody who did not write it? | 3 d, inside A1c |
+| **N4 · correspondence vs Valentine** | **NOT RUN.** A1c use 1 is built and its only number is self-graded. This is the arm that makes it external | 3 d, gates A1c uses 2-3 |
 | **N5 · the persistent-graph decision** | **RUN 20 Aug 2026 — `D-A3-01`.** Re-derivation measured at 0.41 s / 0.63 s and proven a deterministic fold; artefacts persist, the graph does not; Cognee rejected | ~0.5 d |
 
 ---
