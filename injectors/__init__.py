@@ -3457,3 +3457,88 @@ class LeftSplitOnCell(Injector):
 
 ALL_INJECTORS = ALL_INJECTORS + (LeftSplitOnCell,)
 BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+PROVISIONS = REPO_ROOT / "src" / "cdfc" / "qualify" / "provisions.py"
+
+
+class _ProvisionsEdit(Injector):
+    """Base for the N1 division-map controls. Every one of these was observed red for real.
+
+    **Each ANCHOR is asserted before the substitution.** An injector whose anchor has drifted
+    plants nothing, the guard stays green, and the sweep records the control as caught having
+    broken NOTHING — the shape this repository has now hit twice in its own instruments.
+    """
+
+    ANCHOR: str = ""
+    PLANT: str = ""
+
+    def __init__(self) -> None:
+        super().__init__(name=type(self).__name__, touches=[PROVISIONS])
+
+    def apply(self) -> None:
+        src = PROVISIONS.read_text(encoding="utf-8")
+        if self.ANCHOR not in src:
+            raise AssertionError(
+                f"{PROVISIONS}: anchor {self.ANCHOR!r} is gone, so {type(self).__name__} would "
+                "plant nothing and its guards would pass against an UNBROKEN tree."
+            )
+        PROVISIONS.write_text(src.replace(self.ANCHOR, self.PLANT, 1), encoding="utf-8")
+
+
+class LevelByChainLength(_ProvisionsEdit):
+    """The level criterion falls back to raw chain length instead of purity x coverage.
+
+    OBSERVED, not hypothesised. Under chain length the lettered lists inside the schedules score
+    19 against the six schedule headings' 6, so `ORDINAL_WORD` loses, all six schedules are never
+    recovered, and `div1_0148` swallows 181 units — the whole schedule set — while the map still
+    reports a plausible 147 top-level divisions.
+    """
+
+    ANCHOR = "return a[0] * a[2] * b[1] * b[3] > b[0] * b[2] * a[1] * a[3]"
+    PLANT = "return a[0] > b[0]"
+
+
+class AnchorAtMarkerNotLine(_ProvisionsEdit):
+    """A trailing-marker division starts at the number instead of at the line carrying it.
+
+    OBSERVED. `div1_0008` came out with `heading='8'` and a span beginning after `'Net worth
+    requirements '`, so the division excluded its own heading and every quote spanning it failed
+    to locate. The count of divisions is UNCHANGED at 153, which is why the guard pins the
+    heading's CONTENTS and not the total.
+    """
+
+    ANCHOR = "        starts_at_line=True,\n"
+    PLANT = "        starts_at_line=False,\n"
+
+
+class AcceptUnstableChain(_ProvisionsEdit):
+    """Stability is dropped: whichever longest chain the algorithm happened to build is admitted.
+
+    A tie between two equally good readings of a position stops being a refusal and becomes a
+    coin-toss, which is how a system comes to address the wrong region confidently. This is the
+    same rule `cdfc.correspond` applies to two alignments of similar quality.
+    """
+
+    ANCHOR = "    at_depth = Counter(ending[j] for j in on_some)\n    return longest, [j for j in on_some if at_depth[ending[j]] == 1]"
+    PLANT = "    return longest, list(on_some)"
+
+
+class DoubledLetterAsBase26(_ProvisionsEdit):
+    """`(aa) (bb) (cc)` decode as 27, 54, 81 again — the spreadsheet convention, not drafting's.
+
+    OBSERVED. Regulation 2's definitions then appear to skip eighty ordinals and the map publishes
+    336 `ordinal_skipped` rows for numbers the document never wrote.
+    """
+
+    ANCHOR = "    if len(set(t)) == 1:\n        return 26 * (len(t) - 1) + (ord(t[0]) - 96)\n    return None"
+    PLANT = "    n = 0\n    for ch in t:\n        n = n * 26 + (ord(ch) - 96)\n    return n or None"
+
+
+ALL_INJECTORS = ALL_INJECTORS + (
+    LevelByChainLength,
+    AnchorAtMarkerNotLine,
+    AcceptUnstableChain,
+    DoubledLetterAsBase26,
+)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}

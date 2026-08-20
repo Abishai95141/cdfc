@@ -70,12 +70,19 @@ ADDED_LIVE_AT_A1_AUDIT = {126}
 # rendered into the product by `cdfc.surface.openitems`. They were fixed by hand and nothing
 # stopped them returning. Argument in docs/GATE-CHANGES.md.
 ADDED_LIVE_AT_STALE_CLAIM = {127}
+# N1's re-pin, 20 Aug 2026. 128-131 guard the DIVISION MAP -- the durable eId layer that survives a
+# resegmentation, which `docs/measurements/N1-repin-blast-radius.md` measured a coordinate key does
+# not. Each was observed red under an injector reproducing a defect that was in this tree during the
+# session that wrote the module. 128 FAILED TO FLIP on its first run, because the comparison it
+# breaks was written twice and `_select` consulted the other copy; the second copy is gone.
+# Argument in docs/GATE-CHANGES.md.
+ADDED_LIVE_AT_N1_REPIN = {128, 129, 130, 131}
 LIVE_EXPECTED = (LIVE_AT_P0 | ADDED_LIVE_AT_P4 | ADDED_LIVE_AT_P5 | ADDED_LIVE_AT_P6
                  | ADDED_LIVE_AT_P7 | ADDED_LIVE_AT_P8 | ADDED_LIVE_AT_P9
                  | ADDED_LIVE_AT_P10 | ADDED_LIVE_AT_P11 | ADDED_LIVE_AT_P12
                  | ADDED_LIVE_AT_P13 | ADDED_LIVE_AT_P14 | ADDED_LIVE_AT_P14B
                  | ADDED_LIVE_AT_P13B0 | ADDED_LIVE_AT_A1_AUDIT
-                 | ADDED_LIVE_AT_STALE_CLAIM
+                 | ADDED_LIVE_AT_STALE_CLAIM | ADDED_LIVE_AT_N1_REPIN
                  | PROMOTED_AT_P6)
 PENDING_AT_P0 = {14, 15, 16}
 # The PENDING set SHRINKS as subjects ship, and a row may only leave it into LIVE — never the

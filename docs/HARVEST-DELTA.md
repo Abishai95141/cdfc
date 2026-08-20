@@ -195,3 +195,41 @@ entry that changed nothing and dropped them would leave the harvest unpinned:**
 - `test_golden__harvest_count__fme` -> **348**
 - `test_golden__cross_workbook_harvest_distribution` -> **571**
 - `test_golden__zero_formula_template__edr1` -> **1**
+
+---
+
+## 2026-08-20 — the `N1` re-pin: a division layer joins the digest, and nothing else moves
+
+`tools/repin_divisions.py` added the durable division addressing layer of
+`src/cdfc/qualify/provisions.py` to all ten pinned instruments. **Every instrument digest moved.**
+No addressable text did.
+
+| instrument | text sha256 | what changed |
+|---|---|---|
+| `statute-fm-regulations-2025` | `7e4321e8bb9e…` → `5e4a4310c2a1…` | 617 divisions (153 top level), 58 refused |
+| `template-7d9a1960` (FME) | `01b3962c7eef…` → `dacd124a712e…` | 0 divisions — a workbook has no numbered prose |
+| the other eight templates | all moved | 0 divisions each |
+
+**The digest moved because the payload grew, not because the text did**, and that distinction is now
+mechanised rather than asserted:
+
+* `tools/repin_divisions.py` REFUSES to write if the text or any unit changed. Both were checked
+  against the pre-migration file for all ten instruments and both were identical.
+* Independently re-derived afterwards on the statute: text identical at 197,767 characters, all
+  1,218 units identical, all 28 disputed regions identical, and a digest over text-plus-units
+  unchanged at `6c0b2b8df8baeb4a…`.
+* `tests/golden/test_textsource_pins.py` now pins `ADDRESSABLE_SHA256` — text and units and nothing
+  derived — SEPARATELY from the whole-instrument digest. One pin could not tell *"a span is stale"*
+  from *"a derived layer was added"*, and it reported the first when the second had happened.
+
+**This is the one number `N1` predicted wrong, in the favourable direction.**
+`docs/measurements/N1-repin-blast-radius.md` concluded *"a re-pin invalidates 100% of citations made
+against the current corpus"* — measured on a RESEGMENTATION arm, and true of one. This re-pin is not
+a resegmentation, because the provision numbers turned out to be recoverable from the text the two
+parties had already corroborated. **0 of 11 provision citations were invalidated.** The counts
+`tests/golden/test_harvest_count.py` reads from the last entry of this ledger are unchanged and are
+re-stated so the harvest stays pinned:
+
+- `test_golden__harvest_count__fme` -> **348**
+- `test_golden__cross_workbook_harvest_distribution` -> **571**
+- `test_golden__zero_formula_template__edr1` -> **1**

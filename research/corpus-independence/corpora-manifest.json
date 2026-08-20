@@ -1,0 +1,82 @@
+[
+ {
+  "corpus": "ecfr_17_275",
+  "source_file": "ecfr_17_275.xml",
+  "source_sha256": "a43bd6c230a09ea9b2eaa4b1853fd655f34238af359ae32f0edbb75dade47db9",
+  "chars": 221309,
+  "lines": 1189,
+  "text_sha256": "1208018393df8225f65e7994fec61db008607b838781cf8ab364519a9bbec1f6"
+ },
+ {
+  "corpus": "gdpr",
+  "source_file": "gdpr.html",
+  "source_sha256": "09be290fb0b59b82ef07bcf3b61f704c9839086396bd471a6536aa046cb16ccf",
+  "chars": 350673,
+  "lines": 1825,
+  "text_sha256": "ec93f1208e900f11f8d1c24f281287276c218d60f9fa374ae260e00f0c67a092"
+ },
+ {
+  "corpus": "gutenberg_prideprejudice",
+  "source_file": "gutenberg_prideprejudice.txt",
+  "source_sha256": "74f2665d6e6925fc2c17dec644bec9e87df478a0f1836822125e8acbb3777806",
+  "chars": 737569,
+  "lines": 11882,
+  "text_sha256": "0ee95a74358f4ae9df38240f9182758ecfa66b76d0bb35f485616d8acdb7e3fa"
+ },
+ {
+  "corpus": "india_const",
+  "source_file": "india_const.pdf",
+  "source_sha256": "a2fb85e909fb9159057d74999a5fd0d25b0a0004e51937ad65382c661c403ee7",
+  "chars": 37295,
+  "lines": 2737,
+  "text_sha256": "c50db84ba46df63a528ae2da137cb87dc23725fdea8e4e309e3dd20b6aec495d"
+ },
+ {
+  "corpus": "rbi_circular",
+  "source_file": "rbi_circular.html",
+  "source_sha256": "ede953c5364617de4ac74ac20cbb961b19b7e2ec3ed99906bbcba5ba4aad610e",
+  "chars": 4579,
+  "lines": 184,
+  "text_sha256": "9dc6a45cb600813d532e4ccbbb26a69d29a35f1c908b0fc908cc295774199b22"
+ },
+ {
+  "corpus": "rfc2616",
+  "source_file": "rfc2616.txt",
+  "source_sha256": "10211d2885196b97b1c78e1672f3f68ae97c294596ef2b7fd890cbd30a3427bf",
+  "chars": 374579,
+  "lines": 6911,
+  "text_sha256": "1f94a92cb278d6934da25feac82559704c62c4e3926e9cb4a2b9ed7176dfdf7b"
+ },
+ {
+  "corpus": "rfc5321",
+  "source_file": "rfc5321.txt",
+  "source_sha256": "7d560eddff1b213c17d4e1e5f95005728b2f05bc2b3947f0fcc91717c6707634",
+  "chars": 200765,
+  "lines": 3680,
+  "text_sha256": "45991a6896217dddd394842eeb0e1e3264dd3f28742e07e006250f3e4029539a"
+ },
+ {
+  "corpus": "rfc8259",
+  "source_file": "rfc8259.txt",
+  "source_sha256": "61a5378f4255c720beb2a4b4a63b29540147c140f36988bf086291989b4cd2d7",
+  "chars": 23641,
+  "lines": 520,
+  "text_sha256": "121b67c49e0ba19f7f902f1e494b34d99d1140dcb86941c99fe0d9f6f1d03ee4"
+ },
+ {
+  "corpus": "us_bill_hr3684",
+  "source_file": "us_bill_hr3684.htm",
+  "source_sha256": "b229b8922a4a232c0621788727e3f73139bf39f89900827e79061c0d12e423ec",
+  "chars": 2780366,
+  "lines": 54931,
+  "text_sha256": "129c877b023c6df66bd6c3ae72a88cd882bd022599f1dbe75e5cf7b902aee663"
+ },
+ {
+  "corpus": "w3c_html52",
+  "source_file": "w3c_html52.html",
+  "source_sha256": "c5d730fdc3fd10408d8baed58f58a4f0a6e1fa4c16e435b60425aab244892ad1",
+  "chars": 2245816,
+  "lines": 45794,
+  "text_sha256": "03252fe29327ba364804eeb1d08e22259a9608428521df541d557ab699567ef8"
+ }
+]

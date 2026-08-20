@@ -37,6 +37,7 @@ from pathlib import Path
 from typing import Any, Final
 
 from cdfc.canon import canonical_json, digest
+from cdfc.qualify.provisions import recover as recover_divisions
 from cdfc.qualify.textsource import (
     Corroboration,
     DisputedRegion,
@@ -44,6 +45,7 @@ from cdfc.qualify.textsource import (
     InstrumentText,
     ResolvedUnit,
     TextSourceError,
+    division_payload,
 )
 
 CORPUS: Final[Path] = Path("corpus/instruments")
@@ -118,6 +120,27 @@ def serialise(it: InstrumentText, *, kind: str, source_name: str, source_sha256:
             }
             for m in it.manifests
         ],
+        # PUBLISHED FOR READING, RE-DERIVED FOR TRUST. `deserialise` recomputes the map from the
+        # text rather than loading this, and refuses if the two disagree -- so an edited division
+        # block cannot re-point an eId at a region the instrument does not contain.
+        "divisions": [
+            {
+                "eid": d.eid, "run": d.run, "ordinal": d.ordinal, "heading": d.heading,
+                "span": list(d.span), "unit_keys": list(d.unit_keys),
+                "recovered_by": d.recovered_by, "depth": d.depth,
+                "n_agreed": d.n_agreed, "n_single_party": d.n_single_party,
+                "n_disputed": d.n_disputed,
+            }
+            for d in it.divisions.divisions
+        ],
+        "divisions_refused": [list(r) for r in it.divisions.refused],
+        "divisions_selections": [
+            {"run": x.run, "depth": x.depth, "shapes": list(x.shapes),
+             "chain_length": x.chain_length, "score": list(x.score), "runner_up": x.runner_up,
+             "runner_up_score": list(x.runner_up_score)}
+            for x in it.divisions.selections
+        ],
+        "units_outside_any_division": it.divisions.units_outside_any_division,
     }
     return canonical_json(payload)
 
@@ -156,6 +179,11 @@ def deserialise(blob: bytes) -> tuple[InstrumentText, str, str, str]:
         ),
         transformations=tuple((a, b) for a, b in obj["transformations"]),
         refused_transformations=tuple((a, b) for a, b in obj["refused_transformations"]),
+        divisions=recover_divisions(
+            [(u["key"], u["page"], (u["span"][0], u["span"][1]), u["corroboration"])
+             for u in obj["units"]],
+            obj["text"],
+        ),
         sha256=obj["sha256"],
     )
     recomputed = digest({
@@ -172,6 +200,7 @@ def deserialise(blob: bytes) -> tuple[InstrumentText, str, str, str]:
              list(m.exclusion_mechanisms)]
             for m in it.manifests
         ],
+        "divisions": division_payload(it.divisions),
     })
     if recomputed != it.sha256:
         raise TextSourceError(

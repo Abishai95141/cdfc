@@ -8,6 +8,13 @@ in an instrument that counted correctly and reported the wrong thing.
 Moving any number here means the addressable text moved, and **every span recorded against this
 instrument now points at different characters**. That is a regression until an entry in
 `docs/HARVEST-DELTA.md` says otherwise.
+
+**THE INSTRUMENT DIGEST AND THE ADDRESSABLE TEXT ARE PINNED SEPARATELY, and they used to be one.**
+`N1`'s re-pin added a derived DIVISION MAP to the digest payload without touching a single unit or
+span, so `sha256` moved while the addressable text was byte-identical — and a single pin cannot
+tell those apart. It reads as *"every span is stale"* when nothing is. `ADDRESSABLE_SHA256` covers
+the text and the units and NOTHING derived from them: it is the one that must never move, and it
+did not.
 """
 
 from __future__ import annotations
@@ -28,7 +35,11 @@ from cdfc.qualify.textsource import Corroboration  # noqa: E402
 FIX = REPO / "fixtures" / "prescribed"
 FME = FIX / "Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx"
 
-FME_SHA256 = "01b3962c7eef8a93055b3fb0f5fb59558131daa471a899fc1ea60bb631e67536"
+# The whole-instrument digest, which covers derived layers too. It MOVED at the N1 re-pin
+# (`01b3962c7eef…` -> `dacd124a712e…`) because `textsource.build()` now derives a division map into
+# the payload. `docs/HARVEST-DELTA.md` carries the entry; `tools/repin_divisions.py` asserts the
+# text and every unit were unchanged, and `ADDRESSABLE_SHA256` below is the pin that proves it.
+FME_SHA256 = "dacd124a712eb87ae73e7ddd96d7e53aabcb81cbe6f0eaeb8e4ecd7fdb06f957"
 FME_CHARS = 27633
 FME_COUNTS = {"AGREED": 539, "SINGLE_PARTY": 20, "DISPUTED": 0, "units_total": 559}
 
@@ -49,6 +60,25 @@ CORPUS_SINGLE = 38
 CORPUS_DISPUTED = 0
 
 
+# THE ADDRESSABLE TEXT, pinned on its own. Text plus every unit's identity, page, offsets and
+# corroboration — and nothing derived. A change here means a span into this instrument now points
+# at different characters, which is the regression the module docstring describes. A change to
+# `FME_SHA256` alone does not.
+ADDRESSABLE_SHA256 = "bf962b633585ce0420ed962f13b419eb20a002ee01b02ce8b39775bf77e22b2c"
+
+
+def _addressable_digest(it) -> str:
+    from cdfc.canon import digest
+
+    return digest({
+        "text": it.text,
+        "units": [
+            [u.key, u.page, u.corroboration.value, list(u.parties), u.external_party, *u.span]
+            for u in it.units
+        ],
+    })
+
+
 @pytest.fixture(scope="module")
 def fme():
     return emit(FME)
@@ -58,6 +88,11 @@ def test_golden__fme_instrument_digest_and_size(fme):
     assert fme.instrument_id == "template-7d9a1960"
     assert len(fme.text) == FME_CHARS
     assert fme.sha256 == FME_SHA256
+
+
+def test_golden__fme_addressable_text_did_not_move(fme):
+    """The pin that must never move. Separate from `FME_SHA256` since the N1 re-pin — see above."""
+    assert _addressable_digest(fme) == ADDRESSABLE_SHA256
 
 
 def test_golden__fme_first_median_last_unit_pinned_by_value(fme):

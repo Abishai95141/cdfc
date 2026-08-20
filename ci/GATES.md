@@ -443,3 +443,7 @@ because a thirty-second failure gets fixed and a twenty-minute one gets skipped.
 | 125 | shell | `ci/no-model-in-verdict.sh` — the stage-2 grep arm | P13 | P13 | a planted `import httpx`, observed red 16 Aug 2026 | LIVE |
 | 126 | shell | `ci/no-left-split-on-cell.sh` — a cell string is split on its LAST `!`, never its first | A1 | A1 | a planted `partition("!")` in `probes/qualify.py`, observed red 20 Aug 2026 | LIVE |
 | 127 | shell | `ci/no-stale-claim.sh` — a document describing the current tree may not carry a claim the tree falsified | A1 | A1 | an unmarked `refuses every filing` planted in `docs/OPEN-ITEMS.md`, observed red 20 Aug 2026 | LIVE |
+| 128 | pytest | `NC-DIV01` — the level criterion is purity x coverage, never raw chain length | N1 | N1 | `LevelByChainLength`: all six schedules lost, `div1_0148` back to 181 units, observed red 20 Aug 2026 | LIVE |
+| 129 | pytest | `NC-DIV02` — a trailing-marker division is anchored at its LINE, not at the number | N1 | N1 | `AnchorAtMarkerNotLine`: `div1_0008` heading came out `'8'`, observed red 20 Aug 2026 | LIVE |
+| 130 | pytest | `NC-DIV03` — an unstable chain position is refused, never resolved by coin-toss | N1 | N1 | `AcceptUnstableChain`: both maximum chains admitted, observed red 20 Aug 2026 | LIVE |
+| 131 | pytest | `NC-DIV04` — doubled letter markers are a drafting sequence, not a base-26 numeral | N1 | N1 | `DoubledLetterAsBase26`: 336 false `ordinal_skipped` rows, observed red 20 Aug 2026 | LIVE |

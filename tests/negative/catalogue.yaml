@@ -2279,3 +2279,57 @@ entries:
         flips: false
     positive_control: "tests/unit/test_evidence_layer.py::test_cell_string__only_the_last_bang_is_the_delimiter"
     status: ACTIVE
+
+  - id: NC-DIV01
+    component: qualify
+    break: "the level criterion falls back to raw chain length, so a subdivision's long list outscores a short top-level sequence and the whole sequence is never recovered"
+    measured_instance: "the six schedule headings score 6 against the lettered lists inside them at 19; all six schedules vanish and div1_0148 swallows 181 units — the entire schedule set — while the map still reports a plausible 147 top-level divisions"
+    injector: LevelByChainLength
+    guard_tests:
+      - path: "tests/negative/test_nc_div.py::test_nc__DIV01_all_six_schedules_recover"
+        flips: true
+      - path: "tests/negative/test_nc_div.py::test_nc__DIV05_positive_control_the_map_still_recovers_the_body"
+        flips: false
+    positive_control: "tests/negative/test_nc_div.py::test_nc__DIV05_positive_control_the_map_still_recovers_the_body"
+    status: ACTIVE
+
+  - id: NC-DIV02
+    component: qualify
+    break: "a trailing-marker division is anchored at the number instead of at the line carrying it, so it excludes its own heading"
+    measured_instance: "div1_0008 came out with heading '8' rather than 'Net worth requirements 8'; the DIVISION COUNT IS UNCHANGED at 153, which is why the guard pins contents"
+    injector: AnchorAtMarkerNotLine
+    guard_tests:
+      - path: "tests/negative/test_nc_div.py::test_nc__DIV02_a_trailing_marker_division_carries_its_heading"
+        flips: true
+      - path: "tests/negative/test_nc_div.py::test_nc__DIV01_all_six_schedules_recover"
+        flips: true
+      - path: "tests/negative/test_nc_div.py::test_nc__DIV05_positive_control_the_map_still_recovers_the_body"
+        flips: false
+    positive_control: "tests/negative/test_nc_div.py::test_nc__DIV05_positive_control_the_map_still_recovers_the_body"
+    status: ACTIVE
+
+  - id: NC-DIV03
+    component: qualify
+    break: "stability is dropped, so a position two equally good readings disagree about is resolved by whichever chain the algorithm happened to build instead of refused"
+    measured_instance: "over 1,5,2,6 the maximum chains are (1,5,6) and (1,2,6); 5 and 2 share a depth and neither is the document's answer"
+    injector: AcceptUnstableChain
+    guard_tests:
+      - path: "tests/negative/test_nc_div.py::test_nc__DIV03_an_unstable_position_is_refused_not_picked"
+        flips: true
+      - path: "tests/negative/test_nc_div.py::test_nc__DIV05_positive_control_the_map_still_recovers_the_body"
+        flips: false
+    positive_control: "tests/negative/test_nc_div.py::test_nc__DIV05_positive_control_the_map_still_recovers_the_body"
+    status: ACTIVE
+
+  - id: NC-DIV04
+    component: qualify
+    break: "doubled letter markers decode as a base-26 numeral rather than a drafting sequence, so a division appears to skip ordinals nothing wrote"
+    measured_instance: "(aa)(bb)(cc)(dd) read as 27,54,81,108 instead of 27,28,29,30; regulation 2's definitions then published 336 ordinal_skipped rows"
+    injector: DoubledLetterAsBase26
+    guard_tests:
+      - path: "tests/negative/test_nc_div.py::test_nc__DIV04_doubled_letters_are_drafting_not_base_26"
+        flips: true
+      - path: "tests/negative/test_nc_div.py::test_nc__DIV05_positive_control_the_map_still_recovers_the_body"
+        flips: false
+    positive_control: "tests/negative/test_nc_div.py::test_nc__DIV05_positive_control_the_map_still_recovers_the_body"
+    status: ACTIVE

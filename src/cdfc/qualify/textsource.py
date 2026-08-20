@@ -45,6 +45,7 @@ from enum import StrEnum
 from typing import Final
 
 from cdfc.canon import digest
+from cdfc.qualify.provisions import DivisionMap, recover as recover_divisions
 
 # The one character a disputed region is rendered as. It occupies a span, so any quote span
 # intersecting it can be refused with a reason rather than silently sliced.
@@ -257,9 +258,25 @@ class InstrumentText:
     manifests: tuple[ExtractionManifest, ...]
     transformations: tuple[tuple[str, str], ...]
     refused_transformations: tuple[tuple[str, str], ...]
+    divisions: DivisionMap
     sha256: str
 
     # --- addressing ---------------------------------------------------------------------
+
+    def division(self, eid: str):
+        """The division named `eid`, or `None`. THE DURABLE ADDRESS — see `qualify/provisions.py`.
+
+        A unit key is a page/sentence COORDINATE and `N1` measured what that costs: a
+        resegmentation leaves 0 of 11 citations resolving. An eId is the instrument's own
+        numbering and survives both a byte shift and a resegmentation.
+        """
+        return self.divisions.by_eid().get(eid)
+
+    def division_at(self, span: tuple[int, int]):
+        """The DEEPEST division containing `span`, or `None`. Deepest, because `8(1)` is a better
+        answer than `8` when the span is inside it and both are true."""
+        hits = [d for d in self.divisions.divisions if d.span[0] <= span[0] and span[1] <= d.span[1]]
+        return max(hits, key=lambda d: (d.depth, d.span[0]), default=None)
 
     def slice(self, span: tuple[int, int]) -> str:
         """The text at `span`, or `DisputedRegionError`. The ONLY way to read by offset."""
@@ -412,6 +429,13 @@ def build(instrument_id: str, extractions: Sequence[Extraction]) -> InstrumentTe
                 disputed_per_party[name] += 1
 
     text = UNIT_SEP.join(rendered)
+    # THE DURABLE ADDRESSING LAYER, derived from the CORROBORATED text and inside the digest.
+    # Deriving it here rather than in a build tool means a stored instrument cannot carry a
+    # division map that its own text does not produce: `deserialise` re-derives and refuses a
+    # mismatch, exactly as it does for the units.
+    divisions = recover_divisions(
+        [(u.key, u.page, u.span, u.corroboration.value) for u in resolved], text
+    )
     manifests = tuple(
         ExtractionManifest(
             extractor=e.extractor,
@@ -439,6 +463,7 @@ def build(instrument_id: str, extractions: Sequence[Extraction]) -> InstrumentTe
              list(m.exclusion_mechanisms)]
             for m in manifests
         ],
+        "divisions": division_payload(divisions),
     }
     return InstrumentText(
         instrument_id=instrument_id,
@@ -448,5 +473,28 @@ def build(instrument_id: str, extractions: Sequence[Extraction]) -> InstrumentTe
         manifests=manifests,
         transformations=TRANSFORMATIONS,
         refused_transformations=REFUSED_TRANSFORMATIONS,
+        divisions=divisions,
         sha256=digest(payload),
     )
+
+
+def division_payload(m: DivisionMap) -> dict[str, object]:
+    """The division map as digest input. ONE function, used by `build` and by `deserialise`.
+
+    Two copies of this projection is how a stored artifact comes to hash differently from the one
+    that produced it while both look right — so there is one.
+    """
+    return {
+        "divisions": [
+            [d.eid, d.run, d.ordinal, d.heading, list(d.span), list(d.unit_keys), d.recovered_by,
+             d.depth, d.n_agreed, d.n_single_party, d.n_disputed]
+            for d in m.divisions
+        ],
+        "refused": [list(r) for r in m.refused],
+        "selections": [
+            [s.run, s.depth, list(s.shapes), s.chain_length, list(s.score), s.runner_up,
+             list(s.runner_up_score)]
+            for s in m.selections
+        ],
+        "units_outside_any_division": m.units_outside_any_division,
+    }

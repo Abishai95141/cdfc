@@ -1,0 +1,481 @@
+{
+ "ifsca_gazette": {
+  "expected": "regulations 1..148, margin-numbered",
+  "rank_of_correct": 1,
+  "top1": "line_end:ARABIC|LE| ",
+  "top1_chain": 141,
+  "top5": [
+   {
+    "k": "line_end:ARABIC|LE| ",
+    "score": 86.502,
+    "chain": 141,
+    "cands": 146,
+    "variety": 0.809
+   },
+   {
+    "k": "word_before:ROMAN_UPPER|WB|chapter",
+    "score": 4.236,
+    "chain": 12,
+    "cands": 21,
+    "variety": 1.0
+   },
+   {
+    "k": "word_after:ORDINAL_WORD_EN|WA|schedule| ",
+    "score": 1.842,
+    "chain": 6,
+    "cands": 13,
+    "variety": 1.0
+   },
+   {
+    "k": "word_before:ORDINAL_WORD_EN|WB|in",
+    "score": 1.703,
+    "chain": 4,
+    "cands": 5,
+    "variety": 1.0
+   },
+   {
+    "k": "line_start:ALPHA_LOWER_SEQ|LS|(|) \u201c",
+    "score": 1.163,
+    "chain": 37,
+    "cands": 54,
+    "variety": 1.0
+   }
+  ]
+ },
+ "gdpr": {
+  "expected": "recitals (1)..(173) then Articles 1..99",
+  "rank_of_correct": 1,
+  "top1": "line_start:ARABIC|LS|(|)",
+  "top1_chain": 173,
+  "top5": [
+   {
+    "k": "line_start:ARABIC|LS|(|)",
+    "score": 65.492,
+    "chain": 173,
+    "cands": 199,
+    "variety": 1.0
+   },
+   {
+    "k": "line_end:ARABIC|LE|(",
+    "score": 52.765,
+    "chain": 173,
+    "cands": 247,
+    "variety": 1.0
+   },
+   {
+    "k": "word_before:ARABIC|WB|article",
+    "score": 13.044,
+    "chain": 99,
+    "cands": 368,
+    "variety": 1.0
+   },
+   {
+    "k": "word_before:ARABIC|WB|council",
+    "score": 11.353,
+    "chain": 15,
+    "cands": 15,
+    "variety": 1.0
+   },
+   {
+    "k": "line_end:ARABIC|LE| ( ",
+    "score": 2.127,
+    "chain": 7,
+    "cands": 7,
+    "variety": 1.0
+   }
+  ]
+ },
+ "gutenberg_prideprejudice": {
+  "expected": "CHAPTER I..LXI",
+  "rank_of_correct": 1,
+  "top1": "word_before:ROMAN_UPPER|WB|chapter",
+  "top1_chain": 61,
+  "top5": [
+   {
+    "k": "word_before:ROMAN_UPPER|WB|chapter",
+    "score": 38.416,
+    "chain": 61,
+    "cands": 89,
+    "variety": 1.0
+   },
+   {
+    "k": "word_before:ALPHA_UPPER_SEQ|WB|former.",
+    "score": 1.023,
+    "chain": 3,
+    "cands": 4,
+    "variety": 1.0
+   },
+   {
+    "k": "word_before:ALPHA_UPPER_SEQ|WB|kind.",
+    "score": 0.985,
+    "chain": 6,
+    "cands": 8,
+    "variety": 1.0
+   },
+   {
+    "k": "word_after:ALPHA_LOWER_SEQ|WA|do|",
+    "score": 0.926,
+    "chain": 3,
+    "cands": 4,
+    "variety": 1.0
+   },
+   {
+    "k": "word_before:ALPHA_UPPER_SEQ|WB|he.",
+    "score": 0.723,
+    "chain": 4,
+    "cands": 4,
+    "variety": 1.0
+   }
+  ]
+ },
+ "rfc2616": {
+  "expected": "sections 1..19 incl. 1.1 style",
+  "rank_of_correct": 2,
+  "top1": "word_before:ARABIC|WB|page",
+  "top1_chain": 176,
+  "top5": [
+   {
+    "k": "word_before:ARABIC|WB|page",
+    "score": 0.996,
+    "chain": 176,
+    "cands": 176,
+    "variety": 0.006
+   },
+   {
+    "k": "line_start:ARABIC|LS|[|] ",
+    "score": 0.841,
+    "chain": 49,
+    "cands": 49,
+    "variety": 0.959
+   },
+   {
+    "k": "word_before:ALPHA_UPPER_SEQ|WB|server",
+    "score": 0.752,
+    "chain": 6,
+    "cands": 18,
+    "variety": 1.0
+   },
+   {
+    "k": "word_before:ALPHA_UPPER_SEQ|WB|this",
+    "score": 0.704,
+    "chain": 3,
+    "cands": 3,
+    "variety": 1.0
+   },
+   {
+    "k": "word_before:ARABIC|WB|warn-code",
+    "score": 0.69,
+    "chain": 3,
+    "cands": 4,
+    "variety": 1.0
+   }
+  ]
+ },
+ "rfc5321": {
+  "expected": "sections 1..8 incl. 4.1.1 style",
+  "rank_of_correct": 276,
+  "top1": "line_end:ARABIC|LE| [",
+  "top1_chain": 13,
+  "top5": [
+   {
+    "k": "line_end:ARABIC|LE| [",
+    "score": 1.3,
+    "chain": 13,
+    "cands": 24,
+    "variety": 1.0
+   },
+   {
+    "k": "line_start:ARABIC|LS|[|] ",
+    "score": 1.235,
+    "chain": 47,
+    "cands": 48,
+    "variety": 0.979
+   },
+   {
+    "k": "word_before:ARABIC|WB|page",
+    "score": 0.994,
+    "chain": 95,
+    "cands": 95,
+    "variety": 0.011
+   },
+   {
+    "k": "word_before:ALPHA_UPPER_SEQ|WB|environment.",
+    "score": 0.793,
+    "chain": 5,
+    "cands": 6,
+    "variety": 1.0
+   },
+   {
+    "k": "word_before:ALPHA_UPPER_SEQ|WB|to",
+    "score": 0.699,
+    "chain": 7,
+    "cands": 25,
+    "variety": 1.0
+   }
+  ]
+ },
+ "rfc8259": {
+  "expected": "sections 1..15",
+  "rank_of_correct": 36,
+  "top1": "word_before:ARABIC|WB|page",
+  "top1_chain": 16,
+  "top5": [
+   {
+    "k": "word_before:ARABIC|WB|page",
+    "score": 0.947,
+    "chain": 16,
+    "cands": 16,
+    "variety": 0.062
+   },
+   {
+    "k": "word_before:ALPHA_UPPER_SEQ|WB|for",
+    "score": 0.465,
+    "chain": 3,
+    "cands": 3,
+    "variety": 1.0
+   },
+   {
+    "k": "line_end:ALPHA_UPPER_SEQ|LE|",
+    "score": 0.113,
+    "chain": 4,
+    "cands": 12,
+    "variety": 1.0
+   },
+   {
+    "k": "line_end:ARABIC|LE| . ",
+    "score": 0.086,
+    "chain": 12,
+    "cands": 25,
+    "variety": 1.0
+   },
+   {
+    "k": "word_before:ALPHA_UPPER_SEQ|WB|text.",
+    "score": 0.073,
+    "chain": 3,
+    "cands": 3,
+    "variety": 1.0
+   }
+  ]
+ },
+ "ecfr_17_275": {
+  "expected": "sections 275.0-2 .. 275.usc",
+  "rank_of_correct": 248,
+  "top1": "word_after:ARABIC|WA|an|(",
+  "top1_chain": 3,
+  "top5": [
+   {
+    "k": "word_after:ARABIC|WA|an|(",
+    "score": 1.334,
+    "chain": 3,
+    "cands": 5,
+    "variety": 1.0
+   },
+   {
+    "k": "word_before:ALPHA_UPPER_SEQ|WB|otherwise.",
+    "score": 0.984,
+    "chain": 3,
+    "cands": 3,
+    "variety": 1.0
+   },
+   {
+    "k": "word_after:ROMAN_LOWER|WA|does|(",
+    "score": 0.958,
+    "chain": 3,
+    "cands": 5,
+    "variety": 1.0
+   },
+   {
+    "k": "word_after:ROMAN_LOWER|WA|that|(",
+    "score": 0.903,
+    "chain": 3,
+    "cands": 3,
+    "variety": 1.0
+   },
+   {
+    "k": "word_after:ARABIC|WA|of|-",
+    "score": 0.819,
+    "chain": 4,
+    "cands": 8,
+    "variety": 1.0
+   }
+  ]
+ },
+ "us_bill_hr3684": {
+  "expected": "SEC. n across divisions",
+  "rank_of_correct": null,
+  "top1": "word_after:ALPHA_LOWER_SEQ|WA|section|(",
+  "top1_chain": 22,
+  "top5": [
+   {
+    "k": "word_after:ALPHA_LOWER_SEQ|WA|section|(",
+    "score": 3.445,
+    "chain": 22,
+    "cands": 30,
+    "variety": 1.0
+   },
+   {
+    "k": "word_after:ALPHA_UPPER_SEQ|WA|savings|``(",
+    "score": 2.455,
+    "chain": 4,
+    "cands": 4,
+    "variety": 1.0
+   },
+   {
+    "k": "word_after:ALPHA_UPPER_SEQ|WA|individuals|(",
+    "score": 1.919,
+    "chain": 9,
+    "cands": 12,
+    "variety": 1.0
+   },
+   {
+    "k": "word_after:ARABIC|WA|develop|(",
+    "score": 1.902,
+    "chain": 6,
+    "cands": 15,
+    "variety": 1.0
+   },
+   {
+    "k": "word_after:ARABIC|WA|increase|``(",
+    "score": 1.559,
+    "chain": 3,
+    "cands": 3,
+    "variety": 1.0
+   }
+  ]
+ },
+ "w3c_html52": {
+  "expected": "sections 1..14 incl. 4.1 style",
+  "rank_of_correct": 321,
+  "top1": "word_after:ARABIC|WA|that|",
+  "top1_chain": 4,
+  "top5": [
+   {
+    "k": "word_after:ARABIC|WA|that|",
+    "score": 0.92,
+    "chain": 4,
+    "cands": 11,
+    "variety": 1.0
+   },
+   {
+    "k": "word_before:ALPHA_UPPER_SEQ|WB|checked",
+    "score": 0.54,
+    "chain": 3,
+    "cands": 4,
+    "variety": 1.0
+   },
+   {
+    "k": "word_before:ALPHA_UPPER_SEQ|WB|paragraph",
+    "score": 0.534,
+    "chain": 5,
+    "cands": 6,
+    "variety": 0.8
+   },
+   {
+    "k": "word_after:ARABIC|WA|latin|+",
+    "score": 0.442,
+    "chain": 13,
+    "cands": 73,
+    "variety": 1.0
+   },
+   {
+    "k": "word_before:ALPHA_UPPER_SEQ|WB|ways.",
+    "score": 0.405,
+    "chain": 3,
+    "cands": 3,
+    "variety": 1.0
+   }
+  ]
+ },
+ "india_const": {
+  "expected": "Articles / Parts",
+  "rank_of_correct": null,
+  "top1": "line_end:ALPHA_UPPER_SEQ|LE|",
+  "top1_chain": 20,
+  "top5": [
+   {
+    "k": "line_end:ALPHA_UPPER_SEQ|LE|",
+    "score": 8.033,
+    "chain": 20,
+    "cands": 20,
+    "variety": 1.0
+   },
+   {
+    "k": "word_before:ARABIC|WB|page",
+    "score": 0.99,
+    "chain": 52,
+    "cands": 52,
+    "variety": 0.019
+   },
+   {
+    "k": "line_end:ARABIC|LE| ",
+    "score": 0.971,
+    "chain": 52,
+    "cands": 53,
+    "variety": 0.019
+   },
+   {
+    "k": "line_end:ARABIC|LE|, ",
+    "score": 0.293,
+    "chain": 11,
+    "cands": 45,
+    "variety": 1.0
+   },
+   {
+    "k": "line_end:ARABIC|LE|.. ",
+    "score": 0.033,
+    "chain": 8,
+    "cands": 53,
+    "variety": 1.0
+   }
+  ]
+ },
+ "rbi_circular": {
+  "expected": "numbered paragraphs",
+  "rank_of_correct": 3,
+  "top1": "word_before:ALPHA_UPPER_SEQ|WB|and",
+  "top1_chain": 6,
+  "top5": [
+   {
+    "k": "word_before:ALPHA_UPPER_SEQ|WB|and",
+    "score": 0.73,
+    "chain": 6,
+    "cands": 10,
+    "variety": 1.0
+   },
+   {
+    "k": "word_before:ARABIC|WB|july",
+    "score": 0.073,
+    "chain": 3,
+    "cands": 5,
+    "variety": 1.0
+   },
+   {
+    "k": "line_start:ALPHA_UPPER_SEQ|LS||",
+    "score": 0.047,
+    "chain": 13,
+    "cands": 127,
+    "variety": 1.0
+   },
+   {
+    "k": "line_end:ALPHA_LOWER_B26|LE|",
+    "score": 0.009,
+    "chain": 5,
+    "cands": 15,
+    "variety": 1.0
+   },
+   {
+    "k": "word_before:ALPHA_LOWER_B26|WB|t",
+    "score": 0.008,
+    "chain": 3,
+    "cands": 5,
+    "variety": 1.0
+   }
+  ]
+ },
+ "_summary": {
+  "corpora": 11,
+  "rank1": 3,
+  "top5": 5,
+  "found": 9
+ }
+}

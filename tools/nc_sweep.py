@@ -227,6 +227,32 @@ def _run_guards(node_ids: list[str]) -> dict[str, tuple[bool, str]]:
     return result
 
 
+VALID_STATUSES: frozenset[str] = frozenset({"active", "retired", "superseded"})
+
+
+def _status_of(entry: dict[str, Any]) -> str:
+    """The entry's status, NORMALISED, and an unknown one is a REFUSAL rather than a drop.
+
+    **This was a live defect and it is exactly the shape the catalogue exists to catch.** The
+    denominator below read `r.status == "active"` — case-sensitively — and five entries declare
+    `ACTIVE`: `NC-A37` from the A1 audit and the four `NC-DIV` controls. All five ran, all five
+    were CAUGHT, and none of them was in the reported total. The sweep printed `141 / 141` over a
+    set that silently excluded them, so **a failure in any of the five would have been invisible
+    behind a green headline.**
+
+    A count is not a reading, and this one had a plausible total. Unknown statuses now raise: an
+    entry the sweep cannot classify must not quietly leave the denominator.
+    """
+    raw = str(entry.get("status", "active")).strip().lower()
+    if raw not in VALID_STATUSES:
+        raise SystemExit(
+            f"{entry['id']}: status {entry.get('status')!r} is not one of {sorted(VALID_STATUSES)}. "
+            "An entry the sweep cannot classify would leave the denominator without saying so, "
+            "which is how five controls came to run outside the reported total."
+        )
+    return raw
+
+
 def sweep(catalogue: Path = CATALOGUE) -> dict[str, Any]:
     doc = yaml.safe_load(catalogue.read_text())
     entries = doc["entries"]
@@ -236,7 +262,7 @@ def sweep(catalogue: Path = CATALOGUE) -> dict[str, Any]:
         er = EntryResult(
             id=e["id"],
             injector=str(e.get("injector", "NONE")),
-            status=e.get("status", "active"),
+            status=_status_of(e),
             provisional=bool(e.get("provisional", False)),
         )
         guards = e["guard_tests"]
@@ -322,6 +348,8 @@ def sweep(catalogue: Path = CATALOGUE) -> dict[str, Any]:
             )
         results.append(er)
 
+    # `_status_of` has already normalised and refused anything it could not classify, so this is a
+    # comparison against a known value rather than a filter that can silently drop an entry.
     active = [r for r in results if r.status == "active" and not r.provisional and r.injector != "NONE"]
     report = {
         "contract": "EXACT SET — every flips:true guard red, every flips:false guard green. Never 'at least one'.",

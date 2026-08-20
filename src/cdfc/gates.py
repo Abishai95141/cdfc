@@ -30,7 +30,14 @@ VALID_LIVENESS = frozenset({"LIVE", "PENDING"})
 #
 # **The widening does not weaken it.** Anything outside these two closed sequences is still
 # refused, and `test_contract__registry_rejects_a_phase_outside_both_sequences` pins that.
-PHASE_RE = re.compile(r"^(?:P(?:[0-9]|1[0-5])|A(?:[0-5]|1c))$")
+# THREE numbering sequences, not the two CLAUDE.md §7 names. `P0`-`P15` are the build phases and
+# `A0`-`A5` the ANCHOR architecture phases; `N1`-`N9` are the EXPERIMENTS in
+# `docs/EXPERIMENT-PROGRAMME.md`, and a gate can be born from one. Gates 128-131 were: `N1`
+# measured that a coordinate eId does not survive a resegmentation, and the division map is what
+# that measurement produced. Labelling them `A4` would date them to a phase that has not started;
+# labelling them `A3` would backdate them to one that had already closed. Argument in
+# docs/GATE-CHANGES.md, 20 Aug 2026.
+PHASE_RE = re.compile(r"^(?:P(?:[0-9]|1[0-5])|A(?:[0-5]|1c)|N[1-9])$")
 
 
 class RegistryError(ValueError):

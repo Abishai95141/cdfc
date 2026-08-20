@@ -417,3 +417,54 @@ Closures after the repairs: `evaluate` 366 · `verdict` 251 · `probes` 293 · `
 honest response to *"the rule cannot hold here"* is to say where the rule applies rather than to
 weaken it everywhere. `tests/unit/test_api.py::test_api__no_socket_in_the_import_closure` carries
 the API's own narrower rule — no socket in the dispatcher, only in the server.
+
+## 2026-08-20 — gates 128–131, the N1 division map
+
+Four gates, all `pytest`, all in `tests/negative/test_nc_div.py`. **Every one of them was observed
+red for a defect this build actually shipped**, not for a hypothesis — the injectors reproduce
+breaks that were in the tree during the session that wrote the module, and the guard for each was
+written after reading what the broken map contained.
+
+**Why the guards do not go through `deserialise`.** Any edit to `qualify/provisions.py` changes the
+division map the instrument digest covers, so a pinned instrument refuses to load with a
+`TextSourceError`. That refusal is a real property and a useless guard: all four injectors would
+flip every corpus-reading test with one identical error, and the sweep would record four controls as
+caught while distinguishing nothing between them. Each guard therefore reads the raw text and calls
+`recover()` directly, and asserts the specific thing that specific break destroys.
+
+**`NC-DIV01` FAILED TO FLIP ON ITS FIRST RUN, AND THAT IS THE MOST USEFUL THING HERE.**
+`LevelByChainLength` replaces `_better` — the purity x coverage comparison — with raw chain length,
+and all five guards stayed GREEN. The reason was a second copy: `_select` ordered its candidate
+shapes with an inline sort key that recomputed the same comparison, so the choice was never made by
+`_better` at all and breaking `_better` broke nothing observable.
+
+That is `ci/GATES.md`'s own rule biting the gate being registered under it. **A control that breaks
+a rule the system does not consult proves nothing**, and it would have registered as LIVE on a
+guard that could never go red. The repair is one comparison: `_select` now orders through
+`_better` via `cmp_to_key`, the second copy is gone, and the control flips.
+
+Counted honestly, this is the twelfth time in this repository a check has been defeated by
+something other than the thing it was checking.
+
+| gate | injector | what goes red | positive control |
+|---|---|---|---|
+| 128 | `LevelByChainLength` | six schedules lost; `div1_0148` back to 181 units | `DIV05` holds |
+| 129 | `AnchorAtMarkerNotLine` | `div1_0008` heading reads `'8'`; the COUNT is unchanged at 153 | `DIV05` holds |
+| 130 | `AcceptUnstableChain` | both maximum chains admitted at a tied position | `DIV05` holds |
+| 131 | `DoubledLetterAsBase26` | 336 false `ordinal_skipped` rows inside regulation 2 | `DIV05` holds |
+
+`DIV05` is the positive control and it stayed green under all four. Without it a recovery that
+returned NOTHING would score perfectly on the other four, each of which is an assertion about what a
+wrong map contains.
+
+### The registry's phase vocabulary now admits `N1`–`N9`
+
+`PHASE_RE` accepted `P0`–`P15` and `A0`–`A5`, which is the two sequences `CLAUDE.md §7` names.
+**There are three.** `docs/EXPERIMENT-PROGRAMME.md` numbers the experiments `N1`…, and gates
+128–131 were born from one: `N1` measured that a coordinate eId dies on a resegmentation, and the
+division map is what that measurement produced.
+
+Neither existing label is true of them. `A4` dates them to a phase that has not started and that
+`g0_scope.py` still refuses to enter; `A3` backdates them to one that closed before the module
+existed. A gate row is a dated claim about when a guard could first be observed red, and both
+alternatives make that claim false. The vocabulary was the thing that was wrong.
