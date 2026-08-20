@@ -51,6 +51,11 @@ VERDICT_ROOTS: Final[tuple[str, ...]] = (
     # property of this graph or it is a promise. `cdfc.evidence` adjudicates a model's proposals
     # and must not be able to consult the model it is adjudicating.
     "cdfc.pathm", "cdfc.evidence",
+    # A5 adds one. `cdfc.fill` decides which fields get a proposed VALUE, and its whole discipline
+    # is that the trigger is MECHANICAL -- does a grounded observation re-verify byte-exact -- and
+    # never a model's confidence. A fill lane able to consult the model whose proposals it
+    # adjudicates could not be trusted to refuse one.
+    "cdfc.fill",
 )
 
 # ONE RULE, no per-vendor enumeration. `cdfc.model` is banned as a package rather than by naming
