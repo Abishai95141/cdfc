@@ -58,6 +58,8 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import Any, Final
 
+from cdfc.evidence.vocabulary import RuleKind
+
 DEFAULT_BASE_URL: Final[str] = "https://api.anthropic.com"
 DEFAULT_MODEL: Final[str] = "claude-sonnet-5"
 API_VERSION: Final[str] = "2023-06-01"
@@ -84,13 +86,41 @@ class BindingProposal:
     reason: str                # the model's own words, retained for the audit record
     model: str
     proposal_index: int
+    # WHAT LAYER 3 ADJUDICATES. Added 20 Aug 2026, and it is why this module was ORPHANED:
+    # `cdfc.evidence.proposal.Proposal` REQUIRES a `kind` from the closed `RuleKind` vocabulary,
+    # and uses `terms` for G-VOCAB and `refers_to` for G-XREF. A BindingProposal without them
+    # cannot be loaded by `cdfc.evidence.run`, so LAYER 2 produced something LAYER 3 could not
+    # eat, and nothing under src/ imported this package at all. The shape was the defect.
+    kind: RuleKind = RuleKind.DISCLOSURE
+    terms: tuple[str, ...] = ()          # the vocabulary an ENUM field must admit; G-VOCAB
+    refers_to: tuple[str, ...] = ()      # eIds this provision cross-references; G-XREF
 
     def as_canonical_obj(self) -> dict[str, object]:
         return {
             "provision_eid": self.provision_eid, "field_ref": self.field_ref,
             "quote": self.quote, "reason": self.reason, "model": self.model,
-            "proposal_index": self.proposal_index,
+            "proposal_index": self.proposal_index, "kind": self.kind.value,
+            "terms": list(self.terms), "refers_to": list(self.refers_to),
         }
+
+    def as_evidence_row(self) -> dict[str, object]:
+        """Exactly the row `cdfc.evidence.proposal.load()` reads. ONE schema, not two.
+
+        The model's `reason` travels as `note`, which that module documents as *"free model text.
+        NEVER reaches a verdict or a surface"* — so the model's own words are retained for the
+        audit record without any path by which they could become evidence.
+        """
+        row: dict[str, object] = {
+            "eid": self.provision_eid, "quote": self.quote, "kind": self.kind.value,
+            "note": self.reason,
+        }
+        if self.field_ref:
+            row["field"] = self.field_ref
+        if self.terms:
+            row["terms"] = list(self.terms)
+        if self.refers_to:
+            row["refers_to"] = list(self.refers_to)
+        return row
 
 
 @dataclass(frozen=True, slots=True)
@@ -103,6 +133,10 @@ class ProposalSet:
     fields_offered: int
     raw_blocks: int            # how many candidate objects the model emitted, before parsing
     malformed: tuple[str, ...] = ()
+
+    def as_evidence_rows(self) -> list[dict[str, object]]:
+        """The whole set, as the JSON `cdfc evidence --proposals` takes. Closes LAYER 2 -> 3."""
+        return [p.as_evidence_row() for p in self.proposals]
 
     def counts(self) -> dict[str, int]:
         return {
@@ -125,8 +159,17 @@ SYSTEM: Final[str] = (
     "2. `field_ref` MUST be one of the field references given to you, exactly as written.\n"
     "3. `provision_eid` MUST be one of the eIds given to you.\n"
     "4. Propose nothing when nothing fits. An empty list is a valid and useful answer.\n"
-    "5. Do not propose a VALUE for any field. You are binding a rule to a field, not filling it.\n\n"
-    'Reply with JSON only: {"proposals":[{"provision_eid":…,"field_ref":…,"quote":…,"reason":…}]}'
+    "5. Do not propose a VALUE for any field. You are binding a rule to a field, not filling it.\n"
+    "6. `kind` MUST be exactly one of: threshold, deadline, enumeration, disclosure, definition, "
+    "applicability. It is a CLOSED vocabulary and an unlisted kind is discarded, not repaired.\n"
+    "7. A DEFINITION or APPLICABILITY rule governs NO field: omit `field_ref` entirely for "
+    "those two kinds. They scope or define; they do not bind a cell. Naming a field on one is "
+    "refused by G-FIELD.\n"
+    "8. For kind=enumeration, `terms` lists the values the field must admit, copied from the "
+    "provision. For any kind, `refers_to` lists eIds the provision cross-references. Both are "
+    "optional and an empty list is correct when the provision has none.\n\n"
+    'Reply with JSON only: {"proposals":[{"provision_eid":…,"field_ref":…,"quote":…,"kind":…,'
+    '"terms":[…],"refers_to":[…],"reason":…}]}'
 )
 
 
@@ -202,11 +245,25 @@ def propose(
             "An empty offer would make an empty result unreadable — it would not distinguish "
             "'the model proposed nothing' from 'the model was shown nothing'."
         )
+    # THE OFFER IS JSON, and it is JSON because the bracket form invited a systematic error.
+    #
+    # Measured 20 Aug 2026: offering `[1. Introduction!D12] Legal structure` produced replies whose
+    # `field_ref` was the string `"[1. Introduction!D12]"` — brackets included — on 16 of 20 raw
+    # blocks across two batches. `parse()` refused every one, correctly, because a ref that was not
+    # offered cannot be adjudicated. But the model was copying the delimiter WE chose, and the
+    # right response to a systematic parse refusal is to fix the input rather than to strip the
+    # brackets on the way in: stripping would repair this delimiter and silently mangle a field
+    # reference that legitimately contains one.
+    #
+    # A JSON object per line has no delimiter to copy by mistake — the ref is a quoted string and
+    # the model returns a quoted string.
     body = "\n".join(
-        ["PROVISIONS:"]
-        + [f"[{eid}] {text[:1200]}" for eid, text in provisions]
-        + ["", "FIELDS:"]
-        + [f"[{ref}] {label[:200]}" for ref, label in fields]
+        ["PROVISIONS (cite provision_eid exactly as the eid value):"]
+        + [json.dumps({"eid": eid, "text": text[:1200]}, ensure_ascii=False)
+           for eid, text in provisions]
+        + ["", "FIELDS (cite field_ref exactly as the ref value):"]
+        + [json.dumps({"ref": ref, "label": label[:200]}, ensure_ascii=False)
+           for ref, label in fields]
     )
     payload = {
         "model": model, "max_tokens": MAX_TOKENS, "system": SYSTEM,
@@ -249,19 +306,42 @@ def parse(
         if not isinstance(p, dict):
             malformed.append(f"#{i}: not an object")
             continue
-        eid, ref = str(p.get("provision_eid", "")), str(p.get("field_ref", ""))
+        eid, ref = str(p.get("provision_eid", "")), str(p.get("field_ref", "") or "")
         quote, reason = str(p.get("quote", "")), str(p.get("reason", ""))
         if eid not in eids:
             malformed.append(f"#{i}: provision_eid {eid!r} was not offered")
             continue
-        if ref not in refs:
+        # A DEFINITION or APPLICABILITY rule governs no field, so an ABSENT ref is correct for
+        # them and only for them. `evidence.proposal.Proposal.field_ref` is `str | None` for
+        # exactly this reason. An absent ref on any other kind is still refused -- absent is not a
+        # wildcard.
+        kind_raw = str(p.get("kind", "")).strip().lower()
+        fieldless = kind_raw in ("definition", "applicability")
+        if not ref and not fieldless:
+            malformed.append(f"#{i}: kind {kind_raw!r} binds a field and none was given")
+            continue
+        if ref and ref not in refs:
             malformed.append(f"#{i}: field_ref {ref!r} was not offered")
             continue
         if not quote.strip():
             malformed.append(f"#{i}: empty quote; G-QUOTE has nothing to locate")
             continue
+        # A kind outside the closed vocabulary is DISCARDED, never coerced to a default. Coercing
+        # would put a rule the model could not classify into a bucket it never chose, and G-TYPE
+        # would then adjudicate a claim nobody made.
+        raw_kind = str(p.get("kind", "")).strip().lower()
+        try:
+            kind = RuleKind(raw_kind)
+        except ValueError:
+            malformed.append(
+                f"#{i}: kind {raw_kind!r} is outside the closed vocabulary "
+                f"{sorted(k.value for k in RuleKind)}")
+            continue
+        terms = tuple(str(t) for t in (p.get("terms") or []) if str(t).strip())
+        refers = tuple(str(t) for t in (p.get("refers_to") or []) if str(t).strip())
         out.append(BindingProposal(provision_eid=eid, field_ref=ref, quote=quote, reason=reason,
-                                   model=model, proposal_index=i))
+                                   model=model, proposal_index=i, kind=kind, terms=terms,
+                                   refers_to=refers))
     return ProposalSet(
         proposals=tuple(out), model=model, provisions_offered=len(provisions),
         fields_offered=len(fields), raw_blocks=len(raw), malformed=tuple(malformed),
