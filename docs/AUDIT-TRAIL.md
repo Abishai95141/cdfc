@@ -105,3 +105,6 @@ citation, an unlogged artefact, and an empty trail are each planted and observed
 | 2026-08-20 | CORRECTION | AL_monthly was called row-labelling on a fields-per-label ratio of 21.6; the within-line signature is 0.00 — 30 questions asked of ~21 rows each, which is a field population | `src/cdfc/evidence/fields.py` |
 | 2026-08-20 | DECISION | gate 127: a live document may not carry a claim the tree falsified; a dated record declares itself and is exempt whole | `ci/no-stale-claim.sh` |
 | 2026-08-20 | DEFECT | the stale-claim gate's first run flagged six lines that were all its own author's correction notices — the marker set was too narrow | `docs/GATE-CHANGES.md` |
+| 2026-08-20 | MEASUREMENT | A1c: structural correspondence aligns 3,747 of 3,747 CORRECTLY across a row insertion, where a name-based align is wrong on 1,451 of 3,544 | `src/cdfc/correspond/align.py` |
+| 2026-08-20 | DEFECT | the aligner failed to align the blank to ITSELF — rows carrying no text had no signature and never entered the alignment; caught by the positive control | `src/cdfc/correspond/align.py` |
+| 2026-08-20 | DECISION | correspondence is STRUCTURAL, not name-based: rows align as sequences by content signature and cells follow, because only 132 of 3,747 fields carry a label | `src/cdfc/correspond/align.py` |
