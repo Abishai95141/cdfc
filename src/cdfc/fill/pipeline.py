@@ -44,6 +44,7 @@ from cdfc.evidence.fields import FieldSet, from_template
 from cdfc.evidence.observe import Observation
 from cdfc.fill.propose import FillDeclaration, propose
 from cdfc.ingest.tabular import header_and_rows, read_delimited
+from cdfc.qualify.instruments import deserialise
 from cdfc.qualify.textsource import InstrumentText
 from cdfc.registry import ArtefactKind, Registry
 
@@ -105,6 +106,7 @@ def run(
     template_path: Path | None = None,
     delimiter: str = ",",
     subject: Mapping[str, str] | None = None,
+    claims: Sequence[Mapping[str, str]] | None = None,
 ) -> FillRun:
     """Bind a stored source export to a stored template and adjudicate the fills.
 
@@ -128,8 +130,31 @@ def run(
             )
 
     raws = {d: registry.get(d) for d in digests}
-    sources = {d: read_delimited(raws[d], instrument_id=f"source:{d[:12]}", delimiter=delimiter)
-               for d in digests}
+
+    # C4 — A SOURCE IS NOT ALWAYS A TABLE.
+    #
+    # A custodian feed is delimited bytes with a header row. A PDF valuation pack is neither: it
+    # was read at BUILD time into a pinned `InstrumentText` (B3) and what the registry stores is
+    # that text. Both must reach the fill, because *"custodian feeds, trial balance sheets, cap
+    # tables, and PDF valuation packs"* is one sentence and one pipeline.
+    #
+    # The discrimination is on the BYTES THEMSELVES, not on a filename or a declared kind: a
+    # pinned instrument deserialises and a CSV does not. Guessing from an extension would let a
+    # mislabelled upload be read the wrong way silently.
+    sources: dict[str, InstrumentText] = {}
+    prose: set[str] = set()
+    for d in digests:
+        try:
+            it, _kind, _name, _sha = deserialise(raws[d])
+        except Exception:                                      # noqa: BLE001
+            sources[d] = read_delimited(raws[d], instrument_id=f"source:{d[:12]}",
+                                        delimiter=delimiter)
+        else:
+            # A PINNED source. Its spans are already computed and corroborated by two parsers,
+            # and its DISPUTED regions already refuse — `_locate` skips them exactly as it does
+            # for a delimited source.
+            sources[d] = it
+            prose.add(d)
     # The FIRST source is the one A5 adjudicates spans against. Every observation records the
     # document it came from, so a caller can tell them apart; what must not happen is a span from
     # one document being re-verified against another, which would pass on a coincidence.
@@ -152,6 +177,11 @@ def run(
     columns = []
     subjects_seen: set[tuple[str, ...]] = set()
     for d in digests:
+        if d in prose:
+            # A prose source has no header row, so it offers no columns and A1c has nothing to
+            # match. Its values arrive through `claims` instead. Skipping it here is not dropping
+            # it: it is still in `sources`, and every claim is located against it.
+            continue
         header, rows = header_and_rows(raws[d], delimiter=delimiter)
         if subject:
             keys = [k for k in subject if k in header]
@@ -196,6 +226,35 @@ def run(
                     unlocatable.append((field_ref, str(v)[:40]))
                 continue
             binding.setdefault(field_ref, []).append(o)
+
+    # CLAIMS — the prose half of the binder. Rows of `{document, field, value}` that a model read
+    # out of a source at TOOL time.
+    #
+    # `cdfc.fill` is a VERDICT ROOT, so it cannot import `cdfc.model` and does not: the model's
+    # output arrives as DATA, exactly as `evidence.run` takes its proposals as a file. What
+    # happens here is deterministic and is the only part that may decide anything — the value is
+    # LOCATED in the document the claim names, and a value that is not there yields no observation
+    # at all. A claim is a hint about where to look, never evidence that something is there.
+    by_instrument = {s.instrument_id: s for s in sources.values()}
+    for c in claims or ():
+        ref, value, doc = str(c.get("field", "")), str(c.get("value", "")), str(c.get("document", ""))
+        if not ref or not value:
+            continue
+        # A CLAIM NAMES A DOCUMENT, NOT A DIGEST. `sources` is keyed by artefact digest because
+        # that is the run's identity; a claim says `source-fincen-boir-instructions`, which is the
+        # instrument's own id. Resolve BOTH, and refuse a name that matches neither rather than
+        # falling back to "the only source" — a claim located against the wrong document would
+        # pass REVERIFIES on a coincidence, which is the exact defect A5 was corrected for.
+        src = sources.get(doc) or by_instrument.get(doc)
+        if src is None:
+            unlocatable.append((ref, f"{value[:30]} (names document {doc!r}; run has "
+                                     f"{sorted(by_instrument)[:3]})"))
+            continue
+        o = _locate(src, value)
+        if o is None:
+            unlocatable.append((ref, str(value)[:40]))
+            continue
+        binding.setdefault(ref, []).append(o)
 
     decl = propose(
         fields, {k: tuple(v) for k, v in binding.items()},
