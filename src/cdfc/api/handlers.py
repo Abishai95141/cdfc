@@ -15,6 +15,13 @@ from cdfc.measure.paths import PRESCRIBED_MANIFEST
 
 REPORTS: Final[Path] = Path("reports/runs")
 
+# THE ARTEFACT REGISTRY. `D-A3-01a` found this missing and it is what makes an upload survive the
+# request that carried it: before, the filing bytes were gone the moment the handler returned, so
+# the note promising the declaration was "reproducible with `cdfc run`" pointed at a file the
+# server no longer had. Persisting the ARTEFACT is not persisting the run — the run stays a
+# re-derived projection, which is `D-A3-01` unchanged.
+ARTEFACTS: Final[Path] = Path("reports/artefacts")
+
 # The nine vendored blanks a filing may bind to, and the hash-verified manifest that pins them.
 # Absolute, derived from the package location rather than from the process's working directory,
 # because which nine workbooks exist is a fact about this repository and not about where a server
@@ -271,6 +278,24 @@ def post_filings(req, params):
 
         result = run_filing(blob, template=tmpl)
 
+    # STORE THE UPLOAD, content-addressed, so the input this declaration names can be re-read.
+    # A store failure does not fail the request: the coverage declaration is already computed and
+    # correct, and refusing to return it because a side effect failed would withhold the answer
+    # over a bookkeeping problem. It is reported instead.
+    stored: dict[str, Any] = {"persisted": False, "reason": "not attempted"}
+    try:
+        from cdfc.registry import ArtefactKind, Registry
+
+        reg = Registry(root=ARTEFACTS)
+        art = reg.put(blob.read_bytes(), kind=ArtefactKind.FILING,
+                      filename=getattr(blob, "name", "upload.xlsx"),
+                      media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        inputs = reg.inputs([art.digest])
+        stored = {"persisted": True, "artefactDigest": art.digest,
+                  "merkleRoot": inputs.merkle_root}
+    except Exception as exc:                       # noqa: BLE001 - reported, never swallowed
+        stored = {"persisted": False, "reason": f"{type(exc).__name__}: {exc}"}
+
     frac = result.fraction
     part = result.partition
     return _json(201, {
@@ -288,9 +313,13 @@ def post_filings(req, params):
             "indeterminate": part.indeterminate, "error": part.error,
             "outOfScope": part.outOfScope, "informational": part.informational,
         },
-        "persisted": False,
-        "note": ("computed and returned; NOT stored. The run id is a digest of the inputs, so this "
-                 "declaration is reproducible with `cdfc run` and needs no server-side record."),
+        # WHAT IS PERSISTED IS THE ARTEFACT, NOT THE RUN. `D-A3-01`: the run id is a digest of
+        # its inputs, so the declaration re-derives; what was missing was somewhere to keep the
+        # input, and `cdfc run` cannot re-derive from a file the server threw away.
+        **stored,
+        "note": ("the UPLOAD is stored content-addressed; the RUN is not. The run id is a digest "
+                 "of its inputs, so this declaration re-derives with `cdfc run` over the stored "
+                 "artefact. A stored run would be state outside that digest."),
     })
 
 
