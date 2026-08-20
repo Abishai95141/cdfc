@@ -1,0 +1,1203 @@
+[
+ {
+  "eid": "p0143.s0006",
+  "quote": "“Act” means the International Financial Services Centres Authority Act, 2019 (50 of 2019)",
+  "kind": "definition",
+  "note": "Defines the term 'Act'."
+ },
+ {
+  "eid": "p0143.s0008",
+  "quote": "“advertisement” shall include all forms of communication issued by or on behalf of the fund management entity that may influence investment decisions of any investor/prospective investors",
+  "kind": "definition",
+  "note": "Defines the term 'advertisement'."
+ },
+ {
+  "eid": "p0143.s0015",
+  "quote": "“body corporate” shall have the meaning assigned to it under clause (11) of Section 2 of the Companies Act, 2013 (18 of 2013)",
+  "kind": "definition",
+  "note": "Defines the term 'body corporate'."
+ },
+ {
+  "eid": "p0143.s0017",
+  "quote": "“control” shall include the right to appoint majority of the directors or to control the management or policy decisions exercisable by a person or persons acting individually or in concert, directly or indirectly, including by virtue of their shareholding or management rights or shareholders agreements or voting agreements or partnership agreements or in any other manner, including by holding interest, whether direct or indirect, to the extent of more than fifty per cent",
+  "kind": "definition",
+  "note": "Defines the term 'control'."
+ },
+ {
+  "eid": "p0143.s0018",
+  "quote": "(50%) of voting rights or interest: Provided that a director or officer of an entity shall not be considered to be in control over such entity, merely by virtue of holding such position",
+  "kind": "definition",
+  "note": "Continues and refines the definition of 'control'."
+ },
+ {
+  "eid": "p0143.s0020",
+  "quote": "“compliance officer” means any senior officer, designated so and reporting to the board of directors or head of the organization in case board is not there, who is capable of understanding the financial statements and the requirements for legal and regulatory compliance under these regulations, and who shall be responsible for compliance of policies, procedures, maintenance of records, monitoring",
+  "kind": "definition",
+  "note": "Defines the term 'compliance officer'."
+ },
+ {
+  "eid": "p0144.s0010",
+  "quote": "“International Financial Services Centre (IFSC)” shall have the same meaning as assigned to it under clause (g) of sub-section (1) of Section 3 of the Act",
+  "kind": "definition",
+  "note": "Defines 'IFSC' by reference to the Act, which is defined in p0143.s0006.",
+  "refers_to": [
+   "p0143.s0006"
+  ]
+ },
+ {
+  "eid": "p0145.s0004",
+  "quote": "“Registered FME” shall mean a FME which has received a Certificate of registration as Registered FME (Non-Retail) or Registered FME (Retail)",
+  "kind": "definition",
+  "note": "Defines 'Registered FME' by reference to the registration categories.",
+  "refers_to": [
+   "p0145.s0019"
+  ]
+ },
+ {
+  "eid": "p0145.s0013",
+  "quote": "“Venture Capital Scheme” means a scheme that invests primarily in unlisted securities of start-ups, emerging or early-stage venture capital undertakings primarily involved in new products, new services, technology or intellectual property right based activities or a new business model or other schemes which invest in such entities and shall also include an angel fund as specified by the Authority",
+  "kind": "definition",
+  "note": "Defines the term 'Venture Capital Scheme'."
+ },
+ {
+  "eid": "p0145.s0016",
+  "quote": "Any entity, desirous to undertake the business of fund management under these regulations shall not commence operations in an IFSC unless it has obtained a certificate of registration from the Authority as a FME under any of the categories mentioned in sub-regulation (4)",
+  "kind": "applicability",
+  "note": "Sets out the registration requirement that applies to entities desirous of undertaking fund management in an IFSC.",
+  "refers_to": [
+   "p0145.s0019"
+  ]
+ },
+ {
+  "eid": "p0145.s0019",
+  "quote": "(4) The applicant shall seek registration under any of the following three categories: (a) Authorised FME: (i) The FMEs that pool money from accredited investors or investors investing above the specified threshold by way of private placement and invest in start-ups or early-stage ventures through Venture Capital Scheme",
+  "kind": "enumeration",
+  "note": "Requires applicants to register under enumerated categories; the field 'Category of Registration of FME' records the selected category, and 'Authorised FME' is one of the enumerated categories.",
+  "field": "1. Introduction!D10",
+  "terms": [
+   "Authorised FME"
+  ],
+  "refers_to": [
+   "p0145.s0013"
+  ]
+ },
+ {
+  "eid": "p0146.s0013",
+  "quote": "The applicant shall be set up in IFSC in the form of a company or LLP or branch thereof or any other form as may be permitted by the Authority",
+  "kind": "enumeration",
+  "note": "Specifies permissible legal structures for the FME.",
+  "field": "1. Introduction!D12",
+  "terms": [
+   "company",
+   "LLP",
+   "branch"
+  ]
+ },
+ {
+  "eid": "p0147.s0004",
+  "quote": "The applicant shall designate a principal officer who shall be responsible for overall activities of the FME including but not limited to fund management, risk management and compliance",
+  "kind": "disclosure",
+  "note": "Requires designation of a principal officer, whose name is reported.",
+  "field": "1. Introduction!D26"
+ },
+ {
+  "eid": "p0147.s0005",
+  "quote": "In case of Registered FME, in addition to the principal officer, one (1) additional KMP shall be designated as Compliance Officer who shall be responsible for compliance with these regulations and ensure implementation of risk management policies and practices at the FME",
+  "kind": "disclosure",
+  "note": "Requires designation of a Compliance Officer, whose name is reported.",
+  "field": "1. Introduction!D29"
+ },
+ {
+  "eid": "p0147.s0006",
+  "quote": "In case of Registered FME (Retail), the FME shall, in addition to the principal officer and compliance officer, appoint, before filing with the Authority the offer document of its first retail scheme or ETF, an additional KMP who shall be assigned with the responsibility of fund management",
+  "kind": "disclosure",
+  "note": "Requires appointment of an additional KMP for Retail FMEs, whose name is reported.",
+  "field": "1. Introduction!D32"
+ },
+ {
+  "eid": "p0147.s0006",
+  "quote": "before filing with the Authority the offer document of its first retail scheme or ETF",
+  "kind": "deadline",
+  "note": "Sets a deadline for appointing the additional KMP for Retail FMEs.",
+  "field": "1. Introduction!D32"
+ },
+ {
+  "eid": "p0147.s0007",
+  "quote": "Any FME that is managing an AUM of at least USD 1 billion, excluding the AUM of fund of funds schemes, as at the close of a financial year shall, in addition to the principal officer and compliance officer, appoint an additional KMP, who shall be assigned with the responsibility of fund management",
+  "kind": "threshold",
+  "note": "AUM threshold triggers the requirement to appoint an additional KMP.",
+  "field": "1. Introduction!D32"
+ },
+ {
+  "eid": "p0147.s0008",
+  "quote": "Provided that appointment of the additional KMP shall be made within 6 months from the end of such financial year",
+  "kind": "deadline",
+  "note": "Deadline for appointing the additional KMP once the threshold applies.",
+  "field": "1. Introduction!D32"
+ },
+ {
+  "eid": "p0147.s0009",
+  "quote": "Provided further that continuation of the additional KMP shall be optional, if the AUM remains below USD 1 billion for any 2 subsequent consecutive financial years and there is a reasonable expectation that the AUM shall not exceed USD 1 billion in the near term",
+  "kind": "threshold",
+  "note": "Allows the additional KMP to be optional if the AUM falls below the threshold, affecting whether the name must be reported.",
+  "field": "1. Introduction!D32"
+ },
+ {
+  "eid": "p0148.s0005",
+  "quote": "The FME shall appoint other personnel commensurate with the size of its operations and activities",
+  "kind": "disclosure",
+  "note": "Requires adequate staffing, reflected in total employee count.",
+  "field": "1. Introduction!D35"
+ },
+ {
+  "eid": "p0146.s0022",
+  "quote": "For the purposes of sub-regulation (1) “sound track record” shall mean: (a) In case of Registered FME (Retail): (i) The FME, its holding company, or their subsidiaries, shall have at least five (5) years of experience in collectively managing Assets under Management (AUM) of at least USD 200 million with more than twenty-five thousand (25,000) investors",
+  "kind": "definition",
+  "note": "Defines 'sound track record'."
+ },
+ {
+  "eid": "p0148.s0002",
+  "quote": "For the purposes of this regulation, the professional qualification shall include membership of Institute of Chartered Accountants of India, Institute of Company Secretaries of India, Institute of Cost Accountants of India or any institution equivalent thereto in a foreign jurisdiction, and for KMP referred under sub-regulation (2) it shall also include Bachelor of Laws (LLB) from a university or an institution recognised by the Central Government or any State Government or a recognised foreign university or institution or association",
+  "kind": "definition",
+  "note": "Defines 'professional qualification'."
+ },
+ {
+  "eid": "p0148.s0008",
+  "quote": "An entity seeking registration as a FME shall at all times comply with the net worth requirements as specified in Second Schedule of these regulations or such other amount as may be specified by the Authority",
+  "kind": "disclosure",
+  "note": "The net worth compliance requirement is reported in the compliance status field for net worth.",
+  "field": "8. Compliance Status!C6"
+ },
+ {
+  "eid": "p0148.s0009",
+  "quote": "An entity operating as a branch shall at all times comply with the minimum net worth requirements specified in these regulations for its activities in IFSC which may be maintained at the level of the parent entity",
+  "kind": "disclosure",
+  "note": "Branch-specific net worth requirement is captured by the same net worth compliance attestation.",
+  "field": "8. Compliance Status!C6"
+ },
+ {
+  "eid": "p0148.s0012",
+  "quote": "The applicant and its principal officer, directors/ partners/ designated partners, key managerial personnel and controlling shareholders shall be fit and proper persons, at all times",
+  "kind": "disclosure",
+  "note": "The fit and proper requirement is attested in the compliance status field for fit and proper persons.",
+  "field": "8. Compliance Status!C7"
+ },
+ {
+  "eid": "p0148.s0013",
+  "quote": "For the purpose of sub-regulation (1), a person shall be deemed to be a fit and proper person if :- (a) such person has a record of fairness and integrity, including but not limited to- (i) financial integrity",
+  "kind": "definition",
+  "note": "Defines the meaning of a fit and proper person for the fit and proper requirement.",
+  "refers_to": [
+   "p0148.s0012"
+  ]
+ },
+ {
+  "eid": "p0149.s0011",
+  "quote": "The office shall be dedicated, secured and accessible only by authorised person(s) of the FME",
+  "kind": "disclosure",
+  "note": "Office and infrastructure requirements are covered by the infrastructure compliance field.",
+  "field": "8. Compliance Status!C8"
+ },
+ {
+  "eid": "p0149.s0019",
+  "quote": "The registration granted to a FME, shall be subject to the following terms and conditions:- (a) the FME, its CEO / Directors / Designated Partners, Principal officer / KMPs shall comply with the provisions of these regulations and circulars issued thereunder",
+  "kind": "disclosure",
+  "note": "The registration condition to comply with regulations and circulars is reported in the overall compliance field.",
+  "field": "8. Compliance Status!C4"
+ },
+ {
+  "eid": "p0149.s0020",
+  "quote": "The FME shall forthwith inform the Authority, of any material change in the information or particulars previously furnished, which have a bearing on the registration granted by the Authority",
+  "kind": "disclosure",
+  "note": "The obligation to report material information maps to the material information disclosure field.",
+  "field": "8. Compliance Status!C13"
+ },
+ {
+  "eid": "p0149.s0029",
+  "quote": "The voluntary surrender of certificate of registration shall be effective only after its acceptance by the Authority",
+  "kind": "definition",
+  "note": "Explains when voluntary surrender of a certificate of registration becomes effective."
+ },
+ {
+  "eid": "p0150.s0007",
+  "quote": "The fiduciaries shall comply with the Code of Conduct and obligations as detailed in Part B of Third Schedule",
+  "kind": "disclosure",
+  "note": "Fiduciaries' compliance with the Code of Conduct is attested in the Code of Conduct compliance field.",
+  "field": "8. Compliance Status!C9"
+ },
+ {
+  "eid": "p0150.s0014",
+  "quote": "Explanation.- For the purpose of the Income Tax Act, 1961, the communication received by the FME from the Authority that the placement memorandum has been taken on record, shall be construed as Certificate of Registration",
+  "kind": "definition",
+  "note": "Defines the Authority's communication as a Certificate of Registration."
+ },
+ {
+  "eid": "p0150.s0019",
+  "quote": "A Venture Capital scheme shall not have more than fifty (50) investors",
+  "kind": "threshold",
+  "note": "Limits the total number of investors per Venture Capital scheme to 50.",
+  "field": "4. Investors!O4"
+ },
+ {
+  "eid": "p0151.s0003",
+  "quote": "Provided also that the minimum investment threshold specified above shall not apply to an Accredited Investor",
+  "kind": "applicability",
+  "note": "Exempts Accredited Investors from the minimum investment threshold."
+ },
+ {
+  "eid": "p0151.s0004",
+  "quote": "Explanation.- A Registered FME intending to launch Venture Capital Schemes to target more than fifty (50) investors or pool money from investors investing with lower application size of USD 150,000 shall be able to do so under restricted schemes as provided under Part B of this Chapter",
+  "kind": "applicability",
+  "note": "States when restricted schemes apply instead of ordinary Venture Capital schemes."
+ },
+ {
+  "eid": "p0151.s0006",
+  "quote": "(1) A Venture Capital scheme shall only be a close ended scheme",
+  "kind": "definition",
+  "note": "Defines a Venture Capital scheme as close ended."
+ },
+ {
+  "eid": "p0151.s0007",
+  "quote": "(2) The amount to be raised under a Venture Capital scheme and the tenure of the scheme, which shall not be less than three (3) years, shall be disclosed in the placement memorandum",
+  "kind": "disclosure",
+  "note": "Requires the placement memorandum to disclose the amount and tenure of the scheme, including a minimum tenure.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0151.s0022",
+  "quote": "(1) In case of Venture Capital schemes, the minimum size of the corpus shall be USD 3 Million, and the total corpus shall not exceed USD 200 Million",
+  "kind": "threshold",
+  "note": "Sets minimum and maximum total corpus size for a Venture Capital scheme.",
+  "field": "4. Investors!O13"
+ },
+ {
+  "eid": "p0152.s0007",
+  "quote": "(1) The placement memorandum for Venture Capital schemes shall clearly include disclosures regarding the investment objective, the targeted investors, proposed corpus, investment style or strategy, investment methodology, proposed tenure of the scheme, fees and expenses, risk management practices, KMPs of the FME and other relevant details of the FME and the scheme",
+  "kind": "disclosure",
+  "note": "Mandates the content of the placement memorandum, which is the primary disclosure to investors.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0152.s0008",
+  "quote": "(2) The FME shall ensure that the Net Asset Value (NAV) is disclosed to the investors at least on a yearly basis within such time period as disclosed in the placement memorandum of the scheme",
+  "kind": "disclosure",
+  "note": "Requires NAV disclosure to investors at least yearly; binds to the compliance declaration for disclosures to investors.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0152.s0009",
+  "quote": "The FME shall ensure that the portfolio under the scheme is disclosed to the investors at least on a yearly basis and not later than one (1) month of the end of each financial year",
+  "kind": "disclosure",
+  "note": "Annual portfolio disclosure requirement; the field asserts compliance with investor disclosure requirements.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0152.s0010",
+  "quote": "Any other material disclosure, as considered suitable by the FME or the fiduciaries, shall be informed to the investors immediately",
+  "kind": "disclosure",
+  "note": "Immediate material disclosure requirement; covered by the investor disclosure compliance field.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0152.s0011",
+  "quote": "The FME and fiduciaries shall comply with the disclosure requirements as may be specified by the Authority",
+  "kind": "disclosure",
+  "note": "Requires compliance with Authority-specified disclosure requirements, which is covered by the disclosure compliance field.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0152.s0013",
+  "quote": "The maximum leverage by the scheme, along with the methodology for calculation of leverage, shall be disclosed in the placement memorandum",
+  "kind": "disclosure",
+  "note": "Leverage disclosure in placement memorandum is an investor disclosure requirement.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0152.s0017",
+  "quote": "The FME and fiduciaries shall ensure compliance of investment valuation norms, as specified in the Sixth Schedule",
+  "kind": "disclosure",
+  "note": "Directly corresponds to the field asserting compliance with Investment Valuation Norms in the Sixth Schedule.",
+  "field": "8. Compliance Status!C11"
+ },
+ {
+  "eid": "p0153.s0017",
+  "quote": "and shall be filed before the Authority as Category I Alternative Investment Fund",
+  "kind": "enumeration",
+  "note": "Specifies that the fund must be filed as Category I AIF, determining the FME registration category.",
+  "field": "1. Introduction!D10",
+  "terms": [
+   "Category I Alternative Investment Fund"
+  ]
+ },
+ {
+  "eid": "p0154.s0001",
+  "quote": "and shall be filed before the Authority as Category III Alternative Investment Fund",
+  "kind": "enumeration",
+  "note": "Specifies Category III AIF classification, determining the FME registration category.",
+  "field": "1. Introduction!D10",
+  "terms": [
+   "Category III Alternative Investment Fund"
+  ]
+ },
+ {
+  "eid": "p0154.s0003",
+  "quote": "(c) investment which does not fall under the clauses (a) and (b), shall be filed before the Authority as Category II Alternative Investment Fund",
+  "kind": "enumeration",
+  "note": "Specifies residual Category II AIF classification, determining the FME registration category.",
+  "field": "1. Introduction!D10",
+  "terms": [
+   "Category II Alternative Investment Fund"
+  ]
+ },
+ {
+  "eid": "p0153.s0019",
+  "quote": "Explanation II.- Venture capital funds under this Part shall not be required to comply with conditions specified for Venture Capital schemes as specified under Part A of Chapter III of these regulations",
+  "kind": "applicability",
+  "note": "Exempts venture capital funds from certain Venture Capital scheme conditions; applicability rule with no specific field."
+ },
+ {
+  "eid": "p0154.s0009",
+  "quote": "Explanation: For the purpose of the Income Tax Act, 1961, the communication received by the FME from the Authority that the placement memorandum has been taken on record, shall be construed as Certificate of Registration",
+  "kind": "definition",
+  "note": "Defines 'Certificate of Registration' for the purpose of the Income Tax Act."
+ },
+ {
+  "eid": "p0154.s0014",
+  "quote": "(1) Restricted schemes shall not have more than one thousand (1000) investors or such number as may be specified by the Authority",
+  "kind": "threshold",
+  "note": "Limits the number of investors in a restricted scheme to 1,000; the total investor count is reported in this field.",
+  "field": "4. Investors!O4"
+ },
+ {
+  "eid": "p0154.s0018",
+  "quote": "Provided also that the minimum investment threshold shall not apply to an accredited investor",
+  "kind": "applicability",
+  "note": "Exempts accredited investors from the minimum investment threshold."
+ },
+ {
+  "eid": "p0154.s0012",
+  "quote": "(4) The FME shall ensure that any material changes from the information provided in the placement memorandum, shall be immediately informed to the Authority",
+  "kind": "disclosure",
+  "note": "Material changes to placement memorandum information must be reported to the Authority; this field captures other material information affecting registration/operations.",
+  "field": "8. Compliance Status!C13"
+ },
+ {
+  "eid": "p0155.s0002",
+  "quote": "(2) In case of a close ended restricted scheme, the amount to be raised and the tenure of the scheme, which shall not be less than one (1) year, shall be disclosed in the placement memorandum",
+  "kind": "disclosure",
+  "note": "Requires disclosure of amount and tenure in the placement memorandum; part of investor disclosure obligations.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0155.s0021",
+  "quote": "(25%) of the corpus of the scheme: Provided that in case of an open-ended fund of funds scheme, this requirement shall not be applicable if such scheme is investing in other open-ended scheme(s) which shall not have investment in unlisted securities in excess of twenty-five per cent",
+  "kind": "applicability",
+  "note": "Provides an exemption from the 25% corpus limitation for qualifying open-ended fund of funds schemes."
+ },
+ {
+  "eid": "p0155.s0023",
+  "quote": "(2) The minimum size of corpus of the restricted schemes shall be USD 3 Million: Provided that an open-ended scheme may commence investment activities upon raising at least USD 1 Million in funds and shall achieve the minimum corpus of USD 3 Million within 12 months from the date of communication from the Authority that the placement memorandum of the scheme has been taken on record",
+  "kind": "threshold",
+  "note": "Sets minimum corpus requirements for restricted schemes and open-ended schemes; total corpus raised is reported in this field.",
+  "field": "4. Investors!O13"
+ },
+ {
+  "eid": "p0156.s0004",
+  "quote": "(1) The placement memorandum for restricted schemes shall clearly include disclosures regarding the investment objective, the targeted investors, proposed corpus, investment style or strategy, investment methodology, proposed tenure of the scheme, proposed fees and expenses, risk management practices, KMPs of the FME and other relevant details of the FME and the scheme",
+  "kind": "disclosure",
+  "note": "Mandates specific disclosures in the placement memorandum to investors.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0156.s0006",
+  "quote": "(3) The FME shall ensure that the NAV is disclosed to the investors at least on a monthly basis in case of an open-ended scheme and half-yearly in case of a close ended scheme within such time period as disclosed in the placement memorandum",
+  "kind": "disclosure",
+  "note": "Requires periodic NAV disclosure to investors.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0156.s0007",
+  "quote": "(4) The FME shall ensure that the portfolio under the scheme is disclosed to the investors at least on a quarterly basis within one month from the end of the quarter",
+  "kind": "disclosure",
+  "note": "Requires quarterly portfolio disclosure to investors.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0156.s0008",
+  "quote": "(5) Any other material disclosure as considered suitable by the FME or the fiduciaries shall be informed to the investors immediately",
+  "kind": "disclosure",
+  "note": "Requires immediate disclosure of other material information to investors.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0156.s0009",
+  "quote": "(6) The FME and the fiduciaries shall comply with the disclosure requirements as may be specified by the Authority",
+  "kind": "disclosure",
+  "note": "Requires compliance with Authority-specified disclosure requirements.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0156.s0011",
+  "quote": "The maximum leverage by the scheme, along with the methodology for calculation of leverage, shall be disclosed in the placement memorandum",
+  "kind": "disclosure",
+  "note": "Requires disclosure of leverage details in the placement memorandum, which is a disclosure to investors; captured by the compliance statement on disclosure requirements.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0156.s0015",
+  "quote": "The FME and fiduciaries shall ensure compliance of investment valuation norms specified in the Sixth Schedule",
+  "kind": "disclosure",
+  "note": "Directly corresponds to the field on compliance with Investment Valuation Norms specified in the Sixth Schedule.",
+  "field": "8. Compliance Status!C11"
+ },
+ {
+  "eid": "p0157.s0018",
+  "quote": "Explanation.- For the purpose of the Income Tax Act, 1961, the communication received by the FME from the Authority that the offer document has been taken on record, shall be construed as Certificate of Registration",
+  "kind": "definition",
+  "note": "Provides a definition of Certificate of Registration in this context; no specific field governs this definition."
+ },
+ {
+  "eid": "p0158.s0005",
+  "quote": "The tenure of a close-ended scheme, which shall not be less than three (3) years, shall be disclosed in the offer document",
+  "kind": "disclosure",
+  "note": "Requires disclosure of the close-ended scheme tenure in the offer document, which is a disclosure to investors; falls under the compliance statement on disclosure requirements.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0159.s0003",
+  "quote": "(25%) of its AUM in a single sector",
+  "kind": "threshold",
+  "note": "Sector concentration limit applies to Energy sector.",
+  "field": "3. Portfolio!C156"
+ },
+ {
+  "eid": "p0159.s0003",
+  "quote": "(25%) of its AUM in a single sector",
+  "kind": "threshold",
+  "note": "Sector concentration limit applies to Materials sector.",
+  "field": "3. Portfolio!C157"
+ },
+ {
+  "eid": "p0159.s0003",
+  "quote": "(25%) of its AUM in a single sector",
+  "kind": "threshold",
+  "note": "Sector concentration limit applies to Industrials sector.",
+  "field": "3. Portfolio!C158"
+ },
+ {
+  "eid": "p0159.s0003",
+  "quote": "(25%) of its AUM in a single sector",
+  "kind": "threshold",
+  "note": "Sector concentration limit applies to Consumer Discretionary sector.",
+  "field": "3. Portfolio!C159"
+ },
+ {
+  "eid": "p0159.s0003",
+  "quote": "(25%) of its AUM in a single sector",
+  "kind": "threshold",
+  "note": "Sector concentration limit applies to Consumer Staples sector.",
+  "field": "3. Portfolio!C160"
+ },
+ {
+  "eid": "p0159.s0003",
+  "quote": "(25%) of its AUM in a single sector",
+  "kind": "threshold",
+  "note": "Sector concentration limit applies to Health Care sector.",
+  "field": "3. Portfolio!C161"
+ },
+ {
+  "eid": "p0159.s0003",
+  "quote": "(25%) of its AUM in a single sector: Provided that in case of financial services sector, the amount shall not exceed fifty per cent",
+  "kind": "threshold",
+  "note": "Financials sector has an increased sector concentration cap of 50%.",
+  "field": "3. Portfolio!C162"
+ },
+ {
+  "eid": "p0159.s0003",
+  "quote": "(25%) of its AUM in a single sector",
+  "kind": "threshold",
+  "note": "Sector concentration limit applies to Information Technology sector.",
+  "field": "3. Portfolio!C163"
+ },
+ {
+  "eid": "p0159.s0003",
+  "quote": "(25%) of its AUM in a single sector",
+  "kind": "threshold",
+  "note": "Sector concentration limit applies to Communication Services sector.",
+  "field": "3. Portfolio!C164"
+ },
+ {
+  "eid": "p0159.s0003",
+  "quote": "(25%) of its AUM in a single sector",
+  "kind": "threshold",
+  "note": "Sector concentration limit applies to Utilities sector.",
+  "field": "3. Portfolio!C165"
+ },
+ {
+  "eid": "p0159.s0003",
+  "quote": "(25%) of its AUM in a single sector",
+  "kind": "threshold",
+  "note": "Sector concentration limit applies to Real Estate sector.",
+  "field": "3. Portfolio!C166"
+ },
+ {
+  "eid": "p0159.s0007",
+  "quote": "(6) The minimum size of the retail schemes shall be USD 3 Million",
+  "kind": "threshold",
+  "note": "Total AUM in USD Million must meet the minimum scheme size of USD 3 Million.",
+  "field": "4. Investors!O13"
+ },
+ {
+  "eid": "p0159.s0010",
+  "quote": "(1) The offer document for retail schemes shall clearly include all disclosures which are material for investors to make a decision regarding investing in such schemes",
+  "kind": "disclosure",
+  "note": "Offer document material disclosure requirement is captured by the disclosure compliance declaration.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0159.s0011",
+  "quote": "(2) The disclosures in the offer document shall inter-alia include disclosures regarding the investment objective, the targeted investors, proposed size, investment style or strategy, investment methodology, proposed tenure of the scheme fees and expenses, risk management practices, KMPs of the FME and other relevant details of the FME and the scheme",
+  "kind": "disclosure",
+  "note": "Specific offer document disclosure content requirements are covered by the disclosure compliance declaration.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0159.s0013",
+  "quote": "(4) The FME shall ensure that the NAV is disclosed to the investors on a daily basis in case of an open-ended scheme and on weekly basis in case of a close-ended scheme",
+  "kind": "disclosure",
+  "note": "NAV disclosure frequency requirement is a disclosure obligation to investors.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0159.s0015",
+  "quote": "(5) The FME shall ensure that the portfolio under the scheme is disclosed to the investors at least on a quarterly basis within one (1) month from the end of the quarter",
+  "kind": "disclosure",
+  "note": "Portfolio disclosure requirement is a disclosure obligation to investors.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0159.s0016",
+  "quote": "(6) Any other material disclosure as considered suitable by the FME or the fiduciaries shall be informed to the investors immediately",
+  "kind": "disclosure",
+  "note": "Material disclosure requirement is covered by the disclosure compliance declaration.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0159.s0017",
+  "quote": "(7) The FME and the fiduciaries shall comply with the disclosure requirements as specified above or as may be specified by the Authority",
+  "kind": "disclosure",
+  "note": "General compliance with disclosure requirements is captured by the disclosure compliance declaration.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0158.s0021",
+  "quote": "Provided that this restriction shall not be applicable in case of investment in unlisted securities issued by an investment fund which is open-ended in nature, regulated by the concerned regulatory authority in its home jurisdiction, and is permitted for offering to retail investors in its home jurisdiction",
+  "kind": "applicability",
+  "note": "This proviso carves out certain unlisted fund investments from the applicable restriction."
+ },
+ {
+  "eid": "p0158.s0025",
+  "quote": "(50%) shall not be applicable in case of investment by close-ended retail scheme in unlisted securities issued by an investment fund which is regulated by the concerned regulatory authority in its home jurisdiction, and is permitted for offering to retail investors in its home jurisdiction",
+  "kind": "applicability",
+  "note": "This provision creates an exception from a 50% restriction for certain close-ended scheme unlisted investments."
+ },
+ {
+  "eid": "p0159.s0004",
+  "quote": "Provided further that the limit on sectoral caps shall not apply in case of a sectoral or thematic or an Index Scheme: Provided also that in case of a fund of funds scheme, the limit on sectoral cap shall not be applicable if such scheme is investing in other scheme(s) which does not have investment in a single sector in excess of 25% of their AUM, or 50% of their AUM in case of financial services sector or when such scheme(s) are sectoral or thematic or index scheme(s)",
+  "kind": "applicability",
+  "note": "This provision describes when sector caps do not apply."
+ },
+ {
+  "eid": "p0159.s0006",
+  "quote": "Provided that this restriction shall not be applicable in case of fund of funds schemes which have made disclosure in the offer document regarding the details of the underlying scheme(s) wherein the investments are intended to be made and the nature of association, if any, that the FME has with the manager(s) of the underlying scheme(s)",
+  "kind": "applicability",
+  "note": "This proviso creates an exception to the associate investment limit for qualifying fund of funds schemes."
+ },
+ {
+  "eid": "p0160.s0001",
+  "quote": "(1) The FME and fiduciaries shall ensure compliance with the investment valuation norms as specified in the Sixth Schedule",
+  "kind": "disclosure",
+  "note": "The provision imposes an obligation to comply with investment valuation norms, and field C11 is the specific compliance-status declaration for those norms.",
+  "field": "8. Compliance Status!C11"
+ },
+ {
+  "eid": "p0160.s0002",
+  "quote": "(2) In line with the investment valuation norms, the assets of the scheme shall be valued by an independent service provider such as a fund administrator, a custodian or a credit rating agency, registered with the Authority, or a valuer registered with Insolvency and Bankruptcy Board of India or such other person as may be specified by the Authority: Provided that the above requirement shall not apply in case of a fund of funds scheme that invest in scheme(s), regulated by a financial sector regulator, directly or through a manager, in IFSC or India or foreign jurisdiction(s), which are valued by any independent entity",
+  "kind": "disclosure",
+  "note": "The requirement for independent valuation is part of the investment valuation norms, the compliance with which is declared in field C11.",
+  "field": "8. Compliance Status!C11"
+ },
+ {
+  "eid": "p0160.s0008",
+  "quote": "(1) Under a retail scheme, the FME or its associate shall invest at least one per cent",
+  "kind": "threshold",
+  "note": "This provision sets a minimum investment requirement for the FME's contribution in a retail scheme; field D13 reports the FME's investment amount in the investor table.",
+  "field": "4. Investors!D13"
+ },
+ {
+  "eid": "p0160.s0008",
+  "quote": "(1) Under a retail scheme, the FME or its associate shall invest at least one per cent",
+  "kind": "threshold",
+  "note": "The minimum investment obligation also applies to associates of the FME, and field E13 reports the associates' investment amount.",
+  "field": "4. Investors!E13"
+ },
+ {
+  "eid": "p0161.s0008",
+  "quote": "(4) The FME shall ensure that any material changes in the placement memorandum are informed to the Authority immediately",
+  "kind": "disclosure",
+  "note": "This provision requires disclosure of material changes to the Authority; C13 is the return field for any other material information.",
+  "field": "8. Compliance Status!C13"
+ },
+ {
+  "eid": "p0161.s0011",
+  "quote": "(2) The tenure of a special situation fund, which shall not be less than three (3) years, shall be disclosed in the placement memorandum",
+  "kind": "disclosure",
+  "note": "This is a disclosure requirement to investors, and C10 is the compliance-status field for investor disclosure requirements.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0162.s0003",
+  "quote": "(1) The norms regarding disclosures, valuation, computation of NAV, contribution by the FME in the scheme as applicable to a close ended restricted scheme under Chapter III of these regulations shall apply to a special situation fund",
+  "kind": "applicability",
+  "note": "This provision expressly states that specified norms from Chapter III apply to a special situation fund; it is an applicability rule that does not bind a single return cell."
+ },
+ {
+  "eid": "p0163.s0016",
+  "quote": "(10%) shall not be applicable to Gold ETFs where the intention is to take delivery of the physical Gold and not to rollover its position to next contract cycle",
+  "kind": "applicability",
+  "note": "This provision specifies an exemption from the 10% threshold for Gold ETFs under certain conditions; it scopes the applicability of the rule without binding a specific data field."
+ },
+ {
+  "eid": "p0163.s0025",
+  "quote": "(10%) shall not be applicable to Silver ETFs where the intention is to take delivery of the physical silver and not to rollover its position to next contract cycle",
+  "kind": "applicability",
+  "note": "This provision specifies an exemption from the 10% threshold for Silver ETFs under certain conditions; it scopes the applicability of the rule without binding a specific data field."
+ },
+ {
+  "eid": "p0164.s0005",
+  "quote": "(2) An actively managed ETF shall disclose in its offer document and in all advertising material that it is an actively managed ETF, and shall disclose how it will meet the stated investment objectives including, where applicable, its intention to outperform an index",
+  "kind": "disclosure",
+  "note": "This provision mandates disclosures to investors, which aligns with the compliance declaration that the FME is in compliance with disclosure requirements.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0164.s0021",
+  "quote": "(1) The offer document for ETFs shall clearly include all disclosures which are material for investors to make an informed decision regarding investing in such ETFs",
+  "kind": "disclosure",
+  "note": "This provision requires material disclosures in the offer document, covered by the compliance declaration on investor disclosures.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0164.s0022",
+  "quote": "(2) The disclosures in the offer document shall inter-alia include investment objective, the targeted investors, investment style or strategy, investment methodology, proposed fees and expenses, risk management practices, KMPs of the FME and other relevant details of the FME and the ETF",
+  "kind": "disclosure",
+  "note": "This provision specifies the content required in investor disclosures, which is part of the disclosure compliance confirmed by the FME.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0164.s0024",
+  "quote": "The FME shall ensure that the NAV is disclosed to the investors on a daily basis and the manner of such disclosure shall be detailed in the offer document",
+  "kind": "disclosure",
+  "note": "Requirement to disclose NAV to investors on a daily basis; falls under disclosure obligations to investors certified by this compliance field.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0164.s0025",
+  "quote": "The FME shall ensure that the portfolio under the ETF is disclosed to the investors and the manner of such disclosure shall be detailed in the offer document",
+  "kind": "disclosure",
+  "note": "Requirement to disclose ETF portfolio composition to investors.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0165.s0000",
+  "quote": "(6) Any other material disclosure as considered suitable by the FME or the fiduciaries shall be informed to the investors immediately",
+  "kind": "disclosure",
+  "note": "Requirement to make additional material disclosures to investors.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0165.s0001",
+  "quote": "(7) The FME and the fiduciaries shall ensure compliance with the disclosure requirements as specified above or as may be specified by the Authority",
+  "kind": "disclosure",
+  "note": "Requirement to comply with all investor disclosure requirements specified in the regulations.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0165.s0007",
+  "quote": "(2) A FME that launches a scheme related to ESG, shall make full disclosure regarding investment objective, investment policy, strategy, material risk, benchmark, etc., in the manner as may be specified by the Authority",
+  "kind": "disclosure",
+  "note": "Requirement for full disclosure in case of ESG-related schemes, an investor disclosure obligation.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0165.s0017",
+  "quote": "(1) The FME shall provide a disclosure document to the client, prior to entering into a portfolio management agreement with the client",
+  "kind": "disclosure",
+  "note": "Requirement to provide a disclosure document to PMS client, who is an investor.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0165.s0018",
+  "quote": "(2) The FME shall ensure that a copy of disclosure document is available on its website",
+  "kind": "disclosure",
+  "note": "Requirement to make the disclosure document available on the website, a disclosure to investors.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0165.s0019",
+  "quote": "(3) The disclosure document referred to in sub-regulation (1) shall inter-alia contain details pertaining to the services offered, risk factors, client representation, financial performance, performance of portfolio manager, auditor observations, nature of expenses, taxation, investor grievance redressal mechanism and litigations by the regulatory authorities against the portfolio manager and its principal officers, directors/ partners/ designated partners and key managerial personnel",
+  "kind": "disclosure",
+  "note": "Specifies mandatory content of the disclosure document, which is part of investor disclosure obligations.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0166.s0005",
+  "quote": "(1) The FME shall periodically furnish a report to the portfolio management client in terms of the agreement with the client which shall inter-alia contain details relating to composition and value of the portfolio, transactions undertaken during the period of the report, beneficial interest received during the period of the report, expenses incurred in managing the portfolio and details of risk relating to the securities recommended by the portfolio manager for investment or disinvestment",
+  "kind": "disclosure",
+  "note": "Requirement to furnish periodic reports to PMS client, an investor disclosure obligation.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0167.s0013",
+  "quote": "(3) The FME shall ensure that any person or entity involved in the distribution of its services is carrying out the distribution activities in compliance with these regulations and the circulars and directions issued thereunder by the Authority from time to time",
+  "kind": "disclosure",
+  "note": "The field is the compliance attestation that distributors appointed by the FME comply with applicable regulations.",
+  "field": "8. Compliance Status!C12"
+ },
+ {
+  "eid": "p0167.s0014",
+  "quote": "(4) The FME shall report its performance uniformly in the disclosures to the Authority, advertising material, reports to the clients and on its website",
+  "kind": "disclosure",
+  "note": "The field is the compliance attestation for requirements for disclosures to investors under the Fund Management Regulations, and this provision is a specific performance-reporting disclosure requirement.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0169.s0011",
+  "quote": "(l) “project implementation agreement\" or \"project management agreement” means an agreement between the project manager, the concessionaire SPV and the trustee which sets out obligations of the project manager with respect to execution of the project and/or management: Provided that in case of PPP projects, such obligations shall be in addition to the responsibilities as under the concession agreement or any such agreement entered into with the concessioning authority",
+  "kind": "definition",
+  "note": "Defines the term project implementation/project management agreement; no field is governed."
+ },
+ {
+  "eid": "p0169.s0012",
+  "quote": "(m) “project manager” means a company or LLP or a body corporate designated as the project manager by the InvIT, responsible for achieving execution /management of the project and in case of PPP projects, shall mean the entity responsible for such execution and achievement of project milestones in accordance with the concession agreement or any other relevant project document",
+  "kind": "definition",
+  "note": "Defines the term project manager; no field is governed."
+ },
+ {
+  "eid": "p0169.s0013",
+  "quote": "(n) “real estate related assets” shall mean listed or unlisted debt securities and listed shares of or issued by property corporations, mortgage-backed securities, other property funds, and assets incidental to the ownership of real estate",
+  "kind": "definition",
+  "note": "Defines the term real estate related assets; no field is governed."
+ },
+ {
+  "eid": "p0169.s0017",
+  "quote": "Provided that this clause shall not apply in case of PPP projects where such acquiring or holding is disallowed by the government or regulatory provisions under the concession agreement or such other agreement, and shall be subject to provisions under clause (e) of Part D under Fourth Schedule",
+  "kind": "applicability",
+  "note": "This is an exception/scope provision specifying when the clause does not apply and cross-referencing the Fourth Schedule."
+ },
+ {
+  "eid": "p0170.s0015",
+  "quote": "Each sponsor shall maintain net worth not less than USD 15 million if it is a body corporate or a company, or net tangible assets of value not less than USD 15 million in case it is a limited liability partnership",
+  "kind": "threshold",
+  "note": "This sets a net worth threshold that the compliance status field confirms has been met.",
+  "field": "8. Compliance Status!C6"
+ },
+ {
+  "eid": "p0171.s0018",
+  "quote": "The Investment Trust shall raise funds from at least two (2) and not more than one thousand (1000) investors",
+  "kind": "threshold",
+  "note": "This establishes minimum and maximum investor counts, matching the total investor count field.",
+  "field": "4. Investors!O4"
+ },
+ {
+  "eid": "p0172.s0002",
+  "quote": "The fund raising by an Investment Trust by way of private placement, whose units are not proposed to be listed on the recognised stock exchange(s), shall be subject to compliance with the following:",
+  "kind": "applicability",
+  "note": "This chapeau scopes the private placement obligations to an Investment Trust whose units are not listed; it is an applicability rule and therefore does not bind a specific return field."
+ },
+ {
+  "eid": "p0172.s0007",
+  "quote": "The fund raising by an Investment Trust by way of public issue, shall be subject to compliance with the following:",
+  "kind": "applicability",
+  "note": "This chapeau scopes the public issue obligations to an Investment Trust making a public issue; it is an applicability rule and therefore does not bind a specific return field."
+ },
+ {
+  "eid": "p0172.s0004",
+  "quote": "The Investment Trust shall raise funds from not more than fifty (50) investors",
+  "kind": "threshold",
+  "note": "The fifty-investor cap is a threshold on the total number of investors in a private placement, corresponding to the Total column of the investor count table in the return.",
+  "field": "4. Investors!O4"
+ },
+ {
+  "eid": "p0173.s0007",
+  "quote": "the offer document shall contain adequate disclosures towards the utilisation of such oversubscription proceeds, if any, and such proceeds retained on account of oversubscription shall not be utilised towards general purposes",
+  "kind": "disclosure",
+  "note": "This provision imposes a disclosure requirement in the offer document to investors about use of oversubscription proceeds, and the return field is the attestation that investor disclosure requirements are complied with.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0173.s0012",
+  "quote": "The offer document or the placement memorandum of an Investment Trust shall contain material, true, correct and adequate disclosures to enable the investors to make an informed investment decision",
+  "kind": "disclosure",
+  "note": "Mandates material and adequate disclosures to investors; C10 is the compliance attestation for investor disclosure requirements.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0173.s0013",
+  "quote": "The offer document or placement memorandum shall include all information as required by the recognised stock exchange(s) and in such format as specified by the recognised stock exchange(s), including: (a) Introduction",
+  "kind": "disclosure",
+  "note": "Prescribes content of offer document/placement memorandum, part of investor disclosure obligations covered by C10.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0174.s0003",
+  "quote": "The placement memorandum of an Investment Trust whose units are not proposed to be listed on a recognised stock exchange shall contain all information, to the extent applicable, as specified for an Investment Trust whose units are proposed to be listed on a recognised stock exchange",
+  "kind": "disclosure",
+  "note": "Extends disclosure requirements to unlisted trusts; falls under investor disclosure compliance in C10.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0174.s0005",
+  "quote": "The Investment Trust listed on a recognised stock exchange shall comply with the continuous obligations and disclosure requirements specified by the recognised stock exchange(s)",
+  "kind": "disclosure",
+  "note": "Requires compliance with stock exchange disclosure obligations; relevant to C10 investor disclosure attestation.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0174.s0006",
+  "quote": "The investment manager of the Investment Trust shall submit annual report, half-yearly report and valuation report to the trustee and unit holders of the Investment Trust, either electronically or through physical copies",
+  "kind": "disclosure",
+  "note": "Imposes reporting/disclosure obligations to unit holders; captured by investor disclosure compliance in C10.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0174.s0007",
+  "quote": "The annual and half yearly reports shall contain disclosures as specified for a privately placed Investment Trusts listed on a recognised stock exchange",
+  "kind": "disclosure",
+  "note": "Specifies disclosure content of periodic reports; relevant to investor disclosure compliance in C10.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0174.s0008",
+  "quote": "The investment manager shall disclose to the trustee and unit holders any information having bearing on the operation or performance of the Investment Trust which includes but is not restricted to the following:– i",
+  "kind": "disclosure",
+  "note": "Requires ongoing disclosure of material information to unit holders; within scope of investor disclosure compliance in C10.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0178.s0008",
+  "quote": "(1) The following provisions shall apply to an Investment Trust listed on a recognised stock exchange: (a) An Investment Trust whose units are listed on a recognised stock exchange may issue debt securities in the manner specified by the Authority: Provided that such debt securities shall be listed on recognised stock exchange(s)",
+  "kind": "applicability",
+  "note": "This provision scopes the applicability of the following sub-clauses to Investment Trusts listed on a recognised stock exchange."
+ },
+ {
+  "eid": "p0180.s0000",
+  "quote": "(2) The requirements under regulations 5 and 8 pertaining to Legal form and Net-worth of a FME respectively, shall not be applicable to a Family Investment Fund",
+  "kind": "applicability",
+  "note": "This provision exempts Family Investment Funds from specific FME legal form and net worth requirements."
+ },
+ {
+  "eid": "p0180.s0004",
+  "quote": "Explanation I.- Such additional investment vehicles in the form of companies, limited liability partnerships, trusts or any other form as may be specified by the Authority, shall be considered in conjunction for the purpose of meeting the condition specified under sub-regulation (3)",
+  "kind": "definition",
+  "note": "Defines additional investment vehicles and how they are considered; no specific return field."
+ },
+ {
+  "eid": "p0182.s0007",
+  "quote": "Every FME, fiduciaries, KMPs (including Principal officer, Fund Managers and Designated Compliance Officer) shall abide by the Code of Conduct specified in Third Schedule",
+  "kind": "disclosure",
+  "note": "The provision requires compliance with the Code of Conduct, and the return field directly asks for confirmation of compliance with that Code.",
+  "field": "8. Compliance Status!C9"
+ },
+ {
+  "eid": "p0183.s0017",
+  "quote": "A FME shall pay the fees pertaining to annual fees, scheme filing fee or any other fees as may be specified by the Authority from time to time",
+  "kind": "disclosure",
+  "note": "The provision imposes an obligation to pay specified fees; the field captures whether the FME has paid the applicable recurring fees, thereby binding the fee payment requirement to this disclosure field.",
+  "field": "1. Introduction!D39"
+ },
+ {
+  "eid": "p0184.s0026",
+  "quote": "The FME shall ensure that investors are provided information about their holding in the schemes of FME at the end of every month and within ten working days in case of receipt of such request from an investor",
+  "kind": "disclosure",
+  "note": "The provision imposes an investor disclosure requirement, and the field is the compliance attestation for disclosures to investors.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0185.s0000",
+  "quote": "The fiduciaries shall make such disclosures to the investors as are essential in order to keep them informed about any information which may have an adverse bearing on their investments",
+  "kind": "disclosure",
+  "note": "The provision requires fiduciaries to make investor disclosures, and the field is the compliance attestation for disclosures to investors.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0188.s0013",
+  "quote": "No. Category Net Worth 1 Authorised FME USD 75,000 2 Registered FME (Non-retail) USD 5,00,000 3 Registered FME (Retail) USD 1,000,000",
+  "kind": "enumeration",
+  "note": "The provision lists the categories of FME registration, which populate the Category field.",
+  "field": "1. Introduction!D10",
+  "terms": [
+   "Authorised FME",
+   "Registered FME (Non-retail)",
+   "Registered FME (Retail)"
+  ]
+ },
+ {
+  "eid": "p0188.s0013",
+  "quote": "No. Category Net Worth 1 Authorised FME USD 75,000 2 Registered FME (Non-retail) USD 5,00,000 3 Registered FME (Retail) USD 1,000,000",
+  "kind": "threshold",
+  "note": "The provision sets the minimum net worth thresholds by FME category for the net worth compliance declaration.",
+  "field": "8. Compliance Status!C6"
+ },
+ {
+  "eid": "p0189.s0002",
+  "quote": "(e) The FME shall not appoint any person as key personnel who has been found guilty of any economic offence or involved in violation of securities laws",
+  "kind": "disclosure",
+  "note": "The provision describes a fit-and-proper disqualification for key personnel, matching the fit-and-proper compliance declaration.",
+  "field": "8. Compliance Status!C7"
+ },
+ {
+  "eid": "p0189.s0003",
+  "quote": "(f) The FME shall compute and carry out valuation of investments made by its scheme(s) in accordance with the investment valuation norms specified in Sixth Schedule, and shall publish the same",
+  "kind": "disclosure",
+  "note": "The provision requires valuation according to the Sixth Schedule and publication, corresponding to the valuation compliance declaration.",
+  "field": "8. Compliance Status!C11"
+ },
+ {
+  "eid": "p0189.s0009",
+  "quote": "(k) The FME shall maintain high standards of integrity and fairness in all their dealings and in the conduct of their business",
+  "kind": "disclosure",
+  "note": "The provision is a Code of Conduct obligation under the Third Schedule, matching the compliance declaration for the Code of Conduct.",
+  "field": "8. Compliance Status!C9"
+ },
+ {
+  "eid": "p0188.s0006",
+  "quote": "e) We shall notify IFSCA immediately of any material change in the information provided in the application",
+  "kind": "disclosure",
+  "note": "The provision requires disclosure of material changes, corresponding to the material-information field.",
+  "field": "8. Compliance Status!C13"
+ },
+ {
+  "eid": "p0189.s0010",
+  "quote": "(l) The FME shall render at all times high standards of service, exercise due diligence, ensure proper care and exercise independent professional judgment",
+  "kind": "disclosure",
+  "note": "Provision is part of Third Schedule Code of Conduct; C9 attests compliance with that Code.",
+  "field": "8. Compliance Status!C9"
+ },
+ {
+  "eid": "p0189.s0011",
+  "quote": "(m) The FME shall not make any exaggerated statement, whether oral or written, either about their qualifications or capability to render investment management services or their achievements",
+  "kind": "disclosure",
+  "note": "Provision is part of Third Schedule Code of Conduct; C9 attests compliance with that Code.",
+  "field": "8. Compliance Status!C9"
+ },
+ {
+  "eid": "p0189.s0012",
+  "quote": "(n) The FME shall ensure compliance with the Anti-Money Laundering/ Combating the Financing of Terrorism (AML/CFT) norms as applicable",
+  "kind": "disclosure",
+  "note": "Provision is part of Third Schedule Code of Conduct; C9 attests compliance with that Code.",
+  "field": "8. Compliance Status!C9"
+ },
+ {
+  "eid": "p0189.s0013",
+  "quote": "PART B: CODE OF CONDUCT AND OBLIGATIONS OF FIDUCIARIES (DIRECTORS / DESIGNATED PARTNERS / TRUSTEES OF THE FUND) (a) Based on the legal structure of the fund/scheme, the Board of Directors in case of Company, Designated Partners in case of LLP and Trustees (including the Board in case of a Trustee company) in case of a Trust, shall: (i) ensure that the monies of the schemes are invested to achieve the objectives of the scheme and in the interest of the investors",
+  "kind": "disclosure",
+  "note": "Provision is part of Third Schedule Code of Conduct; C9 attests compliance with that Code.",
+  "field": "8. Compliance Status!C9"
+ },
+ {
+  "eid": "p0189.s0025",
+  "quote": "(d) designated a compliance officer who shall be responsible for monitoring the compliance of the",
+  "kind": "disclosure",
+  "note": "Provision requires designation of a compliance officer; D29 captures the name of the Compliance Officer.",
+  "field": "1. Introduction!D29"
+ },
+ {
+  "eid": "p0190.s0004",
+  "quote": "(xii) shall on a yearly basis review the net-worth of the FME to ensure compliance with the threshold provided in Second Schedule on a continuous basis",
+  "kind": "disclosure",
+  "note": "Provision requires review of net worth for compliance with threshold; C6 is the declaration of net worth requirement compliance.",
+  "field": "8. Compliance Status!C6"
+ },
+ {
+  "eid": "p0190.s0005",
+  "quote": "(xiii) shall ensure that the scheme/fund property is properly protected, held and administered by proper persons and by a proper number of such persons",
+  "kind": "disclosure",
+  "note": "Provision is part of Third Schedule Code of Conduct; C9 attests compliance with that Code.",
+  "field": "8. Compliance Status!C9"
+ },
+ {
+  "eid": "p0190.s0006",
+  "quote": "PART C: CODE OF CONDUCT AND OBLIGATIONS OF PRINCIPAL OFFICER, FUND MANAGER AND COMPLIANCE OFFICER (a) The Principal Officer shall ensure that all the activities of the FME are in accordance with the provisions of these regulations and various circulars and guidelines issued thereunder",
+  "kind": "disclosure",
+  "note": "Provision is part of Third Schedule Code of Conduct; C9 attests compliance with that Code.",
+  "field": "8. Compliance Status!C9"
+ },
+ {
+  "eid": "p0190.s0007",
+  "quote": "(b) The Principal Officer shall ensure that the funds of the schemes are invested to achieve the objectives of the scheme and in the interest of the investors",
+  "kind": "disclosure",
+  "note": "Provision is part of Third Schedule Code of Conduct; C9 attests compliance with that Code.",
+  "field": "8. Compliance Status!C9"
+ },
+ {
+  "eid": "p0190.s0009",
+  "quote": "(d) The Principal Officer shall periodically review the investor complaints received and shall ensure immediate redressal of the same by the FME",
+  "kind": "disclosure",
+  "note": "Provision is part of Third Schedule Code of Conduct; C9 attests compliance with that Code.",
+  "field": "8. Compliance Status!C9"
+ },
+ {
+  "eid": "p0190.s0010",
+  "quote": "(e) Principal Officer and Fund Managers shall: (i) abide by the Act, Rules, Regulations, Guidelines and Circulars governing the securities market",
+  "kind": "disclosure",
+  "note": "Provision is part of Third Schedule Code of Conduct; C9 attests compliance with that Code.",
+  "field": "8. Compliance Status!C9"
+ },
+ {
+  "eid": "p0190.s0023",
+  "quote": "(f) The KMP designated as compliance officer shall (i) be responsible for monitoring the compliance of the Act, rules and regulations, notifications, guidelines, instructions, etc., issued by the Authority and for redressal of investors grievances immediately",
+  "kind": "disclosure",
+  "note": "Provision refers to the designated compliance officer; D29 captures the name of the Compliance Officer.",
+  "field": "1. Introduction!D29"
+ },
+ {
+  "eid": "p0191.s0000",
+  "quote": "PART D: CONFLICT OF INTEREST (a) The FME shall act in a fiduciary capacity towards its investors and shall disclose to the investors, all of interests as and when they arise or seem likely to arise",
+  "kind": "disclosure",
+  "note": "Provision requires disclosure to investors; C10 is the declaration of compliance with investor disclosure requirements.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0191.s0001",
+  "quote": "(b) FME shall establish and implement written policies and procedures to identify, monitor and appropriately mitigate conflicts of interest throughout the scope of business",
+  "kind": "disclosure",
+  "note": "Provision is part of Third Schedule Code of Conduct; C9 attests compliance with that Code.",
+  "field": "8. Compliance Status!C9"
+ },
+ {
+  "eid": "p0191.s0002",
+  "quote": "(c) FME shall abide by high level principles on avoidance of conflicts of interest with associated persons, as may be specified by the Authority from time to time",
+  "kind": "disclosure",
+  "note": "Provision is part of Third Schedule Code of Conduct; C9 attests compliance with that Code.",
+  "field": "8. Compliance Status!C9"
+ },
+ {
+  "eid": "p0191.s0003",
+  "quote": "(d) FME shall ensure that different activities of FME are carried at arm’s length and interest of investor under one activity are not being compromised with those of any other scheme or of other activities of the FME",
+  "kind": "disclosure",
+  "note": "Provision is part of Third Schedule Code of Conduct; C9 attests compliance with that Code.",
+  "field": "8. Compliance Status!C9"
+ },
+ {
+  "eid": "p0191.s0004",
+  "quote": "PART E: CODE OF CONDUCT AND OBLIGATIONS OF THE FUND MANAGEMENT ENTITY ACTING AS A PORTFOLIO MANAGER (a) A FME acting as a Portfolio Manager shall:- (i) ensure that the money received from the client for an investment purpose is deployed as soon as possible for that purpose and money due and payable to a client is paid forthwith",
+  "kind": "disclosure",
+  "note": "Provision is part of Third Schedule Code of Conduct; C9 attests compliance with that Code.",
+  "field": "8. Compliance Status!C9"
+ },
+ {
+  "eid": "p0191.s0018",
+  "quote": "(e) The trustee shall make distributions and ensure that investment manager makes timely declaration of distributions to the unit holders",
+  "kind": "disclosure",
+  "note": "The provision requires a timely declaration of distributions to unit holders, which is a disclosure to investors; the field confirms compliance with investor disclosure requirements.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0192.s0002",
+  "quote": "(h) The trustee shall ensure that the investment manager convenes meetings of the unit holders and oversee the voting by unitholders and declare outcome of the voting",
+  "kind": "disclosure",
+  "note": "The provision requires declaring voting outcomes to unit holders, which is a disclosure to investors; the field confirms compliance with investor disclosure requirements.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0193.s0002",
+  "quote": "The investment manager shall ensure that it has adequate infrastructure and sufficient key personnel with adequate experience and qualification to undertake management of the Investment Trust at all times",
+  "kind": "disclosure",
+  "note": "The provision requires the investment manager (FME) to maintain adequate infrastructure and personnel, which is directly reflected in the compliance declaration field C8.",
+  "field": "8. Compliance Status!C8"
+ },
+ {
+  "eid": "p0193.s0005",
+  "quote": "The investment manager and the investment bankers(s) shall ensure that disclosures made in the offer document or placement memorandum contains material, true, correct and adequate disclosures and are in accordance with the requirements specified by Authority or the recognised stock exchange(s), in respect of Investment Trust listed on a recognised stock exchange",
+  "kind": "disclosure",
+  "note": "The provision mandates adequate disclosures in the offer document/placement memorandum, aligning with the compliance statement on disclosure requirements to investors.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0193.s0006",
+  "quote": "The investment manager shall ensure that disclosures made in the placement memorandum contains material, true, correct and adequate disclosures and are in accordance with the requirements specified by Authority in respect of privately placed Investment Trust whose units are not listed on a recognised stock exchange",
+  "kind": "disclosure",
+  "note": "Similar to the listed trust provision, this requires adequate disclosures in the placement memorandum for privately placed Investment Trusts, also covered by the disclosure compliance field.",
+  "field": "8. Compliance Status!C10"
+ },
+ {
+  "eid": "p0195.s0013",
+  "quote": "SIXTH SCHEDULE INVESTMENT VALUATION NORMS - PRINCIPLES OF FAIR VALUATION A FME shall value its investments in accordance with the following overarching principles so as to ensure fair treatment to all investors including existing investors as well as investors seeking to invest: (a) The valuation of investments shall be based on the principles of fair valuation i.e., valuation shall be reflective of the realizable value of the securities/financial product/assets",
+  "kind": "disclosure",
+  "note": "The provision sets out the overarching fair valuation principle which forms part of the Investment Valuation Norms, and the field is a declaration of compliance with those norms.",
+  "field": "8. Compliance Status!C11"
+ },
+ {
+  "eid": "p0195.s0014",
+  "quote": "The valuation shall be done in good faith and in true and fair manner through appropriate valuation policies and procedures",
+  "kind": "disclosure",
+  "note": "Imposes a requirement on valuation practices, relevant to the compliance declaration on Investment Valuation Norms.",
+  "field": "8. Compliance Status!C11"
+ },
+ {
+  "eid": "p0195.s0015",
+  "quote": "(b) The policies and procedures shall identify the methodologies that will be used for valuing each type of securities/financial products/assets held by the schemes",
+  "kind": "disclosure",
+  "note": "Requires identification of valuation methodologies, part of the Investment Valuation Norms.",
+  "field": "8. Compliance Status!C11"
+ },
+ {
+  "eid": "p0195.s0016",
+  "quote": "Investment in new type of securities/financial products/assets by the scheme shall be made only after establishment of the valuation methodologies for such securities/ financial products/assets",
+  "kind": "disclosure",
+  "note": "Conditions investment in new assets on having valuation methodologies, part of the Investment Valuation Norms.",
+  "field": "8. Compliance Status!C11"
+ },
+ {
+  "eid": "p0195.s0017",
+  "quote": "(c) The assets held by the FME shall be consistently valued according to the policies and procedures",
+  "kind": "disclosure",
+  "note": "Requires consistent application of valuation policies, part of the Investment Valuation Norms.",
+  "field": "8. Compliance Status!C11"
+ },
+ {
+  "eid": "p0195.s0018",
+  "quote": "The policies and procedures shall describe the process to deal with events where market quotations are no longer reliable for a particular asset",
+  "kind": "disclosure",
+  "note": "Requires procedures for unreliable quotations, part of the Investment Valuation Norms.",
+  "field": "8. Compliance Status!C11"
+ },
+ {
+  "eid": "p0195.s0019",
+  "quote": "(d) The FME shall provide for the periodic review of the valuation policies and procedures to ensure the appropriateness and accuracy of the methodologies used and its effective implementation in valuing the securities/financial products/assets",
+  "kind": "disclosure",
+  "note": "Mandates periodic review of valuation policies, part of the Investment Valuation Norms.",
+  "field": "8. Compliance Status!C11"
+ },
+ {
+  "eid": "p0196.s0001",
+  "quote": "(f) Disclosure of the valuation policy and procedures (with regard to valuation of each category of securities/financial product/assets where the scheme will invest, situation where these methods will be used, process and methodology and impact of implementation of these methods, if any) shall be made in offer document and on the website of the FME to ensure transparency of valuation norms to be adopted by FME",
+  "kind": "disclosure",
+  "note": "Explicitly requires disclosure of valuation policy, directly relevant to the compliance declaration on Investment Valuation Norms.",
+  "field": "8. Compliance Status!C11"
+ },
+ {
+  "eid": "p0196.s0002",
+  "quote": "This clause shall be applicable only in respect of Retail Schemes",
+  "kind": "applicability",
+  "note": "Limits the application of the preceding disclosure clause to Retail Schemes; applicability rule governs no field."
+ },
+ {
+  "eid": "p0196.s0003",
+  "quote": "(g) The responsibility of true and fairness of valuation and correct NAV shall be of the FME, irrespective of disclosure of the approved valuation policies and procedures i.e., if the established policies and procedures of valuation do not result in fair/ appropriate valuation, the FME shall deviate from the established policies and procedures in order to value the assets/ financial products / securities at fair value: Provided that any deviation from the disclosed valuation policy and procedures may be allowed with appropriate disclosures to investors",
+  "kind": "disclosure",
+  "note": "Places responsibility on FME for true and fair valuation and includes a disclosure condition for deviations, part of the Investment Valuation Norms.",
+  "field": "8. Compliance Status!C11"
+ }
+]

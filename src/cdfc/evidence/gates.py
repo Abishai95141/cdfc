@@ -169,6 +169,32 @@ def adjudicate(
     """Run all five gates over every proposal. **Every gate runs; the first refusal does not stop
     the rest**, because a caller fixing one defect needs to see the others in the same pass."""
     rows = proposals.proposals if isinstance(proposals, ProposalSet) else tuple(proposals)
+
+    # ADDRESS-SPACE MISMATCH IS ONE FAULT, NOT N FAILURES. Added C5, 20 Aug 2026.
+    #
+    # A proposals file addressed `p0143.s0006` (COORDINATE) adjudicated against a provision set
+    # addressed `div1_0001` (PROVISION) produced **0 admitted and 172 refused**, every one a
+    # G-QUOTE "no provision with that eId". The SAME file against the SAME instrument addressed
+    # the same way admits **161 of 172**.
+    #
+    # Left alone, that reports a model as useless when the truth is that two artefacts do not share
+    # an address space — and it is the more dangerous direction of wrong, because zero admitted
+    # looks like a careful system refusing bad input.
+    #
+    # ZERO overlap between two non-empty sets is a mismatch, not a coincidence. A PARTIAL overlap
+    # is legitimate and is not touched: `only_with` narrows the provisions, so proposals citing a
+    # filtered-out provision SHOULD refuse one by one.
+    if rows and len(provisions.provisions):
+        known = {pr.eid for pr in provisions.provisions}
+        if not any(p.eid in known for p in rows):
+            raise ValueError(
+                f"none of {len(rows)} proposal(s) cites any of {len(known)} provision(s). The "
+                f"proposals are addressed like {rows[0].eid!r} and the provisions like "
+                f"{next(iter(sorted(known)))!r} — these are different address spaces "
+                f"({provisions.eid_kind.value}). Adjudicating them would refuse every proposal at "
+                "G-QUOTE and report an addressing fault as a model that proposed nothing usable."
+            )
+
     out: list[Verdict] = []
     for p in rows:
         refusals: list[tuple[str, Refusal, str]] = []
