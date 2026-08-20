@@ -7,7 +7,8 @@ Binds TWO source documents to the regulator's blank in ONE run and proves:
   2. every evidenced observation re-verifies byte-exact IN ITS OWN document;
   3. the fill count rises from B1's 1, and the number is recorded rather than asserted;
   4. the declaration still closes across four lanes;
-  5. the written return still changes nothing but the cells it names.
+  5. the written return still changes nothing but the cells it names;
+  6. one identity appearing in BOTH documents resolves to ONE entity node.
 
 Exit 0 only if all five hold. Prints the numbers either way.
 """
@@ -22,6 +23,8 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 
+from cdfc.correspond.link import Comparison, exact                     # noqa: E402
+from cdfc.evidence.entities import records_from_rows, resolve          # noqa: E402
 from cdfc.fill.pipeline import run                                     # noqa: E402
 from cdfc.fill.write import verify_written, write, written_values      # noqa: E402
 from cdfc.ingest.tabular import read_delimited                         # noqa: E402
@@ -34,15 +37,30 @@ BLANK = REPO / ("fixtures/prescribed/"
 # source asked for net worth, AUM and investor counts — NONE of which this return has a field for:
 # it asks whether the requirements were COMPLIED WITH. A binder cannot fill a field that is absent,
 # and measuring one against a source pack the return never asks for measures nothing.
+# SEVERAL ROWS PER REGISTER, and that is not padding. Fellegi-Sunter fits `m`, `u` and prevalence
+# by EM over the candidate pairs; with ONE record on each side there is a single pair and EM
+# cannot separate a match from a non-match — it returned `m == u == 1.0`, the comparison carried no
+# information, and `link` correctly refused to link on no evidence. Entity resolution is a
+# STATISTICAL method and it needs a population. A demo built on one row each would have been
+# measuring nothing and would have looked like a bug in the resolver.
 ENTITY = (b"Category of Registration of FME,Legal Structure of FME,"
           b"Date of Registration of FME,PAN of FME,Address of FME\n"
           b"Registered FME (Retail),Company,2025-04-01,AABCF1234K,"
-          b"Unit 402 GIFT City Gandhinagar\n")
-OFFICERS = (b"Name of the Principal Officer,Email address of the Principal Officer,"
+          b"Unit 402 GIFT City Gandhinagar\n"
+          b"Registered FME (Non-Retail),LLP,2024-11-12,AAECG9876M,Tower B GIFT City\n"
+          b"Authorised FME,Company,2026-01-05,AAFCH5555Q,Block 9 GIFT City\n"
+          b"Registered FME (Retail),Trust,2023-06-30,AAGCJ2222P,Unit 77 GIFT City\n")
+# The SAME FME appears in the officers register, keyed on the same PAN and with the principal
+# officer's name spelled with a stray double space. That is what CHECK 6 resolves.
+OFFICERS = (b"PAN of FME,Name of the Principal Officer,Email address of the Principal Officer,"
             b"Contact no. of the Principal Officer,Name of the Compliance Officer,"
             b"Email address of the Compliance Officer\n"
-            b"Asha Rao,asha.rao@example.com,+91 79 4000 1234,Vikram Shah,"
-            b"vikram.shah@example.com\n")
+            b"AABCF1234K,Asha  Rao,asha.rao@example.com,+91 79 4000 1234,Vikram Shah,"
+            b"vikram.shah@example.com\n"
+            b"AAECG9876M,Priya Nair,priya.nair@example.com,+91 79 4000 5678,Neha Iyer,"
+            b"neha.iyer@example.com\n"
+            b"AAZZZ0000X,Rahul Menon,rahul.menon@example.com,+91 79 4000 9999,Sunil Das,"
+            b"sunil.das@example.com\n")
 
 B1_FILLED = 1          # what B1 achieved on one source with the polluted binder
 
@@ -60,8 +78,10 @@ def main() -> int:
         b = reg.put(OFFICERS, kind=ArtefactKind.SOURCE, filename="officers-register.csv")
 
         t0 = time.time()
+        # The filing is ABOUT one FME. Both registers hold several; the run names which.
+        SUBJECT = {"PAN of FME": "AABCF1234K"}
         r = run(reg, template_digest=t.digest, source_digest=[a.digest, b.digest],
-                template_path=BLANK)
+                template_path=BLANK, subject=SUBJECT)
         dt = time.time() - t0
         c = r.declaration.counts()
 
@@ -127,6 +147,31 @@ def main() -> int:
         for x in rec.cells:
             print(f"    [{x.lane:9}] {x.ref:26} = {got.get(x.ref)!r}")
 
+        print("\n  CHECK 6 — one identity, seen in BOTH documents, resolves to ONE entity")
+        from cdfc.ingest.tabular import header_and_rows
+
+        eh, er = header_and_rows(ENTITY)
+        oh, orr = header_and_rows(OFFICERS)
+        left = records_from_rows("entity-master.csv", eh, er)
+        right = records_from_rows("officers-register.csv", oh, orr)
+
+        def _norm(x: str, y: str) -> bool:
+            return " ".join(x.split()).casefold() == " ".join(y.split()).casefold()
+
+        es = resolve(left, right, [Comparison("PAN of FME", exact),
+                                   Comparison("Name of the Principal Officer", _norm)])
+        for line in es.lines():
+            print(f"    {line}")
+        cross = es.cross_document()
+        for e in cross:
+            print(f"    CROSS-DOC  {e.label('PAN of FME')}  {list(e.documents)}  "
+                  f"resolved_by={e.resolved_by.value}")
+        if not cross:
+            fail.append("no entity resolved across both documents")
+        covered = [x.id for e in es.entities for x in e.records]
+        if sorted(covered) != sorted(x.id for x in es.records):
+            fail.append("records do not partition into entities")
+
         keep = REPO / "reports/demo-fuse"
         keep.mkdir(parents=True, exist_ok=True)
         import shutil
@@ -138,6 +183,8 @@ def main() -> int:
             "declaration": c, "verify": v,
             "cells": [{"ref": x.ref, "value": x.value, "lane": x.lane, "document": x.document,
                        "span": list(x.span) if x.span else None} for x in rec.cells],
+            "entities": {"counts": es.counts(),
+                         "cross_document": [e.as_canonical_obj() for e in es.cross_document()]},
         }, indent=1), encoding="utf-8")
         print(f"\n  wrote reports/demo-fuse/filled.xlsx and fuse-record.json")
 
@@ -147,10 +194,10 @@ def main() -> int:
         for f in fail:
             print(f"  * {f}")
         return 1
-    print("DEMO-FUSE PASSED — all five checks.")
-    print("  NOT shown: an ENTITY node. Cross-document entity RESOLUTION — one entity appearing")
-    print("  in both sources resolving to one node — is not built; this fuses FIELDS, not")
-    print("  entities. And no filled value is claimed CORRECT.")
+    print("DEMO-FUSE PASSED — all six checks.")
+    print("  NOT shown: no filled value is claimed CORRECT, and no ENTITY is claimed to be the")
+    print("  right one — the resolution is Fellegi-Sunter over two declared comparisons on two")
+    print("  records, which is a mechanism working, not an accuracy measurement.")
     return 0
 
 

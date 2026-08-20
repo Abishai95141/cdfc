@@ -76,17 +76,54 @@ Two bugs in that branch, both found by running it:
   excluded every case it existed to admit. `first` being `TYPE_ADMITS` already proves everything
   before it held.
 
-## What B2 does NOT deliver, against its own plan
+## THE ENTITY HALF — built after the above, and it moved the architecture
 
-`docs/BUILD-B.md` scoped B2 as *"the binder, AND the graph gets entities"*. **The binder half is
-done; the Entity half is not.**
+`cdfc.evidence.entities` resolves records across documents into entities. Two node kinds, not one:
 
-* **No `Entity` node kind exists**, and no entity appearing in both sources resolves to one node.
-  What this fuses is **FIELDS from two documents into one return** — real, and not the same thing
-  as entity resolution. `cdfc.correspond.link` (Fellegi-Sunter, measured in `N4`) is the component
-  that would feed it and is not wired to the graph.
-* **GraphRAG's 29 entities are not ingested** into the `Derived` lane either.
-* `make demo-fuse` states both absences in its own output rather than passing quietly.
+    RECORD    one row, in one document.            OBSERVED.
+    ENTITY    one identity, resolved across rows.  DERIVED, and it says so.
+
+Collapsing them loses what an auditor needs — **which document said what** versus **what we
+concluded by putting two documents side by side**. `ERKG` (DerwenAI) argues the same order from the
+other direction: resolve entities BEFORE building the graph. This system already did; what was
+missing was the node, so the resolution existed and was invisible.
+
+`make demo-fuse` CHECK 6, over 4 + 3 real register rows:
+
+    records 7 · ENTITIES 5 · cross-document 2 · by linkage 2 · singletons 3 · refused 2
+    EM iterations 2 · converged True · prevalence 0.0298 · m=0.9312 u=0.1432
+    CROSS-DOC  AABCF1234K  ['entity-master.csv', 'officers-register.csv']  resolved_by=linkage
+
+The same FME, spelled `Asha Rao` in one register and `Asha  Rao` in the other, resolves to one
+node with **two `resolves_to` edges** — which is what makes *"one identity, seen in both files"* a
+traversable fact rather than a claim. Records **partition** into entities or `EntitySet` refuses
+construction.
+
+## TWO FINDINGS THAT ONLY APPEARED WHEN THE DEMO GOT REALISTIC
+
+**1. Entity resolution needs a POPULATION.** The first CHECK 6 had one record per register and
+resolved nothing: EM fits `m`, `u` and prevalence over the candidate pairs, and with a single pair
+it cannot separate a match from a non-match — it returned **`m == u == 1.0`**, the comparison
+carried no information, and `link` correctly refused to link on no evidence. A demo built on one
+row each would have been measuring nothing while looking like a resolver bug.
+
+**2. A RETURN IS FILED BY ONE ENTITY, ABOUT THAT ENTITY — and nothing enforced it.** Giving the
+registers four and three rows dropped the fill count from 10 to **ZERO**: four different PANs bound
+to one cell, and `A5`'s `UNIQUE` refused every one as contradicted.
+
+That is not a defect in `A5` or in the resolver. **It is a question nobody had asked.** `run` now
+takes a `subject`, binds only that entity's rows, and — when the sources describe more than one
+subject and nobody named it — **REFUSES rather than choosing**. Filing one entity's figures under
+another's name is the worst thing this system could do, and a silent choice is exactly how it would
+happen.
+
+## What is STILL not delivered
+
+* **GraphRAG's 29 entities are not ingested.** `from_extracted` exists and is controlled, so the
+  lane is open and nothing has been put through it from `D3`'s output.
+* **No entity is claimed to be the RIGHT one.** Fellegi-Sunter over two declared comparisons on
+  seven records is a mechanism working, not an accuracy measurement, and `N4`'s independence
+  criterion is still unmet.
 
 ## And what nothing here establishes
 

@@ -28,12 +28,19 @@ class NodeKind(StrEnum):
     PROVISION = "Provision"
     FIELD = "Field"
     RULE = "Rule"
+    # B2. A RECORD is one row of one document — OBSERVED. An ENTITY is one identity resolved
+    # across records — DERIVED. Two kinds rather than one, because an auditor needs to tell what a
+    # document SAID from what we CONCLUDED by putting two documents side by side.
+    RECORD = "Record"
+    ENTITY = "Entity"
 
 
 class EdgeKind(StrEnum):
     CITES = "cites"            # Rule  -> Provision
     GOVERNS = "governs"        # Rule  -> Field
     REFERS_TO = "refers_to"    # Rule  -> Provision (a cross-reference that RESOLVED)
+    RESOLVES_TO = "resolves_to"    # Record -> Entity
+    EVIDENCES = "evidences"        # Record -> Field  (a record supplied this field's value)
 
 
 @dataclass(frozen=True, slots=True)
@@ -83,7 +90,14 @@ class Graph:
             yield (e.src, e.kind.value, e.dst)
 
 
-def build(adj: Adjudication, provisions: ProvisionSet, fields: FieldSet) -> Graph:
+def build(adj: Adjudication, provisions: ProvisionSet, fields: FieldSet,
+          entities: Any = None) -> Graph:
+    """`entities` is an optional `cdfc.evidence.entities.EntitySet`.
+
+    Optional because the rules-and-fields graph predates it and every caller that does not resolve
+    records still gets exactly the graph it got before — an empty entity layer is ABSENT, not a
+    layer of zero, and `counts()` simply carries no Record or Entity key.
+    """
     nodes: list[Node] = []
     edges: list[Edge] = []
 
@@ -97,6 +111,27 @@ def build(adj: Adjudication, provisions: ProvisionSet, fields: FieldSet) -> Grap
             id=f"field:{f.ref}", kind=NodeKind.FIELD,
             attrs=(("type", f.type.value), ("asks", f.asks.value), ("label", f.label)),
         ))
+
+    if entities is not None:
+        field_refs = {f.ref for f in fields.fields}
+        for r in entities.records:
+            nodes.append(Node(id=r.id, kind=NodeKind.RECORD,
+                              attrs=(("document", r.document), ("row", str(r.row)))))
+        for e in entities.entities:
+            nodes.append(Node(
+                id=e.id, kind=NodeKind.ENTITY,
+                attrs=(("resolved_by", e.resolved_by.value),
+                       ("documents", ",".join(e.documents)),
+                       ("cross_document", str(e.is_cross_document).lower())),
+            ))
+            for r in e.records:
+                # An entity resolved across two documents gets TWO of these, which is what makes
+                # "one identity, seen in both files" a traversable fact rather than a claim.
+                edges.append(Edge(src=r.id, dst=e.id, kind=EdgeKind.RESOLVES_TO))
+                for name in r.fields:
+                    ref = name if name in field_refs else None
+                    if ref is not None:
+                        edges.append(Edge(src=r.id, dst=f"field:{ref}", kind=EdgeKind.EVIDENCES))
 
     # ONLY ADMITTED PROPOSALS. The index is the position in the admitted sequence, so a rule id
     # is stable for a given input set and says nothing about the refused ones.

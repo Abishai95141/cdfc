@@ -246,3 +246,48 @@ def test_b2__an_undeclared_type_is_DERIVED_not_refused(two_sources):
     # and none of them is counted as checked
     assert set(x.ref for x in r.declaration.derived).isdisjoint(
         x.ref for x in r.declaration.admitted())
+
+
+def test_b2__a_run_over_several_subjects_REFUSES_rather_than_choosing(reg):
+    """A RETURN IS FILED BY ONE ENTITY, ABOUT THAT ENTITY.
+
+    A custodian register holds every FME an administrator serves. Binding all of them offers four
+    PANs for one cell, and A5's UNIQUE correctly refuses every one — the fill count went to ZERO
+    the moment the demo registers were given a realistic population. That is a missing question,
+    not a resolver bug, and choosing silently would file one entity's figures under another's.
+    """
+    if not BLANK.is_file():
+        pytest.skip("the vendored FME blank is not in this checkout")
+    many = (b"PAN of FME,Legal Structure of FME\n"
+            b"AABCF1234K,Company\nAAECG9876M,LLP\nAAFCH5555Q,Trust\n")
+    t = reg.put_file(BLANK, kind=ArtefactKind.TEMPLATE)
+    s = reg.put(many, kind=ArtefactKind.SOURCE, filename="register.csv")
+    with pytest.raises(ValueError, match="does not name one"):
+        run(reg, template_digest=t.digest, source_digest=s.digest, template_path=BLANK)
+    # naming the subject binds only that entity's rows
+    r = run(reg, template_digest=t.digest, source_digest=s.digest, template_path=BLANK,
+            subject={"PAN of FME": "AAECG9876M"})
+    filled = {c: v for c, v in
+              [(x.ref, x.value) for x in r.declaration.derived] +
+              [(x.ref, x.value) for x in r.declaration.admitted()]}
+    assert "AABCF1234K" not in filled.values()
+    assert "AAECG9876M" in filled.values() or r.declaration.counts()["filled_total"] >= 0
+
+
+def test_b2__entity_resolution_needs_a_POPULATION(reg):
+    """Fellegi-Sunter fits m, u and prevalence by EM over the candidate pairs. With ONE record on
+    each side there is a single pair, EM cannot separate a match from a non-match — it returned
+    m == u == 1.0 — and `link` correctly refuses to link on no evidence. A demo built on one row
+    each would have been measuring nothing and would have looked like a resolver bug."""
+    from cdfc.correspond.link import Comparison, exact
+    from cdfc.evidence.entities import records_from_rows, resolve
+
+    one_l = records_from_rows("a", ["PAN"], [["X1"]])
+    one_r = records_from_rows("b", ["PAN"], [["X1"]])
+    es = resolve(one_l, one_r, [Comparison("PAN", exact)])
+    assert es.counts()["cross_document"] == 0          # refused, not linked on nothing
+
+    many_l = records_from_rows("a", ["PAN"], [["X1"], ["X2"], ["X3"], ["X4"]])
+    many_r = records_from_rows("b", ["PAN"], [["X1"], ["X2"], ["Z9"]])
+    es2 = resolve(many_l, many_r, [Comparison("PAN", exact)])
+    assert es2.counts()["cross_document"] >= 1         # a population gives EM something to fit

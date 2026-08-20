@@ -35,7 +35,7 @@ which artefacts to use: a caller names digests, exactly as a run names its input
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -104,6 +104,7 @@ def run(
     source_digest: str | Sequence[str],
     template_path: Path | None = None,
     delimiter: str = ",",
+    subject: Mapping[str, str] | None = None,
 ) -> FillRun:
     """Bind a stored source export to a stored template and adjudicate the fills.
 
@@ -137,10 +138,43 @@ def run(
     blank = template_path or Path(registry.meta(template_digest).filename)
     fields: FieldSet = from_template(blank)
 
+    # A RETURN IS FILED BY ONE ENTITY, ABOUT THAT ENTITY.
+    #
+    # A custodian register holds every FME the administrator serves. Binding all of them to one
+    # return offers four different PANs for one cell, and `A5`'s UNIQUE condition correctly refuses
+    # every one as contradicted — the fill count went to ZERO the moment the demo registers were
+    # given a realistic population. That is not a bug in the resolver or in A5; it is a missing
+    # question. `subject` answers it: the rows this filing is about.
+    #
+    # When the sources describe more than one subject and nobody said which, the run REFUSES
+    # rather than picking. Filing one entity's figures under another's name is the worst thing
+    # this system could do, and a silent choice is how it would happen.
     columns = []
+    subjects_seen: set[tuple[str, ...]] = set()
     for d in digests:
         header, rows = header_and_rows(raws[d], delimiter=delimiter)
+        if subject:
+            keys = [k for k in subject if k in header]
+            if keys:
+                idx = {k: header.index(k) for k in keys}
+                rows = [r for r in rows
+                        if all(str(r[idx[k]]).strip() == subject[k] for k in keys
+                               if idx[k] < len(r))]
+        for k in ("PAN of FME", "PAN"):
+            if k in header:
+                col = header.index(k)
+                subjects_seen.add(tuple(sorted({str(r[col]).strip() for r in rows
+                                                if col < len(r) and str(r[col]).strip()})))
         columns.extend(columns_from_rows(header, rows))
+
+    distinct = {v for group in subjects_seen for v in group}
+    if subject is None and len(distinct) > 1:
+        raise ValueError(
+            f"the sources describe {len(distinct)} subjects (e.g. {sorted(distinct)[:3]}) and the "
+            "run does not name one. A return is filed BY one entity ABOUT that entity; binding a "
+            "whole register to it offers several values for every cell, and choosing silently "
+            "would file one entity's figures under another's name."
+        )
     m = match(columns, fields)
 
     # A1c gives column -> field. Turn each matched column's VALUES into observations LOCATED in
