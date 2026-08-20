@@ -56,3 +56,5 @@ reports/demo/*
 # Vendored JS. `ci/no-bare-rate.sh` also excludes it at the walk — a gate that reports on a
 # dependency's own documentation produces a failure nobody here can act on.
 node_modules/
+.graphify_*
+graphify-out/

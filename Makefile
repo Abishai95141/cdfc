@@ -323,3 +323,7 @@ pin-pdf:  ## B3 — BUILD TIME ONLY. Needs docling+pdfplumber; not in the runtim
 .PHONY: demo-fuse
 demo-fuse:  ## B2 — two documents, one run, one return
 	$(PY) tools/demo_fuse.py
+
+.PHONY: graph
+graph:  ## rebuild docs/ARCHITECTURE-measured.md's source graph (AST only, no LLM)
+	$(PY) -c "import json,pathlib;from graphify.extract import collect_files,extract;from graphify.build import build_from_json;from graphify.cluster import cluster;from graphify.export import to_json;fs=collect_files(pathlib.Path('src'));r=extract(fs,cache_root=pathlib.Path('src'));G=build_from_json(r,root='src',directed=True);to_json(G,cluster(G),'graphify-out/graph.json');print(G)"
