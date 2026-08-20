@@ -121,6 +121,64 @@ def arm_fincen() -> dict[str, object]:
             "labelled": labelled, "refused": c["refused_total"], "seconds": round(dt, 2)}
 
 
+def arm_registry() -> dict[str, object]:
+    """THE CROSS-UPLOAD FLOW: three uploads on three days, one run naming all three.
+
+    This is what `D-A3-01a` found unbuildable — there was nowhere to put the first two uploads.
+    The run then projects W3C PROV and SHACL, both EXPORTS: nothing here validates against them.
+    """
+    import tempfile
+
+    from cdfc.evidence.fields import from_template
+    from cdfc.registry import ArtefactKind, Registry
+    from cdfc.registry.prov import n_triples, triples
+    from cdfc.registry.shapes import from_fieldset, from_xsd_surface
+    from cdfc.schema.xsd import read as read_xsd
+
+    with tempfile.TemporaryDirectory() as tmp:
+        reg = Registry(root=Path(tmp) / "registry")
+        t0 = time.time()
+        day1 = reg.put_file(EBA_RULES, kind=ArtefactKind.RULES) if EBA_RULES.is_file() else None
+        day8 = reg.put(b"net worth,750000\naum,124000000\ninvestors,1284\n",
+                       kind=ArtefactKind.SOURCE, filename="custodian-feed-2026Q1.csv")
+        day15 = reg.put_file(FME_FILING, kind=ArtefactKind.TEMPLATE)
+        digests = [d.digest for d in (day1, day8, day15) if d is not None]
+        run = reg.inputs(digests)
+        dt = time.time() - t0
+        c = reg.counts()
+        print(f"  day 1   RULES     {day1.filename[:44] if day1 else '(absent)'}")
+        print(f"  day 8   SOURCE    {day8.filename}")
+        print(f"  day 15  TEMPLATE  {day15.filename[:44]}")
+        print(f"  registry          {c['artefacts']} artefacts · {c['bytes']:,} bytes · "
+              f"stored in {dt:.2f}s")
+        print(f"  run names         {len(run.digests)} of {c['artefacts']} · "
+              f"merkle {run.merkle_root[:16]}…")
+
+        # a later, unrelated upload must not move this run's root
+        reg.put(b"another entity's filing", kind=ArtefactKind.FILING, filename="other.xlsx")
+        again = reg.inputs(digests)
+        stable = again.merkle_root == run.merkle_root
+        print(f"  after an unrelated upload, the root is "
+              f"{'UNCHANGED' if stable else 'DIFFERENT — BUG'}")
+
+        metas = {a.digest: a for a in reg.list()}
+        prov = n_triples(triples("e2e", run, metas, outputs=("coverage-declaration",)))
+        fs = from_template(FME_FILING)
+        ttl_wb = from_fieldset(fs)
+        n_xsd = 0
+        if FINCEN_XSD.is_file():
+            ttl_xsd = from_xsd_surface(read_xsd(FINCEN_XSD, schema_id="fincen-bsa-xml-2.0"))
+            n_xsd = ttl_xsd.count("a sh:NodeShape")
+        print(f"  PROV-O            {prov.count(chr(10))} triples (W3C PROV, EXPORT)")
+        print(f"  SHACL shapes      {ttl_wb.count('a sh:NodeShape')} from the workbook · "
+              f"{n_xsd} from the XSD (EXPORT; nothing here validates against them)")
+        return {"regulator": "cross-upload", "ingress": "registry",
+                "artefacts": c["artefacts"], "run_inputs": len(run.digests),
+                "root_stable": stable, "prov_triples": prov.count(chr(10)),
+                "shapes_workbook": ttl_wb.count("a sh:NodeShape"), "shapes_xsd": n_xsd,
+                "seconds": round(dt, 2)}
+
+
 def main() -> int:
     rows: list[dict[str, object]] = []
     rule("ARM 1 · IFSCA (GIFT City) — ingress .xlsx — check a filing, declare coverage")
@@ -144,12 +202,26 @@ def main() -> int:
         print(f"  ARM FAILED: {type(exc).__name__}: {exc}")
         rows.append({"regulator": "FinCEN", "failed": f"{type(exc).__name__}: {exc}"})
 
+    rule("ARM 4 · CROSS-UPLOAD — artefact registry, W3C PROV, SHACL shapes")
+    try:
+        rows.append(arm_registry())
+    except Exception as exc:
+        print(f"  ARM FAILED: {type(exc).__name__}: {exc}")
+        rows.append({"regulator": "cross-upload", "failed": f"{type(exc).__name__}: {exc}"})
+
     rule("WHAT THIS RUN DOES NOT SHOW")
-    print("""  * No filing was FILLED. The fill lane (A5) is not built, so 'autonomously populates
-    the template' is not demonstrated by any arm here.
+    print("""  * No filing was FILLED BY ANY ARM HERE. A5's fill lane IS built and measured
+    (docs/measurements/A5-fill-lane.md) — it is not wired into this pipeline, because
+    binding a source pack to a template is A1c's job and no measured binder exists.
+    So 'autonomously populates the template' is still demonstrated by nothing here.
   * Only IFSCA is checked end to end. EBA executes rules against the publisher's declared
     scope, not against a filed instance; FinCEN produces a surface and stops.
   * No arm crosses regulators. Nothing here fuses a custodian feed with a trial balance.
+  * Arm 4 STORES and NAMES three uploads and projects PROV and SHACL. It does not RUN a
+    filing over them: binding a source pack to a template is A1c's job and the crude
+    binder A5 was measured against is not wired into this path.
+  * Nothing validates against the SHACL shapes. They are an export for somebody else's
+    validator, because a shapes file we also validate with is a claim we grade ourselves.
   * No coverage number below is comparable to another: three regulators declare different
     things in different formats.""")
     failed = [r for r in rows if "failed" in r]
