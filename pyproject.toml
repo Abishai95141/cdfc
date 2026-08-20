@@ -21,6 +21,14 @@ pdf = [
   "pdfplumber==0.11.10",
   "pypdfium2==5.13.0",
 ]
+# MEASUREMENT-TIME ONLY, and it must stay that way. `splink` is the reference implementation our
+# own Fellegi-Sunter is scored against in `docs/measurements/N4-correspondence.md`. Nothing in
+# `src/` imports it: it brings duckdb, pandas and sqlglot into the closure of code that decides
+# which record is which, and `cdfc.correspond` is reachable from a coverage number. Adopting it
+# would be an architecture decision, not a pip install.
+linkage-reference = [
+  "splink==4.0.16",
+]
 dev = [
   "pytest==8.3.4",
   "hypothesis==6.122.3",
