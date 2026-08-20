@@ -298,3 +298,7 @@ report:
 statute:  ## rebuild the STATUTE instrument from the pinned PDF (needs .[pdf])
 	./ci/no-denied-build-tool.sh
 	$(PY) tools/pin_statute.py
+
+.PHONY: e2e
+e2e:  ## run the product path across all three ingress formats and three regulators
+	$(PY) tools/e2e_multiformat.py

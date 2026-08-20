@@ -45,7 +45,12 @@ def test_contract__corpus_manifest_shape():
 # quarantines -- it is the withheld ground truth. `corpus/instruments` is P7's pinned
 # statute and `corpus/rules` is A2's pinned REGULATOR-PUBLISHED rule set: both are public
 # artefacts with published digests, and naming them is the opposite of contamination.
-PUBLIC_CORPORA = ("corpus/instruments", "corpus/rules")
+# PUBLIC corpora: artefacts a regulator PUBLISHES, which carry no blind-fill answer and are
+# meant to be read directly. `corpus/regulators` joined on 20 Aug 2026 with FinCEN's BSA XML
+# schema (D2). Each addition is a deliberate line here, so the exemption list stays readable —
+# the failure this rule already had once was two undocumented exemptions that between them
+# covered every subdirectory `corpus/` had.
+PUBLIC_CORPORA = ("corpus/instruments", "corpus/rules", "corpus/regulators")
 
 
 def test_corpus_is_not_importable():

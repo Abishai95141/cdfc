@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coverage declaration — run 013ee97bb86ba09c</title>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: #FFFFFF; color: #111827;
+  font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1080px; margin: 0 auto; padding: 80px 24px; position: relative; }
+
+/* The atmospheric layer: BEHIND the content, aria-hidden, carrying no information.
+   A decorative layer that carried meaning would be meaning nobody can copy or hear. */
+.wash {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(120% 90% at 12% 0%, rgba(237, 123, 70, 0.10) 0%, rgba(237, 123, 70, 0.00) 55%), radial-gradient(90% 70% at 96% 8%, rgba(83, 97, 122, 0.10) 0%, rgba(83, 97, 122, 0.00) 60%);
+}
+.wrap > *:not(.wash) { position: relative; z-index: 1; }
+
+/* THE HERO. Both lines take THIS class. One rule, one ink — a stylesheet cannot give one of
+   them the accent, because there is only one selector. */
+.hero { font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;font-size:64px;font-weight:500;line-height:1.04; color: #111827; margin: 0 0 12px; letter-spacing: -0.01em; }
+.hero-block { margin-bottom: 32px; }
+.meta { font-family:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;font-size:12px;font-weight:600;line-height:1.2; color: #4B5563; text-transform: uppercase;
+        letter-spacing: 0.06em; margin: 0 0 8px; }
+.caveat { font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:1.6; color: #4B5563; max-width: 68ch;
+          border-left: 3px solid #ED7B46; padding-left: 16px; margin: 16px 0 0; }
+
+/* THE BAND. It never fills: the last two segments are hatched and always drawn. */
+.band { display: flex; width: 100%; height: 44px; border-radius: 8px;
+        overflow: hidden; border: 1px solid #868E9C; margin: 24px 0 16px; }
+/* no height: flex children stretch by default, and `ci/no-bare-rate.sh` reads a CSS
+   percentage as a rate — correctly by its own rule, since it cannot tell one from a
+   geometry. The cure here is to not need the number. */
+.seg { align-self: stretch; }
+.seg-solid { background: #53617A; }
+.seg-solid.k-SETTLED_FAIL { background: #ED7B46; }
+.seg-solid.k-NO_PREDICATE { background: #D8DADF; }
+.seg-hatch {
+  background: repeating-linear-gradient(45deg,
+    #868E9C 0, #868E9C 4px,
+    #FFFFFF 4px, #FFFFFF 9px);
+}
+.legend { list-style: none; padding: 0; margin: 0; display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 8px 24px; }
+.legend li { font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;font-size:14px;font-weight:400;line-height:1.55; color: #4B5563; display: flex; align-items: baseline; gap: 8px; }
+.swatch { width: 10px; height: 10px; border-radius: 2px; flex: none;
+          border: 1px solid #868E9C; }
+.figure { font-family:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;font-size:16px;font-weight:500;line-height:1.4; color: #111827; font-variant-numeric: tabular-nums; }
+
+section { margin-top: 80px; }
+h2 { font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;font-size:24px;font-weight:500;line-height:1.25; margin: 0 0 16px; }
+.card { background: #FFFFFF; border: 1px solid #D8DADF;
+        border-radius: 16px; padding: 24px; box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 4px 12px rgba(17, 24, 39, 0.06); }
+.panel-dark { background: #53617A; color: #FFFFFF;
+              border-radius: 16px; padding: 24px; }
+.panel-dark .meta { color: #FFFFFF; opacity: .82; }
+table { border-collapse: collapse; width: 100%; }
+th, td { text-align: left; padding: 8px 12px;
+         border-bottom: 1px solid #D8DADF; font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;font-size:14px;font-weight:400;line-height:1.55; }
+th { font-family:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;font-size:12px;font-weight:600;line-height:1.2; color: #4B5563; text-transform: uppercase; letter-spacing: .06em; }
+td.num { font-family:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;font-size:16px;font-weight:500;line-height:1.4; text-align: right; font-variant-numeric: tabular-nums; }
+.pill { display: inline-block; border-radius: 9999px; padding: 2px 12px;
+        background: #ED7B46; color: #111827; font-family:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;font-size:12px;font-weight:600;line-height:1.2; }
+.strapline { font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;font-size:14px;font-weight:400;line-height:1.55; color: #4B5563; margin-top: 48px;
+             border-top: 1px solid #D8DADF; padding-top: 16px; }
+
+/* MOTION. Rule one: the reveal animates opacity and transform ONLY — every row is in the DOM
+   and laid out before it runs, so a reader who scrolls past mid-stagger sees every finding. */
+.reveal { opacity: 0; transform: translateY(6px);
+          animation: rise 420ms cubic-bezier(0.16, 1, 0.30, 1) forwards; }
+@keyframes rise { to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { animation: none; opacity: 1; transform: none; }
+}
+@media (max-width: 768px) {
+  .wrap { padding: 48px 16px; }
+  .hero { font-size: 32px; }
+}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="wash" aria-hidden="true"></div>
+
+  <p class="meta">coverage declaration &middot; run 013ee97bb86ba09c &middot; VALID</p>
+
+  <div class="hero-block reveal">
+    <p class="hero">0 failures across 1,898 checks</p>
+    <p class="hero">1,849 fields were not checked</p>
+    <p class="meta">predicate set: PRE-GATE &middot; denominator: v3</p>
+    <p class="caveat">PRE-GATE: none of the predicates producing this number is admitted under G4. The number says how much of the denominator a check ran over, not that any check is right.</p>
+  </div>
+
+  <section>
+    <h2>1,849 fields were not checked</h2>
+    <p class="meta">grouped by reason, with what would make each one checkable</p>
+    <div class="card" style="margin-bottom:16px"><p><span class="figure">422</span> <span class="pill">no_predicate.failed_qualification</span></p><p class="meta">applies to: cells whose only candidate predicate was rejected by one of the five gates</p><p>a candidate that clears the gate that rejected this one, and the attrition row says which: G0 if the clause did not locate uniquely, G1 if it did not bind, G3 if it was degenerate, G2 if its measured kill rate was below the bar, G4 if its false-failure rate was. A rejected candidate is not a missing check — it is a check we declined to ship, and the number that declined it is on the record.</p><p class="meta">source: the attrition funnel, reports/*/attrition.csv</p></div><div class="card" style="margin-bottom:16px"><p><span class="figure">1,427</span> <span class="pill">no_predicate.not_yet_synthesised</span></p><p class="meta">applies to: cells whose obligation is latent in the template&#x27;s own formulas or validations</p><p>a predicate harvested from the template&#x27;s own formula graph or data validations, then carried through all five gates — G0 scope, G1 binding, G3 degeneracy, G2 a measured kill rate against seeded faults, and G4 a measured false-failure rate on a corpus this project did not author. For these cells the obligation is already in the artifact; what is missing is a check that has been qualified rather than merely written.</p><p class="meta">source: the five-gate admission test, plan/04 §G0-G4</p></div>
+    <div class="card" style="margin-top:24px">
+      <p class="meta">demonstrated survivors — exhibits, not reasons</p>
+      <p>residue not yet measured — the procedure has not been run against this predicate set</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>What this run settled, and what it did not</h2>
+    <div class="band"><div class="seg seg-solid k-SETTLED_PASS" style="width:50.60%" title="1,898 settled — a check ran and did not fire"></div><div class="seg seg-solid k-SETTLED_FAIL" style="width:0.10%" title="0 settled — a check ran and fired"></div><div class="seg seg-solid k-INDETERMINATE" style="width:0.10%" title="0 not settled — the check could not decide"></div><div class="seg seg-solid k-NOT_RUN" style="width:0.10%" title="0 not settled — the check did not run"></div><div class="seg seg-solid k-NO_PREDICATE" style="width:49.30%" title="1,849 not checked — no predicate exists for this cell"></div><div class="seg seg-solid k-ERROR" style="width:0.10%" title="0 not settled — the check errored"></div><div class="seg seg-hatch k-NOT_SETTLEABLE_FROM_ARTIFACT" style="width:1.20%" title="not yet measured — not settleable from this filing at all"></div><div class="seg seg-hatch k-RESIDUE" style="width:1.20%" title="not yet measured — constructed falsehoods no admitted check rejects (lower bound)"></div></div>
+    <ul class="legend"><li><span class="swatch seg-solid k-SETTLED_PASS"></span><span class="figure">1,898</span><span>settled — a check ran and did not fire</span></li><li><span class="swatch seg-solid k-SETTLED_FAIL"></span><span class="figure">0</span><span>settled — a check ran and fired</span></li><li><span class="swatch seg-solid k-INDETERMINATE"></span><span class="figure">0</span><span>not settled — the check could not decide</span></li><li><span class="swatch seg-solid k-NOT_RUN"></span><span class="figure">0</span><span>not settled — the check did not run</span></li><li><span class="swatch seg-solid k-NO_PREDICATE"></span><span class="figure">1,849</span><span>not checked — no predicate exists for this cell</span></li><li><span class="swatch seg-solid k-ERROR"></span><span class="figure">0</span><span>not settled — the check errored</span></li><li><span class="swatch seg-hatch k-NOT_SETTLEABLE_FROM_ARTIFACT"></span><span class="figure">not yet measured</span><span>not settleable from this filing at all</span></li><li><span class="swatch seg-hatch k-RESIDUE"></span><span class="figure">not yet measured</span><span>constructed falsehoods no admitted check rejects (lower bound)</span></li></ul>
+    <p class="caveat">The denominator is the template&#x27;s unlocked-cell mask under generator rule v3, computed twice and agreed. It has never been checked against a person filling the form in, so it is PROVISIONAL-UNVALIDATED: it may be larger or smaller than the set a filer actually completes.</p>
+  </section>
+
+  <section>
+    <div class="panel-dark">
+      <p class="meta">the two integers, never one number</p>
+      <table>
+        <tr><th>settled</th><td class="num">1,898 of 3,747</td></tr>
+        <tr><th>field surface</th><td class="num">3,747</td></tr>
+        <tr><th>in scope</th><td class="num">3,747</td></tr>
+        <tr><th>predicates that ran</th><td class="num">33</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Standing open items</h2>
+    <div class="card">
+      <table>
+        <tr><th>item</th><th>age</th></tr>
+        <tr><td>The clean corpus is not funded, so no predicate is admitted under G4 and every severity is capped at ADVISORY. n &gt;= 189 would be needed for BLOCKING.</td><td>open, age not computable without a run date</td></tr><tr><td>A statutory instrument IS pinned since 16 Aug 2026 — the IFSCA (Fund Management) Regulations 2025, 1,218 units, two external extraction arms. No harvested predicate implements a clause from it, so predicates_with_a_STATUTE_obligation still reads 0 of N. The blocker moved from the corpus to the authoring.</td><td>open, age not computable without a run date</td></tr><tr><td>Cohen&#x27;s kappa for the stratum assignment is unmeasured; it needs a second named adjudicator and has no mechanical substitute.</td><td>open, age not computable without a run date</td></tr><tr><td>319 of 348 harvested predicates produce no record in the reference run, so cells like `1. Introduction!D3` — which `P-0002` binds — still sit in the NO_PREDICATE state and under-report coverage. That is the honest direction, and it is what remains open. **The reason code is no longer wrong:** the 1,849 bucket splits 422 `no_predicate.failed_qualification` / 1,427 `no_predicate.not_yet_synthesised`, `1. Introduction!D3` carries `failed_qualification`, and `tests/golden/test_golden__unchecked__fme.py` pins the split. Repaired at `29b40b5`; this entry claimed otherwise until an audit re-ran it.</td><td>open, age not computable without a run date</td></tr><tr><td>Every candidate is refused at G2 — 315 for no kill, 33 for no margin over the free baselines — so the predicate library is empty and every settled count in this product rests on predicates that were never gate-admitted. The two populations are disjoint and the surface says so.</td><td>open, age not computable without a run date</td></tr><tr><td>The churn sweep&#x27;s precise signal moved nobody in the reference run: `P-0002` carries the year vocabulary and does not appear in that run, so the measured step-down comes from the conservative sheet-level signal instead.</td><td>open, age not computable without a run date</td></tr><tr><td>There is no staleness policy for a running deployment. Nothing expires: a pinned instrument, a qualification artifact and a published run are all served the same way at one day old and at one year old, and no surface states an age past which a coverage declaration should stop being relied on. The README names this as absent and this is the list it names.</td><td>open, age not computable without a run date</td></tr><tr><td>There is no deployment packaging. `make serve` binds loopback on a developer machine and that is the only way this runs; there is no image, no service unit, no configuration surface for a bind address or a data root, and no documented upgrade path for a deployment that already holds runs. Nothing has been operated by anyone who did not build it.</td><td>open, age not computable without a run date</td></tr><tr><td>The instrument-stream watcher (P13-B4) is not built. A pinned instrument that is amended upstream stays pinned silently — nothing watches the source, nothing raises the amendment, and the staleness that results would be invisible for exactly as long as nobody looked.</td><td>open, age not computable without a run date</td></tr><tr><td>21 of 125 live gates have no negative control that makes them red. The liveness figure used to read 115 of 125 because `EVIDENCE` in `tools/gate_liveness.py` was a HAND-MAINTAINED gate-to-control map that ASSERTED bindings; pytest bindings are now DERIVED from the sweep&#x27;s own per-guard record and the honest figure is 104 of 125. Two of the assertions were provably wrong rather than merely stale — gate 4 was bound to `NC-CI02`, whose catalogue entry declares that very test `flips: false`, i.e. it must stay GREEN under that injector. The three shell gates among the ten were each tested against their nearest candidate injector and none made its script exit non-zero. So these gates run and can fail; nothing has ever been observed making them fail. Closing it means writing 21 negative controls, not editing a map.</td><td>open, age not computable without a run date</td></tr><tr><td>The division recovery is NOT corpus-independent, and this is measured rather than feared. `docs/measurements/N6-corpus-independence.md` ran it against eleven corpora across five jurisdictions and four document types: the correct top-level division axis is ranked **first on 3 of 11**, is in the top five on 5 of 11, and is induced at all for 9 of 11. The shipped `src/cdfc/qualify/provisions.py` — whose six marker shapes were fitted to the IFSCA Gazette — ranks first on **1 of 11**. Two corpora (`us_bill_hr3684`, `india_const`) induce no candidate matching their true axis at any rank and the reason is unmeasured. **A page-number sequence is a perfect division numbering** — chain 176 of 176, purity, coverage and density all 1.00 in `rfc2616` — and no property intrinsic to numbering separates it from logical structure; nesting was tried and fails, because physical pages genuinely contain sections. Closing this needs the axis to become a DECLARED property of each pinned instrument with the recovery proposing ranked candidates, which is an `A4` change, not a repair.</td><td>open, age not computable without a run date</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <p class="strapline">
+    settled fraction 0.5065 &middot; template 7d9a1960085785ee&hellip; &middot;
+    filing aeedbfe18c803061&hellip; &middot; this document states what was checked and what was not.
+    It is not an audit opinion, an assurance engagement, or a regulatory clearance.
+  </p>
+</div>
+</body>
+</html>

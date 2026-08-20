@@ -1,0 +1,84 @@
+{
+  "cells": 3747,
+  "checks": 33,
+  "closure": {
+    "cellsTotal": 3747,
+    "error": 0,
+    "inScope": 3747,
+    "indeterminate": 0,
+    "informational": 0,
+    "informationalRetained": 0,
+    "noPredicate": 1849,
+    "notRun": 0,
+    "outOfScope": 0,
+    "outOfScopeRetained": 0,
+    "settled": 1898
+  },
+  "filing_sha256": "aeedbfe18c803061a117d6940d85047d3fc6d7d0e9a02b842d2131c56c621269",
+  "invalid_causes": [],
+  "keys_preflighted": 158,
+  "keys_type_checked": 26,
+  "livenessFailureKind": null,
+  "livenessProof": {
+    "antiCanariesFired": 0,
+    "antiCanariesNotPass": 0,
+    "antiCanariesPassed": 33,
+    "antiCanariesRun": 33,
+    "canariesInapplicable": 0,
+    "canariesIndeterminate": 0,
+    "canariesPassed": 33,
+    "canariesRun": 33,
+    "canariesUnresolved": 0,
+    "maxWitnesses": 3,
+    "rowsTotal": 34,
+    "selfTestSilent": true
+  },
+  "run_db_sha256": "70937c20f8fd35f27de97238d3ae4bfa2d2183583ffb8929a0eb63cb48f58bc0",
+  "run_id": "013ee97bb86ba09c",
+  "run_state": "VALID",
+  "settledFraction": {
+    "admissibilityCaveat": "PRE-GATE: none of the predicates producing this number is admitted under G4. The number says how much of the denominator a check ran over, not that any check is right.",
+    "admissionState": "PRE-GATE",
+    "cellsTotal": 3747,
+    "declaredGaps": [],
+    "denominator": {
+      "computedTwiceAgreed": true,
+      "fieldSurface": 3747,
+      "generatorRule": "v3",
+      "source": "styles.xml unlocked mask, computed twice and agreed (P2)",
+      "validationState": "PROVISIONAL-UNVALIDATED"
+    },
+    "denominatorWarning": "The denominator is the template's unlocked-cell mask under generator rule v3, computed twice and agreed. It has never been checked against a person filling the form in, so it is PROVISIONAL-UNVALIDATED: it may be larger or smaller than the set a filer actually completes.",
+    "fraction": "0.5065",
+    "inScope": 3747,
+    "informational": 0,
+    "informationalRetained": 0,
+    "loweredByRollup": 0,
+    "outOfScope": 0,
+    "outOfScopeRetained": 0,
+    "requalificationFlagged": 0,
+    "residue": null,
+    "settled": {
+      "failed": 0,
+      "passed": 1898,
+      "total": 1898
+    },
+    "unsettled": {
+      "error": 0,
+      "indeterminate": 0,
+      "noPredicate": 1849,
+      "notRun": 0
+    }
+  },
+  "surfaceExclusions": {
+    "field_surface": 3747,
+    "formula": 505,
+    "locked": 2505,
+    "recorded": 6757
+  },
+  "template_sha256": "7d9a1960085785eefbe166fb5e04e94689780c490235fe55d8f3e8b620ceea39",
+  "uncheckedByReason": {
+    "no_predicate.failed_qualification": 422,
+    "no_predicate.not_yet_synthesised": 1427
+  }
+}
