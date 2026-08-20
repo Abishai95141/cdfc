@@ -1,0 +1,18 @@
+{
+ "proposals_sha256": "70fcc1433d5bf56ef604ad67eaed24e7aed5b61dfe3c23bacc56aca195d902d6",
+ "model": "deepseek-v4-flash",
+ "instrument": "statute-fm-regulations-2025",
+ "instrument_sha256": "5e4a4310c2a18f0a92351efb828b17c3447d0a45f0320be171de72cc526d1265",
+ "template": "Reporting_Format_for_Fund_Management_Entities_02012026_20260102_0255.xlsx",
+ "template_sha256": "7d9a1960085785eefbe166fb5e04e94689780c490235fe55d8f3e8b620ceea39",
+ "addressing": "coordinate",
+ "only_with": "shall",
+ "provisions_offered": 532,
+ "batch_size": 20,
+ "prompt_sha256": "f7eb1f3afd20500e96c3f1c8ae26ac0486f4ab38f297d412936608b74dd5a759",
+ "raw_blocks": 172,
+ "malformed": 0,
+ "batches_failed": 0,
+ "reproducible": false,
+ "why": "the model is not reproducible: two runs over identical inputs at temperature=0 produced materially different proposal counts. This artefact is pinned so the RUN is re-derivable even though the GENERATION is not."
+}

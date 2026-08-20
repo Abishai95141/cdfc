@@ -30,6 +30,7 @@ A batch that fails is **counted as a failed batch**, never as a batch that propo
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import pathlib
 import sys
@@ -39,7 +40,7 @@ sys.path.insert(0, str(REPO / "src"))
 
 from cdfc.evidence.fields import from_template  # noqa: E402
 from cdfc.evidence.provisions import from_divisions, from_instrument  # noqa: E402
-from cdfc.model.propose import ProposerError, propose  # noqa: E402
+from cdfc.model.propose import SYSTEM, ProposerError, propose  # noqa: E402
 from cdfc.model.transport import DEEPSEEK_MODEL, deepseek  # noqa: E402
 from cdfc.qualify.instruments import InstrumentStore  # noqa: E402
 
@@ -100,8 +101,49 @@ def main() -> int:
         print(f"  batch {i:>2}/{len(batches)}  {len(ps.proposals):>3} proposal(s)"
               f"  raw {ps.raw_blocks}  malformed {len(ps.malformed)}")
 
+    # THE PROPOSAL SET IS A PINNED ARTEFACT, and it has to be, because THE MODEL IS NOT
+    # REPRODUCIBLE.
+    #
+    # Measured 20 Aug 2026: two runs of `tools/e2e_matrix.py` over IDENTICAL inputs at
+    # `temperature=0` gave ALR_V2_3 9 proposals then 2, ITFS_Monthly 11 then 0, AL_monthly 0 then
+    # 10, Quarterly_CMI 19 then 42. `deepseek-v4-flash` is a reasoning model and its sampling is
+    # not pinned by the temperature parameter.
+    #
+    # **Nothing here can make the model deterministic, and pretending otherwise would be worse
+    # than the non-determinism.** What CAN be made reproducible is the SYSTEM: generation is a
+    # BUILD step whose output is content-addressed, and a run names the digest of the proposal set
+    # it used. The same digest re-derives the same adjudication, for ever. This is exactly how an
+    # instrument is pinned, and for the same reason.
+    #
+    # The sidecar records what produced these bytes so a later reader can tell a re-generation
+    # from a re-run: a DIFFERENT digest under the same inputs is the model moving, not us.
     a.out.parent.mkdir(parents=True, exist_ok=True)
-    a.out.write_text(json.dumps(rows, indent=1, ensure_ascii=False), encoding="utf-8")
+    payload = json.dumps(rows, indent=1, ensure_ascii=False)
+    a.out.write_text(payload, encoding="utf-8")
+    digest = hashlib.sha256(payload.encode("utf-8")).hexdigest()
+    side = a.out.with_suffix(".provenance.json")
+    side.write_text(json.dumps({
+        "proposals_sha256": digest,
+        "model": a.model,
+        "instrument": a.instrument,
+        "instrument_sha256": it.sha256,
+        "template": a.template.name,
+        "template_sha256": fs.template_sha256,
+        "addressing": pv.eid_kind.value,
+        "only_with": a.only_with,
+        "provisions_offered": offered,
+        "batch_size": a.batch,
+        "prompt_sha256": hashlib.sha256(SYSTEM.encode("utf-8")).hexdigest(),
+        "raw_blocks": raw_blocks,
+        "malformed": len(malformed),
+        "batches_failed": len(failed),
+        "reproducible": False,
+        "why": ("the model is not reproducible: two runs over identical inputs at temperature=0 "
+                "produced materially different proposal counts. This artefact is pinned so the "
+                "RUN is re-derivable even though the GENERATION is not."),
+    }, indent=1), encoding="utf-8")
+    print(f"  proposals sha256     {digest[:32]}…")
+    print(f"  provenance           {side.name}")
 
     print(f"\n  provisions offered   {offered}")
     print(f"  raw blocks           {raw_blocks}")
