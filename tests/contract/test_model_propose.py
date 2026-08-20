@@ -51,7 +51,7 @@ def test_propose__discards_a_proposal_about_something_it_was_never_shown():
 def test_propose__a_transport_failure_is_NOT_an_empty_proposal_set():
     def boom(_p):
         raise OSError("connection refused")
-    with pytest.raises(ProposerError, match="NOT an empty proposal set"):
+    with pytest.raises(ProposerError, match="NOT an empty result"):
         propose(PROV, FIELDS, transport=lambda p: (_ for _ in ()).throw(OSError("refused")))
 
 

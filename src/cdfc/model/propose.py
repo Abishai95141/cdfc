@@ -152,6 +152,35 @@ def _post(url: str, payload: dict[str, Any], api_key: str) -> dict[str, Any]:
         ) from exc
 
 
+def _call(
+    payload: dict[str, Any], *, base_url: str | None, api_key: str | None, transport: Any,
+) -> dict[str, Any]:
+    """ONE transport, with ONE promise, shared by both LAYER 2 modes.
+
+    Factored out when `extract.py` arrived: two modes each wrapping their own transport is two
+    places for the promise to drift, and the promise — a failed call NEVER looks like a clean
+    empty result — is the whole of what this function is for.
+    """
+    key = api_key or os.environ.get("ANTHROPIC_API_KEY", "")
+    url = (base_url or os.environ.get("ANTHROPIC_BASE_URL") or DEFAULT_BASE_URL).rstrip("/")
+    if transport is None:
+        if not key:
+            raise ProposerError(
+                "no API key. Set ANTHROPIC_API_KEY, or pass one. This module never reads a "
+                "credential from a file and never stores one."
+            )
+        return _post(f"{url}/v1/messages", payload, key)
+    try:
+        return transport(payload)
+    except ProposerError:
+        raise
+    except Exception as exc:                                   # noqa: BLE001
+        raise ProposerError(
+            f"the supplied transport failed: {type(exc).__name__}. This is NOT an empty result — "
+            "nothing is known about what the model would have returned."
+        ) from exc
+
+
 def propose(
     provisions: Sequence[tuple[str, str]],
     fields: Sequence[tuple[str, str]],
@@ -173,15 +202,6 @@ def propose(
             "An empty offer would make an empty result unreadable — it would not distinguish "
             "'the model proposed nothing' from 'the model was shown nothing'."
         )
-    key = api_key or os.environ.get("ANTHROPIC_API_KEY", "")
-    url = (base_url or os.environ.get("ANTHROPIC_BASE_URL") or DEFAULT_BASE_URL).rstrip("/")
-    if transport is None and not key:
-        raise ProposerError(
-            "no API key. Set ANTHROPIC_API_KEY, or pass one. For a local subscription proxy that "
-            "is typically ANTHROPIC_BASE_URL=http://localhost:3456 with ANTHROPIC_API_KEY=dario; "
-            "this module never reads a credential from a file and never stores one."
-        )
-
     body = "\n".join(
         ["PROVISIONS:"]
         + [f"[{eid}] {text[:1200]}" for eid, text in provisions]
@@ -192,23 +212,7 @@ def propose(
         "model": model, "max_tokens": MAX_TOKENS, "system": SYSTEM,
         "messages": [{"role": "user", "content": body}],
     }
-    if transport is None:
-        data = _post(f"{url}/v1/messages", payload, key)
-    else:
-        # A SUPPLIED transport gets the same promise. The first version wrapped only `_post`, so
-        # a caller's client raising propagated raw — and the guarantee this module makes is that a
-        # transport failure never reaches a caller looking like a clean empty result, whichever
-        # transport it was.
-        try:
-            data = transport(payload)
-        except ProposerError:
-            raise
-        except Exception as exc:                               # noqa: BLE001
-            raise ProposerError(
-                f"the supplied transport failed: {type(exc).__name__}. This is NOT an empty "
-                "proposal set — nothing is known about what the model would have proposed."
-            ) from exc
-
+    data = _call(payload, base_url=base_url, api_key=api_key, transport=transport)
     text = "".join(
         b.get("text", "") for b in data.get("content", []) if b.get("type") == "text")
     return parse(text, model=model, provisions=provisions, fields=fields)
