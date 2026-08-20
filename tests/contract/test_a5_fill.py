@@ -194,3 +194,49 @@ def test_a5__every_condition_is_reported_even_when_not_reached():
     d2 = propose(_fields(f), {"S!A1": (_obs("5,00,000", text2),)}, _source(text2),
                  binding_provenance=PROV)
     assert len(d2.proposed[0].conditions) == len(CONDITIONS)
+
+
+# --- the DERIVED lane: model-synthesised values are ADMITTED, and labelled ---------------------
+
+
+def test_a5__a_derived_value_is_admitted_but_never_counted_as_evidenced():
+    """THE FLEXIBILITY, and the line that replaces the one it relaxes.
+
+    Requiring a byte-exact span refused everything a model SYNTHESISES — a figure summed across
+    three custodian files, a total restated from a table. Those are now admitted. What does not
+    happen is that they enter the evidenced count.
+    """
+    from cdfc.fill.propose import Derived
+
+    d = Derived(ref="S!A9", label="Total AUM", value="1,55,40,00,000",
+                basis="summed across three custodian files",
+                supported_by=("r0004", "r0011", "r0027"), model="m")
+    decl = FillDeclaration(template_sha256="t" * 64, surface_total=1,
+                           proposed=(), refused=(), attestations=(), derived=(d,))
+    c = decl.counts()
+    assert c["derived"] == 1
+    assert c["admitted"] == 0                 # NOT evidenced
+    assert c["filled_total"] == 1             # but a value IS placed in the return
+    assert decl.filled() == ("S!A9",)
+    assert d.as_canonical_obj()["evidenced"] is False
+    assert "DERIVED, no span supports them" in "\n".join(decl.lines())
+
+
+def test_a5__the_declaration_still_closes_with_four_lanes():
+    from cdfc.fill.propose import Derived
+
+    d = Derived(ref="S!A1", label="l", value="v", basis="b", supported_by=(), model="m")
+    with pytest.raises(ValueError, match="does not close"):
+        FillDeclaration(template_sha256="t" * 64, surface_total=3,
+                        proposed=(), refused=(), attestations=(), derived=(d,))
+
+
+def test_a5__a_field_may_not_be_both_evidenced_and_derived():
+    """One field, one lane. A ref in two lanes would be counted twice by `filled()`."""
+    from cdfc.fill.propose import Derived, Refusal
+
+    d = Derived(ref="S!A1", label="l", value="v", basis="b", supported_by=(), model="m")
+    r = Refusal("S!A1", "l", FillRefusal.NO_OBSERVATION, "d")
+    with pytest.raises(ValueError, match="more than one lane"):
+        FillDeclaration(template_sha256="t" * 64, surface_total=2,
+                        proposed=(), refused=(r,), attestations=(), derived=(d,))

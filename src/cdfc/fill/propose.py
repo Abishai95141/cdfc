@@ -85,6 +85,7 @@ class FillRefusal(StrEnum):
     """
 
     FIELD_NOT_LABELLED = "field_not_labelled"
+    NOT_LOCATABLE_IN_SOURCE = "not_locatable_in_source"
     NO_OBSERVATION = "no_observation"
     REVERIFICATION_FAILED = "reverification_failed"
     SUPPORT_CONTRADICTED = "support_contradicted"
@@ -137,6 +138,45 @@ class Refusal:
 
 
 @dataclass(frozen=True, slots=True)
+class Derived:
+    """A value a model produced that NO SPAN SUPPORTS — admitted, and labelled as what it is.
+
+    ## Why this lane exists
+
+    Requiring a byte-exact span refuses everything a model SYNTHESISES: a figure summed across
+    three custodian files, a total restated from a table, a value read out of a chart. Those are
+    real and useful and the product needs them, and refusing them was holding back the semantic
+    half for a property that only ever applied to QUOTED evidence.
+
+    So they are admitted. **What does not happen is that they are counted as evidenced.**
+
+    `Derived` is a third lane beside `FillProposal` and `Attestation`, and the separation is the
+    entire safety property that replaces the one being relaxed:
+
+    * it is **never** in `admitted()`, so no coverage figure counts it;
+    * it carries `supported_by` — the units the model says it read — which is weaker than a span
+      and is not nothing;
+    * `cdfc attest` must not sign over one, because a signature is a claim that a named human
+      accepted something re-derivable, and this is not.
+
+    A reader gets both numbers and can tell them apart. That is the difference between flexibility
+    and quietly widening what "checked" means.
+    """
+
+    ref: str
+    label: str
+    value: str
+    basis: str                      # the model's own account of where the value came from
+    supported_by: tuple[str, ...]   # unit keys it says it read; NOT spans, and never treated as
+    model: str
+
+    def as_canonical_obj(self) -> dict[str, object]:
+        return {"ref": self.ref, "label": self.label, "value": self.value, "basis": self.basis,
+                "supported_by": list(self.supported_by), "model": self.model,
+                "evidenced": False}
+
+
+@dataclass(frozen=True, slots=True)
 class Attestation:
     """A field a human must sign. NEVER filled, and the evidence is assembled anyway.
 
@@ -164,10 +204,11 @@ class FillDeclaration:
     proposed: tuple[FillProposal, ...]
     refused: tuple[Refusal, ...]
     attestations: tuple[Attestation, ...]
+    derived: tuple[Derived, ...] = ()
 
     def __post_init__(self) -> None:
         seen = ([p.ref for p in self.proposed] + [r.ref for r in self.refused]
-                + [a.ref for a in self.attestations])
+                + [a.ref for a in self.attestations] + [d.ref for d in self.derived])
         if len(set(seen)) != len(seen):
             dupes = sorted({r for r in seen if seen.count(r) > 1})
             raise ValueError(
@@ -177,13 +218,20 @@ class FillDeclaration:
         if len(seen) != self.surface_total:
             raise ValueError(
                 f"the declaration does not close: {len(self.proposed)} proposed + "
-                f"{len(self.refused)} refused + {len(self.attestations)} attestations = "
-                f"{len(seen)}, over a surface of {self.surface_total}. A fill report whose lanes "
-                "do not sum has lost fields silently."
+                f"{len(self.refused)} refused + {len(self.attestations)} attestations + "
+                f"{len(self.derived)} derived = {len(seen)}, over a surface of "
+                f"{self.surface_total}. A fill report whose lanes do not sum has lost fields "
+                "silently."
             )
 
     def admitted(self) -> tuple[FillProposal, ...]:
+        """EVIDENCED fills only. `derived` is deliberately absent: a value no span supports has
+        not been checked, and putting it here would make one number mean two things."""
         return tuple(p for p in self.proposed if p.admitted)
+
+    def filled(self) -> tuple[str, ...]:
+        """Every ref this run PUTS A VALUE IN, evidenced or derived. The product's own count."""
+        return tuple(sorted([p.ref for p in self.admitted()] + [d.ref for d in self.derived]))
 
     def counts(self) -> dict[str, int]:
         by_reason: dict[str, int] = {}
@@ -195,6 +243,8 @@ class FillDeclaration:
             "admitted": len(self.admitted()),
             "refused": len(self.refused),
             "attestations": len(self.attestations),
+            "derived": len(self.derived),
+            "filled_total": len(self.filled()),
             **{f"refused_{k}": v for k, v in sorted(by_reason.items())},
         }
 
@@ -212,9 +262,14 @@ class FillDeclaration:
         out += [
             "",
             f"awaiting a named signatory  {c['attestations']} of {c['surface_total']}",
+            f"DERIVED, no span supports them  {c['derived']} of {c['surface_total']}",
             "",
-            "A proposed value is EVIDENCED, not verified. Each cites a document and a span that "
-            "re-reads byte-exact; none is a claim that the figure is correct.",
+            f"values placed in the return  {c['filled_total']} of {c['surface_total']}  "
+            f"= {c['admitted']} evidenced + {c['derived']} derived",
+            "",
+            "An EVIDENCED value cites a document and a span that re-reads byte-exact. A DERIVED "
+            "value is one a model produced that no span supports — it is placed in the return and "
+            "it is NOT counted as checked. Neither is a claim that the figure is correct.",
         ]
         return tuple(out)
 
