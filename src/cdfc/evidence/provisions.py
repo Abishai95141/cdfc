@@ -43,6 +43,10 @@ class ProvisionSet:
     instrument_sha256: str
     provisions: tuple[Provision, ...]
     eid_kind: EIdKind
+    # Markers the instrument declared and that could not be addressed: `(eid, why)`. A DECLARED
+    # ABSENCE, because `absent != empty` -- a durable set of 612 where the instrument named 617 is
+    # a different fact from a durable set of 612 where it named 612.
+    refused_markers: tuple[tuple[str, str], ...] = ()
 
     def by_eid(self) -> Mapping[str, Provision]:
         return {p.eid: p for p in self.provisions}
@@ -56,6 +60,80 @@ class ProvisionSet:
     @property
     def durable_count(self) -> int:
         return sum(1 for p in self.provisions if p.durable)
+
+
+def from_divisions(it: InstrumentText, *, only_with: str | None = None) -> ProvisionSet:
+    """C2 — the instrument's OWN DIVISIONS become PROVISION-addressed provisions.
+
+    ## Why this had to exist
+
+    `cdfc evidence` published **`durably addressable 0 of 1218`** on every run. Every provision was
+    `p0146.s0013` — page 146, sentence 13 — which is a COORDINATE: it moves when the instrument is
+    re-extracted, when the layout shifts, or when an amendment inserts a page. A rule stored against
+    one has a shorter lifetime than a reader will assume.
+
+    The durable addresses already existed. `cdfc.qualify.provisions` recovers the instrument's own
+    numbering — `div1_0002__sub_0002` — and the pinned instrument CARRIES that map: 617 divisions
+    with spans, serialised beside the text. `from_markers` already accepted exactly
+    `(eid, lo, hi)`. **Nothing needed inventing; the two halves were never joined.**
+
+    This is also the sharpest form of what `N6` measured. A page-and-sentence address is precisely
+    the incidental axis that measurement warned about — on `rfc2616` a page-number sequence scored a
+    perfect 176-of-176 chain — and citing a statute by page number is citing the rendering rather
+    than the law.
+
+    Falls back to nothing: an instrument with no divisions RAISES, because silently returning
+    coordinate-addressed provisions from a function whose name promises durable ones is how a
+    fragile citation comes to look permanent.
+    """
+    dm = getattr(it, "divisions", None)
+    divisions = tuple(getattr(dm, "divisions", ()) or ()) if dm is not None else ()
+    if not divisions:
+        raise ValueError(
+            f"instrument {it.instrument_id!r} carries no division map, so it has no durable "
+            "addresses. Pin it with the division recovery first; returning coordinate addresses "
+            "here would report a fragile citation as a permanent one."
+        )
+    # A MALFORMED SPAN IS REFUSED AND COUNTED, never dropped and never passed on.
+    #
+    # Measured 20 Aug 2026 on the pinned IFSCA instrument: **5 of 617 divisions are INVERTED**
+    # (`lo > hi`), all of them sub-divisions of `div1_0148`, and every one carries the same
+    # `hi = 166169`. That is the parent's clipped end: `_clip_previous_run` in
+    # `cdfc.qualify.provisions` bounded the parent and did not bound its children, so each child
+    # kept a start that now runs past its own end. `div1_0148` is the same division that once
+    # swallowed 182 units.
+    #
+    # `from_markers` already refuses these — correctly, with the message *"the markers were built
+    # against different bytes than these"* — but it refuses by raising, which takes the whole run
+    # down for 5 rows in 617. Refusing them HERE, with a reason and a count, keeps the other 612
+    # addressable and keeps the defect visible instead of turning it into a crash nobody can act
+    # on. The recovery bug is recorded in `docs/AUDIT-TRAIL.md`; this is not its fix.
+    markers: list[tuple[str, int, int]] = []
+    refused: list[tuple[str, str]] = []
+    n = len(it.text)
+    for d in divisions:
+        lo, hi = d.span
+        if not (0 <= lo <= hi <= n):
+            refused.append((
+                d.eid,
+                f"span {(lo, hi)} is malformed against a {n}-character instrument"
+                + (f" (INVERTED: lo exceeds hi by {lo - hi})" if lo > hi else " (out of range)"),
+            ))
+            continue
+        if only_with is not None and only_with not in it.text[lo:hi]:
+            continue
+        markers.append((d.eid, lo, hi))
+    if not markers:
+        raise ValueError(
+            f"instrument {it.instrument_id!r} yielded no usable division marker: "
+            f"{len(refused)} malformed, {len(divisions)} total. An empty durable set would report "
+            "'nothing matched' where the truth is 'every address was broken'."
+        )
+    ps = from_markers(it, markers)
+    return ProvisionSet(
+        instrument_id=ps.instrument_id, instrument_sha256=ps.instrument_sha256,
+        provisions=ps.provisions, eid_kind=ps.eid_kind, refused_markers=tuple(refused),
+    )
 
 
 def from_instrument(it: InstrumentText, *, only_with: str | None = None) -> ProvisionSet:

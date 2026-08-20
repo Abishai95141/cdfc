@@ -38,7 +38,7 @@ REPO = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 
 from cdfc.evidence.fields import from_template  # noqa: E402
-from cdfc.evidence.provisions import from_instrument  # noqa: E402
+from cdfc.evidence.provisions import from_divisions, from_instrument  # noqa: E402
 from cdfc.model.propose import ProposerError, propose  # noqa: E402
 from cdfc.model.transport import DEEPSEEK_MODEL, deepseek  # noqa: E402
 from cdfc.qualify.instruments import InstrumentStore  # noqa: E402
@@ -50,13 +50,18 @@ def main() -> int:
     ap.add_argument("--template", type=pathlib.Path, required=True)
     ap.add_argument("--out", type=pathlib.Path, required=True)
     ap.add_argument("--only-with", default="shall")
+    ap.add_argument("--coordinate", action="store_true",
+                    help="offer page-and-sentence eIds instead of durable ones")
     ap.add_argument("--batch", type=int, default=40)
     ap.add_argument("--max-batches", type=int, default=0, help="0 = every batch")
     ap.add_argument("--model", default=DEEPSEEK_MODEL)
     a = ap.parse_args()
 
     it = InstrumentStore().get(a.instrument)
-    pv = from_instrument(it, only_with=a.only_with)
+    # DURABLE BY DEFAULT. A model asked to cite `p0146.s0013` is being asked to cite the
+    # rendering; asked to cite `div1_0002__sub_0002` it cites the law, and the citation
+    # survives re-extraction.
+    pv = (from_instrument if a.coordinate else from_divisions)(it, only_with=a.only_with)
     fs = from_template(a.template)
 
     provisions = [(p.eid, p.text) for p in pv.provisions if p.text.strip()]
@@ -77,7 +82,7 @@ def main() -> int:
     failed: list[str] = []
 
     print(f"{a.instrument}  ->  {a.template.name}")
-    print(f"  provisions {len(provisions)} (only_with={a.only_with!r})  fields {len(fields)}")
+    print(f"  provisions {len(provisions)} (only_with={a.only_with!r}, addressing={pv.eid_kind.value}, durable {pv.durable_count})  fields {len(fields)}")
     print(f"  {len(batches)} batch(es) of {a.batch}, every batch sees ALL {len(fields)} fields\n")
 
     for i, batch in enumerate(batches, start=1):

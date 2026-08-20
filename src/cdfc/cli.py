@@ -117,6 +117,9 @@ def build_parser() -> argparse.ArgumentParser:
                       help="a model's rule->field bindings, AS DATA. Nothing here calls a model.")
     evid.add_argument("--only-with", default=None,
                       help="restrict provisions to units containing this substring, e.g. shall")
+    evid.add_argument("--durable", action="store_true",
+                      help="address provisions by the instrument's OWN numbering "
+                           "(div1_0002__sub_0002) instead of page-and-sentence, which moves")
     evid.add_argument("--triples", action="store_true", help="also print the RDF projection size")
 
     rules = sub.add_parser(
@@ -182,6 +185,7 @@ def _evidence(args: argparse.Namespace) -> int:
         template=args.template,
         proposals=args.proposals,
         only_with=args.only_with,
+        durable=args.durable,
     )
     print(r.report())
     if args.triples:
