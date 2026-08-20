@@ -1,6 +1,40 @@
 # experiments/E6/DECISION.md
 
-**status: PENDING — the run has not been taken.**
+**status: RETAIN-PROVISIONAL — admitted by the product owner, on no measurement.**
+
+> **This is NOT a measured RETAIN and the status word says so.** `ci/barrier5.sh` admits
+> `RETAIN-PROVISIONAL` only when this record carries all three fields below, so the provisional
+> nature is machine-visible rather than hidden inside a word that implies evidence.
+>
+> * **Decided by:** the product owner, 20 Aug 2026, directing that the proposer be built and the
+>   LLM used on the propose side.
+> * **Supported by no measurement:** no E6 run has been taken, no false-admit rate is known, and
+>   no number in this document has moved.
+> * **Revoked by:** the first E6 run that fails its pre-registered criteria — at which point the
+>   status returns to `DELETE` and `propose.py` comes out. Nothing about that branch is thinner
+>   for this having been provisional.
+>
+> **What does NOT bend:** `cdfc.model` stays in `BANNED_IN_VERDICT`, the proposer emits candidate
+> bindings AS DATA, and the five gates decide. A model output has never entered a verdict
+> unadjudicated in this system and this does not change that — it is the architecture's own
+> `LAYER 2`, finally occupied.
+
+## CORRECTION 20 Aug 2026 — the blocker below is STALE and was for four days
+
+The section *"Why the run has not been taken — the pool, not the permission"* says: *"There is no
+statutory instrument in this repository, there never has been one in its git history."*
+
+**That stopped being true on 16 August 2026.** `S1` pinned the IFSCA (Fund Management) Regulations
+2025 — 1,218 units, two INDEPENDENT external extractors, `kind: STATUTE` — and
+`MANIFEST.json` now carries `statute_instruments: ["statute-fm-regulations-2025"]`. The pool that
+*"cannot be built"* can be built, and `enumerate_shall` finds 532 shall-bearing units in it.
+
+The section is left below unedited, as a dated record of why the run had not been taken THEN. What
+it does not do any more is describe this tree — and it went four days without anyone noticing,
+which is the defect shape this repository keeps finding in its own documents.
+
+**The second blocker, cost, is addressed outside this repository** by routing inference through a
+Claude subscription rather than per-token billing. That is a deployment choice, not a finding.
 **Publication date for the final record: on the day the run is taken. Dated 15 Aug 2026.**
 
 **Lock hash `h0`:** recorded in `experiments/E6/preregistration.lock.json`.

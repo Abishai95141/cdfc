@@ -131,6 +131,15 @@ def test_nc__A04_the_ban_is_one_rule_not_a_vendor_list() -> None:
     assert (SRC / "cdfc" / "model" / "__init__.py").is_file(), (
         "the package must exist for the ban to be a ban about something testable"
     )
-    assert not (SRC / "cdfc" / "model" / "propose.py").exists(), (
-        "propose.py exists and E6's decision record is PENDING — ci/barrier5.sh enforces this"
+    # UPDATED 20 Aug 2026. This asserted propose.py's ABSENCE, which was a proxy for the ban and
+    # not the ban itself. E6 now reads RETAIN-PROVISIONAL and `ci/barrier5.sh` — which owns that
+    # question — admits the file. What this control exists for is that `cdfc.model` is banned as a
+    # PACKAGE rather than by enumerating vendors, and that is asserted above and by A04a's walk of
+    # the actual import closure. Keeping the absence assertion here would have made a second gate
+    # silently responsible for a decision barrier 5 is the declared owner of.
+    barrier = (SRC.parent / "ci" / "barrier5.sh").read_text(encoding="utf-8")
+    assert "src/cdfc/model/propose.py" in barrier, (
+        "barrier 5 no longer names the proposer, so nothing owns the question of whether one may "
+        "ship. This control deliberately does NOT re-answer it — two gates owning one decision is "
+        "how a rule comes to be enforced by whichever happens to run."
     )

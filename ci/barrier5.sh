@@ -27,9 +27,27 @@ if [ ! -f "$DECISION" ]; then
   exit 1
 fi
 
-# The verdict line. `status: RETAIN` and nothing else admits.
-if grep -qiE '^\*\*status:[[:space:]]*RETAIN' "$DECISION"; then
+# The verdict line. `RETAIN` admits outright.
+if grep -qiE '^\*\*status:[[:space:]]*RETAIN[[:space:]]*[-—]?[[:space:]]*$|^\*\*status:[[:space:]]*RETAIN[[:space:]]+—[[:space:]]+[^P]' "$DECISION"; then
   echo "ok: $PROPOSE is admitted by a RETAIN decision in $DECISION"
+  exit 0
+fi
+
+# RETAIN-PROVISIONAL admits a proposer the OWNER decided to ship before the experiment ran — but
+# only when the record states who decided, that no measurement supports it, and what revokes it.
+# WIDENED 20 Aug 2026, and the three required fields are the whole of the widening: a provisional
+# admission that did not say it was provisional would be a RETAIN wearing a longer word.
+if grep -qiE '^\*\*status:[[:space:]]*RETAIN-PROVISIONAL' "$DECISION"; then
+  missing=""
+  grep -qiE '^>[[:space:]]*\*[[:space:]]*\*\*Decided by:' "$DECISION" || missing="$missing 'Decided by'"
+  grep -qiE 'Supported by no measurement' "$DECISION" || missing="$missing 'Supported by no measurement'"
+  grep -qiE '^>[[:space:]]*\*[[:space:]]*\*\*Revoked by:' "$DECISION" || missing="$missing 'Revoked by'"
+  if [ -n "$missing" ]; then
+    echo "GATE FAIL: $DECISION records RETAIN-PROVISIONAL but omits:$missing" >&2
+    echo "  A provisional admission that does not say it is provisional is a RETAIN in a longer word." >&2
+    exit 1
+  fi
+  echo "ok: $PROPOSE is admitted PROVISIONALLY; $DECISION names who decided and what revokes it"
   exit 0
 fi
 

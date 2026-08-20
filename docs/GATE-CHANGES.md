@@ -468,3 +468,26 @@ Neither existing label is true of them. `A4` dates them to a phase that has not 
 `g0_scope.py` still refuses to enter; `A3` backdates them to one that closed before the module
 existed. A gate row is a dated claim about when a guard could first be observed red, and both
 alternatives make that claim false. The vocabulary was the thing that was wrong.
+
+## 2026-08-20 — barrier 5 WIDENED to admit `RETAIN-PROVISIONAL`
+
+`ci/barrier5.sh` admitted `src/cdfc/model/propose.py` only on `**status: RETAIN`. It now also
+admits `**status: RETAIN-PROVISIONAL`, and **only when the decision record carries three fields**:
+`Decided by:`, the literal phrase `Supported by no measurement`, and `Revoked by:`.
+
+**Why widen it at all.** The barrier's purpose is that *"a proposer shipping against its own
+experiment's answer is worse than one shipping before the experiment: a record exists, and it says
+no."* That purpose is untouched — `DELETE` still refuses. What the old shape could not express is
+the case that actually arose: an owner deciding to ship a proposer while the experiment remains
+un-run, with the un-run-ness recorded rather than dressed as evidence.
+
+**The three required fields ARE the widening.** A provisional admission that did not say it was
+provisional would be a `RETAIN` in a longer word, and the gate refuses that shape explicitly.
+
+**Observed RED before it was relied on.** The first version of the check used `^\>` in `grep -E`,
+where `\>` is a WORD-BOUNDARY operator rather than an escaped `>`, so the pattern could never match
+any line — and the gate refused this repository's own correctly-formatted record. That refusal was
+the check working on a broken pattern rather than on a broken record, and both were fixed.
+
+**What does NOT change:** `cdfc.model` stays in `BANNED_IN_VERDICT`; `test_nc__A04a` still walks
+the closure; a proposal is data and the five gates still decide.
