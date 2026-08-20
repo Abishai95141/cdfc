@@ -2,10 +2,10 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "cdfc",
-      "runtimeExecutable": "make",
-      "runtimeArgs": ["serve"],
-      "port": 8765
+      "name": "cdfc-surface",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8777", "--directory", "web"],
+      "port": 8777
     }
   ]
 }

@@ -93,9 +93,16 @@ def main() -> int:
             adj = adjudicate(props, pv, fs)
             g = build(adj, pv, fs)
             cov = coverage(g, adj, pv, fs)
+            # NO `getattr(..., default)` IN A MEASUREMENT HARNESS.
+            #
+            # The first version read `getattr(cov, "governed", 0)`. The attribute is
+            # `fields_governed`, so every row reported governed=0 and the column read as "this
+            # flow governs nothing" across nine templates. The real number for the FME blank is
+            # 30. A getattr with a default never fails; it just publishes a falsehood, which is
+            # the same shape as a count nobody opened.
             row.update(proposals=len(props.proposals), admitted=len(adj.admitted),
-                       governed=getattr(cov, "governed", 0) if not isinstance(cov, dict)
-                       else cov.get("governed", 0),
+                       governed=cov.fields_governed, labelled_total=cov.labelled_total,
+                       provisions_cited=cov.provisions_cited,
                        state=f"ok ({failed} batch fail)" if failed else "ok")
         except Exception as exc:                                    # noqa: BLE001
             row["state"] = f"ERROR {type(exc).__name__}: {str(exc)[:40]}"

@@ -1,0 +1,114 @@
+/* cdfc surface — tokens from src/cdfc/surface/design.py, which carries the MEASURED ratios.
+   accent (#ED7B46) on background is 2.79:1 — fails text (4.5) AND the 3.0 boundary floor, so it
+   is a FILL ONLY and never ink. accent-ink (#B45D35) is the accent darkened to 4.61:1 and is the
+   only accent that may carry text. border (#D8DADF) is 1.40:1, decorative; border-strong
+   (#868E9C) is 3.30:1 and is used wherever a line is the ONLY thing separating two meanings. */
+:root {
+  --primary:#E48B59; --accent:#ED7B46; --accent-ink:#B45D35;
+  --bg:#FFFFFF; --slate:#53617A; --on-slate:#FFFFFF;
+  --ink:#111827; --ink-2:#4B5563; --line:#D8DADF; --line-strong:#868E9C;
+  --ok:#1B7F4B; --refuse:#9A3412; --derived:#6D28D9;
+  --s-xxs:4px; --s-xs:8px; --s-sm:12px; --s-md:16px; --s-lg:24px; --s-xl:32px; --s-xxl:48px;
+  --r-card:16px; --r-ctl:8px; --r-pill:9999px;
+  --sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --dur:200ms; --ease:cubic-bezier(.2,0,0,1);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.6 var(--sans);
+  -webkit-font-smoothing:antialiased}
+/* EVERY NUMBER IS MONO. A column of counts in a proportional face is a column a reader skims. */
+.fig{font-family:var(--mono);font-weight:500;font-variant-numeric:tabular-nums}
+.mono{font-family:var(--mono)}
+h1,h2,h3{font-weight:500;margin:0}
+h1{font-size:32px;line-height:1.2}
+h2{font-size:24px;line-height:1.25}
+h3{font-size:20px;line-height:1.3}
+.lbl{font:600 11px/1.2 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+
+/* ---- shell ---------------------------------------------------------------------------- */
+.app{display:grid;grid-template-columns:264px 1fr;min-height:100vh}
+.rail{background:var(--slate);color:var(--on-slate);padding:var(--s-lg) 0;position:sticky;top:0;
+  height:100vh;overflow-y:auto}
+.brand{padding:0 var(--s-lg) var(--s-lg);border-bottom:1px solid rgba(255,255,255,.16)}
+.brand b{font-size:20px;font-weight:500;letter-spacing:-.01em}
+.brand span{display:block;font:400 12px/1.5 var(--sans);color:rgba(255,255,255,.72);
+  margin-top:var(--s-xxs)}
+.nav{padding:var(--s-md) var(--s-sm)}
+.nav a{display:grid;grid-template-columns:26px 1fr;gap:var(--s-sm);align-items:baseline;
+  padding:10px var(--s-sm);border-radius:var(--r-ctl);color:rgba(255,255,255,.86);
+  text-decoration:none;transition:background var(--dur) var(--ease)}
+.nav a:hover{background:rgba(255,255,255,.10)}
+.nav a[aria-current=page]{background:var(--accent);color:var(--ink)}
+.nav a[aria-current=page] .n,.nav a[aria-current=page] em{color:var(--ink)}
+.nav .n{font:600 11px/1.2 var(--mono);color:rgba(255,255,255,.60)}
+.nav em{display:block;font-style:normal;font-size:11px;color:rgba(255,255,255,.62);
+  margin-top:2px;font-family:var(--mono)}
+main{padding:var(--s-xl) var(--s-xxl) 96px;max-width:1180px}
+.head{margin-bottom:var(--s-xl)}
+.head p{color:var(--ink-2);margin:var(--s-xs) 0 0;max-width:70ch}
+
+/* ---- cards and figures ---------------------------------------------------------------- */
+.grid{display:grid;gap:var(--s-md);grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.card{border:1px solid var(--line);border-radius:var(--r-card);padding:var(--s-lg);
+  background:var(--bg)}
+.card.k{border-color:var(--line-strong)}
+.stat .lbl{display:block;margin-bottom:var(--s-xs)}
+.stat b{display:block;font:500 32px/1.2 var(--mono);font-variant-numeric:tabular-nums}
+.stat small{display:block;color:var(--ink-2);font-size:13px;margin-top:var(--s-xxs)}
+.of{color:var(--ink-2);font-size:20px}
+/* A rule under a count is the ONLY thing separating it from the next meaning: border-strong. */
+.sec{margin-top:var(--s-xxl);padding-top:var(--s-lg);border-top:1px solid var(--line-strong)}
+.sec>h2{margin-bottom:var(--s-xs)}
+.sec>p.note{color:var(--ink-2);margin:0 0 var(--s-md);max-width:74ch}
+
+/* ---- table --------------------------------------------------------------------------- */
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font:600 11px/1.2 var(--mono);letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink-2);padding:var(--s-xs) var(--s-sm);border-bottom:1px solid var(--line-strong)}
+td{padding:10px var(--s-sm);border-bottom:1px solid var(--line);vertical-align:top}
+td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+tbody tr:hover{background:#FAFAFB}
+.scroll{overflow-x:auto;border-radius:var(--r-card)}
+
+/* ---- pills --------------------------------------------------------------------------- */
+.pill{display:inline-block;padding:3px 10px;border-radius:var(--r-pill);
+  font:600 11px/1.5 var(--mono);letter-spacing:.04em;border:1px solid transparent}
+.pill.ok{background:#E7F4EC;color:var(--ok);border-color:#B7DFC7}
+.pill.no{background:#FBEAE3;color:var(--refuse);border-color:#F0C7B5}
+.pill.dv{background:#EFE9FB;color:var(--derived);border-color:#D6C9F3}
+.pill.at{background:#FFF3E9;color:var(--accent-ink);border-color:#F6D3BC}
+.pill.n{background:#F3F4F6;color:var(--ink-2);border-color:var(--line)}
+
+/* ---- provenance ----------------------------------------------------------------------- */
+.prov{font:400 12px/1.5 var(--mono);color:var(--ink-2)}
+.digest{font-family:var(--mono);font-size:12px;color:var(--ink-2)}
+blockquote{margin:var(--s-xs) 0 0;padding-left:var(--s-sm);
+  border-left:3px solid var(--accent);color:var(--ink-2);font-size:13px}
+
+/* ---- bar ------------------------------------------------------------------------------ */
+.bar{height:10px;border-radius:var(--r-pill);background:#F0F1F3;overflow:hidden;display:flex}
+.bar i{display:block;height:100%}
+.bar i.e{background:var(--ok)} .bar i.d{background:var(--derived)}
+.bar i.a{background:var(--accent)} .bar i.r{background:#E7E9ED}
+.legend{display:flex;gap:var(--s-md);flex-wrap:wrap;margin-top:var(--s-sm);font-size:13px;
+  color:var(--ink-2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+
+/* ---- graph ---------------------------------------------------------------------------- */
+.gwrap{border:1px solid var(--line-strong);border-radius:var(--r-card);overflow:hidden;
+  background:#FCFCFD}
+svg.graph{display:block;width:100%;height:auto}
+svg.graph .lnk{stroke:var(--line-strong);stroke-width:1}
+svg.graph text{font:500 10px var(--mono);fill:var(--ink)}
+
+/* ---- callout -------------------------------------------------------------------------- */
+.callout{border:1px solid var(--line-strong);border-left:4px solid var(--accent);
+  border-radius:var(--r-ctl);padding:var(--s-md);background:#FFFBF8;margin-top:var(--s-md)}
+.callout b{display:block;margin-bottom:var(--s-xxs)}
+.callout p{margin:0;color:var(--ink-2);font-size:14px}
+.empty{padding:var(--s-xl);text-align:center;color:var(--ink-2);border:1px dashed var(--line-strong);
+  border-radius:var(--r-card)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
