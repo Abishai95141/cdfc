@@ -366,20 +366,23 @@ is trusted. **Scored against Valentine** so the number is not self-graded. **Exi
 `row-inserted__portfolio-r7.xlsx` is checked rather than refused, and a negative control proves a
 mis-aligned pair is REFUSED rather than scored.
 
-> **STATUS 20 Aug 2026 — USE 1 OF 3 IS BUILT, and calling A1c "complete" was wrong.**
+> **STATUS 20 Aug 2026 — ALL THREE USES BUILT. `N4` RUN.**
 >
-> `src/cdfc/correspond/align.py` does **filing ↔ blank**: 3,747 of 3,747 aligned and 3,747 of 3,747
-> CORRECT across a row insertion, where a name-based align is wrong on 1,451 of 3,544. Ambiguity is
-> refused with its reason. It uses a longest-common-subsequence over row signatures and **no
-> Splink**, which is the right tool for THAT use — two revisions of the same form sharing one
-> address space is a sequence-edit problem, not a probabilistic linkage one.
+> **Use 1, filing ↔ blank** (`correspond/align.py`): LCS over row signatures. 3,747 of 3,747
+> aligned and 3,747 of 3,747 CORRECT across a row insertion, where a name-based align is wrong on
+> 1,451 of 3,544. Ambiguity refused with its reason.
 >
-> **Uses 2 and 3 are NOT built, and they are where the planned stack belongs.** Aligning a source
-> column to a template field is schema matching (Valentine's benchmark). Aligning a record to a
-> record across documents with no shared address space is Fellegi-Sunter (Splink). Neither is
-> written, and **`N4` — score the correspondence against Valentine, judged by someone who did not
-> write it — has not been run**, so the one number that exists is self-graded against a
-> transformation whose ground truth I constructed.
+> **Use 2, source column ↔ template field** (`correspond/schema.py`): declared evidence — header
+> tokens, declared type against value shape, the field's own vocabulary — with EM-derived weights.
+> 5 of 6 matched and verified; the unrelated column refused rather than forced.
+>
+> **Use 3, record ↔ record** (`correspond/link.py`): Fellegi-Sunter, `m`/`u`/prevalence fitted by
+> EM with no labelled pairs. Linked, ambiguous and unlinked PARTITION the input, asserted.
+>
+> **`N4`: ours F1 0.964, Splink 4.0.16 F1 0.915 on a degraded population — and that is NOT a
+> ranking.** Single points on two operating curves. Three harness bugs each flattered us and are
+> recorded, including one on which Splink scored 0.000. **The independence criterion is UNMET**:
+> every number was produced by the author of the thing measured.
 
 ### A2 — PATH M AND RULE COVERAGE
 The `with {…}` context compiler, four host functions, rules `ADMITTED_BY_PUBLISHER`, our own
@@ -474,7 +477,7 @@ number it was written against was wrong. `(141, 141)` entries and `(230, 230)` g
 | **N1 · re-pinning blast radius** | when the instrument is re-extracted with layout, how many offsets, spans, `text_hash`es and committed envelopes move, and is there a window where nothing reproduces? | 2 d, **gates A4** |
 | **N2 · the labelling rule, then the split** | **RUN 20 Aug 2026.** Pinned by fields-per-label (1.2 vs 4.8); reading all 125 labels found 351 placeholders and 12 instruction texts. **132 labelled, 124 / 8** | done |
 | **N3 · the negation negative control** | every engine we adopt must PROVE it honours negation and comparison before it adjudicates | 0.5 d, reusable |
-| **N4 · correspondence vs Valentine** | **NOT RUN.** A1c use 1 is built and its only number is self-graded. This is the arm that makes it external | 3 d, gates A1c uses 2-3 |
+| **N4 · correspondence vs Valentine** | **RUN 20 Aug 2026.** Valentine's METRICS on constructed ground truth; its corpora were not in reach and the independence criterion is unmet | done, with limits named |
 | **N5 · the persistent-graph decision** | **RUN 20 Aug 2026 — `D-A3-01`.** Re-derivation measured at 0.41 s / 0.63 s and proven a deterministic fold; artefacts persist, the graph does not; Cognee rejected | ~0.5 d |
 
 ---
@@ -502,7 +505,8 @@ number it was written against was wrong. `(141, 141)` entries and `(230, 230)` g
 3. ~~`N1`, the re-pinning blast radius~~ — **DONE 20 Aug 2026.** A byte shift costs 0 of 11
    citations; a resegmentation costs 11 of 11. **Re-pin BEFORE A4** — the radius is near-zero today
    and widens with every provision-citing artefact.
-4. **A1c.** The longest, and the one that makes schema-free true for real filer behaviour.
+4. ~~A1c~~ — **DONE 20 Aug 2026.** All three uses built, `N4` run. What remains is independence:
+   the scoring was done by the author of the thing scored.
 
 **A2 stays blocked** on a filed instance — a sourcing problem to start in parallel, not to discover
 later. **A4 should not start:** its human blocker has not moved and `g0_scope.py` will raise on the
