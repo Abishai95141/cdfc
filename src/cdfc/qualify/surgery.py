@@ -184,18 +184,29 @@ def _mutate_element(c: Any, new_value: Any) -> Any:
     return el
 
 
-def seed_mutant(
-    base: Path,
-    edits: Sequence[CellEdit],
-    out: Path,
-    *,
-    fault_class: str,
-    operator_id: str,
-    seed: int,
-) -> MutantRecord:
-    """Write the mutant. Every entry copied byte-for-byte; exactly one worksheet part rewritten."""
+class PartsChangedError(SurgeryError):
+    """A part changed that no edit named. Shared by every caller of `write_cells`."""
+
+
+def write_cells(base: Path, edits: Sequence[CellEdit], out: Path) -> frozenset[str]:
+    """THE ONE WORKBOOK WRITER. Byte-for-byte copy; exactly the parts the edits name are rewritten.
+
+    **Extracted from `seed_mutant` on 20 Aug 2026 so the FILL path and the MUTANT path cannot
+    drift.** They need identical guarantees for opposite reasons — a mutant that lost a part would
+    make the observability diff a diff of the writer, and a FILLED RETURN that lost a part would be
+    a different document handed to a regulator under the original's name. One writer, two callers,
+    one set of invariants.
+
+    Everything the module docstring says about the method applies here and is where it is enforced:
+    every entry copied with its original compression parameters, the worksheet XML PARSED rather
+    than pattern-matched, and `parts_changed` compared against the parts the edits name rather than
+    against the number 1.
+    """
     if not edits:
-        raise SurgeryError("a mutant with no edits is the base workbook under another name")
+        raise SurgeryError(
+            "a write with no edits is the base workbook under another name; callers that mean "
+            "'copy' should copy."
+        )
 
     with zipfile.ZipFile(base) as z:
         named_parts = {e.sheet_name: _part_for(z, e.sheet_name) for e in edits}
@@ -233,11 +244,32 @@ def seed_mutant(
     changed = differing_parts(base, out)
     expected = set(named_parts.values())
     if changed != expected:
-        raise MultiPartEditError(
+        raise PartsChangedError(
             f"parts changed {sorted(changed)} but the edits name {sorted(expected)}. Raw-zip "
             "surgery rewrites exactly the parts the edits name; anything else means a part was "
-            "re-serialised, and the observability diff would include it."
+            "re-serialised."
         )
+    return changed
+
+
+def seed_mutant(
+    base: Path,
+    edits: Sequence[CellEdit],
+    out: Path,
+    *,
+    fault_class: str,
+    operator_id: str,
+    seed: int,
+) -> MutantRecord:
+    """Write the mutant, through `write_cells`. The invariants live there and are shared."""
+    if not edits:
+        raise SurgeryError("a mutant with no edits is the base workbook under another name")
+    try:
+        changed = write_cells(base, edits, out)
+    except PartsChangedError as exc:
+        # The mutant path has always raised MultiPartEditError here and the campaign catches it
+        # by name; re-raised so extracting the writer changes no caller's contract.
+        raise MultiPartEditError(str(exc)) from exc
     return MutantRecord(
         mutant_sha256=_sha(out.read_bytes()),
         base_sha256=_sha(base.read_bytes()),

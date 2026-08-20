@@ -302,3 +302,7 @@ statute:  ## rebuild the STATUTE instrument from the pinned PDF (needs .[pdf])
 .PHONY: e2e
 e2e:  ## run the product path across all three ingress formats and three regulators
 	$(PY) tools/e2e_multiformat.py
+
+.PHONY: demo-fill
+demo-fill:  ## B1 — fill the regulator's blank and prove nothing else changed
+	$(PY) tools/demo_fill.py
