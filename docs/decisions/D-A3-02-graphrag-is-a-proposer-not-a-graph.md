@@ -1,5 +1,14 @@
 # D-A3-02 — GraphRAG: rejected as a graph builder, admissible ONLY as a proposer
 
+> **AMENDED 20 Aug 2026 by `docs/measurements/D3-graphrag-vs-extract.md`, after actually running
+> it.** This assessment was made on a reading of the repository and its docs; D3 indexed the
+> pinned instrument with it. Two corrections: the community reports this document argues our gates
+> would refuse **never arrived** — the pipeline failed at `create_community_reports` — and the
+> entities and relationships it DID produce now have a home, the `Derived` lane, which did not
+> exist when this was written. The ruling below is widened from *"a proposer at most"* to **use it,
+> into the DERIVED lane, alongside `cdfc.model.extract` in the evidenced lane**. Everything here
+> about unadjudicated edges stands.
+
 *Assessed 20 Aug 2026 against `github.com/microsoft/graphrag` and its indexing documentation.
 Extends `D-A3-01`'s ruling on document-graph builders to a named, specific candidate.*
 
