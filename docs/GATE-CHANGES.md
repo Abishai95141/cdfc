@@ -1,5 +1,25 @@
 # docs/GATE-CHANGES.md
 
+## 20 Aug 2026 — row 127 added: a live document may not carry a falsified claim
+
+Four claims Phase 1 falsified were still being asserted days later, and **two were RENDERED INTO
+THE PRODUCT**: `cdfc.surface.openitems` reads `docs/OPEN-ITEMS.md` and shows every `- [OPEN]` line
+to a user, so the report was telling readers the upload endpoint refuses every filing while probe
+`A1-6` observed it returning 201. They were fixed by hand, and nothing prevented their return — a
+second README passage saying the same thing was found later the same session, and three documents
+were still quoting a superseded attestation ratio.
+
+Every pattern in the gate was TRUE of this repository once. The rule is not that the words are
+banned: a line carrying one must also carry a closure marker, and a document that declares itself
+a dated record in its own header is exempt whole, so a pre-registration whose criteria may never be
+edited is not asked to annotate them.
+
+**Its first run flagged six lines, and all six were its own author's correction notices** — the
+marker set was too narrow. That is recorded rather than quietly widened: the cost of a missed
+marker is a false red on a correction someone already wrote, so the markers are broad on purpose.
+Observed red under an unmarked planted claim, and observed GREEN under the same claim marked as
+history — a gate that only ever goes red cannot tell a claim from a record of one.
+
 ## 20 Aug 2026 — row 126 added: only the LAST `!` delimits a cell string
 
 Found by the adversarial audit of the A1 diff. A cell string is `<sheet>!<ref>`. A reference can

@@ -442,3 +442,4 @@ because a thirty-second failure gets fixed and a twenty-minute one gets skipped.
 | 124 | shell | `ci/barrier5.sh` — `propose.py` may not exist without a RETAIN decision record | P13 | P13 | `propose.py` planted against the PENDING record, observed red 16 Aug 2026 | LIVE |
 | 125 | shell | `ci/no-model-in-verdict.sh` — the stage-2 grep arm | P13 | P13 | a planted `import httpx`, observed red 16 Aug 2026 | LIVE |
 | 126 | shell | `ci/no-left-split-on-cell.sh` — a cell string is split on its LAST `!`, never its first | A1 | A1 | a planted `partition("!")` in `probes/qualify.py`, observed red 20 Aug 2026 | LIVE |
+| 127 | shell | `ci/no-stale-claim.sh` — a document describing the current tree may not carry a claim the tree falsified | A1 | A1 | an unmarked `refuses every filing` planted in `docs/OPEN-ITEMS.md`, observed red 20 Aug 2026 | LIVE |

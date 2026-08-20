@@ -41,6 +41,7 @@ greps:
 	bash ci/no-wallclock-z3.sh
 	bash ci/no-imported-prior.sh
 	bash ci/no-left-split-on-cell.sh
+	bash ci/no-stale-claim.sh
 	$(PY) tools/audit_trail.py
 
 contract:

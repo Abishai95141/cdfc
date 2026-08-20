@@ -103,3 +103,5 @@ citation, an unlogged artefact, and an empty trail are each planted and observed
 | 2026-08-20 | DEFECT | the labelling rule was pinned globally and was NOT schema-free: it named rows on AL_monthly and was chosen on one blank | `src/cdfc/evidence/fields.py` |
 | 2026-08-20 | DECISION | the labelling rule is selected PER DOCUMENT by a threshold-free signature — does the rule give one label to two cells on the same line — and the choice is declared on every FieldSet | `src/cdfc/evidence/fields.py` |
 | 2026-08-20 | CORRECTION | AL_monthly was called row-labelling on a fields-per-label ratio of 21.6; the within-line signature is 0.00 — 30 questions asked of ~21 rows each, which is a field population | `src/cdfc/evidence/fields.py` |
+| 2026-08-20 | DECISION | gate 127: a live document may not carry a claim the tree falsified; a dated record declares itself and is exempt whole | `ci/no-stale-claim.sh` |
+| 2026-08-20 | DEFECT | the stale-claim gate's first run flagged six lines that were all its own author's correction notices — the marker set was too narrow | `docs/GATE-CHANGES.md` |

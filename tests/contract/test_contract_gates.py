@@ -66,11 +66,16 @@ ADDED_LIVE_AT_P13B0 = {123, 124, 125}
 # not, so only the LAST `!` delimits a cell string. `Anchor.parse` right-split and was right;
 # eighteen call sites left-split and were not. Argument in docs/GATE-CHANGES.md.
 ADDED_LIVE_AT_A1_AUDIT = {126}
+# 20 Aug 2026. 127: four claims Phase 1 falsified were still being asserted, and TWO of them were
+# rendered into the product by `cdfc.surface.openitems`. They were fixed by hand and nothing
+# stopped them returning. Argument in docs/GATE-CHANGES.md.
+ADDED_LIVE_AT_STALE_CLAIM = {127}
 LIVE_EXPECTED = (LIVE_AT_P0 | ADDED_LIVE_AT_P4 | ADDED_LIVE_AT_P5 | ADDED_LIVE_AT_P6
                  | ADDED_LIVE_AT_P7 | ADDED_LIVE_AT_P8 | ADDED_LIVE_AT_P9
                  | ADDED_LIVE_AT_P10 | ADDED_LIVE_AT_P11 | ADDED_LIVE_AT_P12
                  | ADDED_LIVE_AT_P13 | ADDED_LIVE_AT_P14 | ADDED_LIVE_AT_P14B
                  | ADDED_LIVE_AT_P13B0 | ADDED_LIVE_AT_A1_AUDIT
+                 | ADDED_LIVE_AT_STALE_CLAIM
                  | PROMOTED_AT_P6)
 PENDING_AT_P0 = {14, 15, 16}
 # The PENDING set SHRINKS as subjects ship, and a row may only leave it into LIVE — never the
