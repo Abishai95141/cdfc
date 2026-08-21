@@ -177,6 +177,52 @@ class Derived:
 
 
 @dataclass(frozen=True, slots=True)
+class Asserted:
+    """A value a NAMED HUMAN supplied, in answer to a question this lane's refusal put to them.
+
+    ## Why this lane exists
+
+    `FillRefusal` is a closed vocabulary of eight reasons, and six of them are QUESTIONS: nothing
+    we hold contains this value; two of your documents disagree; the term you used is not in the
+    form's own list. A system that counts those and never asks is a system that has told the filer
+    what it cannot do and then stopped. The product's own sentence — *"tell you exactly what
+    nothing supports, what two of your documents disagree about, and what needs your judgement"* —
+    is a system that ASKS, and `cdfc.ask` is the layer that formulates the question.
+
+    An answer becomes a value HERE, and the separation from `FillProposal` is the whole safety
+    property:
+
+    * it is **never** in `admitted()`, so no coverage figure counts it as evidenced;
+    * it IS in `filled()`, because the filer put it in the return and hiding that would be a
+      different lie from counting it;
+    * it carries `answered_by` and `answered_at` and the `question_id` it answers, so *who said
+      this, when, and what were they asked* is answerable from the artefact alone;
+    * `resolved_by` is the constant `human`, matching `evidence.entities.ResolvedBy` — the
+      existing precedent for a labelled weaker tier.
+
+    **An asserted value and a byte-exact located value are different evidence.** `Derived` is the
+    other weak tier and it is a different one again: a model produced it and no span supports it.
+    Three tiers, three labels, one count each. Merging any two of them would make one number mean
+    two things, which is the defect `admitted()` exists to prevent.
+    """
+
+    ref: str
+    label: str
+    value: str
+    question_id: str          # the question this answers; stable, derived from template+ref+reason
+    reason: FillRefusal       # the refusal the question was put for
+    answered_by: str          # a NAMED person. An anonymous assertion is not an assertion
+    answered_at: str          # ISO 8601 instant, SUPPLIED by the caller: no clock in the core
+    resolved_by: str = "human"
+
+    def as_canonical_obj(self) -> dict[str, object]:
+        return {"ref": self.ref, "label": self.label, "value": self.value,
+                "question_id": self.question_id, "reason": self.reason.value,
+                "answered_by": self.answered_by, "answered_at": self.answered_at,
+                "resolved_by": self.resolved_by, "evidenced": False}
+
+
+@dataclass(frozen=True, slots=True)
 class Attestation:
     """A field a human must sign. NEVER filled, and the evidence is assembled anyway.
 
@@ -205,10 +251,12 @@ class FillDeclaration:
     refused: tuple[Refusal, ...]
     attestations: tuple[Attestation, ...]
     derived: tuple[Derived, ...] = ()
+    asserted: tuple[Asserted, ...] = ()
 
     def __post_init__(self) -> None:
         seen = ([p.ref for p in self.proposed] + [r.ref for r in self.refused]
-                + [a.ref for a in self.attestations] + [d.ref for d in self.derived])
+                + [a.ref for a in self.attestations] + [d.ref for d in self.derived]
+                + [s.ref for s in self.asserted])
         if len(set(seen)) != len(seen):
             dupes = sorted({r for r in seen if seen.count(r) > 1})
             raise ValueError(
@@ -219,19 +267,26 @@ class FillDeclaration:
             raise ValueError(
                 f"the declaration does not close: {len(self.proposed)} proposed + "
                 f"{len(self.refused)} refused + {len(self.attestations)} attestations + "
-                f"{len(self.derived)} derived = {len(seen)}, over a surface of "
-                f"{self.surface_total}. A fill report whose lanes do not sum has lost fields "
-                "silently."
+                f"{len(self.derived)} derived + {len(self.asserted)} asserted = {len(seen)}, over "
+                f"a surface of {self.surface_total}. A fill report whose lanes do not sum has lost "
+                "fields silently."
             )
 
     def admitted(self) -> tuple[FillProposal, ...]:
-        """EVIDENCED fills only. `derived` is deliberately absent: a value no span supports has
-        not been checked, and putting it here would make one number mean two things."""
+        """EVIDENCED fills only. `derived` and `asserted` are deliberately absent: a value no span
+        supports has not been checked, and a value a human typed was never checked at all. Putting
+        either here would make one number mean two things."""
         return tuple(p for p in self.proposed if p.admitted)
 
     def filled(self) -> tuple[str, ...]:
-        """Every ref this run PUTS A VALUE IN, evidenced or derived. The product's own count."""
-        return tuple(sorted([p.ref for p in self.admitted()] + [d.ref for d in self.derived]))
+        """Every ref this run PUTS A VALUE IN — evidenced, derived OR asserted. The product's own
+        count of what appears in the return, which is a different question from what was checked.
+
+        An answered question is a value in a cell. Leaving it out here would hide the filer's own
+        answer from the filer, which is a different falsehood from counting it as evidence and is
+        not a lesser one."""
+        return tuple(sorted([p.ref for p in self.admitted()] + [d.ref for d in self.derived]
+                            + [s.ref for s in self.asserted]))
 
     def counts(self) -> dict[str, int]:
         by_reason: dict[str, int] = {}
@@ -244,6 +299,7 @@ class FillDeclaration:
             "refused": len(self.refused),
             "attestations": len(self.attestations),
             "derived": len(self.derived),
+            "asserted": len(self.asserted),
             "filled_total": len(self.filled()),
             **{f"refused_{k}": v for k, v in sorted(by_reason.items())},
         }
@@ -263,13 +319,16 @@ class FillDeclaration:
             "",
             f"awaiting a named signatory  {c['attestations']} of {c['surface_total']}",
             f"DERIVED, no span supports them  {c['derived']} of {c['surface_total']}",
+            f"ASSERTED by a named human, in answer  {c['asserted']} of {c['surface_total']}",
             "",
             f"values placed in the return  {c['filled_total']} of {c['surface_total']}  "
-            f"= {c['admitted']} evidenced + {c['derived']} derived",
+            f"= {c['admitted']} evidenced + {c['derived']} derived + {c['asserted']} asserted",
             "",
             "An EVIDENCED value cites a document and a span that re-reads byte-exact. A DERIVED "
             "value is one a model produced that no span supports — it is placed in the return and "
-            "it is NOT counted as checked. Neither is a claim that the figure is correct.",
+            "it is NOT counted as checked. An ASSERTED value is one a named human supplied in "
+            "answer to a question, and it was never checked against anything at all. None of the "
+            "three is a claim that the figure is correct.",
         ]
         return tuple(out)
 
@@ -307,13 +366,30 @@ def propose(
     source: InstrumentText | Mapping[str, InstrumentText],
     *,
     binding_provenance: str,
+    offered_but_absent: Mapping[str, str] | None = None,
 ) -> FillDeclaration:
     """Apply the six conditions to every field in the surface. Deterministic; no model, no network.
 
     `binding` maps a field ref to the observations bound to it, and `binding_provenance` names what
     produced it. Both are INPUTS: this lane adjudicates a binding, and a lane that could also
     create one could not be trusted to refuse it.
+
+    ## `offered_but_absent`, and the reason that had never been reachable
+
+    `FillRefusal` declares eight reasons and `NOT_LOCATABLE_IN_SOURCE` was **constructed nowhere**
+    — measured 20 Aug 2026 by grepping every `FillRefusal.` site in `src/` and `tools/`. The
+    binder recorded that population in `FillRun.unlocatable`, a `(ref, value)` list *outside* the
+    declaration, so a filer was told *"nothing you gave us contains a value for this field"* for a
+    cell where a column had in fact offered one that the document did not contain. Those are
+    different facts and they take different answers — the first wants a document, the second wants
+    somebody to say WHICH document the value should have been in.
+
+    So the binder passes what it offered and could not find, and the reason becomes reachable in
+    the lane that declares it. A reason in a closed vocabulary that nothing can produce is the
+    *"table full of entries nobody reaches"* half of an allowlist, and `CLAUDE.md §3` requires each
+    half of a check to have its own injector for exactly this shape.
     """
+    absent: Mapping[str, str] = dict(offered_but_absent or {})
     if not binding_provenance.strip():
         raise ValueError(
             "a binding with no declared provenance cannot be adjudicated: the refusals would not "
@@ -366,6 +442,20 @@ def propose(
 
         conds, value, chosen = _evaluate(field, obs, by_doc)
         first = next((c for c in conds if not c.holds), None)
+
+        # A COLUMN OFFERED A VALUE AND THE DOCUMENT DOES NOT CONTAIN IT.
+        #
+        # `GROUNDED` fails identically whether nothing was ever offered for this cell or a matched
+        # column offered a value that could not be located in any source this run read. Reporting
+        # both as `no_observation` collapses two facts that take two different answers.
+        if first is not None and first.name == "GROUNDED" and ref in absent:
+            refused.append(Refusal(
+                ref, field.label, FillRefusal.NOT_LOCATABLE_IN_SOURCE,
+                f"a matched source column offered {absent[ref]!r} for this field, and no document "
+                "this run read contains it at any span. A value that cannot be located in the "
+                "document it is claimed to come from yields no observation at all",
+            ))
+            continue
 
         # AN UNDECLARED FIELD IS PLACED, NOT REFUSED — and it lands in `Derived`, labelled.
         #

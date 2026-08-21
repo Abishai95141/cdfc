@@ -200,6 +200,20 @@ class Registry:
             )
         return data
 
+    def path(self, digest: str) -> Path:
+        """The blob's own path on disk. **For readers that need a FILE, never for a writer.**
+
+        `openpyxl` and every workbook reader want a path, and the registry holds bytes. Copying
+        each blob to a temporary file to satisfy that would give the reader a path whose name is
+        not the artefact's identity, and a refusal message naming `/tmp/tmp8f2a.xlsx` tells a
+        filer nothing about what they uploaded. The store is immutable — there is no update and no
+        delete — so handing out a read path cannot be used to change what a digest addresses.
+        """
+        p = self._blob_path(digest)
+        if not p.is_file():
+            raise RegistryError(f"{digest[:12]}… is not in this registry")
+        return p
+
     def meta(self, digest: str) -> Artefact:
         m = self._read_meta(digest)
         if m is None:

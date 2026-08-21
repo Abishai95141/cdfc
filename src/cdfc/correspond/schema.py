@@ -128,12 +128,21 @@ def match(columns: list[SourceColumn], fields: FieldSet, *, margin: float = 1.0)
     for s, i, _j in scored:
         best.setdefault(i, []).append(s)
 
-    taken_j: set[int] = set()
+    taken_j: dict[int, str] = {}
     done_i: set[int] = set()
     pairs: list[tuple[str, str, float]] = []
     refused: list[tuple[str, str]] = []
+    # WHY a column lost, kept as it happens. A column whose best field was already claimed is not
+    # a column no field carries evidence for, and reporting it as one says we looked and found
+    # nothing when what happened is that somebody else got there first. Found 20 Aug 2026 when two
+    # documents both carried `Legal structure` and the second was reported as unmatched.
+    lost_to: dict[int, str] = {}
     for s, i, j in scored:
-        if i in done_i or j in taken_j or s <= 0:
+        if i in done_i or s <= 0:
+            continue
+        if j in taken_j:
+            lost_to.setdefault(i, f"{targets[j].ref} already matched column "
+                                  f"{taken_j[j]!r} at a higher score")
             continue
         runners = best.get(i, [])
         second = runners[1] if len(runners) > 1 else float("-inf")
@@ -144,10 +153,10 @@ def match(columns: list[SourceColumn], fields: FieldSet, *, margin: float = 1.0)
             continue
         pairs.append((columns[i].name, targets[j].ref, s))
         done_i.add(i)
-        taken_j.add(j)
+        taken_j[j] = columns[i].name
     for i, c in enumerate(columns):
         if i not in done_i:
-            refused.append((c.name, "no field carries evidence for it"))
+            refused.append((c.name, lost_to.get(i, "no field carries evidence for it")))
 
     return SchemaMatch(tuple(sorted(pairs)), tuple(sorted(refused)),
                        len(columns), len(targets), m=w.m, u=w.u)

@@ -3606,3 +3606,160 @@ ALL_INJECTORS = ALL_INJECTORS + (
     DoubledLetterAsBase26,
 )
 BY_NAME = {c.__name__: c for c in ALL_INJECTORS}
+
+
+# ============================================================================================
+# C6 — THE QUESTIONING FLOW. Four injectors, one per half of two crossed checks.
+#
+# `CLAUDE.md §3`: *"Each half of a check needs its OWN injector. An allowlist has two failure
+# modes — an undeclared entry, and a table full of entries nobody reaches. One injector flips one
+# of them and leaves the other permanently green. Cross them."*
+#
+#   ASKABLE, half 1   a reason declared NOT a question is asked anyway   AskFieldNotLabelled
+#   ASKABLE, half 2   a row nothing can ever reach sits in the table     AskableGhostRow
+#   ASSERTED, half 1  an answer is counted as EVIDENCED                  AssertedCountsAsEvidenced
+#   ASSERTED, half 2  an answer is not PLACED in the return              AssertedNotPlaced
+#
+# The two asserted halves are opposite errors about the same value and a single control catches
+# only one: a lane that counts an answer as evidence overstates what was checked, and a lane that
+# drops the answer hides the filer's own words from them.
+# ============================================================================================
+
+ASK_QUESTIONS = REPO_ROOT / "src" / "cdfc" / "ask" / "questions.py"
+FILL_PROPOSE = REPO_ROOT / "src" / "cdfc" / "fill" / "propose.py"
+
+
+class _AnchoredEdit(Injector):
+    """Base: assert the anchor, then substitute. An anchor that moved plants NOTHING.
+
+    `CLAUDE.md §3` — *"Assert your anchors. An edit whose anchor moved silently does nothing."*
+    Every subclass here raises rather than writing an unchanged file, because a control that
+    breaks nothing passes while proving nothing.
+    """
+
+    TARGET: Path = ASK_QUESTIONS
+    ANCHOR: str = ""
+    REPLACEMENT: str = ""
+
+    def __init__(self) -> None:
+        super().__init__(name=type(self).__name__, touches=[self.TARGET])
+
+    def apply(self) -> None:
+        src = self.TARGET.read_text(encoding="utf-8")
+        n = src.count(self.ANCHOR)
+        if n != 1:
+            raise AssertionError(
+                f"{self.TARGET}: anchor appears {n} time(s), expected exactly 1. This injector "
+                "would plant nothing (or plant it in several places), and the control would pass "
+                "having broken NOTHING — the drifted-anchor shape this repository has hit twice."
+            )
+        self.TARGET.write_text(src.replace(self.ANCHOR, self.REPLACEMENT, 1), encoding="utf-8")
+
+
+class AskFieldNotLabelled(_AnchoredEdit):
+    """Move `field_not_labelled` out of NOT_ASKABLE and into the allowlist.
+
+    On the pinned FME return this is **3,615 of 3,735** refusals. Asked, the question is *"what
+    value goes in `Sheet3!AC118`?"* — a coordinate, not a question, and the filer would have to
+    open the workbook and read the merged header for us. The screen's answerable total goes from
+    129 to 3,744 and every one of the new ones is unanswerable.
+    """
+
+    ANCHOR = """    FillRefusal.FIELD_NOT_LABELLED: (
+        "the regulator's cell carries no label under the pinned label rule, so there is no \""""
+    REPLACEMENT = """    FillRefusal.REVERIFICATION_FAILED: (
+        "the regulator's cell carries no label under the pinned label rule, so there is no \""""
+
+    def apply(self) -> None:
+        src = self.TARGET.read_text(encoding="utf-8")
+        if self.ANCHOR not in src:
+            raise AssertionError(f"{self.TARGET}: the NOT_ASKABLE row for FIELD_NOT_LABELLED is "
+                                 "gone; this injector would plant nothing.")
+        # Put it in ASKABLE, and take it out of NOT_ASKABLE by renaming that row onto the other
+        # non-question. The disposition stays TOTAL, so the import-time check still passes and the
+        # only thing that changes is that an unanswerable reason is now asked.
+        add = """ASKABLE: Final[Mapping[FillRefusal, Askable]] = {
+    FillRefusal.FIELD_NOT_LABELLED: Askable(
+        FillRefusal.FIELD_NOT_LABELLED, AnswerShape.VALUE,
+        "What value goes in this cell?", "type it",
+    ),"""
+        src = src.replace("ASKABLE: Final[Mapping[FillRefusal, Askable]] = {", add, 1)
+        src = src.replace(self.ANCHOR, self.REPLACEMENT, 1)
+        self.TARGET.write_text(src, encoding="utf-8")
+
+
+class AskableGhostRow(_AnchoredEdit):
+    """A row in ASKABLE that NO refusal can ever carry — the vacuous half of the allowlist.
+
+    This is not hypothetical here. `NOT_LOCATABLE_IN_SOURCE` was declared in `FillRefusal` and
+    **constructed nowhere** until C6 wired `offered_but_absent`, and `ATTESTATION_REQUIRES_SIGNATORY`
+    is still produced by no `Refusal` at all — the attestation lane short-circuits before the
+    conditions run. A table of questions nobody is ever shown looks exactly like a table of
+    questions, and only a reachability check tells them apart.
+    """
+
+    ANCHOR = "    ATTESTATION_REQUIRES_SIGNATORY = \"attestation_requires_signatory\""
+
+    def __init__(self) -> None:
+        Injector.__init__(self, name=type(self).__name__,
+                          touches=[FILL_PROPOSE, ASK_QUESTIONS])
+
+    def apply(self) -> None:
+        src = FILL_PROPOSE.read_text(encoding="utf-8")
+        if self.ANCHOR not in src:
+            raise AssertionError(f"{FILL_PROPOSE}: anchor {self.ANCHOR!r} is gone; this injector "
+                                 "would plant nothing.")
+        FILL_PROPOSE.write_text(
+            src.replace(self.ANCHOR,
+                        self.ANCHOR + "\n    GHOST_REASON = \"ghost_reason\"", 1),
+            encoding="utf-8")
+
+        q = ASK_QUESTIONS.read_text(encoding="utf-8")
+        head = "ASKABLE: Final[Mapping[FillRefusal, Askable]] = {"
+        if head not in q:
+            raise AssertionError(f"{ASK_QUESTIONS}: the ASKABLE table is gone.")
+        ASK_QUESTIONS.write_text(q.replace(head, head + """
+    FillRefusal.GHOST_REASON: Askable(
+        FillRefusal.GHOST_REASON, AnswerShape.VALUE,
+        "A question nothing can ever ask.", "nothing resolves it, because it never arises",
+    ),""", 1), encoding="utf-8")
+
+
+class AssertedCountsAsEvidenced(_AnchoredEdit):
+    """`admitted()` counts the asserted lane, so an answer becomes a checked value.
+
+    The whole safety property of `cdfc.ask` is that answering does not make a cell evidenced. This
+    is the shape that breaks it and no behavioural test of the questioning flow catches it: the
+    questions are still right, the answers are still recorded, the provenance is still there — only
+    the coverage number silently absorbs values that re-read nothing.
+    """
+
+    TARGET = FILL_PROPOSE
+    ANCHOR = "        return tuple(p for p in self.proposed if p.admitted)"
+    REPLACEMENT = ("        return tuple(p for p in self.proposed if p.admitted) + tuple(\n"
+                   "            FillProposal(ref=s.ref, label=s.label, value=s.value,\n"
+                   "                         document='(asserted)', span=(0, 0), page=None,\n"
+                   "                         context='', conditions=())\n"
+                   "            for s in self.asserted)")
+
+
+class AssertedNotPlaced(_AnchoredEdit):
+    """`filled()` drops the asserted lane, so an answered question puts nothing in the return.
+
+    The opposite error from `AssertedCountsAsEvidenced`, and the one a single control misses. The
+    evidenced count stays honest and the filer's own answer disappears from the thing they are
+    filing — a value they typed, under their name, that no screen shows.
+    """
+
+    TARGET = FILL_PROPOSE
+    ANCHOR = ("        return tuple(sorted([p.ref for p in self.admitted()] "
+              "+ [d.ref for d in self.derived]\n"
+              "                            + [s.ref for s in self.asserted]))")
+    REPLACEMENT = ("        return tuple(sorted([p.ref for p in self.admitted()] "
+                   "+ [d.ref for d in self.derived]))")
+
+
+ALL_INJECTORS = ALL_INJECTORS + (
+    AskFieldNotLabelled, AskableGhostRow, AssertedCountsAsEvidenced, AssertedNotPlaced,
+)
+BY_NAME = {c.__name__: c for c in ALL_INJECTORS}

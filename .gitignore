@@ -58,3 +58,9 @@ reports/demo/*
 node_modules/
 .graphify_*
 graphify-out/
+
+# The live application's own working directory: an artefact registry and the returns opened
+# against it. Content-addressed uploads and a person's answers are a DEPLOYMENT's state, not the
+# repository's — committing one filer's evidence exports would put their data in a public tree.
+# `tools/serve_app.py --app-root` moves it.
+runs/app/

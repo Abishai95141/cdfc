@@ -63,6 +63,41 @@ ROUTES: Final[tuple[Route, ...]] = (
           "the template-bump sweep: which predicates stopped settling, and why each one moved"),
     Route("GET", "/v1/portfolio", "get_portfolio", False,
           "the administrator's table. NO TOTAL ROW -- see handlers.get_portfolio"),
+    # --- C6: the LIVE application. Upload, map, fill, ASK, attest. --------------------------
+    #
+    # `mutating` is declared per route and these three are declared honestly. An upload writes to
+    # an operator's registry; opening a return writes a filing record under their name; an ANSWER
+    # is a named human asserting a value that goes into a regulator's return. The reads are not
+    # mutating even where they are expensive, because expense is not accountability.
+    Route("GET", "/v1/capabilities", "get_capabilities", False,
+          "what THIS deployment can do; a capability nobody wired reports false, never absent"),
+    Route("POST", "/v1/artefacts", "post_artefacts", True,
+          "operator token; ?kind=&filename=, raw bytes. The kind is DECLARED, never sniffed; a "
+          "raw PDF with no reader installed is 501 with the remedy, never stored unread"),
+    Route("GET", "/v1/artefacts", "get_artefacts", False, "?kind= — what has been uploaded"),
+    Route("GET", "/v1/artefacts/{digest}/surface", "get_artefact_surface", False,
+          "a template's INDUCED field surface, or the reason it is not derivable. "
+          "absent != empty != zero"),
+    Route("GET", "/v1/artefacts/{digest}/provisions", "get_artefact_provisions", False,
+          "a corpus, segmented and addressable, with the two agreement vectors NEVER averaged"),
+    Route("POST", "/v1/returns", "post_returns", True,
+          "operator token; open a return over uploaded artefacts. Idempotent by content — the id "
+          "is sha256(merkle root ‖ subject), so re-opening never discards an answer"),
+    Route("GET", "/v1/returns", "get_returns", False, "the returns this deployment holds"),
+    Route("GET", "/v1/returns/{id}", "get_return", False,
+          "the return and its fill declaration AFTER answers, derived on this request"),
+    Route("GET", "/v1/returns/{id}/map", "get_return_map", False,
+          "the driver's declaration: provisions, proposals, the five gates and what they refused"),
+    Route("GET", "/v1/returns/{id}/graph", "get_return_graph", False,
+          "the REAL graph — nodes, typed edges, four populations kept apart"),
+    Route("GET", "/v1/returns/{id}/questions", "get_return_questions", False,
+          "the questions, AND the refusals that are NOT questions. Both, or the total misleads"),
+    Route("POST", "/v1/returns/{id}/answers", "post_return_answers", True,
+          "operator token; an answer becomes a value labelled resolved_by human and is NEVER "
+          "counted as evidenced"),
+    Route("GET", "/v1/returns/{id}/certificate", "get_return_certificate", False,
+          "the signed coverage certificate, and what it does NOT say"),
+
     Route("GET", "/v1/healthz", "get_healthz", False, "liveness"),
     Route("GET", "/v1/openapi.json", "get_openapi", False, "the generated document"),
 )

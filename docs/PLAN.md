@@ -508,19 +508,58 @@ number it was written against was wrong. `(141, 141)` entries and `(230, 230)` g
 4. ~~A1c~~ — **DONE 20 Aug 2026.** All three uses built, `N4` run. What remains is independence:
    the scoring was done by the author of the thing scored.
 
+5. ~~The web application~~ — **DONE 20 Aug 2026, `C6`.** `web/` was a snapshot of a run somebody
+   else computed and nothing in it could be done. It is now an application: upload a corpus, a
+   template and evidence exports; watch the graph build and explore it; press fill; **answer the
+   system's questions so those answers become values**; review and attest. `cdfc.ask` is a new
+   VERDICT ROOT and `cdfc.api.derive` re-derives every screen from the return's stored inputs.
+   Gates 134–137. See `web/README.md`.
+
 **A2 stays blocked** on a filed instance — a sourcing problem to start in parallel, not to discover
 later. **A4 should not start:** its human blocker has not moved and `g0_scope.py` will raise on the
 first STATUTE obligation regardless of how much segmenter exists.
 
+### What C6 does NOT establish
+
+* **No fill-accuracy number, and none is closer.** On the demo return: **1 evidenced + 2 derived +
+  3 asserted = 6 placed of 3,747 cells**. The mechanism is what runs end to end; the coverage is
+  unmeasured on realistic inputs and stays that way until 30 filing-plus-source-pack pairs arrive.
+  The application says so on the Return screen rather than in this file only.
+* **Nothing bounds RECALL.** The questions are derived from the refusals a binder produced. A field
+  no column was ever matched to produces `no_observation` and is asked about; a field nobody
+  proposed anything for at all is invisible to the whole flow, and no number here changes that.
+* **An answer is not evidence and the application never says it is** — but nor is it checked. An
+  asserted value re-reads nothing. It is placed, labelled `resolved_by: human`, and excluded from
+  every evidenced count; whether it is CORRECT is outside anything this system measures.
+* **"Any template" is still 7 of 9.** Two IFSCA workbooks ship neither a protection mask nor a data
+  validation, and the Template screen reports them as a refusal with a reason rather than as a
+  template with no fields in it. That is honest, not fixed.
+* **A raw PDF corpus is refused on a machine without a reader.** `cdfc.ingest` is inside the
+  verdict closure so no PDF reader may live in it; `tools/serve_app.py` installs one through a
+  declared seam when `docling` and `pdfplumber` are importable, and reports `pdfReader.installed:
+  false` when they are not. Measured false on the machine this was built on. A corpus already
+  pinned by `make pin-pdf` uploads and reads normally, because it is text by then.
+* **LangExtract is still ADOPTED here and NOT wired** (line 247). C6 did not close that divergence
+  and does not claim to.
+* **The signature is a demo signature.** `cdfc-demo-key-do-not-trust`, by a non-constant-time
+  Ed25519 implementation that refuses to sign with any other key. The certificate says this in its
+  own payload, not only on the screen that renders it.
+
 ---
 
-## 14. Two numbering sequences
+## 14. Four numbering sequences
 
 | prefix | sequence | where |
 |---|---|---|
 | `P0`…`P15`, `P4-B1` | the **build** phases shipped | `docs/measurements/P*.md`, `plan/`, the task list |
 | `A0`…`A5`, `A1-4` | the **ANCHOR architecture** phases | `ARCHITECTURE §9`, `PROGRESS.md`, this file |
+| `B1`…`B4` | **BUILD-B** | `docs/BUILD-B.md` |
+| `C0`…`C6` | **any-corpus / any-template**, ending in the application | `git log`, `web/README.md` |
 | `W0-*`, `E1`… | pre-registered experiments | `EXPERIMENT-PROGRAMME.md` |
 | `M-CEIL`, `N1`…`N5` | experiments this work created | §11 |
 
-Both sequences reached 4 independently, which is why the architecture phases were renamed to `A`.
+The P and A sequences reached 4 independently, which is why the architecture phases were renamed to
+`A`. `src/cdfc/gates.py:PHASE_RE` is the registry's list and every sequence in it is BOUNDED at the
+phase that exists — `C[0-6]`, not `C[0-9]` — because a phase that does not exist must not be
+admissible. C6 was the first C phase to register a gate and found the registry refusing its own
+phase name, exactly as B3 had.

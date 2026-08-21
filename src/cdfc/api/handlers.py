@@ -11,6 +11,24 @@ from pathlib import Path
 from typing import Any, Final
 
 from cdfc.api import registry_store, store
+# C6 — the LIVE application's handlers. `app.dispatch` resolves a route's handler by
+# `getattr(handlers, name)`, so they are imported here by name rather than star-imported: a
+# handler that stops existing must break the import, not become a 501 at request time.
+from cdfc.api.live import (  # noqa: F401
+    get_artefact_provisions,
+    get_artefact_surface,
+    get_artefacts,
+    get_capabilities,
+    get_return,
+    get_return_certificate,
+    get_return_graph,
+    get_return_map,
+    get_return_questions,
+    get_returns,
+    post_artefacts,
+    post_return_answers,
+    post_returns,
+)
 from cdfc.measure.paths import PRESCRIBED_MANIFEST
 
 REPORTS: Final[Path] = Path("reports/runs")

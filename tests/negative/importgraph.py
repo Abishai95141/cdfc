@@ -57,6 +57,11 @@ VERDICT_ROOTS: Final[tuple[str, ...]] = (
     # never a model's confidence. A fill lane able to consult the model whose proposals it
     # adjudicates could not be trusted to refuse one.
     "cdfc.fill",
+    # C6 adds one. `cdfc.ask` turns a refusal into a question and an answer into a value stamped
+    # `resolved_by: human`. That stamp is a claim about WHO produced the value, and a layer able to
+    # call a model while making it would make the label forgeable -- the asserted lane and the
+    # derived lane would become the same lane wearing two names.
+    "cdfc.ask",
 )
 
 # ONE RULE, no per-vendor enumeration. `cdfc.model` is banned as a package rather than by naming

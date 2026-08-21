@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Emit `web/data/state.json` — the REAL flow's output, for the surface to render.
+"""Emit `reports/flow-state.json` — the REAL flow's output, as an end-to-end check.
 
     python tools/build_frontend_data.py
 
@@ -41,7 +41,12 @@ BLANK = REPO / ("fixtures/prescribed/"
 STATUTE = "statute-fm-regulations-2025"
 PROPOSALS = REPO / "fixtures/evidence/fme-proposals-generated.json"
 PDF_PIN = REPO / "corpus/instruments/source-fincen-boir-instructions.text.json"
-OUT = REPO / "web/data/state.json"
+# C6, 20 Aug 2026: THE SURFACE NO LONGER READS THIS. `web/` is an application now — every screen
+# is a request, and `cdfc.api.derive` re-derives the whole flow from the return's stored inputs on
+# each one. A tool that kept writing a file nobody reads would be the same dead lane the questioning
+# flow was. What this script still is, and is kept for, is an end-to-end CHECK of the flow in one
+# process, so its output moved to `reports/` where measurements live.
+OUT = REPO / "reports/flow-state.json"
 
 CUSTODIAN = b"""PAN of FME,Name of the FME,Legal structure,Contact person
 AAACI1234K,Meridian Capital IFSC Ltd,Company,Asha Rao

@@ -36,7 +36,7 @@ which artefacts to use: a caller names digests, exactly as a run names its input
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from cdfc.correspond.schema import SchemaMatch, columns_from_rows, match
@@ -60,6 +60,13 @@ class FillRun:
     declaration: FillDeclaration
     unlocatable: tuple[tuple[str, str], ...]     # (field ref, the value that was not in the source)
     source_digests: tuple[str, ...] = ()
+    # THE BINDING THIS RUN ADJUDICATED, returned rather than discarded.
+    #
+    # `cdfc.ask` builds the option list for a `support_contradicted` question by READING the
+    # observations that disagree — deliberately not by parsing the sentence `A5` renders them into,
+    # because an option list recovered from a message's formatting breaks when the message is
+    # reworded. It needs the binding to do that, and this was the only place holding it.
+    binding: Mapping[str, tuple[Observation, ...]] = field(default_factory=dict)
 
     def lines(self) -> tuple[str, ...]:
         return (
@@ -209,14 +216,35 @@ def run(
 
     # A1c gives column -> field. Turn each matched column's VALUES into observations LOCATED in
     # the source text; a value that is not there yields nothing, and is counted.
-    by_name = {c.name: c for c in columns}
+    # EVERY COLUMN CARRYING THE MATCHED NAME BINDS — not the last one with that name.
+    #
+    # C6, 20 Aug 2026, found by driving the surface. `{c.name: c for c in columns}` keeps the LAST
+    # column of a given name, and a filing is assembled from several documents that routinely
+    # share one: a custodian register and a trial balance both carry `Legal structure`. Two things
+    # went wrong at once and both were silent.
+    #
+    #   * `match()` gives each template field to at most ONE column, so the second document's
+    #     column was refused and its value never reached the adjudication. **`SUPPORT_CONTRADICTED`
+    #     could not arise from the commonest real disagreement there is** — two documents
+    #     reporting the same field differently — and the product's own sentence promises exactly
+    #     *"what two of your documents disagree about"*.
+    #   * `pairs` carries the column NAME, and two columns shared it, so the values actually bound
+    #     came from whichever document happened to be last in `digests`. Measured: with the
+    #     register naming `Company` and the trial balance `Partnership`, the fill reported
+    #     `Company` as EVIDENCED and the disagreement did not exist anywhere in the declaration.
+    #
+    # A1c decided that the column NAMED `Legal structure` corresponds to this field. Every
+    # document holding a column of that name is offering a value for it, and deciding whether they
+    # agree is A5's `UNIQUE` condition — which is the one place in this system allowed to make
+    # that call.
+    by_name: dict[str, list] = {}
+    for c in columns:
+        by_name.setdefault(c.name, []).append(c)
     binding: dict[str, list[Observation]] = {}
     unlocatable: list[tuple[str, str]] = []
     for col_name, field_ref, _w in m.pairs:
-        col = by_name.get(col_name)
-        if col is None:
-            continue
-        for v in col.values:
+        offered = by_name.get(col_name, ())
+        for v in [v for col in offered for v in col.values]:
             # Locate in WHICHEVER source actually contains it, and record which one. A value found
             # in the trial balance must not be recorded as coming from the custodian feed.
             o = next((x for x in (_locate(src, v) for src in sources.values()) if x is not None),
@@ -256,6 +284,17 @@ def run(
             continue
         binding.setdefault(ref, []).append(o)
 
+    # WHAT A COLUMN OFFERED AND NO DOCUMENT CONTAINS, handed to the lane that names it.
+    #
+    # `unlocatable` was reported only on `FillRun`, so the declaration called these cells
+    # `no_observation` — the same reason as a cell nothing ever offered anything for. They are
+    # different facts and they take different answers, and `FillRefusal.NOT_LOCATABLE_IN_SOURCE`
+    # existed for the distinction while being constructed by nothing. Sorted, and the FIRST offer
+    # per ref, so the reason is deterministic when a column offered several.
+    offered_but_absent: dict[str, str] = {}
+    for field_ref, value in sorted(set(unlocatable)):
+        offered_but_absent.setdefault(field_ref, value)
+
     decl = propose(
         fields, {k: tuple(v) for k, v in binding.items()},
         {src.instrument_id: src for src in sources.values()},
@@ -263,10 +302,12 @@ def run(
             f"cdfc.correspond.schema.match over {len(columns)} source column(s) from "
             f"{len(digests)} artefact(s), EM-weighted"
         ),
+        offered_but_absent=offered_but_absent,
     )
     return FillRun(
         template_digest=template_digest, source_digest=digests[0],
         source_digests=tuple(digests),
         merkle_root=inputs.merkle_root, schema_match=m, declaration=decl,
         unlocatable=tuple(sorted(set(unlocatable))),
+        binding={k: tuple(v) for k, v in binding.items()},
     )

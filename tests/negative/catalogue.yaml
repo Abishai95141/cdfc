@@ -2374,3 +2374,59 @@ entries:
         flips: false
     positive_control: "tests/negative/test_nc_div.py::test_nc__DIV05_positive_control_the_map_still_recovers_the_body"
     status: ACTIVE
+
+  - id: NC-ASK01
+    component: ask
+    break: "a refusal reason declared NOT a question is moved into the askable allowlist, so the filer is asked something nobody can answer"
+    measured_instance: "field_not_labelled is 3,615 of 3,735 refusals on the pinned FME return (tools/user_flow.py, 20 Aug 2026); asked, the screen's answerable total goes from 129 to 3,744 and the question it puts is 'what value goes in Sheet3!AC118?' — a coordinate, not a question"
+    injector: AskFieldNotLabelled
+    guard_tests:
+      - path: "tests/negative/test_nc_ask.py::test_nc__ASK01_a_reason_that_is_not_a_question_is_never_asked"
+        flips: true
+      - path: "tests/negative/test_nc_ask.py::test_nc__ASK05_positive_control_the_flow_still_asks_and_still_evidences"
+        flips: true
+      - path: "tests/negative/test_nc_ask.py::test_nc__ASK03_an_answer_is_never_counted_as_evidenced"
+        flips: false
+    positive_control: "tests/negative/test_nc_ask.py::test_nc__ASK03_an_answer_is_never_counted_as_evidenced"
+    status: ACTIVE
+
+  - id: NC-ASK02
+    component: ask
+    break: "a row is added to the askable allowlist for a reason no refusal can ever carry — the vacuous half, where a table of questions nobody is ever shown looks exactly like a table of questions"
+    measured_instance: "not_locatable_in_source was declared in FillRefusal and CONSTRUCTED NOWHERE until C6 wired offered_but_absent — verified 20 Aug 2026 by grepping every FillRefusal. site in src/ and tools/; attestation_requires_signatory is still carried by no Refusal at all, because the attestation lane short-circuits before the six conditions run"
+    injector: AskableGhostRow
+    guard_tests:
+      - path: "tests/negative/test_nc_ask.py::test_nc__ASK02_every_askable_reason_is_reachable"
+        flips: true
+      - path: "tests/negative/test_nc_ask.py::test_nc__ASK05_positive_control_the_flow_still_asks_and_still_evidences"
+        flips: true
+      - path: "tests/negative/test_nc_ask.py::test_nc__ASK03_an_answer_is_never_counted_as_evidenced"
+        flips: false
+    positive_control: "tests/negative/test_nc_ask.py::test_nc__ASK03_an_answer_is_never_counted_as_evidenced"
+    status: ACTIVE
+
+  - id: NC-ASK03
+    component: fill
+    break: "FillDeclaration.admitted() counts the asserted lane, so a value a human typed is reported as EVIDENCED"
+    measured_instance: "on the demo return the evidenced count is 1 and three questions have been answered; under this break the coverage figure reads 4 and three of those four cite no document and no span. Every behavioural test of the questioning flow still passes — the questions are right, the answers are recorded, the provenance is there, and only the number moves"
+    injector: AssertedCountsAsEvidenced
+    guard_tests:
+      - path: "tests/negative/test_nc_ask.py::test_nc__ASK03_an_answer_is_never_counted_as_evidenced"
+        flips: true
+      - path: "tests/negative/test_nc_ask.py::test_nc__ASK01_a_reason_that_is_not_a_question_is_never_asked"
+        flips: false
+    positive_control: "tests/negative/test_nc_ask.py::test_nc__ASK01_a_reason_that_is_not_a_question_is_never_asked"
+    status: ACTIVE
+
+  - id: NC-ASK04
+    component: fill
+    break: "FillDeclaration.filled() drops the asserted lane, so an answered question puts nothing in the return"
+    measured_instance: "the opposite error from NC-ASK03 and the one a single control misses: the evidenced count stays honest at 1 while the three values the filer supplied under their own name vanish from what is filed. filled_total reads 3 instead of 6"
+    injector: AssertedNotPlaced
+    guard_tests:
+      - path: "tests/negative/test_nc_ask.py::test_nc__ASK04_an_answer_is_placed_in_the_return"
+        flips: true
+      - path: "tests/negative/test_nc_ask.py::test_nc__ASK03_an_answer_is_never_counted_as_evidenced"
+        flips: false
+    positive_control: "tests/negative/test_nc_ask.py::test_nc__ASK03_an_answer_is_never_counted_as_evidenced"
+    status: ACTIVE

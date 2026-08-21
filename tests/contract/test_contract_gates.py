@@ -78,13 +78,19 @@ ADDED_LIVE_AT_STALE_CLAIM = {127}
 # Argument in docs/GATE-CHANGES.md.
 ADDED_LIVE_AT_N1_REPIN = {128, 129, 130, 131}
 ADDED_LIVE_AT_B3 = {132, 133}   # docs/GATE-CHANGES.md, 20 Aug 2026
+# C6, 20 Aug 2026. The QUESTIONING FLOW. Two crossed checks, four halves, one injector each:
+# 134/135 are the askable allowlist's two failure modes (a reason that is not a question gets
+# asked; a row nothing can reach sits in the table) and 136/137 are the asserted tier's two
+# opposite errors (an answer counted as evidence; an answer dropped from the return). A single
+# control on either pair leaves the other half permanently green. Argument in docs/GATE-CHANGES.md.
+ADDED_LIVE_AT_C6 = {134, 135, 136, 137}
 
 LIVE_EXPECTED = (LIVE_AT_P0 | ADDED_LIVE_AT_P4 | ADDED_LIVE_AT_P5 | ADDED_LIVE_AT_P6
                  | ADDED_LIVE_AT_P7 | ADDED_LIVE_AT_P8 | ADDED_LIVE_AT_P9
                  | ADDED_LIVE_AT_P10 | ADDED_LIVE_AT_P11 | ADDED_LIVE_AT_P12
                  | ADDED_LIVE_AT_P13 | ADDED_LIVE_AT_P14 | ADDED_LIVE_AT_P14B
                  | ADDED_LIVE_AT_P13B0 | ADDED_LIVE_AT_A1_AUDIT | ADDED_LIVE_AT_B3
-                 | ADDED_LIVE_AT_STALE_CLAIM | ADDED_LIVE_AT_N1_REPIN
+                 | ADDED_LIVE_AT_STALE_CLAIM | ADDED_LIVE_AT_N1_REPIN | ADDED_LIVE_AT_C6
                  | PROMOTED_AT_P6)
 PENDING_AT_P0 = {14, 15, 16}
 # The PENDING set SHRINKS as subjects ship, and a row may only leave it into LIVE — never the
@@ -176,10 +182,11 @@ def test_contract__registry_rejects_a_phase_outside_both_sequences(tmp_path: Pat
     anything is not a check, so this pins what it still refuses."""
     from cdfc.gates import PHASE_RE
 
-    for good in ("P0", "P15", "A0", "A1", "A1c", "A5", "B1", "B4"):
+    for good in ("P0", "P15", "A0", "A1", "A1c", "A5", "B1", "B4", "C0", "C5", "C6"):
         assert PHASE_RE.match(good), f"{good} is a real phase and must be admitted"
     # B0 and B5 are refused ON PURPOSE: docs/BUILD-B.md declares exactly four phases, and an
     # admitted phase that does not exist is how a gate comes to name a subject nobody built.
+    # C7 is refused for the same reason: the C sequence runs C0-C6 and stops there.
     for bad in ("P16", "A6", "A2c", "Q1", "", "P", "A", "P1x", "phase1", "A1C",
-                "B0", "B5", "B10", "B", "b1"):
+                "B0", "B5", "B10", "B", "b1", "C7", "C10", "C", "c1", "C1c"):
         assert not PHASE_RE.match(bad), f"{bad} is not a phase and must be refused"

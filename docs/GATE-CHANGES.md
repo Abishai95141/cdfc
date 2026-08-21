@@ -553,3 +553,67 @@ making a homoglyph substitution unlocatable by `test_g0__verbatim_quote_required
 exists to catch it. That is the trade this repository refused for dashes at P7. It is refused
 again, the cause is attributed in `docs/measurements/B3-pdf-ingress.md`, and the units stay
 DISPUTED.
+
+---
+
+## 20 Aug 2026 — C6, the questioning flow. Rows 134, 135, 136, 137 enter LIVE.
+
+**What the gates guard.** The product's sentence is *"tell you exactly what nothing supports, what
+two of your documents disagree about, and what needs your judgement."* That is a system that ASKS,
+and until today this one counted: `cdfc.fill` produced 3,735 refusals over the pinned FME return,
+every one carrying a reason from a closed vocabulary of eight, and no question was ever put, no
+answer could be given, and no answer could become a value. `cdfc.ask` is the layer that closes it.
+
+**Two crossed checks, four halves, four injectors.** `CLAUDE.md §3` requires each half of a check
+to have its own injector, and both of these fail in two directions.
+
+*The askable allowlist.* Six of the eight reasons are questions. Two are not, and presenting them
+as questions is not a smaller error than failing to ask.
+
+* **134 — `AskFieldNotLabelled`.** `field_not_labelled` moved into the allowlist. Measured on the
+  pinned FME return by `tools/user_flow.py` on 20 Aug 2026: **3,615 of 3,735** refusals carry it.
+  Asked, the screen's answerable total goes from 129 to 3,744 and the question it puts is *"what
+  value goes in `Sheet3!AC118`?"* — a coordinate, not a question. The filer would have to open the
+  workbook and read the merged header themselves, at which point we have asked them to do the work
+  and called their reading an answer.
+* **135 — `AskableGhostRow`.** A row in the table for a reason no refusal can ever carry. **This is
+  not hypothetical.** `NOT_LOCATABLE_IN_SOURCE` was declared in `FillRefusal` and **constructed
+  nowhere** — verified 20 Aug 2026 by grepping every `FillRefusal.` construction site in `src/` and
+  `tools/` — so a filer was told *"nothing you gave us contains a value for this field"* about a
+  cell where a matched column had in fact offered one the document did not contain. Those are
+  different facts taking different answers. C6 wired `propose(offered_but_absent=…)` and the reason
+  became reachable. `ATTESTATION_REQUIRES_SIGNATORY` is STILL carried by no `Refusal`: the
+  attestation lane short-circuits before the six conditions run, so `_REASON_FOR["LANE_IS_FACT"]`
+  is unreachable, and the question is generated from the attestation lane instead. A table of
+  questions nobody is ever shown looks exactly like a table of questions.
+
+*The asserted tier.* An answered question becomes a value that is PLACED and NEVER EVIDENCED. The
+two errors are opposite and a single control catches one of them.
+
+* **136 — `AssertedCountsAsEvidenced`.** `admitted()` returns the asserted lane too. Nothing
+  behavioural catches this: the questions are still right, the answers are still recorded, the
+  provenance is still there, and only the coverage number silently absorbs values that re-read
+  nothing. On the demo return it takes the evidenced count from 1 to 4, and three of those four
+  cite no document and no span.
+* **137 — `AssertedNotPlaced`.** `filled()` drops the asserted lane. The evidenced count stays
+  honest and the three values the filer supplied under their own name vanish from what is filed.
+  A value they typed that no screen shows is a different falsehood from counting it as evidence,
+  and it is not a lesser one.
+
+**Every guard is written over a population where all eight reasons arise.** The pinned FME return
+produces exactly two of them — `field_not_labelled` and `no_observation` — so a guard written over
+that return alone would leave six rows of the table unmeasured and green.
+`tests/negative/ask_reference.py` builds the population from `src/` code end to end: a real
+`InstrumentText`, real located spans, a real `FieldSet`, and `fill.propose.propose`. The only
+synthetic part is four lines of CSV.
+
+**`PHASE_RE` was widened, and bounded.** `C0`–`C6` are now admissible. The C sequence had never
+registered a gate and the registry refused its own phase name — the same thing B3 found. `C[0-9]`
+would admit a phase that does not exist, so the bound is `C[0-6]` and
+`test_contract__registry_rejects_a_phase_outside_both_sequences` was extended, not relaxed: it now
+pins `C7`, `C10`, `C`, `c1` and `C1c` as refused.
+
+**`cdfc.ask` is a VERDICT ROOT.** An answer is stamped `resolved_by: human`, and that stamp is a
+claim about WHO produced the value. A layer able to call a model while making it would make the
+label forgeable, and the asserted lane and the derived lane would become the same lane wearing two
+names. `tests/negative/importgraph.py` enforces it positively.

@@ -112,3 +112,98 @@ svg.graph text{font:500 10px var(--mono);fill:var(--ink)}
 .empty{padding:var(--s-xl);text-align:center;color:var(--ink-2);border:1px dashed var(--line-strong);
   border-radius:var(--r-card)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ================= C6 — the LIVE application ==================================================
+   Added for the working surface. Every rule here obeys the same two measured constraints as the
+   block above: --accent (2.79:1) is a FILL and never ink, and --accent-ink (4.61:1) is the only
+   accent that may carry text. */
+
+/* ---- the operator token ---------------------------------------------------------------- */
+.tokbox{padding:var(--s-md) var(--s-lg);border-bottom:1px solid rgba(255,255,255,.16)}
+.tokbox .lbl{color:rgba(255,255,255,.72)}
+.tokbox input{width:100%;margin-top:6px;padding:8px 10px;border-radius:var(--r-ctl);
+  border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.18);color:#fff;
+  font:400 12px/1.4 var(--mono)}
+.tokbox input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.tokbox p{margin:6px 0 0;font:400 11px/1.45 var(--sans);color:rgba(255,255,255,.62)}
+.tokbox p.set{color:#BFE8CE}
+.retbox{padding:var(--s-md) var(--s-lg);border-top:1px solid rgba(255,255,255,.16);
+  font:400 11px/1.5 var(--mono);color:rgba(255,255,255,.72)}
+.retbox b{display:block;font-size:11px;color:#fff;letter-spacing:.04em;text-transform:uppercase}
+.nav a.off{opacity:.45}
+
+/* ---- controls --------------------------------------------------------------------------- */
+button,.btn{font:500 14px/1 var(--sans);padding:10px 16px;border-radius:var(--r-ctl);
+  border:1px solid var(--line-strong);background:var(--bg);color:var(--ink);cursor:pointer;
+  transition:background var(--dur) var(--ease),border-color var(--dur) var(--ease)}
+button:hover:not(:disabled){background:#F6F7F8}
+button:disabled{opacity:.5;cursor:not-allowed}
+button.pri{background:var(--accent);border-color:var(--accent-ink);color:var(--ink);
+  font-weight:600}
+button.pri:hover:not(:disabled){background:var(--primary)}
+button.sm{padding:6px 12px;font-size:13px}
+input[type=text],input[type=search],select,textarea{font:400 14px/1.4 var(--sans);
+  padding:9px 12px;border:1px solid var(--line-strong);border-radius:var(--r-ctl);
+  background:var(--bg);color:var(--ink);width:100%}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent-ink);outline-offset:1px}
+.row{display:flex;gap:var(--s-sm);align-items:center;flex-wrap:wrap}
+.row.tight{gap:var(--s-xs)}
+label.f{display:block;margin-bottom:var(--s-md)}
+label.f>span{display:block;margin-bottom:6px}
+
+/* ---- upload ----------------------------------------------------------------------------- */
+.drops{display:grid;gap:var(--s-md);grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.drop{border:1px dashed var(--line-strong);border-radius:var(--r-card);padding:var(--s-lg);
+  background:#FCFCFD;transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease)}
+.drop.over{border-color:var(--accent-ink);background:#FFF7F2}
+.drop h3{font-size:16px}
+.drop p{color:var(--ink-2);font-size:13px;margin:var(--s-xxs) 0 var(--s-md);min-height:3.2em}
+.drop input[type=file]{font:400 13px var(--sans);width:100%}
+.drop .st{margin-top:var(--s-sm);font:400 12px/1.5 var(--mono);color:var(--ink-2);min-height:1.5em}
+.drop .st.bad{color:var(--refuse)}
+.drop .st.good{color:var(--ok)}
+
+/* ---- the question card ------------------------------------------------------------------ */
+.qlist{display:grid;gap:var(--s-md)}
+.q{border:1px solid var(--line-strong);border-radius:var(--r-card);padding:var(--s-lg);
+  background:var(--bg)}
+.q.done{border-color:var(--ok);background:#F7FCF9}
+.q .qh{display:flex;justify-content:space-between;gap:var(--s-md);align-items:flex-start;
+  flex-wrap:wrap}
+.q .ref{font:500 12px/1.4 var(--mono);color:var(--ink-2)}
+.q .lab{font-size:17px;font-weight:500;margin:var(--s-xxs) 0 0;max-width:70ch}
+.q .ask{margin:var(--s-sm) 0 0;font-size:15px;color:var(--ink)}
+.q .why{margin:var(--s-xs) 0 0;font-size:13px;color:var(--ink-2);max-width:80ch}
+.q .res{margin:var(--s-xs) 0 var(--s-md);font-size:13px;color:var(--accent-ink)}
+.q .opts{display:grid;gap:var(--s-xs);margin:0 0 var(--s-md)}
+.q .opt{display:flex;gap:var(--s-sm);align-items:baseline;padding:8px 12px;
+  border:1px solid var(--line);border-radius:var(--r-ctl);cursor:pointer}
+.q .opt:hover{background:#FAFAFB}
+.q .opt input{width:auto}
+.q .opt em{font-style:normal;color:var(--ink-2);font-size:12px;font-family:var(--mono)}
+.q .ans{display:grid;gap:var(--s-sm);grid-template-columns:2fr 1fr auto;align-items:end}
+.q .msg{margin-top:var(--s-sm);font:400 13px/1.5 var(--sans)}
+.q .msg.bad{color:var(--refuse)} .q .msg.good{color:var(--ok)}
+@media (max-width:820px){.q .ans{grid-template-columns:1fr}}
+
+/* ---- the not-asked panel: the count that must never be headlined as questions ----------- */
+.notask{border:1px solid var(--line-strong);border-radius:var(--r-card);padding:var(--s-lg);
+  background:#F7F8F9;margin-top:var(--s-lg)}
+.notask h3{font-size:16px}
+.notask li{margin-top:var(--s-sm);color:var(--ink-2);font-size:14px}
+.notask b{color:var(--ink);font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* ---- misc ------------------------------------------------------------------------------- */
+.err{border:1px solid var(--refuse);border-left:4px solid var(--refuse);border-radius:var(--r-ctl);
+  padding:var(--s-md);background:#FDF5F2;margin-top:var(--s-md)}
+.err b{display:block;font-family:var(--mono);font-size:13px;color:var(--refuse)}
+.err p{margin:var(--s-xxs) 0 0;font-size:14px;color:var(--ink-2)}
+.busy{display:inline-block;font:500 13px var(--mono);color:var(--ink-2)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:var(--s-xs) var(--s-md);font-size:14px}
+.kv dt{color:var(--ink-2)} .kv dd{margin:0;font-family:var(--mono);font-size:13px;
+  word-break:break-all}
+.abs{color:var(--ink-2);font-style:italic}
+.sig{font:400 12px/1.6 var(--mono);word-break:break-all;color:var(--ink-2)}
+.gwrap svg{background:#FCFCFD}
+svg.graph .nd{stroke:var(--bg);stroke-width:1.5}
+svg.graph .lg{font:500 11px var(--mono);fill:var(--ink-2)}

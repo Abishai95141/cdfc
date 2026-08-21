@@ -1,16 +1,25 @@
 <!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>cdfc — evidence for a regulatory filing</title>
+<title>cdfc — upload, map, fill, answer, attest</title>
 <link rel="stylesheet" href="app.css">
 <div class="app">
   <aside class="rail">
     <div class="brand">
       <b>cdfc</b>
-      <span>Provenance for a regulatory filing. Every value carries the document and page it came from.</span>
+      <span>Upload your exports in whatever shape they arrive. We propose a value for every field
+        we can evidence, show the document and page it came from, and <em>ask</em> about the
+        rest.</span>
+    </div>
+    <div class="tokbox">
+      <label class="lbl" for="tok">Operator token</label>
+      <input id="tok" type="password" autocomplete="off" spellcheck="false"
+             placeholder="paste the token the server printed">
+      <p id="tokstate">Held in memory only — never written to disk, never in a URL.</p>
     </div>
     <nav class="nav" id="nav"></nav>
+    <div class="retbox" id="retbox"></div>
   </aside>
-  <main id="main"><div class="empty">Loading the run…</div></main>
+  <main id="main"><div class="empty">Starting…</div></main>
 </div>
 <script src="app.js"></script>
