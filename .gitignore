@@ -64,3 +64,6 @@ graphify-out/
 # repository's — committing one filer's evidence exports would put their data in a public tree.
 # `tools/serve_app.py --app-root` moves it.
 runs/app/
+
+# macOS
+.DS_Store
